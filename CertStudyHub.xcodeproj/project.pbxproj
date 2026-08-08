@@ -1,0 +1,722 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C10000000000000000000001 /* CertStudyHubApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000001 /* CertStudyHubApp.swift */; };
+		C10000000000000000000002 /* CertStudyHubApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000001 /* CertStudyHubApp.swift */; };
+		C10000000000000000000003 /* CertPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000002 /* CertPickerView.swift */; };
+		C10000000000000000000004 /* CertPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000002 /* CertPickerView.swift */; };
+		C10000000000000000000005 /* CertHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000003 /* CertHomeView.swift */; };
+		C10000000000000000000006 /* CertHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000003 /* CertHomeView.swift */; };
+		C10000000000000000000007 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000004 /* Question.swift */; };
+		C10000000000000000000008 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000004 /* Question.swift */; };
+		C10000000000000000000009 /* StudyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000005 /* StudyModels.swift */; };
+		C1000000000000000000000A /* StudyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000005 /* StudyModels.swift */; };
+		C1000000000000000000000B /* CertConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000006 /* CertConfig.swift */; };
+		C1000000000000000000000C /* CertConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000006 /* CertConfig.swift */; };
+		C1000000000000000000000D /* CertCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000007 /* CertCatalog.swift */; };
+		C1000000000000000000000E /* CertCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000007 /* CertCatalog.swift */; };
+		C1000000000000000000000F /* AgentforceQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000008 /* AgentforceQuestionBank.swift */; };
+		C10000000000000000000010 /* AgentforceQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000008 /* AgentforceQuestionBank.swift */; };
+		C10000000000000000000011 /* AgentforceStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000009 /* AgentforceStudyBank.swift */; };
+		C10000000000000000000012 /* AgentforceStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000009 /* AgentforceStudyBank.swift */; };
+		C10000000000000000000013 /* DataCloud360QuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000000A /* DataCloud360QuestionBank.swift */; };
+		C10000000000000000000014 /* DataCloud360QuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000000A /* DataCloud360QuestionBank.swift */; };
+		C10000000000000000000015 /* DataCloud360StudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000000B /* DataCloud360StudyBank.swift */; };
+		C10000000000000000000016 /* DataCloud360StudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000000B /* DataCloud360StudyBank.swift */; };
+		C10000000000000000000017 /* QuizViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000000C /* QuizViewModel.swift */; };
+		C10000000000000000000018 /* QuizViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000000C /* QuizViewModel.swift */; };
+		C10000000000000000000019 /* StudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000000D /* StudyViewModel.swift */; };
+		C1000000000000000000001A /* StudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000000D /* StudyViewModel.swift */; };
+		C1000000000000000000001B /* CopyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000000E /* CopyHelper.swift */; };
+		C1000000000000000000001C /* CopyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000000E /* CopyHelper.swift */; };
+		C1000000000000000000001D /* PlatformColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000000F /* PlatformColors.swift */; };
+		C1000000000000000000001E /* PlatformColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000000F /* PlatformColors.swift */; };
+		C1000000000000000000001F /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000010 /* QuizView.swift */; };
+		C10000000000000000000020 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000010 /* QuizView.swift */; };
+		C10000000000000000000021 /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000011 /* StartView.swift */; };
+		C10000000000000000000022 /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000011 /* StartView.swift */; };
+		C10000000000000000000023 /* QuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000012 /* QuestionView.swift */; };
+		C10000000000000000000024 /* QuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000012 /* QuestionView.swift */; };
+		C10000000000000000000025 /* OptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000013 /* OptionButton.swift */; };
+		C10000000000000000000026 /* OptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000013 /* OptionButton.swift */; };
+		C10000000000000000000027 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000014 /* FeedbackView.swift */; };
+		C10000000000000000000028 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000014 /* FeedbackView.swift */; };
+		C10000000000000000000029 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000015 /* ResultsView.swift */; };
+		C1000000000000000000002A /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000015 /* ResultsView.swift */; };
+		C1000000000000000000002B /* ForReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000016 /* ForReviewView.swift */; };
+		C1000000000000000000002C /* ForReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000016 /* ForReviewView.swift */; };
+		C1000000000000000000002D /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000017 /* ProgressBarView.swift */; };
+		C1000000000000000000002E /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000017 /* ProgressBarView.swift */; };
+		C1000000000000000000002F /* StudyGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000018 /* StudyGuideView.swift */; };
+		C10000000000000000000030 /* StudyGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000018 /* StudyGuideView.swift */; };
+		C10000000000000000000031 /* StudyHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000019 /* StudyHomeView.swift */; };
+		C10000000000000000000032 /* StudyHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000019 /* StudyHomeView.swift */; };
+		C10000000000000000000033 /* ObjectiveListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000001A /* ObjectiveListView.swift */; };
+		C10000000000000000000034 /* ObjectiveListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000001A /* ObjectiveListView.swift */; };
+		C10000000000000000000035 /* TopicStudyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000001B /* TopicStudyView.swift */; };
+		C10000000000000000000036 /* TopicStudyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000001B /* TopicStudyView.swift */; };
+		C10000000000000000000037 /* NeedsReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000001C /* NeedsReviewView.swift */; };
+		C10000000000000000000038 /* NeedsReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000001C /* NeedsReviewView.swift */; };
+		C10000000000000000000039 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000001D /* Assets.xcassets */; };
+		C1000000000000000000003A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000001D /* Assets.xcassets */; };
+		C1000000000000000000003B /* ProgressManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000001E /* ProgressManager.swift */; };
+		C1000000000000000000003C /* ProgressManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000001E /* ProgressManager.swift */; };
+		C1000000000000000000003D /* ProgressExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000001F /* ProgressExportView.swift */; };
+		C1000000000000000000003E /* ProgressExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000001F /* ProgressExportView.swift */; };
+		C10000000000000000000041 /* PD1StudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000020 /* PD1StudyBank.swift */; };
+		C10000000000000000000042 /* PD1StudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000020 /* PD1StudyBank.swift */; };
+		C10000000000000000000043 /* PD1QuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000021 /* PD1QuestionBank.swift */; };
+		C10000000000000000000044 /* PD1QuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000021 /* PD1QuestionBank.swift */; };
+		C10000000000000000000045 /* AppBuilderStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000022 /* AppBuilderStudyBank.swift */; };
+		C10000000000000000000046 /* AppBuilderStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000022 /* AppBuilderStudyBank.swift */; };
+		C10000000000000000000047 /* AppBuilderQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000023 /* AppBuilderQuestionBank.swift */; };
+		C10000000000000000000048 /* AppBuilderQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000023 /* AppBuilderQuestionBank.swift */; };
+		C10000000000000000000049 /* PDLDAStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000024 /* PDLDAStudyBank.swift */; };
+		C1000000000000000000004A /* PDLDAStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000024 /* PDLDAStudyBank.swift */; };
+		C1000000000000000000004B /* PDLDAQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000025 /* PDLDAQuestionBank.swift */; };
+		C1000000000000000000004C /* PDLDAQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000025 /* PDLDAQuestionBank.swift */; };
+		C1000000000000000000004D /* AgentOpsQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000026 /* AgentOpsQuestionBank.swift */; };
+		C1000000000000000000004E /* AgentOpsQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000026 /* AgentOpsQuestionBank.swift */; };
+		C1000000000000000000004F /* AgentOpsStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000027 /* AgentOpsStudyBank.swift */; };
+		C10000000000000000000050 /* AgentOpsStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000027 /* AgentOpsStudyBank.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C1F000000000000000000001 /* CertStudyHubApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertStudyHubApp.swift; sourceTree = "<group>"; };
+		C1F000000000000000000002 /* CertPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertPickerView.swift; sourceTree = "<group>"; };
+		C1F000000000000000000003 /* CertHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertHomeView.swift; sourceTree = "<group>"; };
+		C1F000000000000000000004 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
+		C1F000000000000000000005 /* StudyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyModels.swift; sourceTree = "<group>"; };
+		C1F000000000000000000006 /* CertConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertConfig.swift; sourceTree = "<group>"; };
+		C1F000000000000000000007 /* CertCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertCatalog.swift; sourceTree = "<group>"; };
+		C1F000000000000000000008 /* AgentforceQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentforceQuestionBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000009 /* AgentforceStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentforceStudyBank.swift; sourceTree = "<group>"; };
+		C1F00000000000000000000A /* DataCloud360QuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCloud360QuestionBank.swift; sourceTree = "<group>"; };
+		C1F00000000000000000000B /* DataCloud360StudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCloud360StudyBank.swift; sourceTree = "<group>"; };
+		C1F00000000000000000000C /* QuizViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizViewModel.swift; sourceTree = "<group>"; };
+		C1F00000000000000000000D /* StudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViewModel.swift; sourceTree = "<group>"; };
+		C1F00000000000000000000E /* CopyHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyHelper.swift; sourceTree = "<group>"; };
+		C1F00000000000000000000F /* PlatformColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformColors.swift; sourceTree = "<group>"; };
+		C1F000000000000000000010 /* QuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
+		C1F000000000000000000011 /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
+		C1F000000000000000000012 /* QuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionView.swift; sourceTree = "<group>"; };
+		C1F000000000000000000013 /* OptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionButton.swift; sourceTree = "<group>"; };
+		C1F000000000000000000014 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
+		C1F000000000000000000015 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
+		C1F000000000000000000016 /* ForReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForReviewView.swift; sourceTree = "<group>"; };
+		C1F000000000000000000017 /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
+		C1F000000000000000000018 /* StudyGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyGuideView.swift; sourceTree = "<group>"; };
+		C1F000000000000000000019 /* StudyHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyHomeView.swift; sourceTree = "<group>"; };
+		C1F00000000000000000001A /* ObjectiveListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveListView.swift; sourceTree = "<group>"; };
+		C1F00000000000000000001B /* TopicStudyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicStudyView.swift; sourceTree = "<group>"; };
+		C1F00000000000000000001C /* NeedsReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeedsReviewView.swift; sourceTree = "<group>"; };
+		C1F00000000000000000001D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C1F00000000000000000001E /* ProgressManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressManager.swift; sourceTree = "<group>"; };
+		C1F00000000000000000001F /* ProgressExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressExportView.swift; sourceTree = "<group>"; };
+		C1F000000000000000000020 /* PD1StudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PD1StudyBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000021 /* PD1QuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PD1QuestionBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000022 /* AppBuilderStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBuilderStudyBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000023 /* AppBuilderQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBuilderQuestionBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000024 /* PDLDAStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDLDAStudyBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000025 /* PDLDAQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDLDAQuestionBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000026 /* AgentOpsQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentOpsQuestionBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000027 /* AgentOpsStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentOpsStudyBank.swift; sourceTree = "<group>"; };
+		C1P000000000000000000001 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1P000000000000000000002 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C1W000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1W000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C1G000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				C1G000000000000000000002 /* CertStudyHub */,
+				C1G00000000000000000000B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C1G000000000000000000002 /* CertStudyHub */ = {
+			isa = PBXGroup;
+			children = (
+				C1F000000000000000000001 /* CertStudyHubApp.swift */,
+				C1F000000000000000000002 /* CertPickerView.swift */,
+				C1F000000000000000000003 /* CertHomeView.swift */,
+				C1F00000000000000000001D /* Assets.xcassets */,
+				C1G000000000000000000003 /* Models */,
+				C1G000000000000000000004 /* Data */,
+				C1G000000000000000000005 /* ViewModels */,
+				C1G000000000000000000006 /* Helpers */,
+				C1G00000000000000000000C /* Utilities */,
+				C1G000000000000000000007 /* Views */,
+			);
+			path = CertStudyHub;
+			sourceTree = "<group>";
+		};
+		C1G000000000000000000003 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C1F000000000000000000004 /* Question.swift */,
+				C1F000000000000000000005 /* StudyModels.swift */,
+				C1F000000000000000000006 /* CertConfig.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C1G000000000000000000004 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				C1F000000000000000000007 /* CertCatalog.swift */,
+				C1F000000000000000000008 /* AgentforceQuestionBank.swift */,
+				C1F000000000000000000009 /* AgentforceStudyBank.swift */,
+				C1F00000000000000000000A /* DataCloud360QuestionBank.swift */,
+				C1F00000000000000000000B /* DataCloud360StudyBank.swift */,
+				C1F000000000000000000020 /* PD1StudyBank.swift */,
+				C1F000000000000000000021 /* PD1QuestionBank.swift */,
+				C1F000000000000000000022 /* AppBuilderStudyBank.swift */,
+				C1F000000000000000000023 /* AppBuilderQuestionBank.swift */,
+				C1F000000000000000000024 /* PDLDAStudyBank.swift */,
+				C1F000000000000000000025 /* PDLDAQuestionBank.swift */,
+				C1F000000000000000000026 /* AgentOpsQuestionBank.swift */,
+				C1F000000000000000000027 /* AgentOpsStudyBank.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		C1G000000000000000000005 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				C1F00000000000000000000C /* QuizViewModel.swift */,
+				C1F00000000000000000000D /* StudyViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		C1G000000000000000000006 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				C1F00000000000000000000E /* CopyHelper.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		C1G000000000000000000007 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C1F00000000000000000001F /* ProgressExportView.swift */,
+				C1G000000000000000000008 /* Quiz */,
+				C1G000000000000000000009 /* Study */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C1G000000000000000000008 /* Quiz */ = {
+			isa = PBXGroup;
+			children = (
+				C1F00000000000000000000F /* PlatformColors.swift */,
+				C1F000000000000000000010 /* QuizView.swift */,
+				C1F000000000000000000011 /* StartView.swift */,
+				C1F000000000000000000012 /* QuestionView.swift */,
+				C1F000000000000000000013 /* OptionButton.swift */,
+				C1F000000000000000000014 /* FeedbackView.swift */,
+				C1F000000000000000000015 /* ResultsView.swift */,
+				C1F000000000000000000016 /* ForReviewView.swift */,
+				C1F000000000000000000017 /* ProgressBarView.swift */,
+			);
+			path = Quiz;
+			sourceTree = "<group>";
+		};
+		C1G000000000000000000009 /* Study */ = {
+			isa = PBXGroup;
+			children = (
+				C1F000000000000000000018 /* StudyGuideView.swift */,
+				C1F000000000000000000019 /* StudyHomeView.swift */,
+				C1F00000000000000000001A /* ObjectiveListView.swift */,
+				C1F00000000000000000001B /* TopicStudyView.swift */,
+				C1F00000000000000000001C /* NeedsReviewView.swift */,
+			);
+			path = Study;
+			sourceTree = "<group>";
+		};
+		C1G00000000000000000000B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C1P000000000000000000001 /* CertStudyHub.app */,
+				C1P000000000000000000002 /* CertStudyHub.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C1G00000000000000000000C /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				C1F00000000000000000001E /* ProgressManager.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C1T000000000000000000001 /* CertStudyHub */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1C000000000000000000003 /* Build configuration list for PBXNativeTarget "CertStudyHub" */;
+			buildPhases = (
+				C1S000000000000000000001 /* Sources */,
+				C1W000000000000000000001 /* Frameworks */,
+				C1R000000000000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CertStudyHub;
+			productName = CertStudyHub;
+			productReference = C1P000000000000000000001 /* CertStudyHub.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C1T000000000000000000002 /* CertStudyHub-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1C000000000000000000006 /* Build configuration list for PBXNativeTarget "CertStudyHub-macOS" */;
+			buildPhases = (
+				C1S000000000000000000002 /* Sources */,
+				C1W000000000000000000002 /* Frameworks */,
+				C1R000000000000000000002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "CertStudyHub-macOS";
+			productName = CertStudyHub;
+			productReference = C1P000000000000000000002 /* CertStudyHub.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C1X000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					C1T000000000000000000001 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					C1T000000000000000000002 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+				};
+			};
+			buildConfigurationList = C1C000000000000000000001 /* Build configuration list for PBXProject "CertStudyHub" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C1G000000000000000000001;
+			productRefGroup = C1G00000000000000000000B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C1T000000000000000000001 /* CertStudyHub */,
+				C1T000000000000000000002 /* CertStudyHub-macOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C1R000000000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C10000000000000000000039 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1R000000000000000000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1000000000000000000003A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C1S000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C10000000000000000000001 /* CertStudyHubApp.swift in Sources */,
+				C10000000000000000000003 /* CertPickerView.swift in Sources */,
+				C10000000000000000000005 /* CertHomeView.swift in Sources */,
+				C10000000000000000000007 /* Question.swift in Sources */,
+				C10000000000000000000009 /* StudyModels.swift in Sources */,
+				C1000000000000000000000B /* CertConfig.swift in Sources */,
+				C1000000000000000000000D /* CertCatalog.swift in Sources */,
+				C1000000000000000000000F /* AgentforceQuestionBank.swift in Sources */,
+				C10000000000000000000011 /* AgentforceStudyBank.swift in Sources */,
+				C10000000000000000000013 /* DataCloud360QuestionBank.swift in Sources */,
+				C10000000000000000000015 /* DataCloud360StudyBank.swift in Sources */,
+				C10000000000000000000017 /* QuizViewModel.swift in Sources */,
+				C10000000000000000000019 /* StudyViewModel.swift in Sources */,
+				C1000000000000000000001B /* CopyHelper.swift in Sources */,
+				C1000000000000000000001D /* PlatformColors.swift in Sources */,
+				C1000000000000000000001F /* QuizView.swift in Sources */,
+				C10000000000000000000021 /* StartView.swift in Sources */,
+				C10000000000000000000023 /* QuestionView.swift in Sources */,
+				C10000000000000000000025 /* OptionButton.swift in Sources */,
+				C10000000000000000000027 /* FeedbackView.swift in Sources */,
+				C10000000000000000000029 /* ResultsView.swift in Sources */,
+				C1000000000000000000002B /* ForReviewView.swift in Sources */,
+				C1000000000000000000002D /* ProgressBarView.swift in Sources */,
+				C1000000000000000000002F /* StudyGuideView.swift in Sources */,
+				C10000000000000000000031 /* StudyHomeView.swift in Sources */,
+				C10000000000000000000033 /* ObjectiveListView.swift in Sources */,
+				C10000000000000000000035 /* TopicStudyView.swift in Sources */,
+				C10000000000000000000037 /* NeedsReviewView.swift in Sources */,
+				C1000000000000000000003B /* ProgressManager.swift in Sources */,
+				C1000000000000000000003D /* ProgressExportView.swift in Sources */,
+				C10000000000000000000041 /* PD1StudyBank.swift in Sources */,
+				C10000000000000000000043 /* PD1QuestionBank.swift in Sources */,
+				C10000000000000000000045 /* AppBuilderStudyBank.swift in Sources */,
+				C10000000000000000000047 /* AppBuilderQuestionBank.swift in Sources */,
+				C10000000000000000000049 /* PDLDAStudyBank.swift in Sources */,
+				C1000000000000000000004B /* PDLDAQuestionBank.swift in Sources */,
+				C1000000000000000000004D /* AgentOpsQuestionBank.swift in Sources */,
+				C1000000000000000000004F /* AgentOpsStudyBank.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1S000000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C10000000000000000000002 /* CertStudyHubApp.swift in Sources */,
+				C10000000000000000000004 /* CertPickerView.swift in Sources */,
+				C10000000000000000000006 /* CertHomeView.swift in Sources */,
+				C10000000000000000000008 /* Question.swift in Sources */,
+				C1000000000000000000000A /* StudyModels.swift in Sources */,
+				C1000000000000000000000C /* CertConfig.swift in Sources */,
+				C1000000000000000000000E /* CertCatalog.swift in Sources */,
+				C10000000000000000000010 /* AgentforceQuestionBank.swift in Sources */,
+				C10000000000000000000012 /* AgentforceStudyBank.swift in Sources */,
+				C10000000000000000000014 /* DataCloud360QuestionBank.swift in Sources */,
+				C10000000000000000000016 /* DataCloud360StudyBank.swift in Sources */,
+				C10000000000000000000018 /* QuizViewModel.swift in Sources */,
+				C1000000000000000000001A /* StudyViewModel.swift in Sources */,
+				C1000000000000000000001C /* CopyHelper.swift in Sources */,
+				C1000000000000000000001E /* PlatformColors.swift in Sources */,
+				C10000000000000000000020 /* QuizView.swift in Sources */,
+				C10000000000000000000022 /* StartView.swift in Sources */,
+				C10000000000000000000024 /* QuestionView.swift in Sources */,
+				C10000000000000000000026 /* OptionButton.swift in Sources */,
+				C10000000000000000000028 /* FeedbackView.swift in Sources */,
+				C1000000000000000000002A /* ResultsView.swift in Sources */,
+				C1000000000000000000002C /* ForReviewView.swift in Sources */,
+				C1000000000000000000002E /* ProgressBarView.swift in Sources */,
+				C10000000000000000000030 /* StudyGuideView.swift in Sources */,
+				C10000000000000000000032 /* StudyHomeView.swift in Sources */,
+				C10000000000000000000034 /* ObjectiveListView.swift in Sources */,
+				C10000000000000000000036 /* TopicStudyView.swift in Sources */,
+				C10000000000000000000038 /* NeedsReviewView.swift in Sources */,
+				C1000000000000000000003C /* ProgressManager.swift in Sources */,
+				C1000000000000000000003E /* ProgressExportView.swift in Sources */,
+				C10000000000000000000042 /* PD1StudyBank.swift in Sources */,
+				C10000000000000000000044 /* PD1QuestionBank.swift in Sources */,
+				C10000000000000000000046 /* AppBuilderStudyBank.swift in Sources */,
+				C10000000000000000000048 /* AppBuilderQuestionBank.swift in Sources */,
+				C1000000000000000000004A /* PDLDAStudyBank.swift in Sources */,
+				C1000000000000000000004C /* PDLDAQuestionBank.swift in Sources */,
+				C1000000000000000000004E /* AgentOpsQuestionBank.swift in Sources */,
+				C10000000000000000000050 /* AgentOpsStudyBank.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C1D000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		C1D000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		C1D000000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QZSN2569D9;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.certstudyhub.app;
+				PRODUCT_NAME = CertStudyHub;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C1D000000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QZSN2569D9;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.certstudyhub.app;
+				PRODUCT_NAME = CertStudyHub;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C1D000000000000000000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.certstudyhub.app;
+				PRODUCT_NAME = CertStudyHub;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C1D000000000000000000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.certstudyhub.app;
+				PRODUCT_NAME = CertStudyHub;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C1C000000000000000000001 /* Build configuration list for PBXProject "CertStudyHub" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1D000000000000000000001 /* Debug */,
+				C1D000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1C000000000000000000003 /* Build configuration list for PBXNativeTarget "CertStudyHub" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1D000000000000000000003 /* Debug */,
+				C1D000000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1C000000000000000000006 /* Build configuration list for PBXNativeTarget "CertStudyHub-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1D000000000000000000005 /* Debug */,
+				C1D000000000000000000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C1X000000000000000000001 /* Project object */;
+}
