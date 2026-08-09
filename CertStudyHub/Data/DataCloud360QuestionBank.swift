@@ -12,11 +12,11 @@ enum DataCloud360QuestionBank {
         ),
         Question(
             id: "2",
-            question: "What are the five core capabilities of Data Cloud? Choose five.",
-            options: [("A", "Connect"), ("B", "Harmonize"), ("C", "Unify"), ("D", "Analyze and Predict"), ("E", "Act")],
+            question: "What are the five core capabilities of Data 360? Choose five.",
+            options: [("A", "Connect"), ("B", "Harmonize"), ("C", "Unify"), ("D", "Analyze and Predict"), ("E", "Act"), ("F", "Journey Orchestration"), ("G", "Message Delivery")],
             questionType: .multiSelect,
             correctIndices: [0, 1, 2, 3, 4],
-            explanation: "These five capabilities represent the complete end-to-end lifecycle of data in Data Cloud. Connect brings data in from external sources. Harmonize cleans and maps it to a standard data model. Unify resolves customer identities across sources into a single profile. Analyze and Predict enables insights, segmentation, and AI/ML predictions using tools like Model Builder, Einstein, and external platforms such as Amazon SageMaker, Databricks, and Google Vertex AI. Act pushes that unified, enriched data out to any cloud or application to drive real business outcomes. Every Data Cloud implementation follows this flow."
+            explanation: "These five capabilities represent the complete end-to-end lifecycle of data in Data Cloud. Connect brings data in from external sources. Harmonize cleans and maps it to a standard data model. Unify resolves customer identities across sources into a single profile. Analyze and Predict enables insights, segmentation, and AI/ML predictions using tools like Model Builder, Einstein, and external platforms such as Amazon SageMaker, Databricks, and Google Vertex AI. Act pushes that unified, enriched data out to any cloud or application to drive real business outcomes. Journey Orchestration and Message Delivery are capabilities of Marketing Cloud Engagement, not Data Cloud."
         ),
         Question(
             id: "3",
