@@ -56,7 +56,12 @@
   };
 
   function getSectionIcon(iconName) {
-    return iconMap[iconName] || '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+    if (iconMap[iconName]) return iconMap[iconName];
+    // If it's an emoji (not an SF Symbol name), render as text span
+    if (iconName && !/^[a-z]/.test(iconName)) {
+      return '<span style="font-size:20px;line-height:1">' + iconName + '</span>';
+    }
+    return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
   }
 
   // ── Utility Functions ─────────────────────────────────────
