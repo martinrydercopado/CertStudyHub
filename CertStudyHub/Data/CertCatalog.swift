@@ -4,8 +4,10 @@ enum CertCatalog {
     static let all: [CertConfig] = [
         agentforce,
         dataCloud360,
+        businessAnalyst,
         platformDev1,
         platformAppBuilder,
+        platformIntegrationArchitect,
         pdlda,
         agentOps,
         successArchitect
@@ -59,6 +61,30 @@ enum CertCatalog {
         storageKeyPrefix: "dc360"
     )
 
+    static let businessAnalyst = CertConfig(
+        id: "ba",
+        name: "Business Analyst",
+        shortName: "BA",
+        icon: "chart.bar.doc.horizontal.fill",
+        primaryColor: Color(red: 0.20, green: 0.60, blue: 0.86),
+        secondaryColor: .cyan,
+        headerGradient: [
+            Color(red: 0.10, green: 0.35, blue: 0.58),
+            Color(red: 0.12, green: 0.40, blue: 0.62),
+            Color(red: 0.14, green: 0.45, blue: 0.66)
+        ],
+        passingScore: 72,
+        quizLengths: [
+            QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
+            QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
+            QuizLength(id: 60, label: "60 Questions", icon: "trophy.fill", subtitle: "Exam Simulation", duration: "~30 min"),
+            QuizLength(id: 148, label: "All 148 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~74 min")
+        ],
+        questions: BAQuestionBank.all,
+        studySections: BAStudyBank.sections,
+        storageKeyPrefix: "ba"
+    )
+
     static let platformDev1 = CertConfig(
         id: "pd1",
         name: "Platform Developer I",
@@ -105,6 +131,30 @@ enum CertCatalog {
         questions: AppBuilderQuestionBank.all,
         studySections: AppBuilderStudyBank.sections,
         storageKeyPrefix: "appbuilder"
+    )
+
+    static let platformIntegrationArchitect = CertConfig(
+        id: "pia",
+        name: "Platform Integration Architect",
+        shortName: "PIA",
+        icon: "point.3.connected.trianglepath.dotted",
+        primaryColor: Color(red: 0.17, green: 0.63, blue: 0.45),
+        secondaryColor: .mint,
+        headerGradient: [
+            Color(red: 0.08, green: 0.38, blue: 0.28),
+            Color(red: 0.10, green: 0.42, blue: 0.32),
+            Color(red: 0.12, green: 0.46, blue: 0.36)
+        ],
+        passingScore: 62,
+        quizLengths: [
+            QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
+            QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
+            QuizLength(id: 60, label: "60 Questions", icon: "trophy.fill", subtitle: "Exam Simulation", duration: "~30 min"),
+            QuizLength(id: 154, label: "All 154 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~77 min")
+        ],
+        questions: PIAQuestionBank.all,
+        studySections: PIAStudyBank.sections,
+        storageKeyPrefix: "pia"
     )
 
     static let pdlda = CertConfig(
