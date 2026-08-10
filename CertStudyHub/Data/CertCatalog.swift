@@ -7,7 +7,8 @@ enum CertCatalog {
         platformDev1,
         platformAppBuilder,
         pdlda,
-        agentOps
+        agentOps,
+        successArchitect
     ]
 
     static let agentforce = CertConfig(
@@ -153,5 +154,28 @@ enum CertCatalog {
         storageKeyPrefix: "agentops",
         isBonusTopic: true,
         subtitle: "Bonus Topic — Not an official Salesforce certification"
+    )
+
+    static let successArchitect = CertConfig(
+        id: "successarchitect",
+        name: "Success Architect Scenarios",
+        shortName: "SA Scenarios",
+        icon: "person.badge.shield.checkmark.fill",
+        primaryColor: Color(red: 0.60, green: 0.20, blue: 0.20),
+        secondaryColor: Color(red: 0.80, green: 0.30, blue: 0.30),
+        headerGradient: [
+            Color(red: 0.45, green: 0.12, blue: 0.12),
+            Color(red: 0.50, green: 0.16, blue: 0.14),
+            Color(red: 0.55, green: 0.20, blue: 0.16)
+        ],
+        passingScore: 70,
+        quizLengths: [
+            QuizLength(id: 45, label: "Agentforce", icon: "brain.head.profile.fill", subtitle: "45 Scenario Questions", duration: "~25 min", questionIDRange: 1...45)
+        ],
+        questions: SuccessArchitectAgentforceQuestionBank.all,
+        studySections: [],
+        storageKeyPrefix: "successarchitect",
+        isBonusTopic: true,
+        subtitle: "Bonus Track — Real-world scenario practice"
     )
 }
