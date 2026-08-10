@@ -8,6 +8,29 @@ struct QuizView: View {
         VStack(spacing: 0) {
             // Header
             VStack(spacing: 4) {
+                // Back to quiz picker row
+                if viewModel.currentScreen == .quiz || viewModel.currentScreen == .results {
+                    HStack {
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                viewModel.returnToStart()
+                            }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "chevron.left")
+                                    .font(.system(size: 12, weight: .semibold))
+                                Text("Quiz Menu")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                            }
+                            .foregroundStyle(.white.opacity(0.8))
+                        }
+                        Spacer()
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.top, 6)
+                }
+
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(certConfig.name)
