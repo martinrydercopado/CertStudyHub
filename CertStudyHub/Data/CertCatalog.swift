@@ -3,14 +3,14 @@ import SwiftUI
 enum CertCatalog {
     static let all: [CertConfig] = [
         agentforce,
-        dataCloud360,
-        businessAnalyst,
-        platformDev1,
-        platformAppBuilder,
-        platformIntegrationArchitect,
-        pdlda,
         agentOps,
-        successArchitect
+        dataCloud360,
+        successArchitect,
+        businessAnalyst,
+        pdlda,
+        platformAppBuilder,
+        platformDev1,
+        platformIntegrationArchitect
     ]
 
     static let agentforce = CertConfig(
