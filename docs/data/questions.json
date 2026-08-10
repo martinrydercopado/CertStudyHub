@@ -28018,7 +28018,7 @@
     },
     {
       "id": "29",
-      "question": "M\\&A driving integration choice Following an acquisition, the parent company must rapidly connect the acquired company's separate CRM and ERP systems to its own Salesforce org within a tight 90-day integration window, with the acquired systems likely to be decommissioned within a year. What should most influence the integration solution choice?",
+      "question": "Following an acquisition, the parent company must rapidly connect the acquired company's separate CRM and ERP systems to its own Salesforce org within a tight 90-day integration window, with the acquired systems likely to be decommissioned within a year. What should most influence the integration solution choice?",
       "options": [
         {
           "letter": "A",
