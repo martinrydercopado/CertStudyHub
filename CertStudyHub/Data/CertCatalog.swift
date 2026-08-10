@@ -171,7 +171,7 @@ enum CertCatalog {
         passingScore: 70,
         quizLengths: [
             QuizLength(id: 45, label: "Agentforce", icon: "brain.head.profile.fill", subtitle: "45 Scenario Questions", duration: "~25 min", questionIDRange: 1...45),
-            QuizLength(id: 90, label: "Data 360", icon: "cloud.fill", subtitle: "45 Scenario Questions", duration: "~25 min", questionIDRange: 46...90)
+            QuizLength(id: 91, label: "Data 360", icon: "cloud.fill", subtitle: "46 Scenario Questions", duration: "~25 min", questionIDRange: 46...91)
         ],
         questions: SuccessArchitectAgentforceQuestionBank.all + SuccessArchitectData360QuestionBank.all,
         studySections: [],
