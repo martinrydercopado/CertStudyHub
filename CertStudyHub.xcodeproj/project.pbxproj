@@ -85,6 +85,10 @@
 		C1000000000000000000004E /* AgentOpsQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000026 /* AgentOpsQuestionBank.swift */; };
 		C1000000000000000000004F /* AgentOpsStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000027 /* AgentOpsStudyBank.swift */; };
 		C10000000000000000000050 /* AgentOpsStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000027 /* AgentOpsStudyBank.swift */; };
+		C10000000000000000000051 /* SuccessArchitectAgentforceQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000028 /* SuccessArchitectAgentforceQuestionBank.swift */; };
+		C10000000000000000000052 /* SuccessArchitectAgentforceQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000028 /* SuccessArchitectAgentforceQuestionBank.swift */; };
+		C10000000000000000000053 /* SuccessArchitectData360QuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000029 /* SuccessArchitectData360QuestionBank.swift */; };
+		C10000000000000000000054 /* SuccessArchitectData360QuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000029 /* SuccessArchitectData360QuestionBank.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -127,6 +131,8 @@
 		C1F000000000000000000025 /* PDLDAQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDLDAQuestionBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000026 /* AgentOpsQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentOpsQuestionBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000027 /* AgentOpsStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentOpsStudyBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000028 /* SuccessArchitectAgentforceQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessArchitectAgentforceQuestionBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000029 /* SuccessArchitectData360QuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessArchitectData360QuestionBank.swift; sourceTree = "<group>"; };
 		C1P000000000000000000001 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1P000000000000000000002 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -200,6 +206,8 @@
 				C1F000000000000000000025 /* PDLDAQuestionBank.swift */,
 				C1F000000000000000000026 /* AgentOpsQuestionBank.swift */,
 				C1F000000000000000000027 /* AgentOpsStudyBank.swift */,
+				C1F000000000000000000028 /* SuccessArchitectAgentforceQuestionBank.swift */,
+				C1F000000000000000000029 /* SuccessArchitectData360QuestionBank.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -412,6 +420,8 @@
 				C1000000000000000000004B /* PDLDAQuestionBank.swift in Sources */,
 				C1000000000000000000004D /* AgentOpsQuestionBank.swift in Sources */,
 				C1000000000000000000004F /* AgentOpsStudyBank.swift in Sources */,
+				C10000000000000000000051 /* SuccessArchitectAgentforceQuestionBank.swift in Sources */,
+				C10000000000000000000053 /* SuccessArchitectData360QuestionBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,6 +467,8 @@
 				C1000000000000000000004C /* PDLDAQuestionBank.swift in Sources */,
 				C1000000000000000000004E /* AgentOpsQuestionBank.swift in Sources */,
 				C10000000000000000000050 /* AgentOpsStudyBank.swift in Sources */,
+				C10000000000000000000052 /* SuccessArchitectAgentforceQuestionBank.swift in Sources */,
+				C10000000000000000000054 /* SuccessArchitectData360QuestionBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
