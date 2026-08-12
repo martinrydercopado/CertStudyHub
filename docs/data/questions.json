@@ -21369,9 +21369,9 @@
       ],
       "questionType": "single-select",
       "correctIndices": [
-        3
+        2
       ],
-      "explanation": "Data 360 supports configuring reconciliation rules at the attribute (or attribute-group) level, each with its own source-priority ordering — this lets different fields defer to different \"winning\" source systems, exactly matching the customer's requirement.\n\n* A is a fabricated platform limitation — per-field/attribute-group reconciliation rules with distinct source priority are a supported, standard capability.  \n* B ignores that \"Most Recently Updated\" is only one of several reconciliation strategies, and using it universally can pull stale or wrong data for fields where source system matters more than recency.  \n* C is the correct approach, not a wrong answer here.\n\n---",
+      "explanation": "Data 360 supports configuring reconciliation rules at the attribute (or attribute-group) level, each with its own source-priority ordering — this lets different fields defer to different \"winning\" source systems, exactly matching the customer's requirement.\n\n* A is a fabricated platform limitation — per-field/attribute-group reconciliation rules with distinct source priority are a supported, standard capability.\n* B ignores that \"Most Recently Updated\" is only one of several reconciliation strategies, and using it universally can pull stale or wrong data for fields where source system matters more than recency.\n* D invents an unnecessary workaround using Data Actions and custom Apex; reconciliation rules can be scoped by field/attribute group natively.",
       "requiredSelections": 1
     },
     {
@@ -21688,7 +21688,7 @@
         1,
         3
       ],
-      "explanation": "(Note: E is also a reasonable real-world consideration per the source case, but A and C are the two areas an architect can directly investigate and act on.) Since the ruleset configuration itself is identical and volume is ruled out, the most actionable differences are in the underlying data model mapping and the quality/completeness of the identifiers being matched.\n\n* C invents a nonexistent storage-based IR throttling mechanism.  \n* E fabricates an edition-gating constraint; Identity Resolution isn't restricted by Salesforce CRM Edition in this way.  \n* A invents an irrelevant dependency on Chatter groups that has no basis in how Identity Resolution processes records.",
+      "explanation": "(Note: F is also a reasonable real-world consideration per the source case, but B and D are the two areas an architect can directly investigate and act on.) Since the ruleset configuration itself is identical and volume is ruled out, the most actionable differences are in the underlying data model mapping and the quality/completeness of the identifiers being matched.\n\n* C invents a nonexistent storage-based IR throttling mechanism.  \n* E fabricates an edition-gating constraint; Identity Resolution isn't restricted by Salesforce CRM Edition in this way.  \n* A invents an irrelevant dependency on Chatter groups that has no basis in how Identity Resolution processes records.",
       "requiredSelections": 2
     },
     {
@@ -21918,10 +21918,10 @@
       ],
       "questionType": "multi-select",
       "correctIndices": [
-        0,
-        2
+        2,
+        5
       ],
-      "explanation": "A Data Action with a trigger condition tied to the Calculated Insight is the mechanism that detects the flagged state, and a Flow/Agentforce action subscribed to that Data Action's outbound event is what actually fires the Next Best Action — together they form the real-time trigger-to-action chain.\n\n* D fails because hourly batch scheduling is not real-time and defeats the stated \"near-real-time\" requirement — it's a right-outcome/wrong-mechanism trap.  \n* E alone doesn't trigger anything; it only improves data freshness upstream of the CI, so it doesn't satisfy the triggering requirement by itself.  \n* B misapplies Einstein Prediction Builder, which operates on DMOs/CRM data for scoring, not as a real-time trigger mechanism against raw DLOs.  \n* A is a scope-limit trap: segment refresh scheduling is still batch-based, and segments aren't designed as the sole real-time trigger for individual customer events.",
+      "explanation": "A Data Action with a trigger condition tied to the Calculated Insight (C) is the mechanism that detects the flagged state, and a Flow/Agentforce action subscribed to that Data Action's outbound event (F) is what actually fires the Next Best Action — together they form the real-time trigger-to-action chain.\n\n* D fails because hourly batch scheduling is not real-time and defeats the stated \"near-real-time\" requirement — it's a right-outcome/wrong-mechanism trap.\n* E alone doesn't trigger anything; it only improves data freshness upstream of the CI, so it doesn't satisfy the triggering requirement by itself.\n* B misapplies Einstein Prediction Builder, which operates on DMOs/CRM data for scoring, not as a real-time trigger mechanism against raw DLOs.\n* A is a scope-limit trap: segment refresh scheduling is still batch-based, and segments aren't designed as the sole real-time trigger for individual customer events.",
       "requiredSelections": 2
     },
     {
@@ -22011,10 +22011,10 @@
       ],
       "questionType": "multi-select",
       "correctIndices": [
-        4,
-        5
+        3,
+        4
       ],
-      "explanation": "The documented root cause was write-lock contention from concurrent jobs plus data skew on the shared DMO; staggering/serializing the concurrent writes and fixing the underlying identifier skew both directly address that mechanism.\n\n* C is a padded, ineffective distractor — segment size was explicitly ruled out as the cause here.  \n* F misunderstands activation targets; the Ingestion API is for inbound ingestion, not an alternative activation destination.  \n* A would likely worsen contention by increasing the frequency of concurrent writes against the same shared DMO.  \n* B is an invalid-mechanism trap: Data Graphs are a query/serving layer over DMOs, not a replacement for a curated DMO.",
+      "explanation": "The documented root cause was write-lock contention from concurrent jobs plus data skew on the shared DMO; staggering/serializing the concurrent writes (D) and fixing the underlying identifier skew (E) both directly address that mechanism.\n\n* C is a padded, ineffective distractor — segment size was explicitly ruled out as the cause here.\n* F misunderstands activation targets; the Ingestion API is for inbound ingestion, not an alternative activation destination.\n* A would likely worsen contention by increasing the frequency of concurrent writes against the same shared DMO.\n* B is an invalid-mechanism trap: Data Graphs are a query/serving layer over DMOs, not a replacement for a curated DMO.",
       "requiredSelections": 2
     },
     {
@@ -22076,10 +22076,10 @@
       ],
       "questionType": "multi-select",
       "correctIndices": [
-        0,
-        4
+        1,
+        3
       ],
-      "explanation": "Consent should be modeled at the Contact Point/channel level and unified across sources, then actively used as suppression/exclusion criteria in segmentation before activation — this ensures unconsented individuals are never sent downstream.\n\n* C misapplies Data Spaces, a tenant/regional data-partitioning mechanism, as a substitute for consent enforcement.  \n* E is a governance risk trap: deferring consent enforcement to the destination platform means unconsented data has already left Data 360.  \n* F is an adjacent-product trap: the Einstein Trust Layer governs AI/LLM data usage and grounding, not marketing consent management.  \n* A oversimplifies a real requirement — channel-specific consent (e.g., opted into email but not SMS) is standard and a single flag can't represent it.\n\n*Study set generated for based on the official Data Cloud (Data 360) Consultant exam guide's weighted sections: Data Modeling & Data Streams, Identity Resolution, Segmentation & Activation, Data Governance & Security, Data Actions/AI, and Calculated Insights. August 2026.*",
+      "explanation": "Consent should be modeled at the Contact Point/channel level and unified across sources (B), then actively used as suppression/exclusion criteria in segmentation before activation (D) — this ensures unconsented individuals are never sent downstream.\n\n* C misapplies Data Spaces, a tenant/regional data-partitioning mechanism, as a substitute for consent enforcement.\n* E is a governance risk trap: deferring consent enforcement to the destination platform means unconsented data has already left Data 360.\n* F is an adjacent-product trap: the Einstein Trust Layer governs AI/LLM data usage and grounding, not marketing consent management.\n* A oversimplifies a real requirement — channel-specific consent (e.g., opted into email but not SMS) is standard and a single flag can't represent it.",
       "requiredSelections": 2
     },
     {
