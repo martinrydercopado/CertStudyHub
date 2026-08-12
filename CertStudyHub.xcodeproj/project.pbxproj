@@ -89,14 +89,14 @@
 		C10000000000000000000052 /* SuccessArchitectAgentforceQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000028 /* SuccessArchitectAgentforceQuestionBank.swift */; };
 		C10000000000000000000053 /* SuccessArchitectData360QuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000029 /* SuccessArchitectData360QuestionBank.swift */; };
 		C10000000000000000000054 /* SuccessArchitectData360QuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000029 /* SuccessArchitectData360QuestionBank.swift */; };
-		C10000000000000000000055 /* BAQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002A /* BAQuestionBank.swift */; };
-		C10000000000000000000056 /* BAQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002A /* BAQuestionBank.swift */; };
-		C10000000000000000000057 /* BAStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002B /* BAStudyBank.swift */; };
-		C10000000000000000000058 /* BAStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002B /* BAStudyBank.swift */; };
-		C10000000000000000000059 /* PIAQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002C /* PIAQuestionBank.swift */; };
-		C1000000000000000000005A /* PIAQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002C /* PIAQuestionBank.swift */; };
-		C1000000000000000000005B /* PIAStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002D /* PIAStudyBank.swift */; };
-		C1000000000000000000005C /* PIAStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002D /* PIAStudyBank.swift */; };
+		C10000000000000000000055 /* PIAStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002A /* PIAStudyBank.swift */; };
+		C10000000000000000000056 /* PIAStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002A /* PIAStudyBank.swift */; };
+		C10000000000000000000057 /* PIAQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002B /* PIAQuestionBank.swift */; };
+		C10000000000000000000058 /* PIAQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002B /* PIAQuestionBank.swift */; };
+		C10000000000000000000059 /* BAStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002C /* BAStudyBank.swift */; };
+		C1000000000000000000005A /* BAStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002C /* BAStudyBank.swift */; };
+		C1000000000000000000005B /* BAQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002D /* BAQuestionBank.swift */; };
+		C1000000000000000000005C /* BAQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000002D /* BAQuestionBank.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -141,10 +141,10 @@
 		C1F000000000000000000027 /* AgentOpsStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentOpsStudyBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000028 /* SuccessArchitectAgentforceQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessArchitectAgentforceQuestionBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000029 /* SuccessArchitectData360QuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessArchitectData360QuestionBank.swift; sourceTree = "<group>"; };
-		C1F00000000000000000002A /* BAQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BAQuestionBank.swift; sourceTree = "<group>"; };
-		C1F00000000000000000002B /* BAStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BAStudyBank.swift; sourceTree = "<group>"; };
-		C1F00000000000000000002C /* PIAQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PIAQuestionBank.swift; sourceTree = "<group>"; };
-		C1F00000000000000000002D /* PIAStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PIAStudyBank.swift; sourceTree = "<group>"; };
+		C1F00000000000000000002A /* PIAStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PIAStudyBank.swift; sourceTree = "<group>"; };
+		C1F00000000000000000002B /* PIAQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PIAQuestionBank.swift; sourceTree = "<group>"; };
+		C1F00000000000000000002C /* BAStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BAStudyBank.swift; sourceTree = "<group>"; };
+		C1F00000000000000000002D /* BAQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BAQuestionBank.swift; sourceTree = "<group>"; };
 		C1P000000000000000000001 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1P000000000000000000002 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -220,10 +220,10 @@
 				C1F000000000000000000027 /* AgentOpsStudyBank.swift */,
 				C1F000000000000000000028 /* SuccessArchitectAgentforceQuestionBank.swift */,
 				C1F000000000000000000029 /* SuccessArchitectData360QuestionBank.swift */,
-				C1F00000000000000000002A /* BAQuestionBank.swift */,
-				C1F00000000000000000002B /* BAStudyBank.swift */,
-				C1F00000000000000000002C /* PIAQuestionBank.swift */,
-				C1F00000000000000000002D /* PIAStudyBank.swift */,
+				C1F00000000000000000002A /* PIAStudyBank.swift */,
+				C1F00000000000000000002B /* PIAQuestionBank.swift */,
+				C1F00000000000000000002C /* BAStudyBank.swift */,
+				C1F00000000000000000002D /* BAQuestionBank.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -438,10 +438,10 @@
 				C1000000000000000000004F /* AgentOpsStudyBank.swift in Sources */,
 				C10000000000000000000051 /* SuccessArchitectAgentforceQuestionBank.swift in Sources */,
 				C10000000000000000000053 /* SuccessArchitectData360QuestionBank.swift in Sources */,
-				C10000000000000000000055 /* BAQuestionBank.swift in Sources */,
-				C10000000000000000000057 /* BAStudyBank.swift in Sources */,
-				C10000000000000000000059 /* PIAQuestionBank.swift in Sources */,
-				C1000000000000000000005B /* PIAStudyBank.swift in Sources */,
+				C10000000000000000000055 /* PIAStudyBank.swift in Sources */,
+				C10000000000000000000057 /* PIAQuestionBank.swift in Sources */,
+				C10000000000000000000059 /* BAStudyBank.swift in Sources */,
+				C1000000000000000000005B /* BAQuestionBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -489,10 +489,10 @@
 				C10000000000000000000050 /* AgentOpsStudyBank.swift in Sources */,
 				C10000000000000000000052 /* SuccessArchitectAgentforceQuestionBank.swift in Sources */,
 				C10000000000000000000054 /* SuccessArchitectData360QuestionBank.swift in Sources */,
-				C10000000000000000000056 /* BAQuestionBank.swift in Sources */,
-				C10000000000000000000058 /* BAStudyBank.swift in Sources */,
-				C1000000000000000000005A /* PIAQuestionBank.swift in Sources */,
-				C1000000000000000000005C /* PIAStudyBank.swift in Sources */,
+				C10000000000000000000056 /* PIAStudyBank.swift in Sources */,
+				C10000000000000000000058 /* PIAQuestionBank.swift in Sources */,
+				C1000000000000000000005A /* BAStudyBank.swift in Sources */,
+				C1000000000000000000005C /* BAQuestionBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
