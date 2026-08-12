@@ -24767,7 +24767,7 @@
         3,
         4
       ],
-      "explanation": "Role-based field-level security is a security requirement, and needing the system to be usable by staff with limited computer literacy is a usability requirement — both are standard non-functional requirement categories. B (scalability) concerns growth in volume/users, which isn't mentioned here. D (availability) concerns uptime, which isn't referenced. B is a functional concern (data validation logic), not a non-functional category.",
+      "explanation": "Role-based field-level security is a security requirement, and needing the system to be usable by staff with limited computer literacy is a usability requirement — both are standard non-functional requirement categories. C (scalability) concerns growth in volume/users, which isn't mentioned here. A (availability) concerns uptime, which isn't referenced. B is a functional concern (data validation logic), not a non-functional category.",
       "requiredSelections": 2
     },
     {
@@ -25278,9 +25278,9 @@
       ],
       "questionType": "single-select",
       "correctIndices": [
-        3
+        1
       ],
-      "explanation": "UPN's defining characteristic is layered decomposition capturing who/what/when/why/how at each level, which suits processes needing progressive drill-down — unlike a flat flowchart. B focuses on a superficial drawing-speed claim rather than UPN's actual structural benefit. A is factually wrong; UPN is a general business process notation, not IT-specific. C wrongly claims any notation removes the need for stakeholder validation.",
+      "explanation": "UPN's defining characteristic is layered decomposition capturing who/what/when/why/how at each level, which suits processes needing progressive drill-down — unlike a flat flowchart. C focuses on a superficial drawing-speed claim rather than UPN's actual structural benefit. A is factually wrong; UPN is a general business process notation, not IT-specific. D wrongly claims any notation removes the need for stakeholder validation.",
       "requiredSelections": 1
     },
     {
