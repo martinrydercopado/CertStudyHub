@@ -18183,7 +18183,7 @@
       "options": [
         {
           "letter": "A",
-          "text": "Always deploy the consuming org (Org"
+          "text": "Always deploy the consuming org (Org B) first, regardless of dependency direction, since consumers should always go first."
         },
         {
           "letter": "B",
@@ -18195,7 +18195,7 @@
         },
         {
           "letter": "D",
-          "text": "first, regardless of dependency direction, since consumers should always go first."
+          "text": "Deploy the provider org (Org A) first so its API contract is in place and stable before Org B's dependent changes go live, preventing a broken integration window."
         }
       ],
       "questionType": "single-select",
