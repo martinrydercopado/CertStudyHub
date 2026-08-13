@@ -189,11 +189,11 @@
         "questionIDRange": null
       },
       {
-        "id": 60,
-        "label": "All 60 Questions",
+        "id": 39,
+        "label": "All 39 Questions",
         "icon": "⭐",
         "subtitle": "Full Question Bank",
-        "duration": "~30 min",
+        "duration": "~20 min",
         "questionIDRange": null
       }
     ]
