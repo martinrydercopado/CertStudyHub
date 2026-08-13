@@ -375,7 +375,7 @@ function certOverviewTable() {
   const bonusShading = { fill: "FFF8F0", type: ShadingType.CLEAR };
 
   const certs = [
-    { name: "Agentforce AI Specialist", qs: "135", topics: "218 topics across 26 objectives", passing: "72%", bonus: false },
+    { name: "Agentforce Specialist", qs: "135", topics: "218 topics across 26 objectives", passing: "72%", bonus: false },
     { name: "Data 360 Consultant", qs: "212", topics: "167 topics across 18 objectives", passing: "62%", bonus: false },
     { name: "Platform Developer I", qs: "100", topics: "198 topics across 21 objectives", passing: "65%", bonus: false },
     { name: "Platform App Builder", qs: "100", topics: "361 topics across 24 objectives", passing: "63%", bonus: false },

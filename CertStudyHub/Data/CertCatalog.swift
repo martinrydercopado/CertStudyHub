@@ -5,6 +5,8 @@ enum CertCatalog {
         agentforce,
         agentOps,
         dataCloud360,
+        reasoningEngine,
+        rag,
         successArchitect,
         businessAnalyst,
         pdlda,
@@ -15,7 +17,7 @@ enum CertCatalog {
 
     static let agentforce = CertConfig(
         id: "agentforce",
-        name: "Agentforce AI Specialist",
+        name: "Agentforce Specialist",
         shortName: "Agentforce",
         icon: "brain.head.profile.fill",
         primaryColor: .indigo,
@@ -202,6 +204,57 @@ enum CertCatalog {
         questions: AgentOpsQuestionBank.all,
         studySections: AgentOpsStudyBank.sections,
         storageKeyPrefix: "agentops",
+        isBonusTopic: true,
+        subtitle: "Bonus Topic — Not an official Salesforce certification"
+    )
+
+    static let reasoningEngine = CertConfig(
+        id: "reasoningengine",
+        name: "Inside Daisy: The Agentforce Reasoning Engine",
+        shortName: "Daisy",
+        icon: "cpu.fill",
+        primaryColor: Color(red: 0.40, green: 0.20, blue: 0.60),
+        secondaryColor: .purple,
+        headerGradient: [
+            Color(red: 0.28, green: 0.10, blue: 0.48),
+            Color(red: 0.32, green: 0.14, blue: 0.52),
+            Color(red: 0.36, green: 0.18, blue: 0.56)
+        ],
+        passingScore: 70,
+        quizLengths: [
+            QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
+            QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
+            QuizLength(id: 60, label: "All 60 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~30 min")
+        ],
+        questions: ReasoningEngineQuestionBank.all,
+        studySections: ReasoningEngineStudyBank.sections,
+        storageKeyPrefix: "reasoningengine",
+        isBonusTopic: true,
+        subtitle: "Bonus Topic — Not an official Salesforce certification"
+    )
+
+    static let rag = CertConfig(
+        id: "rag",
+        name: "RAG, Agentforce & Data 360",
+        shortName: "RAG",
+        icon: "doc.text.magnifyingglass",
+        primaryColor: Color(red: 0.20, green: 0.45, blue: 0.70),
+        secondaryColor: .blue,
+        headerGradient: [
+            Color(red: 0.12, green: 0.30, blue: 0.52),
+            Color(red: 0.16, green: 0.34, blue: 0.56),
+            Color(red: 0.20, green: 0.38, blue: 0.60)
+        ],
+        passingScore: 70,
+        quizLengths: [
+            QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
+            QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
+            QuizLength(id: 60, label: "60 Questions", icon: "trophy.fill", subtitle: "Exam Simulation", duration: "~30 min"),
+            QuizLength(id: 72, label: "All 72 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~36 min")
+        ],
+        questions: RAGQuestionBank.all,
+        studySections: RAGStudyBank.sections,
+        storageKeyPrefix: "rag",
         isBonusTopic: true,
         subtitle: "Bonus Topic — Not an official Salesforce certification"
     )
