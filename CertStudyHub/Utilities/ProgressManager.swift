@@ -15,7 +15,7 @@ final class ProgressManager {
 
     // MARK: – Constants
     private static let firstLaunchKey   = "certStudyHub_firstLaunchDate"
-    private static let freeProvDays     = 7          // Apple free-account profile lifetime
+    private static let freeProvDays     = 6          // Apple free-account profile lifetime (conservative; profiles nominally say 7 days but expire ~6 days in practice)
 
     // MARK: – Published State
     private(set) var firstLaunchDate: Date?
@@ -58,8 +58,8 @@ final class ProgressManager {
         return max(0, remaining)
     }
 
-    var isExpiringSoon: Bool { daysRemaining <= 2 }
     var isExpired: Bool      { daysRemaining == 0 && hoursRemaining == 0 }
+    var isExpiringSoon: Bool { daysRemaining <= 2 || isExpired }
 
     private func evaluateExpiration() {
         showExpirationWarning = isExpiringSoon

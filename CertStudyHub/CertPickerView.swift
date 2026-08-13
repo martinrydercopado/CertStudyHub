@@ -14,14 +14,19 @@ struct CertPickerView: View {
             ScrollView {
                 VStack(spacing: 32) {
 
-                    // Expiration Warning Banner
+                    // Expiration Warning Banner (iOS only – free provisioning profiles expire; macOS apps do not)
+                    #if os(iOS)
                     if progressManager.isExpiringSoon {
                         Button { showBackup = true } label: {
                             HStack(spacing: 10) {
                                 Image(systemName: "exclamationmark.triangle.fill")
                                     .foregroundStyle(.white)
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text("App expires in \(progressManager.daysRemaining) day\(progressManager.daysRemaining == 1 ? "" : "s")")
+                                    Text(progressManager.isExpired
+                                         ? "App may have expired"
+                                         : progressManager.daysRemaining >= 1
+                                           ? "App expires in ~\(progressManager.daysRemaining) day\(progressManager.daysRemaining == 1 ? "" : "s")"
+                                           : "App expires in ~\(progressManager.hoursRemaining) hour\(progressManager.hoursRemaining == 1 ? "" : "s")")
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .foregroundStyle(.white)
@@ -46,6 +51,7 @@ struct CertPickerView: View {
                         }
                         .buttonStyle(.plain)
                     }
+                    #endif
 
                     // Header
                     VStack(spacing: 8) {
