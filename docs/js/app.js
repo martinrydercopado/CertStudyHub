@@ -462,9 +462,12 @@
           (topicCount > 0
             ? '<span class="cert-stat"><span class="cert-stat-icon">&#x1F4D6;</span> ' + topicCount + ' topics</span>'
             : '') +
-          '<span class="cert-stat">' +
-            '<span class="cert-stat-icon">&#x2705;</span> ' + cert.passingScore + '% to pass' +
-          '</span>' +
+          (!cert.isBonusTopic
+            ? '<span class="cert-stat"><span class="cert-stat-icon">&#x2705;</span> ' + cert.passingScore + '% to pass</span>'
+            : '') +
+          (cert.guideFile
+            ? '<span class="cert-stat cert-stat-guide"><span class="cert-stat-icon">&#x1F4D6;</span> Reference Guide</span>'
+            : '') +
         '</div>' +
         '</div>'
       );
@@ -1423,6 +1426,7 @@
       '.cert-card-subtitle { font-size: 13px; color: var(--text3); margin-bottom: 8px; }' +
       '.cert-card-stats { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 12px; }' +
       '.cert-stat { font-size: 13px; color: var(--text2); display: flex; align-items: center; gap: 4px; }' +
+      '.cert-stat-guide { color: var(--tint, #007AFF); font-weight: 500; }' +
       '.cert-stat-icon { font-size: 14px; }' +
 
       /* Cert Home */
