@@ -6,55 +6,55 @@
 
 ## Table of Contents
 
-1. [The Mental Model](#1-the-mental-model)  
-   - 1.1 What "Daisy" Is  
-   - 1.2 The Fundamental Split  
-   - 1.3 The Atlas Engine and the Agent Graph  
-2. [The Two-Phase Execution Engine](#2-the-two-phase-execution-engine)  
-   - 2.1 Phase 1: Deterministic Resolution  
-   - 2.2 Phase 2: LLM Reasoning  
-   - 2.3 Why This Split Is the Primary Diagnostic Tool  
-3. [The Complete Turn Anatomy](#3-the-complete-turn-anatomy)  
-   - 3.1 The Re-Resolution Loop: The Inner Heartbeat  
-   - 3.2 The Backward Arrow: FSM Retry Mechanics  
-   - 3.3 What the LLM Actually Does NOT See  
-4. [The Five Instruction Surfaces](#4-the-five-instruction-surfaces)  
-   - 4.1 Global System Instructions: The Persona Layer  
-   - 4.2 Subagent System Override: Full Replacement, Not Merge  
-   - 4.3 reasoning.instructions: Two Modes, One Critical Rule  
-   - 4.4 before\_reasoning: The Pre-Turn Gate  
-   - 4.5 after\_reasoning: The Post-Turn Gate  
-5. [Variables and State in the Reasoning Loop](#5-variables-and-state-in-the-reasoning-loop)  
-   - 5.1 Mutable vs. Linked Variables  
-   - 5.2 The Three Scope Zones  
-   - 5.3 The Silent Failure Zone  
-   - 5.4 Variable Persistence Across Subagents  
-   - 5.5 The setVariables Turn-End Trap  
-   - 5.6 The Three Input Binding Patterns  
-6. [Actions and the Reasoning Loop](#6-actions-and-the-reasoning-loop)  
-   - 6.1 Deterministic vs. LLM-Driven Invocation  
-   - 6.2 available when: Hard Filter, Not Soft Hint  
-   - 6.3 The Three Transition Mechanisms  
-   - 6.4 Handoff vs. Delegation  
-   - 6.5 The Zero-Hallucination Routing Pattern  
-7. [The Posture Spectrum](#7-the-posture-spectrum)  
-   - 7.1 Agentic, Mixed, and Scripted  
-   - 7.2 The Five Justifications for Determinism  
-   - 7.3 The Three Control Primitives  
-   - 7.4 The Minimal Instructions Principle  
-8. [The Einstein Trust Layer](#8-the-einstein-trust-layer)  
-   - 8.1 What It Is and When It Operates  
-   - 8.2 The Zero-Retention Policy  
-   - 8.3 Data Permissions and Content Screening  
-9. [Reasoning Constraints](#9-reasoning-constraints)  
-   - 9.1 The 3–4 Loop Iteration Limit  
-   - 9.2 The 10,000-Token Heuristic  
-10. [Reasoning Anti-Patterns](#10-reasoning-anti-patterns)  
+1. [The Mental Model](#1-the-mental-model)
+   - [1.1 What "Daisy" Is](#11-what-daisy-is)
+   - [1.2 The Fundamental Split](#12-the-fundamental-split)
+   - [1.3 The Atlas Engine and the Agent Graph](#13-the-atlas-engine-and-the-agent-graph)
+2. [The Two-Phase Execution Engine](#2-the-two-phase-execution-engine)
+   - [2.1 Phase 1: Deterministic Resolution](#21-phase-1-deterministic-resolution)
+   - [2.2 Phase 2: LLM Reasoning](#22-phase-2-llm-reasoning)
+   - [2.3 Why This Split Is the Primary Diagnostic Tool](#23-why-this-split-is-the-primary-diagnostic-tool)
+3. [The Complete Turn Anatomy](#3-the-complete-turn-anatomy)
+   - [3.1 The Re-Resolution Loop: The Inner Heartbeat](#31-the-re-resolution-loop-the-inner-heartbeat)
+   - [3.2 The Backward Arrow: FSM Retry Mechanics](#32-the-backward-arrow-fsm-retry-mechanics)
+   - [3.3 What the LLM Actually Does NOT See](#33-what-the-llm-actually-does-not-see)
+4. [The Five Instruction Surfaces](#4-the-five-instruction-surfaces)
+   - [4.1 Global System Instructions: The Persona Layer](#41-global-system-instructions-the-persona-layer)
+   - [4.2 Subagent System Override: Full Replacement, Not Merge](#42-subagent-system-override-full-replacement-not-merge)
+   - [4.3 reasoning.instructions: Two Modes, One Critical Rule](#43-reasoninginstructions-two-modes-one-critical-rule)
+   - [4.4 before_reasoning: The Pre-Turn Gate](#44-before_reasoning-the-pre-turn-gate)
+   - [4.5 after_reasoning: The Post-Turn Gate](#45-after_reasoning-the-post-turn-gate)
+5. [Variables and State in the Reasoning Loop](#5-variables-and-state-in-the-reasoning-loop)
+   - [5.1 Mutable vs. Linked Variables](#51-mutable-vs-linked-variables)
+   - [5.2 The Three Scope Zones](#52-the-three-scope-zones)
+   - [5.3 The Silent Failure Zone](#53-the-silent-failure-zone)
+   - [5.4 Variable Persistence Across Subagents](#54-variable-persistence-across-subagents)
+   - [5.5 The setVariables Turn-End Trap](#55-the-setvariables-turn-end-trap)
+   - [5.6 The Three Input Binding Patterns](#56-the-three-input-binding-patterns)
+6. [Actions and the Reasoning Loop](#6-actions-and-the-reasoning-loop)
+   - [6.1 Deterministic vs. LLM-Driven Invocation](#61-deterministic-vs-llm-driven-invocation)
+   - [6.2 available when: Hard Filter, Not Soft Hint](#62-available-when-hard-filter-not-soft-hint)
+   - [6.3 The Three Transition Mechanisms](#63-the-three-transition-mechanisms)
+   - [6.4 Handoff vs. Delegation](#64-handoff-vs-delegation)
+   - [6.5 The Zero-Hallucination Routing Pattern](#65-the-zero-hallucination-routing-pattern)
+7. [The Posture Spectrum](#7-the-posture-spectrum)
+   - [7.1 Agentic, Mixed, and Scripted](#71-agentic-mixed-and-scripted)
+   - [7.2 The Five Justifications for Determinism](#72-the-five-justifications-for-determinism)
+   - [7.3 The Three Control Primitives](#73-the-three-control-primitives)
+   - [7.4 The Minimal Instructions Principle](#74-the-minimal-instructions-principle)
+8. [The Einstein Trust Layer](#8-the-einstein-trust-layer)
+   - [8.1 What It Is and When It Operates](#81-what-it-is-and-when-it-operates)
+   - [8.2 The Zero-Retention Policy](#82-the-zero-retention-policy)
+   - [8.3 Data Permissions and Content Screening](#83-data-permissions-and-content-screening)
+9. [Reasoning Constraints](#9-reasoning-constraints)
+   - [9.1 The 3–4 Loop Iteration Limit](#91-the-34-loop-iteration-limit)
+   - [9.2 The 10,000-Token Heuristic](#92-the-10000-token-heuristic)
+10. [Reasoning Anti-Patterns](#10-reasoning-anti-patterns)
 11. [Terminology Reference](#11-terminology-reference)
 
 ---
 
-## 1\. The Mental Model
+## 1. The Mental Model
 
 ### Why This Matters Before Anything Else
 
@@ -70,8 +70,8 @@ Agentforce represents a fundamentally different design philosophy. The move from
 
 It is not a single large language model. It is a **hybrid execution environment** that combines three distinct layers:
 
-- **A deterministic resolver** — a compiler-like pass that evaluates your authored logic before any LLM is ever involved  
-- **An LLM reasoning loop** — where an underlying foundation model makes probabilistic decisions, but only within the constraints the resolver has already enforced  
+- **A deterministic resolver** — a compiler-like pass that evaluates your authored logic before any LLM is ever involved
+- **An LLM reasoning loop** — where an underlying foundation model makes probabilistic decisions, but only within the constraints the resolver has already enforced
 - **The Einstein Trust Layer** — a runtime security boundary that wraps every LLM call, enforcing data privacy, permission checks, and content safety
 
 Think of it this way. A pure LLM approach is like asking a very smart person to run your company with no rulebook, no access controls, and no audit trail. The Daisy hybrid approach gives that person a strict operating manual, controlled access to tools, and a security checkpoint on everything they send or receive. Every reasoning behavior, every bug, and every optimization in Agentforce traces back to the interaction between these three layers.
@@ -87,7 +87,7 @@ The most important concept in all of Agentforce is the clean division of respons
 **The deterministic layer handles everything that must always be controlled:**
 
 | Deterministic Layer (authored control) | LLM Layer (probabilistic judgment) |
-| :---- | :---- |
+|---|---|
 | if / else evaluation | Which action to call |
 | Variable injection | How to fill slot parameters |
 | run @actions.X execution | What to say to the user |
@@ -99,8 +99,8 @@ Here is the critical insight: **the LLM never sees raw AgentScript syntax.** It 
 
 Deterministic logic controls **what the agent knows**. The LLM controls **whether and how to act** on that knowledge.
 
-> **Scenario: Why This Split Matters in Practice**  
->   
+> **Scenario: Why This Split Matters in Practice**
+>
 > You are building a customer service agent for a bank. A customer asks to transfer $10,000 to an external account. In a pure LLM world, the model decides whether to execute this based on the prompt you wrote — a prompt the user might be able to argue or trick their way around. In Agentforce, the transfer action simply does not appear in the LLM's tool list until `@variables.is_verified == True`. The model cannot override this. It cannot be convinced otherwise. The deterministic layer made unauthorized invocation structurally impossible before the LLM was ever consulted.
 
 ---
@@ -119,7 +119,7 @@ Why two structures? The DAG guarantees determinism and order in the parts of you
 
 ---
 
-## 2\. The Two-Phase Execution Engine
+## 2. The Two-Phase Execution Engine
 
 ### Why Two Phases?
 
@@ -135,17 +135,23 @@ Every reasoning iteration — every single cycle of the engine — begins with P
 
 Phase 1 reads `reasoning.instructions: ->` from top to bottom and performs these six operations in sequence:
 
-**1\. Condition Evaluation** Evaluates `if / else if / else` conditions against current variable values. Only the matching branch's content proceeds. Non-matching branches are discarded entirely — they do not exist as far as the LLM is concerned.
+**1. Condition Evaluation**
+Evaluates `if / else if / else` conditions against current variable values. Only the matching branch's content proceeds. Non-matching branches are discarded entirely — they do not exist as far as the LLM is concerned.
 
-**2\. Synchronous Action Execution** Executes `run @actions.X` calls synchronously. The Apex class or Flow runs immediately, and its outputs are available for the next steps within the same Phase 1 pass.
+**2. Synchronous Action Execution**
+Executes `run @actions.X` calls synchronously. The Apex class or Flow runs immediately, and its outputs are available for the next steps within the same Phase 1 pass.
 
-**3\. Variable Capture** Executes `set @variables.X` statements, updating variable state immediately. These updated values are available to all subsequent steps in the same Phase 1 pass.
+**3. Variable Capture**
+Executes `set @variables.X` statements, updating variable state immediately. These updated values are available to all subsequent steps in the same Phase 1 pass.
 
-**4\. Token Injection** Replaces `{!@variables.X}` tokens with their current values in the pipe text. This is how the LLM ends up with concrete values — a customer's name, an order status, a tier level — injected directly into its instruction text.
+**4. Token Injection**
+Replaces `{!@variables.X}` tokens with their current values in the pipe text. This is how the LLM ends up with concrete values — a customer's name, an order status, a tier level — injected directly into its instruction text.
 
-**5\. Tool Schema Filtering** Evaluates `available when` guards on every action in the `reasoning.actions` block. Actions that fail their guard are completely removed from the tool schema. The LLM has zero awareness they exist.
+**5. Tool Schema Filtering**
+Evaluates `available when` guards on every action in the `reasoning.actions` block. Actions that fail their guard are completely removed from the tool schema. The LLM has zero awareness they exist.
 
-**6\. Immediate Transition** Fires `transition to` immediately if one is reached. The current prompt is discarded, and execution starts fresh in the target subagent. The LLM is never called for this iteration.
+**6. Immediate Transition**
+Fires `transition to` immediately if one is reached. The current prompt is discarded, and execution starts fresh in the target subagent. The LLM is never called for this iteration.
 
 **The output of Phase 1 is two things:** a resolved prompt string (only the pipe lines matching current state) and a filtered tool schema (only the actions where `available when` evaluated to True). Everything Phase 2 receives has already been through this filter.
 
@@ -157,20 +163,19 @@ Phase 2 is where probability enters. After Phase 1 produces its resolved output,
 
 **The LLM receives exactly four things:**
 
-1. **One system prompt** — either the global `system.instructions` or the subagent-level system override. Never both merged. Never blended. Only one is active.  
-2. **Full conversation history** — every prior turn in this session.  
-3. **Resolved reasoning.instructions** — only the pipe text matching current variable state. No conditionals. No `run` blocks. No `set` statements. Just plain, resolved English.  
-4. **Tool schemas** — JSON function schemas for only the actions that passed their `available when` guard during Phase 1\.
+1. **One system prompt** — either the global `system.instructions` or the subagent-level system override. Never both merged. Never blended. Only one is active.
+2. **Full conversation history** — every prior turn in this session.
+3. **Resolved reasoning.instructions** — only the pipe text matching current variable state. No conditionals. No `run` blocks. No `set` statements. Just plain, resolved English.
+4. **Tool schemas** — JSON function schemas for only the actions that passed their `available when` guard during Phase 1.
 
 **The LLM makes one of three decisions:**
 
-- **Call an action** — selects one tool, fills its slot parameters by extracting values from conversation, and submits the call  
-- **Produce a terminal response** — writes a text reply to the user and ends the current reasoning loop  
+- **Call an action** — selects one tool, fills its slot parameters by extracting values from conversation, and submits the call
+- **Produce a terminal response** — writes a text reply to the user and ends the current reasoning loop
 - **Delegate to a subagent** — calls a subagent as a tool (if available), which runs its own reasoning loop and returns a result
 
->   
-> **Scenario: A Refund Request**  
->   
+> **Scenario: A Refund Request**
+>
 > A customer types "I need a refund for order 12345." Phase 1 has already evaluated that `@variables.is_verified == True` and included the `issue_refund` action in the tool schema. It has also injected the customer's account tier into the prompt text. The LLM now sees a resolved instruction like "Help the customer with their refund request. The customer is a Gold tier member." and a tool schema containing the `issue_refund` action. The LLM decides to call `issue_refund`, extracts "12345" from the conversation as the order ID, and submits the call. The customer's verification status was enforced in Phase 1 before the LLM ever had a chance to reason about it.
 
 ---
@@ -189,7 +194,7 @@ This binary framing eliminates a large class of guesswork before you ever read a
 
 ---
 
-## 3\. The Complete Turn Anatomy
+## 3. The Complete Turn Anatomy
 
 ### What a Turn Actually Contains
 
@@ -216,8 +221,8 @@ after_reasoning fires (deterministic only, once per turn)
 Turn ends. Agent waits for next message.
 ```
 
-> **Scenario: A Status Lookup**  
->   
+> **Scenario: A Status Lookup**
+>
 > A user types "What is the status of my order?" `before_reasoning` fires and checks if `@variables.session_token` is empty — it is not, so no redirect. The reasoning loop begins. Phase 1 resolves instructions and filters available actions. Phase 2 (the LLM) decides to call `get_order_status`, extracting the user's intent. The action runs, populates `@variables.order_status`, and Phase 1 re-resolution fires immediately from the top. The re-resolution detects `@variables.order_status != ''` at the top of the block. The LLM produces: "Your order is out for delivery and will arrive today." `after_reasoning` fires and logs the completed lookup. Turn ends.
 
 ---
@@ -281,13 +286,13 @@ Understanding what the LLM cannot see is just as important as understanding what
 
 **The LLM never sees:**
 
-- Raw `if` or `else` keywords or the conditions they contain  
-- `run` statements or any indication one fired  
-- `set` statements  
-- `available when` conditions — failing actions simply do not appear in the tool schema, with no indication they ever existed  
-- `before_reasoning` or `after_reasoning` block content  
-- Subagent names or the concept of subagents as a structural entity  
-- `@variables.X` syntax — it only sees the resolved value after `{!@variables.X}` injection  
+- Raw `if` or `else` keywords or the conditions they contain
+- `run` statements or any indication one fired
+- `set` statements
+- `available when` conditions — failing actions simply do not appear in the tool schema, with no indication they ever existed
+- `before_reasoning` or `after_reasoning` block content
+- Subagent names or the concept of subagents as a structural entity
+- `@variables.X` syntax — it only sees the resolved value after `{!@variables.X}` injection
 - Any action invocations that fired deterministically during Phase 1
 
 **The practical authoring rule:** never write a reasoning instruction that tells the model to "check `@variables.X`" or "look at which subagent is active." The model cannot do these things. Instructions must state the concrete operational task in plain English, based on what Phase 1 has already resolved and injected.
@@ -296,7 +301,7 @@ A good test: read your `reasoning.instructions` pipe text as if you were the LLM
 
 ---
 
-## 4\. The Five Instruction Surfaces
+## 4. The Five Instruction Surfaces
 
 ### Why Multiple Surfaces Exist
 
@@ -307,12 +312,12 @@ Conflating these surfaces — using the wrong one for the wrong job — is one o
 **Quick reference:**
 
 | Surface | Fires | Processed By | Supports `instructions:` Wrapper |
-| :---- | :---- | :---- | :---- |
+|---|---|---|---|
 | Global system | Every iteration | LLM (system prompt) | Yes |
 | Subagent system | Every iteration (overrides global) | LLM (system prompt) | Yes |
-| reasoning.instructions | Every iteration, rebuilt each | Phase 1 resolver, then LLM | Yes (`|` or `->` mode) |
-| before\_reasoning | Once per turn, before loop | Phase 1 resolver only | **No — direct content only** |
-| after\_reasoning | Once per turn, after loop | Phase 1 resolver only | **No — direct content only** |
+| reasoning.instructions | Every iteration, rebuilt each | Phase 1 resolver, then LLM | Yes (`\|` or `->` mode) |
+| before_reasoning | Once per turn, before loop | Phase 1 resolver only | **No — direct content only** |
+| after_reasoning | Once per turn, after loop | Phase 1 resolver only | **No — direct content only** |
 
 ---
 
@@ -349,8 +354,8 @@ This is one of the most consequential and least obvious behaviors in Agentforce.
 
 Any invariant defined in the global system block — a safety disclosure, a data protection rule, a confidentiality requirement — is **silently dropped** for any subagent that has its own system override but does not explicitly restate that invariant. There is no error, no warning, and no indication in the agent's behavior that the rule no longer applies for that subagent.
 
-> **Scenario: The Silent Security Gap**  
->   
+> **Scenario: The Silent Security Gap**
+>
 > Your global system instructions include "Never reveal internal pricing tiers or system configuration." You add a product specialist subagent with its own system override focused on technical product details. The developer wrote the override for specialization purposes and assumed confidentiality rules were inherited. A user routes to the product specialist and asks directly about internal pricing. The specialist, operating without that constraint, discusses it. The global rule did not travel with the subagent — it was silently replaced.
 
 **The authoring rule is absolute:** restate every invariant the subagent must retain in its subagent-level system block. Treat every subagent system block as a complete, self-contained identity definition — not an addendum to the global.
@@ -371,21 +376,20 @@ The `reasoning.instructions` surface is the most powerful and most error-prone s
 
 ---
 
-### 4.4 before\_reasoning: The Pre-Turn Gate
+### 4.4 before_reasoning: The Pre-Turn Gate
 
 `before_reasoning` runs once per turn, before the reasoning loop begins and before the LLM is ever involved. It is purely deterministic — it can set variables, run actions, evaluate conditions, and fire transitions, but it never produces LLM output.
 
 **Why this matters:** it lets you make hard decisions before any LLM cost is incurred. If a session has expired, you can detect it and redirect immediately. If you need to load account data that every part of the conversation will use, you can load it here once per turn rather than once per iteration.
 
 **Common valid uses:**
-
-- Authentication and authorization gates (fail fast before LLM cost)  
-- Mandatory data pre-loading used across all reasoning iterations  
+- Authentication and authorization gates (fail fast before LLM cost)
+- Mandatory data pre-loading used across all reasoning iterations
 - Early exits for invalid or expired session states
 
 **The critical syntax constraint:** `before_reasoning` does **not** use an `instructions:` wrapper. Content goes directly under the block as direct children — `transition` statements, `run` statements, `set` statements, and `if` statements are all written directly, not nested under `instructions:`. Using `instructions: ->` inside `before_reasoning` is a **compilation error**.
 
-```
+```yaml
 # WRONG — compile error
 before_reasoning:
     instructions: ->
@@ -400,14 +404,13 @@ before_reasoning:
 
 ---
 
-### 4.5 after\_reasoning: The Post-Turn Gate
+### 4.5 after_reasoning: The Post-Turn Gate
 
 `after_reasoning` runs once per turn, after the reasoning loop produces a terminal response. The LLM has already spoken by the time this executes.
 
 **Common valid uses:**
-
-- State cleanup (clearing temporary variables)  
-- Logging (recording that a workflow step completed)  
+- State cleanup (clearing temporary variables)
+- Logging (recording that a workflow step completed)
 - Conditional transitions based on what the turn accomplished
 
 **Two critical behavioral distinctions:**
@@ -420,7 +423,7 @@ Like `before_reasoning`, `after_reasoning` does not support an `instructions:` w
 
 ---
 
-## 5\. Variables and State in the Reasoning Loop
+## 5. Variables and State in the Reasoning Loop
 
 ### Why State Management Is Different Here
 
@@ -432,7 +435,7 @@ In a traditional application, state lives in a database or session store, and yo
 
 **Mutable variables** are session-persistent values the agent can both read and write. They must have a default value declared at definition time.
 
-```
+```yaml
 variables:
     customer_name: mutable string = ''
     order_count: mutable number = 0
@@ -445,7 +448,7 @@ variables:
 
 **Linked variables** are read-only values populated from external session context — information Salesforce establishes at session start. They must have a `source` declaration and must **not** have a default value. Providing a default value on a linked variable is a compile error.
 
-```
+```yaml
 variables:
     EndUserId: linked string from @MessagingSession.MessagingEndUserId
     RoutableId: linked string from @MessagingSession.RoutableId
@@ -460,11 +463,14 @@ Linked variables are the primary mechanism for knowing who the user is without a
 
 Agentforce defines three distinct variable scope zones. Each holds a different kind of value, is valid in a different context, and behaves very differently when used outside its valid scope.
 
-**`@variables.X` — Session-persistent state** Valid anywhere in AgentScript logic and injectable into pipe text via `{!@variables.X}`. Persists for the life of the session unless explicitly overwritten.
+**`@variables.X` — Session-persistent state**
+Valid anywhere in AgentScript logic and injectable into pipe text via `{!@variables.X}`. Persists for the life of the session unless explicitly overwritten.
 
-**`@outputs.X` — Action return values** Valid **only** in `set` and `if` statements immediately after the action's `run` block. The scope expires when those statements complete. Referencing `@outputs.X` anywhere else produces a silent failure.
+**`@outputs.X` — Action return values**
+Valid **only** in `set` and `if` statements immediately after the action's `run` block. The scope expires when those statements complete. Referencing `@outputs.X` anywhere else produces a silent failure.
 
-**`@inputs.X` — Action input values** Valid **only** in `with` clauses during action invocation. Not valid in subsequent `set` statements or post-execution checks. Scope expires when the `with` clause finishes.
+**`@inputs.X` — Action input values**
+Valid **only** in `with` clauses during action invocation. Not valid in subsequent `set` statements or post-execution checks. Scope expires when the `with` clause finishes.
 
 **The correct mental model:** `@outputs` and `@inputs` are short-lived windows, not persistent stores. The moment an action's `with` clause or immediate post-run block completes, those windows close. Everything that needs to survive beyond the action must be explicitly transferred to `@variables` within those windows.
 
@@ -476,8 +482,8 @@ Agentforce defines three distinct variable scope zones. Each holds a different k
 
 When you use `@inputs` or `@outputs` outside their valid scope, the action executes successfully. The variable simply does not get set. No error is thrown. The agent continues operating as if everything worked — just without the value it should have.
 
-> **Scenario: The Invisible Empty Field**  
->   
+> **Scenario: The Invisible Empty Field**
+>
 > An agent retrieves a customer's home branch location to display in a response. The developer writes the fetch action, captures `@outputs.status` immediately, but then tries to inject `@outputs.customer_location` into a pipe line three statements later. The `@outputs` scope has already expired. The injection produces an empty string. The agent displays "Your nearest branch is ." — a clearly wrong response with no error in any log to explain why.
 
 **How to catch this in traces:** a `FunctionStep` that completes with no difference in the `postVars` section (the before/after variable state comparison) is the diagnostic indicator of a scope violation. The action ran. The output was produced. Nothing was captured because the `set` statement referenced a scope that was already closed.
@@ -490,8 +496,8 @@ When you use `@inputs` or `@outputs` outside their valid scope, the action execu
 
 `@variables` persist across subagent transitions. A value set in Subagent A is fully available when Subagent B takes control. This is not a special feature you configure — it is the default behavior of the `@variables` scope, and it is the primary mechanism for passing state through a multi-subagent workflow without external storage or middleware.
 
-> **Scenario: Verify Once, Carry Forward**  
->   
+> **Scenario: Verify Once, Carry Forward**
+>
 > A customer service agent has three subagents — an authentication gate, an order management specialist, and a billing specialist. When the authentication gate verifies the customer, it sets `@variables.is_verified = True` and `@variables.customer_id` from the verification result. When the router transitions to order management, those variables are already there. The order management subagent's `before_reasoning` block checks `@variables.is_verified` — it is `True` — and immediately makes order-specific actions available. The customer never re-verifies. The verified customer ID flows through to every action that needs it without being re-extracted from conversation. This is the verify-once, carry-forward pattern.
 
 ---
@@ -506,7 +512,7 @@ The reasoning loop does not continue after `setVariables` runs. Any action liste
 
 **The correct pattern for capture-then-act in one turn:** use LLM slot-fill directly on the target action using the ellipsis operator.
 
-```
+```yaml
 # WRONG — action never fires in same turn
 reasoning:
     actions:
@@ -534,17 +540,17 @@ Action parameters can be populated three ways. The choice between them has direc
 
 **Variable binding (`with param = @variables.X`):** the runtime reads the variable at Phase 1 time, before the LLM is involved. Fully deterministic. If the variable is empty, the action receives an empty string with no user prompt.
 
-**Literal value (`with param = 'fixed'`):** a compiled constant resolved at Phase 1\. Always the same value regardless of conversation or state.
+**Literal value (`with param = 'fixed'`):** a compiled constant resolved at Phase 1. Always the same value regardless of conversation or state.
 
-> **Scenario: The Account ID Injection Risk**  
->   
+> **Scenario: The Account ID Injection Risk**
+>
 > An agent processes refunds. The `issue_refund` action requires a `customer_id` parameter. If you use `with customer_id = ...`, the LLM extracts a customer ID from the conversation — meaning a malicious user could type a different customer's ID and potentially trigger a refund against someone else's account. If you use `with customer_id = @variables.customer_id`, where that variable was set during verified authentication, the LLM has no ability to override the value from conversation. The verified ID flows through deterministically. This is the security-critical reason to choose variable binding over slot-fill for sensitive parameters.
 
 **The rule:** use `@variables` binding for verified identities, confirmed record IDs, and any sensitive value that should not be extractable from arbitrary user input. Use the ellipsis only for parameters the LLM legitimately needs to extract from conversation.
 
 ---
 
-## 6\. Actions and the Reasoning Loop
+## 6. Actions and the Reasoning Loop
 
 ### Actions as the Bridge to the Real World
 
@@ -560,12 +566,12 @@ Every action can be invoked in one of two ways, and the choice fundamentally cha
 
 Use for: pre-loading data every iteration needs, security gates that must always run, mandatory logging, and guaranteed ordering of multiple actions.
 
-**LLM-driven invocation (`reasoning.actions` block):** fires during Phase 2\. The LLM decides whether and when to call the action based on the action's `description` field and conversation context. The LLM is in control of the invocation decision.
+**LLM-driven invocation (`reasoning.actions` block):** fires during Phase 2. The LLM decides whether and when to call the action based on the action's `description` field and conversation context. The LLM is in control of the invocation decision.
 
 Use for: actions the agent should call only when relevant to the user's specific request, and any case where the model's judgment about timing and relevance is appropriate.
 
-> **Scenario: Pre-Load vs. On-Demand**  
->   
+> **Scenario: Pre-Load vs. On-Demand**
+>
 > Loading a customer's account tier on every turn is deterministic — it always needs to happen, and the cost of not having it is instructions that reference an empty variable. This belongs in `before_reasoning` as a `run` statement, firing once per turn. Looking up a specific order's status is LLM-driven — it only needs to happen if the user is asking about an order. This belongs in `reasoning.actions`, where the LLM calls it only when the conversation calls for it.
 
 ---
@@ -578,8 +584,8 @@ When an `available when` condition evaluates to `False` during Phase 1, the acti
 
 This is fundamentally different from a prose instruction like "only call this action if the user is verified." A prose instruction is probabilistic. Under adversarial input or in a sufficiently complex conversation, the LLM may not follow it. `available when` makes unauthorized invocation **structurally impossible**, not just unlikely.
 
-> **Scenario: The Layered Refund Guard**  
->   
+> **Scenario: The Layered Refund Guard**
+>
 > A refund action has two guards: `available when @variables.is_verified == True` and `available when @variables.refund_amount > 0`. A user who has not completed verification cannot see the refund action in the LLM's tool list at all. A verified user with a zero refund amount also cannot. Only when both conditions are simultaneously True does the action become available. No prose instruction achieves this level of enforcement — and no amount of clever user phrasing can work around it.
 
 Multiple `available when` clauses on a single action are evaluated as a logical AND — all must be True for the action to appear.
@@ -591,7 +597,7 @@ Multiple `available when` clauses on a single action are evaluated as a logical 
 Transitions are how agents move between subagents. Agentforce has three distinct mechanisms with strict rules about where each can be used. Using the wrong one in the wrong context produces a compile error — and the error message rarely tells you which pairing rule you violated.
 
 | Mechanism | Valid Context | LLM Involved | Direction |
-| :---- | :---- | :---- | :---- |
+|---|---|---|---|
 | Bare `transition to @subagent.X` | `before_reasoning`, `after_reasoning`, run post-conditions | No | One-way |
 | `@utils.transition to @subagent.X` | `reasoning.actions` only | Yes (LLM decides when) | One-way |
 | `@subagent.X` as action reference | `reasoning.actions` only | Yes (LLM decides when) | Two-way (returns to caller) |
@@ -604,11 +610,11 @@ The valid pairings must be memorized. Bare `transition to` belongs in lifecycle 
 
 Handoff and delegation represent two fundamentally different control flow models. Choosing the right one has major architectural implications.
 
-**Handoff (`@utils.transition to`):** control transfers completely to the called subagent. The caller does not resume. The destination owns the full response. The original subagent's `after_reasoning` does not fire if the handoff occurs mid-reasoning. Use when the destination should completely own the user experience.
+**Handoff (`@utils.transition to`):** control transfers completely to the called subagent. The caller does not resume. The destination owns the full response. The original subagent's fire if the handoff occurs mid-reasoning. Use when the destination should completely own the user experience.
 
 **Delegation (`@subagent.X` as action reference):** the parent orchestrates, the child runs its full reasoning loop and produces a result, and control returns to the parent, which synthesizes the final response. Use when the parent needs to coordinate across multiple children or incorporate results into a unified response.
 
-**The architectural implication:** building with delegation rather than pure handoff creates moreable, orchestratable agents. As Salesforce's multi-agent coordination capabilities evolve, agents built with the delegation pattern are much easier to incorporate into larger orchestration workflows without architectural rework.
+**The architectural implication:** building with delegation rather than pure handoff creates more composable, orchestratable agents. As Salesforce's multi-agent coordination capabilities evolve, agents built with the delegation pattern are much easier to incorporate into larger orchestration workflows without architectural rework.
 
 ---
 
@@ -626,7 +632,7 @@ Without this pattern, a router LLM might guess intent from the user's message wi
 
 ---
 
-## 7\. The Posture Spectrum
+## 7. The Posture Spectrum
 
 ### From Fully Scripted to Fully Agentic
 
@@ -652,10 +658,10 @@ One of the strongest patterns in Salesforce's Agentforce design guidance is the 
 
 **The five valid justifications:**
 
-1. **Regulatory requirement** — a compliance rule mandates specific sequencing, wording, or disclosure that cannot vary  
-2. **Trust gate** — identity verification must complete before access is granted  
-3. **Irreversible action** — once fired, the action cannot be undone  
-4. **External system ordering** — an external API requires operations in a specific sequence  
+1. **Regulatory requirement** — a compliance rule mandates specific sequencing, wording, or disclosure that cannot vary
+2. **Trust gate** — identity verification must complete before access is granted
+3. **Irreversible action** — once fired, the action cannot be undone
+4. **External system ordering** — an external API requires operations in a specific sequence
 5. **Observed production failure** — a specific behavior has failed in production and deterministic control is the proven fix
 
 If the justification does not match one of these five, keep the posture agentic. Adding determinism without justification increases brittleness, removes the LLM's ability to handle natural variation in user input, and increases maintenance burden without a concrete safety benefit. The agentic default is not laziness — it is recognition that the LLM's adaptive reasoning is a feature, one that should only be constrained when a specific risk justifies the cost.
@@ -672,8 +678,8 @@ When a justification for determinism exists, three primitives implement it. Each
 
 **Conditional instructions:** `if/else` blocks in `reasoning.instructions: ->` mode ensure the LLM only sees the branch matching current state. Use for security-state-dependent instruction sets.
 
-> **Scenario: Three Layers on One Action**  
->   
+> **Scenario: Three Layers on One Action**
+>
 > A payment action has: `available when @variables.is_verified == True` (the action is invisible until verified), `with account_number = @variables.verified_account` (the account number cannot be overridden from conversation), and a conditional instruction block showing "Process the payment" only when verified and "Please verify your identity first" otherwise. Three independent layers of control — an unverified user gets no payment action in their tool list, no ability to inject an account number, and sees only the verification instruction.
 
 ---
@@ -690,7 +696,7 @@ Every unnecessary instruction token brings the context budget closer to the 10,0
 
 ---
 
-## 8\. The Einstein Trust Layer
+## 8. The Einstein Trust Layer
 
 ### Why a Trust Layer Is Necessary
 
@@ -707,13 +713,11 @@ The Einstein Trust Layer (ETL) is the runtime security boundary that operates on
 The ETL is not a one-time authoring check. It is actively running on every single inference call, continuously, in production.
 
 **The ETL sequence on input:**
-
-1. Sharing rule and field-level security enforcement — data in the context respects the same permission model as a direct SOQL query by the running user  
+1. Sharing rule and field-level security enforcement — data in the context respects the same permission model as a direct SOQL query by the running user
 2. Prompt injection and toxicity detection — the input is screened for malicious injection attempts and inappropriate content before reaching the model
 
 **The ETL sequence on output:**
-
-1. Toxicity detection on the model's response  
+1. Toxicity detection on the model's response
 2. Grounding quality check before the response returns to the reasoning loop
 
 ---
@@ -740,7 +744,7 @@ Together, these capabilities mean the ETL is not just a data privacy mechanism. 
 
 ---
 
-## 9\. Reasoning Constraints
+## 9. Reasoning Constraints
 
 ### Design Constraints as Architecture Drivers
 
@@ -752,18 +756,17 @@ Every platform has constraints. What makes Agentforce's constraints interesting 
 
 The reasoning loop has a hard platform guardrail of approximately 3–4 iterations per turn before the runtime forces an exit. This is enforced by the Atlas FSM — it is not a configurable timeout, it is a hard architectural constraint.
 
-A reasoning iteration is one complete Phase 1 \+ Phase 2 cycle. Each time the LLM calls an action and re-resolution begins, the iteration counter increments. Failed retries via backward arrows also count. When the cap is reached, the platform forces the turn to exit with an error response.
+A reasoning iteration is one complete Phase 1 + Phase 2 cycle. Each time the LLM calls an action and re-resolution begins, the iteration counter increments. Failed retries via backward arrows also count. When the cap is reached, the platform forces the turn to exit with an error response.
 
 **Concrete design implications:**
 
-- Count your maximum possible iterations on every execution path during design, not after deployment  
-- Workflows requiring more than 3–4 sequential LLM-driven decisions per turn must be broken across multiple user turns  
-- Circular subagent references will hit this cap unpredictably, producing confusing errors  
+- Count your maximum possible iterations on every execution path during design, not after deployment
+- Workflows requiring more than 3–4 sequential LLM-driven decisions per turn must be broken across multiple user turns
+- Circular subagent references will hit this cap unpredictably, producing confusing errors
 - Monitoring for turns that frequently hit the cap in production is a signal the workflow needs structural redesign — not a signal to seek a higher limit
 
->   
-> **Scenario: The Hidden Loop**  
->   
+> **Scenario: The Hidden Loop**
+>
 > An agent workflow has: collect order ID (1 iteration) → look up order status (2nd iteration) → check eligibility for return (3rd iteration) → log the interaction (4th iteration). On the happy path, this works. But if the order lookup fails and the LLM retries (backward arrow), you now have 5 iterations. The platform forces an exit. The user gets an "unexpected error" response that has nothing to do with their actual request. The fix is to move the logging to `after_reasoning` (free, deterministic, does not count as an iteration) and consolidate the status and eligibility lookups into a single action.
 
 ---
@@ -775,25 +778,25 @@ The reasoning engine targets approximately 10,000 tokens per transaction payload
 **What fills the token budget:**
 
 | Source | Typical Range | Controllability |
-| :---- | :---- | :---- |
+|---|---|---|
 | Global system instructions | 100–500 tokens | High — keep concise |
 | Subagent system overrides | 100–500 tokens per subagent | High — restate only required invariants |
 | Conversation history | Grows per turn | Partial — session design controls this |
 | Resolved reasoning.instructions | 100–1,000 tokens | High — `->` mode sends only matching branches |
-| Tool schemas | \~100 tokens per action | High — `available when` suppresses irrelevant tools |
+| Tool schemas | ~100 tokens per action | High — `available when` suppresses irrelevant tools |
 | Grounding data (ADL/knowledge) | Variable | High — use relevancy-ranked retrieval |
 
 **The three optimization levers:**
 
-1. **Conciseness** — remove any instruction that does not change behavior  
-2. **Consolidation** — merge redundant actions and overlapping descriptions  
+1. **Conciseness** — remove any instruction that does not change behavior
+2. **Consolidation** — merge redundant actions and overlapping descriptions
 3. **Filtering** — use `available when` aggressively; every suppressed action removes its full schema from the budget for that iteration
 
 **A critical distinction Salesforce documentation makes explicit:** token count drives **latency and LLM accuracy**. Credit billing is charged per action execution — 20 credits per Apex or Flow action, 2–16 for Prompt Templates — regardless of token count. These are completely separate optimization concerns with completely separate levers. Reducing instruction length improves reasoning quality. Reducing unnecessary action executions reduces credit costs. Do not conflate them.
 
 ---
 
-## 10\. Reasoning Anti-Patterns
+## 10. Reasoning Anti-Patterns
 
 ### Why Anti-Patterns Matter
 
@@ -903,66 +906,90 @@ Every platform has failure modes that appear repeatedly, across different teams,
 
 **Fix:** write descriptions specific enough for unambiguous selection. Include what the action does, what data it returns, what parameter it requires, and when to use it versus similar actions.
 
-> **Poor:** "Look up order information"  
->   
+> **Poor:** "Look up order information"
+>
 > **Correct:** "Look up the current status, estimated delivery date, and tracking number for a specific customer order. Requires the order ID. Use this when the customer asks about the status or whereabouts of a particular order — not when they want to modify or cancel it."
 
 ---
 
-## 11\. Terminology Reference
+## 11. Terminology Reference
 
 A shared vocabulary is essential for working on Agentforce teams. These definitions are the precise meanings used throughout this guide and throughout Salesforce's Agentforce documentation.
 
 ---
 
-**Turn** The complete cycle of one user message in, one agent response out. Includes `before_reasoning`, the full reasoning loop, and `after_reasoning`.
+**Turn**
+The complete cycle of one user message in, one agent response out. Includes `before_reasoning`, the full reasoning loop, and `after_reasoning`.
 
-**Reasoning Iteration** One complete Phase 1 (deterministic resolution) plus Phase 2 (LLM reasoning) cycle within the reasoning loop. Multiple iterations can occur within a single turn. Each LLM-driven action call starts a new iteration and increments the counter toward the 3–4 hard cap.
+**Reasoning Iteration**
+One complete Phase 1 (deterministic resolution) plus Phase 2 (LLM reasoning) cycle within the reasoning loop. Multiple iterations can occur within a single turn. Each LLM-driven action call starts a new iteration and increments the counter toward the 3–4 hard cap.
 
-**Deterministic Resolution** Phase 1 — evaluating all AgentScript constructs (conditions, `run` statements, variable injections, `available when` filters) before any LLM involvement. Always produces the same output for the same input state.
+**Deterministic Resolution**
+Phase 1 — evaluating all AgentScript constructs (conditions, `run` statements, variable injections, `available when` filters) before any LLM involvement. Always produces the same output for the same input state.
 
-**Re-Resolution** The specific instance of Phase 1 that fires after every tool call within the reasoning loop. A full re-evaluation from the top of the `reasoning.instructions` block using updated variable state. Not a continuation — a full rebuild from the top.
+**Re-Resolution**
+The specific instance of Phase 1 that fires after every tool call within the reasoning loop. A full re-evaluation from the top of the `reasoning.instructions` block using updated variable state. Not a continuation — a full rebuild from the top.
 
-**Slot Filling** The LLM extracting a parameter value from conversation context using the `...` (ellipsis) syntax. A Phase 2 probabilistic operation — the LLM decides what value matches the parameter. If absent, it prompts the user.
+**Slot Filling**
+The LLM extracting a parameter value from conversation context using the `...` (ellipsis) syntax. A Phase 2 probabilistic operation — the LLM decides what value matches the parameter. If absent, it prompts the user.
 
-**Variable Binding** The runtime resolving `@variables.X` to its stored value at Phase 1 time. Fully deterministic — no LLM involved, no probability. The stored value is used directly. Security-critical distinction from slot filling.
+**Variable Binding**
+The runtime resolving `@variables.X` to its stored value at Phase 1 time. Fully deterministic — no LLM involved, no probability. The stored value is used directly. Security-critical distinction from slot filling.
 
-**Tool Schema** The JSON function schema representation of an action handed to the LLM during Phase 2\. Actions failing `available when` are completely excluded — from the LLM's perspective, they do not exist.
+**Tool Schema**
+The JSON function schema representation of an action handed to the LLM during Phase 2. Actions failing `available when` are completely excluded — from the LLM's perspective, they do not exist.
 
-**| mode (Literal mode)** `reasoning.instructions` mode in which content is sent to the LLM verbatim without Phase 1 evaluation. Conditionals appear as English prose. Use only for simple, unconditional instructions.
+**| mode (Literal mode)**
+`reasoning.instructions` mode in which content is sent to the LLM verbatim without Phase 1 evaluation. Conditionals appear as English prose. Use only for simple, unconditional instructions.
 
-**\-\> mode (Procedural mode)** `reasoning.instructions` mode that activates Phase 1 deterministic evaluation. Use whenever the block contains conditional logic, variable injection, `run` statements, or `set` statements.
+**-> mode (Procedural mode)**
+`reasoning.instructions` mode that activates Phase 1 deterministic evaluation. Use whenever the block contains conditional logic, variable injection, `run` statements, or `set` statements.
 
-**Posture** The designed ratio of LLM latitude to authored determinism in a subagent. Agentic gives the LLM maximum latitude. Scripted gives the LLM zero discretion. Mixed applies selective controls where justified.
+**Posture**
+The designed ratio of LLM latitude to authored determinism in a subagent. Agentic gives the LLM maximum latitude. Scripted gives the LLM zero discretion. Mixed applies selective controls where justified.
 
-**Handoff** One-way subagent transfer via `@utils.transition to` in `reasoning.actions`. The caller does not resume. The destination subagent owns the full response. The original subagent's `after_reasoning` does not fire if the handoff occurs mid-reasoning.
+**Handoff**
+One-way subagent transfer via `@utils.transition to` in `reasoning.actions`. The caller does not resume. The destination subagent owns the full response. The original subagent's `after_reasoning` does not fire if the handoff occurs mid-reasoning.
 
-**Delegation (Supervision)** Two-way subagent call via `@subagent.X` as an action reference in `reasoning.actions`. The child runs its full reasoning loop, produces a result, and control returns to the parent, which synthesizes the final response.
+**Delegation (Supervision)**
+Two-way subagent call via `@subagent.X` as an action reference in `reasoning.actions`. The child runs its full reasoning loop, produces a result, and control returns to the parent, which synthesizes the final response.
 
-**DAG (Directed Acyclic Graph)** The mathematical structure for tool invocations and sequential dependencies in the Agent Graph. The "acyclic" property mathematically prevents infinite loops in the deterministic path.
+**DAG (Directed Acyclic Graph)**
+The mathematical structure for tool invocations and sequential dependencies in the Agent Graph. The "acyclic" property mathematically prevents infinite loops in the deterministic path.
 
-**FSM (Finite State Machine)** The mathematical structure for subagent transitions and retry logic in the Agent Graph. Managed by the Atlas engine. Enforces the 3–4 iteration hard cap. Records backward arrows for retry paths.
+**FSM (Finite State Machine)**
+The mathematical structure for subagent transitions and retry logic in the Agent Graph. Managed by the Atlas engine. Enforces the 3–4 iteration hard cap. Records backward arrows for retry paths.
 
-**Backward Arrow** An FSM retry edge recorded when the LLM attempts a tool call, receives an error, and reasons into an alternative approach. Visible as literal reverse edges in trace visualization tools.
+**Backward Arrow**
+An FSM retry edge recorded when the LLM attempts a tool call, receives an error, and reasons into an alternative approach. Visible as literal reverse edges in trace visualization tools.
 
-**GenAiPlannerBundle** The runtime metadata artifact created by the Salesforce platform when you publish an agent. The compiled output of the Atlas engine — what actually executes in production. Distinct from the AiAuthoringBundle (the `.agent` file developers author and deploy).
+**GenAiPlannerBundle**
+The runtime metadata artifact created by the Salesforce platform when you publish an agent. The compiled output of the Atlas engine — what actually executes in production. Distinct from the AiAuthoringBundle (the `.agent` file developers author and deploy).
 
-**@variables** Session-persistent state. Valid anywhere in AgentScript logic and injectable into pipe text via `{!@variables.X}`. Persists for the life of the session.
+**@variables**
+Session-persistent state. Valid anywhere in AgentScript logic and injectable into pipe text via `{!@variables.X}`. Persists for the life of the session.
 
-**@outputs** Action return values. Valid only in `set` and `if` statements immediately after the action's `run` block. Expires after those statements complete. Using `@outputs` outside this window is a silent failure.
+**@outputs**
+Action return values. Valid only in `set` and `if` statements immediately after the action's `run` block. Expires after those statements complete. Using `@outputs` outside this window is a silent failure.
 
-**@inputs** Action input values. Valid only in `with` clauses during action invocation. Expires when the `with` clause finishes. Using `@inputs` in a subsequent `set` statement is a silent failure.
+**@inputs**
+Action input values. Valid only in `with` clauses during action invocation. Expires when the `with` clause finishes. Using `@inputs` in a subsequent `set` statement is a silent failure.
 
-**10k Token Heuristic** Approximately 10,000 tokens as the architectural target for the total context package per reasoning transaction. Governs latency and LLM reasoning accuracy — not credit billing. A separate concern from action execution costs.
+**10k Token Heuristic**
+Approximately 10,000 tokens as the architectural target for the total context package per reasoning transaction. Governs latency and LLM reasoning accuracy — not credit billing. A separate concern from action execution costs.
 
-**Credit Billing** 20 Einstein credits per Apex or Flow action execution. 2–16 credits per Prompt Template action. Framework operations (transitions, conditionals, variable evaluations) are free. Completely separate from token count optimization.
+**Credit Billing**
+20 Einstein credits per Apex or Flow action execution. 2–16 credits per Prompt Template action. Framework operations (transitions, conditionals, variable evaluations) are free. Completely separate from token count optimization.
 
-**Zero-Hallucination Pattern** Combining `filter_from_agent: True` and `is_used_by_planner: True` on an action output. Forces the LLM to invoke the action to obtain a routing value rather than guessing from conversation, while preventing the raw value from appearing in user-facing output.
+**Zero-Hallucination Pattern**
+Combining `filter_from_agent: True` and `is_used_by_planner: True` on an action output. Forces the LLM to invoke the action to obtain a routing value rather than guessing from conversation, while preventing the raw value from appearing in user-facing output.
 
-**Einstein Trust Layer (ETL)** The runtime security boundary between Phase 1 output and the LLM. Enforces zero-retention of CRM grounding data, screens inputs for prompt injection and toxicity, screens model outputs before they return to the reasoning loop, and enforces Salesforce sharing rules and field-level security at the LLM boundary. Operates on every inference call, in every session, in every production deployment.
+**Einstein Trust Layer (ETL)**
+The runtime security boundary between Phase 1 output and the LLM. Enforces zero-retention of CRM grounding data, screens inputs for prompt injection and toxicity, screens model outputs before they return to the reasoning loop, and enforces Salesforce sharing rules and field-level security at the LLM boundary. Operates on every inference call, in every session, in every production deployment.
 
-**Zero-Retention Policy** The ETL guarantee that customer CRM data used for grounding is never stored, logged, or used to train external public models by the underlying LLM providers. Enforced at the LLM gateway boundary. A contractual and architectural guarantee from Salesforce.
+**Zero-Retention Policy**
+The ETL guarantee that customer CRM data used for grounding is never stored, logged, or used to train external public models by the underlying LLM providers. Enforced at the LLM gateway boundary. A contractual and architectural guarantee from Salesforce.
 
 ---
 
-*This guide covers the Agentforce Reasoning Engine (Daisy) as documented in Salesforce's Agentforce developer documentation and platform best practices.*  
+*This guide covers the Agentforce Reasoning Engine (Daisy) as documented in Salesforce's Agentforce developer documentation and platform best practices.*

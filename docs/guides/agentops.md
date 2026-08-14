@@ -1,12 +1,127 @@
-# Foundations, Governance & Environment Strategy
+# AgentOps Study Guide: Agentforce Lifecycle for Consultants
+
+**From Traditional ALM to Probabilistic Delivery — Governance, Deployment, Testing, and Production Operations**
 
 ---
+
+## Table of Contents
+
+1. [Foundations, Governance & Environment Strategy](#1-foundations-governance--environment-strategy)
+   - [1.1 Why traditional ALM assumptions break for LLM-driven agents](#11-why-traditional-alm-assumptions-break-for-llm-driven-agents)
+   - [1.2 Probabilistic vs. deterministic quality gates](#12-probabilistic-vs-deterministic-quality-gates)
+   - [1.3 Behavioral baseline as the new regression test](#13-behavioral-baseline-as-the-new-regression-test)
+   - [1.4 Rollback nuance: metadata rollback vs. behavioral rollback](#14-rollback-nuance-metadata-rollback-vs-behavioral-rollback)
+   - [1.5 Configuration drift vs. behavioral drift](#15-configuration-drift-vs-behavioral-drift)
+   - [1.6 Expanded security surface: prompt injection vs. code and SOQL injection](#16-expanded-security-surface-prompt-injection-vs-code-and-soql-injection)
+   - [1.7 Mapping traditional ALM roles to AgentOps roles](#17-mapping-traditional-alm-roles-to-agentops-roles)
+   - [1.8 Educating clients on why "it passed UAT" is not "done"](#18-educating-clients-on-why-it-passed-uat-is-not-done)
+   - [1.9 Positioning AgentOps as additive rigor, not a replacement](#19-positioning-agentops-as-additive-rigor-not-a-replacement)
+   - [1.10 Release Manager responsibilities and runbook ownership](#110-release-manager-responsibilities-and-runbook-ownership)
+   - [1.11 Agent Developer and Architect responsibilities](#111-agent-developer-and-architect-responsibilities)
+   - [1.12 QA and Evaluation Engineer responsibilities](#112-qa-and-evaluation-engineer-responsibilities)
+   - [1.13 Security Reviewer responsibilities](#113-security-reviewer-responsibilities)
+   - [1.14 Business Owner and UAT Approver responsibilities](#114-business-owner-and-uat-approver-responsibilities)
+   - [1.15 Risk classification model for change types](#115-risk-classification-model-for-change-types)
+   - [1.16 CAB review triggers](#116-cab-review-triggers)
+   - [1.17 Emergency and hotfix approval path](#117-emergency-and-hotfix-approval-path)
+   - [1.18 Preventing unauthorized production changes](#118-preventing-unauthorized-production-changes)
+   - [1.19 Recommended environment hierarchy](#119-recommended-environment-hierarchy)
+   - [1.20 Purpose and gate criteria of each tier](#120-purpose-and-gate-criteria-of-each-tier)
+   - [1.21 Feature flag and licensing verification per environment](#121-feature-flag-and-licensing-verification-per-environment)
+   - [1.22 Agent User provisioning per environment](#122-agent-user-provisioning-per-environment)
+   - [1.23 Data Cloud and STDM setup per environment](#123-data-cloud-and-stdm-setup-per-environment)
+   - [1.24 Sandbox refresh impact on active BotVersion](#124-sandbox-refresh-impact-on-active-botversion)
+   - [1.25 Advising clients on sandbox types for agent workloads](#125-advising-clients-on-sandbox-types-for-agent-workloads)
+   - [1.26 Hotfix branch sourcing from production tag vs. main](#126-hotfix-branch-sourcing-from-production-tag-vs-main)
+   - [1.27 Accelerated deployment path for emergencies](#127-accelerated-deployment-path-for-emergencies)
+   - [1.28 24-hour back-propagation rule](#128-24-hour-back-propagation-rule)
+   - [1.29 Post-incident review requirement](#129-post-incident-review-requirement)
+   - [1.30 Hotfix sandbox usage boundaries](#130-hotfix-sandbox-usage-boundaries)
+
+2. [Source Control, Metadata Architecture & Deployment Engineering](#2-source-control-metadata-architecture--deployment-engineering)
+   - [2.1 Branch structure: main, release, feature, hotfix](#21-branch-structure-main-release-feature-hotfix)
+   - [2.2 Draft vs. committed AiAuthoringBundle states](#22-draft-vs-committed-aiauthoringbundle-states)
+   - [2.3 When to pin a bundle to a BotVersion](#23-when-to-pin-a-bundle-to-a-botversion)
+   - [2.4 Repository structure for v65+ orgs](#24-repository-structure-for-v65-orgs)
+   - [2.5 graph.json is machine-generated — never hand-edit](#25-graphjson-is-machine-generated--never-hand-edit)
+   - [2.6 Retrieval pitfalls: Agent pseudo-type exclusions](#26-retrieval-pitfalls-agent-pseudo-type-exclusions)
+   - [2.7 BotVersion explicit-naming requirement](#27-botversion-explicit-naming-requirement)
+   - [2.8 The mental model before the detail](#28-the-mental-model-before-the-detail)
+   - [2.9 Bot: the identity layer](#29-bot-the-identity-layer)
+   - [2.10 BotVersion: the scaffold layer](#210-botversion-the-scaffold-layer)
+   - [2.11 GenAiPlannerBundle: the intelligence layer](#211-genaiplannerbundle-the-intelligence-layer)
+   - [2.12 AiAuthoringBundle: the authoring layer](#212-aiauthoringbundle-the-authoring-layer)
+   - [2.13 AiEvaluationDefinition as quality-gate metadata](#213-aievaluationdefinition-as-quality-gate-metadata)
+   - [2.14 attributeMappings for secure data propagation](#214-attributemappings-for-secure-data-propagation)
+   - [2.15 ruleExpressions as declarative security gates](#215-ruleexpressions-as-declarative-security-gates)
+   - [2.16 Why phase ordering exists and what happens when it breaks](#216-why-phase-ordering-exists-and-what-happens-when-it-breaks)
+   - [2.17 Phase 1: Base platform dependencies](#217-phase-1-base-platform-dependencies)
+   - [2.18 Phase 2: GenAiPromptTemplate deployment timing](#218-phase-2-genaiprompttemplate-deployment-timing)
+   - [2.19 Phase 3: Global Asset Library components](#219-phase-3-global-asset-library-components)
+   - [2.20 Phase 4: GenAiPlannerBundle](#220-phase-4-genaiplannerbundle)
+   - [2.21 Phase 5: AiAuthoringBundle deploy, publish, and activate](#221-phase-5-aiauthoringbundle-deploy-publish-and-activate)
+   - [2.22 The bifurcated transaction strategy for Prompt Flow + Apex conflicts](#222-the-bifurcated-transaction-strategy-for-prompt-flow--apex-conflicts)
+   - [2.23 Einstein Search Retriever ID substitution across orgs](#223-einstein-search-retriever-id-substitution-across-orgs)
+   - [2.24 Distinguishing deployment success from behavioral change confirmation](#224-distinguishing-deployment-success-from-behavioral-change-confirmation)
+   - [2.25 Pre-flight verification checklist](#225-pre-flight-verification-checklist)
+   - [2.26 The five-step CI pipeline sequence](#226-the-five-step-ci-pipeline-sequence)
+   - [2.27 Manual steps that cannot be automated](#227-manual-steps-that-cannot-be-automated)
+   - [2.28 Common deployment error patterns](#228-common-deployment-error-patterns)
+
+3. [Testing & Security](#3-testing--security)
+   - [3.1 Why the traditional testing pyramid is not enough](#31-why-the-traditional-testing-pyramid-is-not-enough)
+   - [3.2 Apex unit tests for action implementations](#32-apex-unit-tests-for-action-implementations)
+   - [3.3 Deterministic logic tests for Agent Script conditionals](#33-deterministic-logic-tests-for-agent-script-conditionals)
+   - [3.4 LLM-as-a-Judge evaluation fundamentals](#34-llm-as-a-judge-evaluation-fundamentals)
+   - [3.5 Multi-turn conversation testing for memory retention](#35-multi-turn-conversation-testing-for-memory-retention)
+   - [3.6 Security red-teaming as a distinct test layer](#36-security-red-teaming-as-a-distinct-test-layer)
+   - [3.7 Converting production failures into permanent regression cases](#37-converting-production-failures-into-permanent-regression-cases)
+   - [3.8 Creating AiEvaluationDefinition test suites via CLI](#38-creating-aievaluationdefinition-test-suites-via-cli)
+   - [3.9 Execution capacity limits and rate-limit avoidance](#39-execution-capacity-limits-and-rate-limit-avoidance)
+   - [3.10 Behavioral regression baselining and artifact storage](#310-behavioral-regression-baselining-and-artifact-storage)
+   - [3.11 Custom JSONPath evaluation criteria for compliance rules](#311-custom-jsonpath-evaluation-criteria-for-compliance-rules)
+   - [3.12 Reading trace files for interactive debugging](#312-reading-trace-files-for-interactive-debugging)
+   - [3.13 Grounding accuracy validation for RAG-based templates](#313-grounding-accuracy-validation-for-rag-based-templates)
+   - [3.14 Data masking compliance testing with representative PII](#314-data-masking-compliance-testing-with-representative-pii)
+   - [3.15 Why AI expands the traditional security surface](#315-why-ai-expands-the-traditional-security-surface)
+   - [3.16 Prompt injection mechanics and the ForcedLeak precedent](#316-prompt-injection-mechanics-and-the-forcedleak-precedent)
+   - [3.17 attributeMappings for keeping sensitive values out of LLM context](#317-attributemappings-for-keeping-sensitive-values-out-of-llm-context)
+   - [3.18 ruleExpressions for gating high-risk actions](#318-ruleexpressions-for-gating-high-risk-actions)
+   - [3.19 Einstein Trust Layer validation checklist](#319-einstein-trust-layer-validation-checklist)
+
+4. [Release Management, Rollback & Monitoring](#4-release-management-rollback--monitoring)
+   - [4.1 Gate 1: Developer sandbox](#41-gate-1-developer-sandbox)
+   - [4.2 Gate 2: Integration sandbox](#42-gate-2-integration-sandbox)
+   - [4.3 Gate 3: QA sandbox](#43-gate-3-qa-sandbox)
+   - [4.4 Gate 4: UAT sandbox](#44-gate-4-uat-sandbox)
+   - [4.5 Gate 5: Staging](#45-gate-5-staging)
+   - [4.6 Gate 6: Production go-live](#46-gate-6-production-go-live)
+   - [4.7 Activation window planning and seasonal release impact](#47-activation-window-planning-and-seasonal-release-impact)
+   - [4.8 Option 1: Reactivating a prior BotVersion](#48-option-1-reactivating-a-prior-botversion)
+   - [4.9 Option 2: Redeploying prior AiAuthoringBundle from source control](#49-option-2-redeploying-prior-aiauthoringbundle-from-source-control)
+   - [4.10 Option 3: Targeted Apex or Flow rollback](#410-option-3-targeted-apex-or-flow-rollback)
+   - [4.11 Preconditions for guaranteeing fast rollback availability](#411-preconditions-for-guaranteeing-fast-rollback-availability)
+   - [4.12 Severity classification for emergency hotfix qualification](#412-severity-classification-for-emergency-hotfix-qualification)
+   - [4.13 The three-system observability stack](#413-the-three-system-observability-stack)
+   - [4.14 STDM's five core tables](#414-stdms-five-core-tables)
+   - [4.15 Querying the Step table to reconstruct a failed session](#415-querying-the-step-table-to-reconstruct-a-failed-session)
+   - [4.16 Key health indicators to monitor continuously](#416-key-health-indicators-to-monitor-continuously)
+   - [4.17 Establishing a production behavioral baseline within 24 hours of go-live](#417-establishing-a-production-behavioral-baseline-within-24-hours-of-go-live)
+   - [4.18 Feeding STDM data to developers, not just operations](#418-feeding-stdm-data-to-developers-not-just-operations)
+   - [4.19 Tracking Instruction Adherence trend lines over time](#419-tracking-instruction-adherence-trend-lines-over-time)
+   - [4.20 Distinguishing authoring fixes from deployment fixes based on trend cause](#420-distinguishing-authoring-fixes-from-deployment-fixes-based-on-trend-cause)
+   - [4.21 Monthly behavioral health checks independent of deployments](#421-monthly-behavioral-health-checks-independent-of-deployments)
+   - [4.22 Building a client-facing AgentOps maturity scorecard](#422-building-a-client-facing-agentops-maturity-scorecard)
+
+---
+
+# 1. Foundations, Governance & Environment Strategy
 
 ## Frame the AgentOps mindset shift from deterministic to probabilistic change management
 
 ---
 
-### Why traditional ALM assumptions break for LLM-driven agents
+### 1.1 Why traditional ALM assumptions break for LLM-driven agents
 
 In traditional Salesforce change management, every metadata change produces a predictable, repeatable outcome. You deploy a validation rule, you test it against known inputs, and it behaves the same way every single time. That predictability is the foundation every ALM process you have ever built is sitting on.
 
@@ -18,7 +133,7 @@ AgentOps is the discipline of operating AI agents in production with the same en
 
 ---
 
-### Probabilistic vs. deterministic quality gates
+### 1.2 Probabilistic vs. deterministic quality gates
 
 Traditional Salesforce quality gates rely on exact-match assertions. Apex code coverage must hit a threshold. PMD flags specific anti-patterns. Field values must equal expected outputs. Pass or fail. Green or red.
 
@@ -30,7 +145,7 @@ This is not a weakening of quality control. It is an honest reflection of what y
 
 ---
 
-### Behavioral baseline as the new regression test
+### 1.3 Behavioral baseline as the new regression test
 
 In traditional ALM, a regression test suite is a fixed set of inputs with known expected outputs. You run it before a release, confirm nothing broke, and ship. The baseline is the code itself, locked in source control.
 
@@ -42,7 +157,7 @@ The reason this matters is drift. An agent's behavior can change without any met
 
 ---
 
-### Rollback nuance: metadata rollback vs. behavioral rollback
+### 1.4 Rollback nuance: metadata rollback vs. behavioral rollback
 
 Traditional Salesforce rollback is conceptually simple: redeploy the previous version of the metadata from source control. Restore what was there before. Done.
 
@@ -50,11 +165,11 @@ Agentforce adds a faster option that has no traditional equivalent. Because each
 
 This is only possible if the prior BotVersion has not been deleted. Retaining at least the two most recent BotVersions in production at all times is not optional. It is the safety net that makes fast rollback possible.
 
-> **Scenario:** A new BotVersion activates on Monday morning. By 9:15 AM, the operations team sees a spike in escalation rate in the STDM dashboard. The on-call engineer runs `sf agent activate --version 1` against production. By 9:17 AM, the prior behavior is restored. Total user-facing downtime: two minutes. That is only possible because: (a) BotVersion 1 was not deleted after BotVersion 2 was activated, and (b) the rollback command was documented in the deployment runbook and the on-call engineer did not have to figure it out under pressure.
+> **Scenario:** A new BotVersion activates on Monday morning. By 9:15 AM, the operations team sees a spike in escalation rate in the STDM dashboard. The on-call engineer runs `sf agent activate --version 1` against production. By 9:17 AM, the prior behavior is restored. Total user-facing downtime: two minutes. That is only possible because the prior BotVersion was not deleted after the new one activated, and the rollback command was already documented in the deployment runbook.
 
 ---
 
-### Configuration drift vs. behavioral drift
+### 1.5 Configuration drift vs. behavioral drift
 
 Configuration drift is the familiar ALM problem: the org's metadata state has diverged from what is in source control. You fix it by redeploying from source. This problem predates AI by many years and your existing processes already handle it.
 
@@ -62,17 +177,17 @@ Behavioral drift is new. It describes the agent acting differently even when no 
 
 Monitoring must distinguish between these two failure modes. A sudden behavioral change immediately after a deployment is almost certainly configuration drift or a deployment bug. A gradual behavioral change over days with no deployment activity is almost certainly model-level drift requiring an authoring update.
 
-> **Scenario:** Two teams report agent problems in the same week. Team A's agent started behaving oddly two hours after a Friday deployment. Team B's agent has been gradually giving less complete responses over ten days with no deployments. Team A has configuration drift — likely a subagent instruction that was changed in the deployment. Team B has model drift. Team A's fix is a hotfix deployment or BotVersion rollback. Team B's fix is an authoring revision to tighten the instructions that the model is now interpreting more loosely. Treating both the same way wastes time and may make the situation worse.
+> **Scenario:** Two teams report agent problems in the same week. Team A's agent started behaving oddly two hours after a Friday deployment. Team B's agent has been gradually giving less complete responses over ten days with no deployments. Team A has configuration drift. Team B has model drift. Team A's fix is a hotfix deployment or BotVersion rollback. Team B's fix is an authoring revision to tighten the instructions the model is now interpreting more loosely. Treating both the same way wastes time and may make the situation worse.
 
 ---
 
-### Expanded security surface: prompt injection vs. code and SOQL injection
+### 1.6 Expanded security surface: prompt injection vs. code and SOQL injection
 
 Traditional Salesforce security testing covers SOQL injection, code injection, and sharing-model bypasses. These are well-understood attack vectors with established prevention patterns, and your security reviewers know how to test for them.
 
 Agentforce adds a fundamentally different attack class: prompt injection. An adversarial payload embedded in data the agent retrieves or processes can cause the agent to treat that payload as system instructions — potentially overriding its authored behavior or exfiltrating data.
 
-The ForcedLeak vulnerability (CVSS 9.4) demonstrated this concretely. Malicious instructions embedded in a Web-to-Lead form were stored as a CRM record. Later, when the agent summarized leads, it retrieved the record, the payload entered the agent's grounding context, and the agent treated it as instructions — exfiltrating data to an attacker-controlled endpoint. No special access to the Salesforce org was required. The attack was entirely data-layer.
+The ForcedLeak vulnerability (CVSS 9.4) demonstrated this concretely. Malicious instructions embedded in a Web-to-Lead form were stored as a CRM record. Later, when the agent summarized leads, it retrieved the record, the payload entered the agent's grounding context, and the agent treated it as instructions — exfiltrating data to an attacker-controlled endpoint. No special access to the Salesforce org was required.
 
 Every agent that ingests externally submitted data must be red-team tested for this class of attack in addition to all existing security practices.
 
@@ -80,27 +195,27 @@ Every agent that ingests externally submitted data must be red-team tested for t
 
 ---
 
-### Mapping traditional ALM roles to AgentOps roles
+### 1.7 Mapping traditional ALM roles to AgentOps roles
 
 Every traditional ALM role has a direct counterpart in AgentOps, but each carries expanded responsibilities that need to be explicitly communicated to clients when setting up their delivery team.
 
 The Release Manager now tracks evaluation pass rates as a release-readiness metric alongside open defect counts. The Architect ensures behavioral baselines are captured before integration, not just that code compiles. The QA Engineer owns the `AiEvaluationDefinition` suite — writing utterances, configuring LLM-as-a-Judge scoring, and establishing custom JSONPath evaluations for business rules. This is a new skill with no direct equivalent in Apex testing.
 
-A new Security Reviewer role takes on adversarial red-team testing and Einstein Trust Layer validation. This role must sign off before any agent processes real customer data. It cannot be absorbed into existing QA responsibilities without explicitly expanding the QA team's skills and testing scope.
+A new Security Reviewer role takes on adversarial red-team testing and Einstein Trust Layer validation. This role must sign off before any agent processes real customer data. It cannot be absorbed into existing QA responsibilities without explicitly expanding the team's skills and testing scope.
 
 ---
 
-### Educating clients on why "it passed UAT" is not "done"
+### 1.8 Educating clients on why "it passed UAT" is not "done"
 
 UAT with a fixed set of utterances proves behavior at a single point in time using the current underlying LLM model. That is meaningful. But it is not a permanent guarantee.
 
 Salesforce periodically updates the LLM platform behind Agentforce. Agent behavior can shift without any metadata change being deployed. This means ongoing production monitoring is not an optional operational nice-to-have — it is a required discipline. Clients trained on traditional UAT-as-final-gate thinking need a concrete explanation of why this is different, delivered before the first go-live so expectations are set correctly.
 
-The analogy that works well: traditional software is like a printed document. Once it is printed, it does not change. An AI agent is more like a living document whose interpretation can shift as the underlying model evolves. UAT verifies a snapshot. Monitoring verifies the ongoing state.
+The analogy that works well in client conversations: traditional software is like a printed document. Once it is printed, it does not change. An AI agent is more like a living document whose interpretation can shift as the underlying model evolves. UAT verifies a snapshot. Monitoring verifies the ongoing state.
 
 ---
 
-### Positioning AgentOps as additive rigor, not a replacement
+### 1.9 Positioning AgentOps as additive rigor, not a replacement
 
 Consultants should frame AgentOps to clients as a layer of additional rigor built on top of what the team already does well — not a replacement for existing practices.
 
@@ -114,7 +229,7 @@ Clients who are already mature in Salesforce ALM have a strong foundation. The d
 
 ---
 
-### Release Manager responsibilities and runbook ownership
+### 1.10 Release Manager responsibilities and runbook ownership
 
 The Release Manager coordinates every activity required to move an agent change from development to production. They maintain the release calendar, chair Change Advisory Board (CAB) reviews for high-risk AI changes, and own the deployment runbook end to end.
 
@@ -124,7 +239,7 @@ This role also owns the emergency change process — which means the Release Man
 
 ---
 
-### Agent Developer and Architect responsibilities
+### 1.11 Agent Developer and Architect responsibilities
 
 The Agent Developer or Architect owns the Agent Script, subagent design, and the underlying action implementations. A key AgentOps-specific responsibility is ensuring every change is retrieved into source control immediately — not after UAT, not after testing, but as the first act after any work in Agentforce Builder.
 
@@ -132,7 +247,7 @@ They are also responsible for ensuring behavioral baselines are captured before 
 
 ---
 
-### QA and Evaluation Engineer responsibilities
+### 1.12 QA and Evaluation Engineer responsibilities
 
 The QA or Evaluation Engineer owns the `AiEvaluationDefinition` test suite in its entirety. This includes writing representative utterances, defining expected subagent routing per test case, configuring LLM-as-a-Judge scoring criteria, and establishing JSONPath-based custom evaluations for business rule enforcement.
 
@@ -140,7 +255,7 @@ This role is the last technical sign-off before a change enters UAT. Their evalu
 
 ---
 
-### Security Reviewer responsibilities
+### 1.13 Security Reviewer responsibilities
 
 The Security Reviewer is responsible for adversarial red-team testing: submitting prompt injection payloads, indirect payload attacks, and data exfiltration attempts to verify the agent refuses them. They also verify the Einstein Trust Layer configuration — data masking patterns, toxicity detection thresholds, PII scope, and the zero-retention policy.
 
@@ -150,7 +265,7 @@ No agent that processes real customer data should enter a production environment
 
 ---
 
-### Business Owner and UAT Approver responsibilities
+### 1.14 Business Owner and UAT Approver responsibilities
 
 The Business Owner validates agent behavior against the original business requirements in the UAT environment, using the Agentforce Builder live preview to interact with realistic scenarios. Their sign-off must be documented — a verbal approval is not sufficient for the compliance record.
 
@@ -158,7 +273,7 @@ This role should be briefed on what a realistic failure mode looks like — not 
 
 ---
 
-### Risk classification model for change types
+### 1.15 Risk classification model for change types
 
 Not every Agentforce change requires the same approval overhead. Applying the right governance level to the right change type is what keeps teams both secure and fast.
 
@@ -168,14 +283,14 @@ Not every Agentforce change requires the same approval overhead. Applying the ri
 | Adding or removing a subagent | Medium | PR review + evaluation suite + QA sign-off |
 | Modifying `ruleExpression` security guards | High | Full CAB review + Security sign-off |
 | Releasing a net-new agent to production | High | Full CAB review + UAT approval + Security sign-off |
-| Modifying a shared Prompt Template used by multiple agents | High | Full CAB + cross-agent impact analysis |
+| Modifying a shared Prompt Template | High | Full CAB + cross-agent impact analysis |
 | Emergency hotfix to a live agent | High | Pre-authorized emergency approver + post-incident review |
 
 Skipping a required approval level because of schedule pressure is how behavioral regressions and security vulnerabilities reach production.
 
 ---
 
-### CAB review triggers
+### 1.16 CAB review triggers
 
 Three change categories reliably require full CAB review.
 
@@ -183,7 +298,7 @@ First, any relaxation of a `ruleExpression` security guard. These declarative co
 
 ---
 
-### Emergency and hotfix approval path
+### 1.17 Emergency and hotfix approval path
 
 When a production defect requires immediate resolution, a pre-authorized emergency approver can bypass the standard CAB queue. The key constraint is that this pre-authorization must exist before the incident occurs. You cannot improvise who the emergency approver is during an outage.
 
@@ -191,7 +306,7 @@ A post-incident review is mandatory after every emergency approval. It covers ro
 
 ---
 
-### Preventing unauthorized production changes
+### 1.18 Preventing unauthorized production changes
 
 Restrict the `Customize Application` permission in production to the CI/CD service account only, and remove standing edit access from admin profiles. This is the primary technical control that prevents developers or administrators from making direct changes in Agentforce Builder that bypass source control, CI validation, and evaluation gates.
 
@@ -203,7 +318,7 @@ Configure Salesforce Event Monitoring to alert whenever a `Bot`, `GenAiPlannerBu
 
 ---
 
-### Recommended environment hierarchy
+### 1.19 Recommended environment hierarchy
 
 The recommended six-tier hierarchy flows from Developer Sandbox through Integration, QA, UAT, Staging, and Production. Each tier has a distinct gate before promotion.
 
@@ -228,13 +343,13 @@ Skipping a tier to accelerate delivery typically results in discovering the skip
 
 ---
 
-### Purpose and gate criteria of each tier
+### 1.20 Purpose and gate criteria of each tier
 
 Developer sandboxes exist for individual feature work and early syntax validation using `sf agent validate authoring-bundle`. Integration validates the combined state of all in-progress work after feature branch merges, and automated evaluation suites run here as the primary automated gate. QA runs the full suite including adversarial prompt injection tests with masked, representative data. UAT is where business owners interact with realistic scenarios and provide documented sign-off. Staging executes the complete production deployment runbook as a dry run using a Full Copy environment. Production activation is always a deliberate, separately triggered step — never automatic.
 
 ---
 
-### Feature flag and licensing verification per environment
+### 1.21 Feature flag and licensing verification per environment
 
 Einstein Setup, Agentforce Agents feature enablement, and Prompt Template licensing must be verified in every target org before each pipeline run. A sandbox refresh does not guarantee that feature flags from production are carried over.
 
@@ -242,7 +357,7 @@ Missing feature flags produce misleading errors like "Feature is not currently e
 
 ---
 
-### Agent User provisioning per environment
+### 1.22 Agent User provisioning per environment
 
 The `default_agent_user` field in a `Bot` record references an org-specific user record by ID. That user must exist in every target org with an Einstein Agent license and the correct permission sets assigned. This is not configuration that transfers via metadata deployment.
 
@@ -250,7 +365,7 @@ Create an agent user substitution step in your deployment runbook for every envi
 
 ---
 
-### Data Cloud and STDM setup per environment
+### 1.23 Data Cloud and STDM setup per environment
 
 If the agent uses knowledge grounding via the Agentforce Data Library, or if STDM telemetry will be queried for observability, the Data Cloud CRM Connector must be active and Data Cloud permissions must be provisioned separately in each org. Metadata deployment does not activate the CRM Connector.
 
@@ -258,7 +373,7 @@ This is a common source of post-deployment confusion where the agent appears to 
 
 ---
 
-### Sandbox refresh impact on active BotVersion
+### 1.24 Sandbox refresh impact on active BotVersion
 
 When a sandbox is refreshed from production, the active BotVersion resets to whatever version was active in the production snapshot at the time of the refresh. Any in-flight testing is immediately disrupted because the agent's behavior reverts to the production baseline, not the state under test.
 
@@ -266,7 +381,7 @@ Plan sandbox refreshes explicitly around the release calendar. Communicate refre
 
 ---
 
-### Advising clients on sandbox types for agent workloads
+### 1.25 Advising clients on sandbox types for agent workloads
 
 Recommend Developer sandboxes for individual feature work where the primary need is syntax validation and interactive debugging. Recommend Partial Copy sandboxes for QA and UAT, where representative but masked production data is required for evaluation accuracy and business-owner testing realism. Reserve Full Copy sandboxes for Staging only, where production-equivalent data volume is required.
 
@@ -278,7 +393,7 @@ Full Copy sandboxes are expensive to refresh and maintain. Using one for QA is u
 
 ---
 
-### Hotfix branch sourcing from production tag vs. main
+### 1.26 Hotfix branch sourcing from production tag vs. main
 
 Emergency hotfix branches must originate from the production release tag in Git, not from `main`. The `main` branch at the time of the incident may contain unreleased features from in-flight work that should absolutely not ship as part of an emergency fix.
 
@@ -286,7 +401,7 @@ Branching from the production tag guarantees the hotfix contains only what is cu
 
 ---
 
-### Accelerated deployment path for emergencies
+### 1.27 Accelerated deployment path for emergencies
 
 Emergency fixes can skip the standard integration and QA sandbox promotion queue, but two gates cannot be skipped regardless of urgency: `sf agent validate authoring-bundle` syntax checking, and a critical-path evaluation suite covering the affected functionality. These take minutes to execute and exist to prevent an emergency fix from introducing a new defect into production.
 
@@ -296,7 +411,7 @@ Every other gate can be bypassed with appropriate emergency approval. These two 
 
 ---
 
-### 24-hour back-propagation rule
+### 1.28 24-hour back-propagation rule
 
 Any direct or emergency production change must be retrieved to source control and deployed back to all lower environments within 24 hours of going live. This prevents the hotfix from being silently overwritten by the next regular release that promotes from an environment that never received the fix.
 
@@ -304,13 +419,13 @@ The 24-hour window is not aspirational. Treat it as a hard SLA with a named owne
 
 ---
 
-### Post-incident review requirement
+### 1.29 Post-incident review requirement
 
 Every hotfix, regardless of severity, triggers a mandatory post-incident review. The review documents root cause, identifies which governance gate failed to catch the issue, and defines the process change that prevents recurrence. This review is scheduled within 48 hours while memory is fresh — it is not optional cleanup.
 
 ---
 
-### Hotfix sandbox usage boundaries
+### 1.30 Hotfix sandbox usage boundaries
 
 The hotfix sandbox's value comes entirely from its production parity. The moment a developer uses it for in-progress feature work, its state diverges from production and it can no longer serve as a reliable validation environment for emergency fixes. Enforce this boundary technically by restricting deployment access to a dedicated service account not used for feature branch work.
 
@@ -318,15 +433,13 @@ The hotfix sandbox's value comes entirely from its production parity. The moment
 
 ---
 
-# Source Control, Metadata Architecture & Deployment Engineering
-
----
+# 2. Source Control, Metadata Architecture & Deployment Engineering
 
 ## Establish branching and bundle versioning strategy
 
 ---
 
-### Branch structure: main, release, feature, hotfix
+### 2.1 Branch structure: main, release, feature, hotfix
 
 The `main` branch mirrors production at all times. Release branches stabilize committed bundles with `<target>` fields pinned, acting as the integration point for everything going into a specific release. Feature branches hold draft bundles that support iterative publishing during development. Hotfix branches originate exclusively from production release tags.
 
@@ -342,11 +455,13 @@ Understanding this structure is essential for every team member. A developer who
 
 ---
 
-### Draft vs. committed AiAuthoringBundle states
+### 2.2 Draft vs. committed AiAuthoringBundle states
 
 The `<target>` field in `bundle-meta.xml` is the single mechanism that distinguishes a draft bundle from a committed, versioned one.
 
-**Draft** (no `<target>` field): used in feature branches and developer sandboxes. Can be iteratively published — each publish overwrites the previous runtime state. **Committed** (with `<target>` set to `{Bot}.{BotVersion}`): used in release branches. Immutable versioned snapshot. Publishing a committed bundle to a development sandbox fails because the versioned identity is already claimed.
+**Draft** (no `<target>` field): used in feature branches and developer sandboxes. Can be iteratively published — each publish overwrites the previous runtime state.
+
+**Committed** (with `<target>` set to `{Bot}.{BotVersion}`): used in release branches. Immutable versioned snapshot. Publishing a committed bundle to a development sandbox fails because the versioned identity is already claimed.
 
 Mixing draft and committed bundle states across environments is the most common source of confusing deployment failures on Agentforce projects.
 
@@ -354,7 +469,7 @@ Mixing draft and committed bundle states across environments is the most common 
 
 ---
 
-### When to pin a bundle to a BotVersion
+### 2.3 When to pin a bundle to a BotVersion
 
 Pin the bundle during UAT promotion by adding the `<target>` field to `bundle-meta.xml` and assigning a `versionTag` for release traceability. This is the formal transition from development artifact to release candidate.
 
@@ -362,33 +477,33 @@ Before this point, the bundle should remain in draft state to support rapid iter
 
 ---
 
-### Repository structure for v65+ orgs
+### 2.4 Repository structure for v65+ orgs
 
 ```
 force-app/main/default/
 ├── aiAuthoringBundles/
 │   └── My_Agent/
-│       ├── My_Agent.agent          # Agent Script source (human-editable)
-│       └── My_Agent.bundle-meta.xml  # draft: no <target>
+│       ├── My_Agent.agent             # Agent Script source (human-editable)
+│       └── My_Agent.bundle-meta.xml   # draft: no <target>
 │   └── My_Agent_1/
-│       ├── My_Agent_1.agent        # committed snapshot
-│       └── My_Agent_1.bundle-meta.xml  # <target>My_Agent.v1</target>
+│       ├── My_Agent_1.agent           # committed snapshot
+│       └── My_Agent_1.bundle-meta.xml # <target>My_Agent.v1</target>
 ├── genAiPlannerBundles/
 │   └── My_Agent_v1/
 │       ├── agentGraph/
-│       │   └── graph.json          # DO NOT EDIT — machine-generated
+│       │   └── graph.json             # DO NOT EDIT — machine-generated
 │       └── localActions/
 ├── bots/
 │   └── My_Agent/
 │       ├── My_Agent.bot-meta.xml
-│       └── v1.botVersion-meta.xml  # must be listed explicitly in package.xml
+│       └── v1.botVersion-meta.xml     # must be listed explicitly in package.xml
 ```
 
 Understanding this layout is required for meaningful PR review. A reviewer who does not know the structure cannot distinguish a safe Agent Script iteration from a dangerous security guard relaxation.
 
 ---
 
-### graph.json is machine-generated — never hand-edit
+### 2.5 graph.json is machine-generated — never hand-edit
 
 The `agentGraph/graph.json` file is compiled from the Agent Script source when you publish to a sandbox. It is the runtime graph that the Agentforce reasoning engine actually executes. Editing it directly breaks the correspondence between the authored `.agent` file and the compiled runtime.
 
@@ -396,7 +511,7 @@ If you modify the `.agent` file, you must publish to a sandbox and re-retrieve t
 
 ---
 
-### Retrieval pitfalls: Agent pseudo-type exclusions
+### 2.6 Retrieval pitfalls: Agent pseudo-type exclusions
 
 Using `Agent:My_Agent` as the retrieval target silently excludes the `AiAuthoringBundle`. You will retrieve the `Bot`, `BotVersion`, `GenAiPlannerBundle`, `GenAiPlugin`, and `GenAiFunction` records — but the Agent Script source file, the primary artifact developers work with, will be missing.
 
@@ -404,7 +519,7 @@ Always retrieve `AiAuthoringBundle` explicitly as a separate metadata type. This
 
 ---
 
-### BotVersion explicit-naming requirement
+### 2.7 BotVersion explicit-naming requirement
 
 `BotVersion` does not support wildcard retrieval (`<members>*</members>`). Every BotVersion that needs to be in source control must be named explicitly in `package.xml` using the `{Bot}.{version}` format:
 
@@ -423,7 +538,7 @@ Wildcard retrieval against BotVersion either fails silently or returns nothing. 
 
 ---
 
-### The mental model before the detail
+### 2.8 The mental model before the detail
 
 Before diving into individual metadata types, it helps to anchor the four-layer model with a single idea: each layer answers a different question about the agent.
 
@@ -438,7 +553,7 @@ Changes to the Intelligence layer have the highest risk of behavioral regression
 
 ---
 
-### Bot: the identity layer
+### 2.9 Bot: the identity layer
 
 The `Bot` metadata type defines who the agent is: its display name, `botType` (either `InternalCopilot` for employee-facing agents or `ExternalCopilot` for customer-facing agents), channel configuration, privacy and logging settings, and session timeout behavior.
 
@@ -446,7 +561,7 @@ Changing the `botType` has implications for which permission sets are required, 
 
 ---
 
-### BotVersion: the scaffold layer
+### 2.10 BotVersion: the scaffold layer
 
 The `BotVersion` houses the dialog logic, conversation variables, the LLM planner reference (`genAiPlannerName`), tone, language configuration, and error dialog mappings. Only one BotVersion can be active at a time.
 
@@ -454,7 +569,7 @@ Deploying a new BotVersion to an org does not automatically make it active — a
 
 ---
 
-### GenAiPlannerBundle: the intelligence layer
+### 2.11 GenAiPlannerBundle: the intelligence layer
 
 The `GenAiPlannerBundle` is the most complex metadata type in the stack. It contains local subagent definitions (`localTopics` in v65+), local action definitions (`localActions`), the compiled runtime graph (`agentGraph/graph.json`), `attributeMappings` for secure PII propagation between actions, and `ruleExpressions` that gate subagents and actions behind boolean conditions.
 
@@ -462,7 +577,7 @@ Changes to this layer have the highest risk of behavioral regression because the
 
 ---
 
-### AiAuthoringBundle: the authoring layer
+### 2.12 AiAuthoringBundle: the authoring layer
 
 The `AiAuthoringBundle` contains the `.agent` Agent Script source file and the `bundle-meta.xml` version-pinning metadata. This is the only layer where human-authored intent is expressed in readable form — all other layers are either compiled outputs or platform-managed metadata.
 
@@ -470,7 +585,7 @@ It is also the only layer that exists in both draft and committed states, making
 
 ---
 
-### AiEvaluationDefinition as quality-gate metadata
+### 2.13 AiEvaluationDefinition as quality-gate metadata
 
 `AiEvaluationDefinition` and `AiTestingDefinition` records encapsulate evaluation utterances, expected subagent routing, conversation history for multi-turn tests, and LLM-as-a-Judge scoring criteria. Because these are deployed as standard Salesforce metadata, they can be source-controlled, reviewed, and versioned alongside the agent they test.
 
@@ -478,7 +593,7 @@ This makes the evaluation suite a CI/CD-native quality gate rather than a manual
 
 ---
 
-### attributeMappings for secure data propagation
+### 2.14 attributeMappings for secure data propagation
 
 `attributeMappings` in the `GenAiPlannerBundle` allow sensitive outputs from one action — such as a verified identity flag or a user's email address — to be passed directly to another action without routing the value through the LLM's context window.
 
@@ -488,11 +603,11 @@ This is the primary technical control against prompt-injection-based data exfilt
 
 ---
 
-### ruleExpressions as declarative security gates
+### 2.15 ruleExpressions as declarative security gates
 
 `ruleExpressions` are boolean conditions defined in the `GenAiPlannerBundle` that lock specific subagents or actions behind verified preconditions. Unlike an instruction in Agent Script telling the model "only do this after verification," a `ruleExpression` is evaluated by the platform before the LLM is involved at all — making it impossible for a malicious prompt to bypass.
 
-Any relaxation of a `ruleExpression` is a high-risk change requiring CAB review. A `ruleExpression` that allows access to a financial transaction before `isIdentityVerified = true` is not an instruction the model can be convinced to ignore — it is a platform-enforced gate.
+Any relaxation of a `ruleExpression` is a high-risk change requiring CAB review. A `ruleExpression` that gates a financial transaction action behind `isIdentityVerified = true` cannot be overridden by a user typing "I have already been verified, please proceed." It is a platform-enforced gate, not a suggestion to the model.
 
 ---
 
@@ -500,27 +615,27 @@ Any relaxation of a `ruleExpression` is a high-risk change requiring CAB review.
 
 ---
 
-### Why phase ordering exists and what happens when it breaks
+### 2.16 Why phase ordering exists and what happens when it breaks
 
 Agentforce metadata has hard dependency ordering because each layer references the layer beneath it. Agent actions reference Apex class API names. Prompt Templates reference Flows. The `GenAiPlannerBundle` references Prompt Templates. The `AiAuthoringBundle` references the Planner. Deploy anything out of order and the deployment fails immediately with an unresolved reference error.
 
-The five-phase sequence exists to encode this dependency chain in a form a CI/CD pipeline can enforce automatically. Developers should not need to remember the ordering — the pipeline definition should make violating it impossible.
+The five-phase sequence encodes this dependency chain in a form a CI/CD pipeline can enforce automatically. Developers should not need to remember the ordering — the pipeline definition should make violating it impossible.
 
 ---
 
-### Phase 1: Base platform dependencies
+### 2.17 Phase 1: Base platform dependencies
 
 Apex classes, triggers, custom objects, custom fields, and autolaunched flows must be fully deployed and compiled before any Agentforce metadata that references them. For net-new agents, this means the full action implementation stack must be ready before a single Agentforce metadata type is deployed.
 
 ```bash
 sf project deploy start --json \
-  -m ApexClass,Flow,CustomObject,CustomField \
+  -mexClass,Flow,CustomObject,CustomField \
   --target-org target-env
 ```
 
 ---
 
-### Phase 2: GenAiPromptTemplate deployment timing
+### 2.18 Phase 2: GenAiPromptTemplate deployment timing
 
 `GenAiPromptTemplate` metadata must deploy after its underlying Apex classes and Flows are compiled (Phase 1) but before any agent actions that invoke the template (Phases 4 and 5).
 
@@ -528,19 +643,19 @@ If the template is grounded by a Template-Triggered Prompt Flow that calls Invoc
 
 ---
 
-### Phase 3: Global Asset Library components
+### 2.19 Phase 3: Global Asset Library components
 
 Global `GenAiFunction` and `GenAiPlugin` records must deploy after Phase 1 but before Phase 4. For agents that use only local subagents and actions embedded in the bundle (the default in API v65+), this phase is skipped entirely. Include it only when the agent explicitly references shared Asset Library components.
 
 ---
 
-### Phase 4: GenAiPlannerBundle
+### 2.20 Phase 4: GenAiPlannerBundle
 
 The `GenAiPlannerBundle` carries the agent's reasoning and orchestration layer: subagent definitions, action definitions, the compiled graph, attribute mappings, and security rule expressions. It must be present in the target org before the `AiAuthoringBundle` can be published, because the publish step links the Bundle to the Planner via `BotVersion.PlannerId`.
 
 ---
 
-### Phase 5: AiAuthoringBundle deploy, publish, and activate
+### 2.21 Phase 5: AiAuthoringBundle deploy, publish, and activate
 
 Deploying the `AiAuthoringBundle` moves the Agent Script source to the target org. Publishing compiles it into the runtime. These are two distinct steps — deployment alone does not make the agent live.
 
@@ -566,7 +681,7 @@ After publishing, run the behavioral evaluation gate. Only after it passes shoul
 
 ---
 
-### The bifurcated transaction strategy for Prompt Flow + Apex conflicts
+### 2.22 The bifurcated transaction strategy for Prompt Flow + Apex conflicts
 
 When a `GenAiPromptTemplate` is grounded by a Template-Triggered Prompt Flow that calls Invocable Apex, deploying the template and the Flow/Apex in the same metadata transaction triggers a compilation failure. The Apex `@InvocableMethod` schema cannot be resolved at the same time as generative AI entity validation within a single transaction.
 
@@ -584,7 +699,7 @@ This pattern cannot be resolved through code changes. It requires the bifurcated
 
 ---
 
-### Einstein Search Retriever ID substitution across orgs
+### 2.23 Einstein Search Retriever ID substitution across orgs
 
 `GenAiPromptTemplate` components that reference Einstein Search Retrievers embed an org-specific Retriever ID. When the template is promoted to a target org, that source-org ID does not exist in the target org, causing a misleading "template corruption" error.
 
@@ -592,7 +707,7 @@ The fix: deploy the Retriever to the target org first, query the target org for 
 
 ---
 
-### Distinguishing deployment success from behavioral change confirmation
+### 2.24 Distinguishing deployment success from behavioral change confirmation
 
 A green deployment pipeline confirms that metadata structure moved from one org to another without error. It does not confirm that the agent's behavior changed as intended. A committed bundle already at that version produces a successful no-op. An Agent Script change that introduced a logic error will deploy successfully and fail behaviorally.
 
@@ -604,7 +719,7 @@ Always run `sf agent test run` and compare the JSON output to the prior baseline
 
 ---
 
-### Pre-flight verification checklist
+### 2.25 Pre-flight verification checklist
 
 Before any deployment to any target environment, verify:
 
@@ -613,29 +728,29 @@ Before any deployment to any target environment, verify:
 - [ ] Prompt Template licenses are active
 - [ ] The `default_agent_user` exists with an Einstein Agent license and correct permission sets
 - [ ] Data Cloud CRM Connector is active (knowledge-grounded agents only)
-- [ ] API version of the target org is known; CLI flags are set to match
+- [ ] API version of the target org is known and CLI flags are set to match
 
 Missing any of these prerequisites produces errors that appear to be deployment failures but are actually environment configuration gaps — and they can waste significant diagnostic time.
 
 ---
 
-### The five-step CI pipeline sequence
+### 2.26 The five-step CI pipeline sequence
 
 ```
-1. [Pre-flight] Verify Einstein Setup, licensing, agent user
+1. [Pre-flight]  Verify Einstein Setup, licensing, agent user
 2. sf agent validate authoring-bundle --json     ← syntax gate
-3. sf project deploy start --json                ← Phases 1–4
+3. sf project deploy start --json                ← Phases 1-4
 4. sf project deploy start --json                ← Phase 5: AiAuthoringBundle
 5. sf agent publish authoring-bundle --json      ← compile and link runtime
 6. sf agent test run --json                      ← behavioral quality gate
 7. sf agent activate --json                      ← promote to active version
 ```
 
-Each step must complete successfully before the next begins. The most common sequencing error is treating `deploy` and `publish` as the same step — they are not.
+Each step must complete successfully before the next begins. The most common sequencing error is treating `deploy` and `publish` as the same step — they are not. Deploy moves metadata. Publish compiles the runtime.
 
 ---
 
-### Manual steps that cannot be automated
+### 2.27 Manual steps that cannot be automated
 
 Several Agentforce configuration steps cannot be automated via the Metadata API and must appear as explicit human steps in the deployment runbook.
 
@@ -645,14 +760,14 @@ Several Agentforce configuration steps cannot be automated via the Metadata API 
 | Data Cloud ingestion connection setup | Not exposed via Metadata API |
 | Data Cloud stream activation | Not exposed via Metadata API |
 | Channel assignments (Slack, WhatsApp, etc.) | Not surfaced via Metadata API |
-| Standard Salesforce-provided subagent assignments | Must be added via Agentforce Builder UI |
+| Standard subagent assignments | Must be added via Agentforce Builder UI |
 | Search index re-crawling for RAG agents | Manual step in Data 360 after deployment |
 
 Missing any of these in the runbook results in a technically successful deployment that is functionally incomplete.
 
 ---
 
-### Common deployment error patterns
+### 2.28 Common deployment error patterns
 
 Three error patterns appear repeatedly across Agentforce projects.
 
@@ -666,26 +781,24 @@ Template corruption errors on `GenAiPromptTemplate` deployments usually mean an 
 
 ---
 
-# Testing & Security
-
----
+# 3. Testing & Security
 
 ## Build a layered testing strategy across the Agentforce testing pyramid
 
 ---
 
-### Why the traditional testing pyramid is not enough
+### 3.1 Why the traditional testing pyramid is not enough
 
 Traditional Salesforce testing has a well-understood pyramid: Apex unit tests at the base, integration tests in the middle, UI tests at the top. That pyramid catches code-level bugs, integration failures, and UI regression. It is excellent at what it does.
 
-But it cannot catch a routing failure caused by ambiguous subagent instructions. It cannot catch a response quality regression caused by a background LLM update. It cannot catch a prompt injection attack that bypasses the agent's authored controls. The Agentforce testing pyramid adds layers above and below the traditional model to cover these new failure classes.
+But it cannot catch a routing failure caused by ambiguous subagent instructions. It cannot catch a response quality regression caused by a background LLM update. It cannot catch a prompt injection attack that bypasses the agent's authored controls. The Agentforce testing pyramid adds layers to cover these new failure classes.
 
 ```
          ┌────────────────────────────┐
          │  Security Red-Teaming      │  ← catches adversarial exploits
          ├────────────────────────────┤
          │  End-to-End Integration    │  ← catches downstream system failures
-         ├────────
+         ├────────────────────────────┤
          │  Multi-Turn Conversation   │  ← catches stateful memory failures
          ├────────────────────────────┤
          │  LLM-as-a-Judge Evaluation │  ← catches routing + quality regressions
@@ -700,7 +813,7 @@ Each layer catches a distinct class of failure that the other layers cannot dete
 
 ---
 
-### Apex unit tests for action implementations
+### 3.2 Apex unit tests for action implementations
 
 Every Apex class powering an agent action must have standard Apex unit test coverage using `@IsTest(SeeAllData=false)` and test data factories. Tests must assert on the specific `outputParam` values returned under varied inputs — not just achieve line coverage.
 
@@ -708,15 +821,15 @@ Bulk behavior must be covered because the LLM may invoke an action repeatedly ac
 
 ---
 
-### Deterministic logic tests for Agent Script conditionals
+### 3.3 Deterministic logic tests for Agent Script conditionals
 
 Agent Script's `available when` guards, `ruleExpression` conditions, and conversation variable state transitions execute deterministically and can be tested like a state machine. Verify that a guarded action cannot be invoked when its precondition is `false`. Verify that the correct variable is set when a specific action completes.
 
-Use `sf agent preview start` and `sf agent preview send` to drive specific Agent Script paths interactively during development and capture the expected state transitions.
+Use `sf agent preview start` and `sf agent preview send` to drive specific Agent Script paths interactively during development and capture the expected state transitions before writing formal test cases.
 
 ---
 
-### LLM-as-a-Judge evaluation fundamentals
+### 3.4 LLM-as-a-Judge evaluation fundamentals
 
 The Agentforce Testing Center uses Salesforce's SFR-Judge models to evaluate agent responses probabilistically. Instead of asserting that a specific output string appears, the evaluation asks whether the response is coherent, complete, concise, and adherent to the subagent's authored instructions.
 
@@ -729,29 +842,29 @@ The Agentforce Testing Center uses Salesforce's SFR-Judge models to evaluate age
 | Completeness | All requested info present | LLM Judge pass/fail |
 | Instruction Adherence | Followed authored instructions | HIGH / LOW / UNCERTAIN |
 
-Understanding what each metric actually validates allows the QA engineer to write test cases that exercise the right behavioral properties rather than gaming pass rates with easy utterances.
+Understanding what each metric validates allows the QA engineer to write test cases that exercise the right behavioral properties rather than gaming pass rates with easy utterances.
 
 ---
 
-### Multi-turn conversation testing for memory retention
+### 3.5 Multi-turn conversation testing for memory retention
 
 Real users provide context incrementally across multiple turns, pivot topics, and reference information from earlier in the conversation. Single-shot test utterances do not cover these patterns.
 
 Inject a `conversationHistory` array into the test input metadata to simulate prior turns and verify that the agent correctly retains working memory — for example, that an account ID established in turn 1 is correctly passed to an action in turn 4.
 
-> **Scenario:** A test case simulates a three-turn conversation: Turn 1 — "I need to check the status of my order." Turn 2 — "Actually, can I change the shipping address?" Turn 3 — "And while I am here, can I add an item?" Without multi-turn testing, you would not catch that the agent loses the order ID context when the user pivots to the address change in turn 2. Single-shot testing would pass all three utterances individually while missing the stateful failure that only surfaces across turns.
+> **Scenario:** A test case simulates a three-turn conversation. Turn 1: "I need to check the status of my order." Turn 2: "Actually, can I change the shipping address?" Turn 3: "And while I am here, can I add an item?" Without multi-turn testing, you would not catch that the agent loses the order ID context when the user pivots to the address change in turn 2. Single-shot testing would pass all three utterances individually while missing the stateful failure that only surfaces across turns.
 
 ---
 
-### Security red-teaming as a distinct test layer
+### 3.6 Security red-teaming as a distinct test layer
 
 Adversarial prompt injection testing is not a one-time pre-launch checkbox. It is a continuous test layer that must run as part of the QA evaluation suite on every promotion.
 
-Red-team test cases should include: attempts to override system instructions via user input, attempts to extract PII through conversational manipulation, ForcedLeak-style indirect injection tests for agents that retrieve externally submitted data, and attempts to invoke high-risk actions before identity verification gates are satisfied. A passing red-team suite is a hard Gate 3 requirement.
+Red-team test cases should include: attempts to override system instructions via user input, attempts to extract PII through conversational manipulation, ForcedLeak-style indirect injection tests for agents that retrieve externally submitted data, and attempts to invoke high-risk actions before identity verification gates are satisfied. A passing red-team suite is a hard Gate 3 requirement — not an optional security exercise.
 
 ---
 
-### Converting production failures into permanent regression cases
+### 3.7 Converting production failures into permanent regression cases
 
 Every production session where the agent misrouted an utterance or returned an inadequate response should become a new `AiEvaluationDefinition` test case within 48 hours of discovery. Extract the utterance from STDM, define the expected routing, and add it to the suite.
 
@@ -763,7 +876,7 @@ This converts the cost of a production failure into a permanent improvement in r
 
 ---
 
-### Creating AiEvaluationDefinition test suites via CLI
+### 3.8 Creating AiEvaluationDefinition test suites via CLI
 
 ```bash
 # Generate a starter YAML spec from the agent's schema
@@ -788,19 +901,19 @@ The agent must be published before `sf agent generate test-spec` can reference i
 
 ---
 
-### Execution capacity limits and rate-limit avoidance
+### 3.9 Execution capacity limits and rate-limit avoidance
 
-The Agentforce Testing Center enforces limits that must be respected in CI/CD pipelines. Exceeding them produces Agent Rate Limit Errors that throttle org-wide AI requests, affecting production users if the evaluation runs against a shared environment.
+The Agentforce Testing Center enforces limits that must be respected in CI/CD pipelines. Exceeding them produces Agent Rate Limit Errors that throttle org-wide AI requests, potentially affecting production users if evaluations run against a shared environment.
 
 - Maximum 500 test cases per evaluation job
 - Maximum 10 concurrent jobs per hour
-- Each test case consumes approximately 5 seconds and draws from Einstein Requests allowance
+- Each test case consumes approximately 5 seconds and draws from the Einstein Requests allowance
 
-Segment large regression suites into batches of 20 to 30 cases, organized by functional area. This prevents a rate-limit failure in one area from blocking unrelated areas from being evaluated.
+Segment large regression suites into batches of 20 to 30 cases organized by functional area. This prevents a rate-limit failure in one area from blocking unrelated areas from being evaluated.
 
 ---
 
-### Behavioral regression baselining and artifact storage
+### 3.10 Behavioral regression baselining and artifact storage
 
 On every `release/*` branch, run `sf agent test run --json` and store the complete output as a named pipeline artifact alongside the deployed bundle version identifier and deployment timestamp.
 
@@ -811,11 +924,11 @@ sf agent test run --json \
   > artifacts/regression-baseline-$(date +%Y%m%d-%H%M%S).json
 ```
 
-This creates a durable behavioral record for every release. When a production incident is reported, comparing the current evaluation output to the most recent clean baseline is the first diagnostic step — and it is the only way to distinguish a deployment-caused regression from model-level drift.
+When a production incident is reported, comparing the current evaluation output to the most recent clean baseline is the first diagnostic step — and it is the only way to distinguish a deployment-caused regression from model-level drift.
 
 ---
 
-### Custom JSONPath evaluation criteria for compliance rules
+### 3.11 Custom JSONPath evaluation criteria for compliance rules
 
 Business rules that cannot be validated by standard LLM-as-a-Judge metrics can be enforced using JSONPath expressions against the execution payload. Target the deterministic action input payload rather than the non-deterministic final conversational response text.
 
@@ -824,15 +937,13 @@ Business rules that cannot be validated by standard LLM-as-a-Judge metrics can b
 $.generatedData.invokedActions[*][?(@.function.name == 'DraftReplyEmail')].function.input.recipient
 ```
 
-The LLM's phrasing of its response varies. The inputs it passed to a backend action do not. JSONPath evaluation on action inputs is the correct tool for compliance-sensitive assertions.
-
-Two evaluation operators are available:
+The LLM's phrasing of its response varies. The inputs it passed to a backend action do not. Two evaluation operators are available:
 - `string_comparison`: `equals`, `contains`, `startswith`, `endswith`
 - `numeric_comparison`: `equals`, `greater_than`, `less_than`, and range operators
 
 ---
 
-### Reading trace files for interactive debugging
+### 3.12 Reading trace files for interactive debugging
 
 Preview sessions generate step-by-step execution trace files in `.sfdx/agents/`. Three step types reveal different layers of the execution:
 
@@ -848,7 +959,7 @@ The VS Code Agentforce extension can attach the Apex Replay Debugger to the exec
 
 ---
 
-### Grounding accuracy validation for RAG-based templates
+### 3.13 Grounding accuracy validation for RAG-based templates
 
 For Prompt Templates that use retrieval-augmented generation, verify that the retrieval pipeline returns the correct knowledge chunks for a representative set of merge field values. Test with realistic CRM records in the QA sandbox — not synthetic placeholders.
 
@@ -856,7 +967,7 @@ An incorrectly grounded prompt can produce responses that are confident-sounding
 
 ---
 
-### Data masking compliance testing with representative PII
+### 3.14 Data masking compliance testing with representative PII
 
 Confirm that PII in Prompt Template merge fields is correctly masked by the Einstein Trust Layer before the prompt leaves the Salesforce trust boundary. Test with records containing realistic PII patterns — names, email addresses, phone numbers, financial account numbers — and verify the outbound prompt payload in the Trust Layer audit logs shows anonymized placeholders, not actual values.
 
@@ -868,7 +979,7 @@ Testing with sanitized records that contain no real PII patterns will not reveal
 
 ---
 
-### Why AI expands the traditional security surface
+### 3.15 Why AI expands the traditional security surface
 
 Every Agentforce agent that has access to CRM data and can invoke backend actions is a new attack surface that did not exist before AI was introduced into the system. Traditional penetration testing covers SOQL injection, code injection, and sharing-model bypass. It does not cover prompt injection attacks, where adversarial text is used to override an agent's system instructions.
 
@@ -876,7 +987,7 @@ Adding an AI agent to a Salesforce org requires explicitly expanding the securit
 
 ---
 
-### Prompt injection mechanics and the ForcedLeak precedent
+### 3.16 Prompt injection mechanics and the ForcedLeak precedent
 
 ForcedLeak (CVSS 9.4) demonstrated a concrete, exploitable vulnerability pattern. Malicious instructions embedded in a Web-to-Lead form were stored as a CRM record. Later, when an agent was asked to summarize leads, it retrieved the record, the malicious payload entered the agent's grounding context, and the agent treated it as system instructions — exfiltrating data to an attacker-controlled endpoint. The attack required no special access to the Salesforce org.
 
@@ -884,25 +995,25 @@ The fundamental defensive principle: system instructions and grounded data are n
 
 ---
 
-### attributeMappings for keeping sensitive values out of LLM context
+### 3.17 attributeMappings for keeping sensitive values out of LLM context
 
 Use `attributeMappings` in the `GenAiPlannerBundle` to route sensitive outputs — identity verification flags, user email addresses, account numbers, authorization tokens — directly from one action to another without passing the value through the LLM's context window.
 
-When a sensitive value travels through the model's context, it becomes visible to the model and can potentially be leaked through a manipulated response. `attributeMappings` bypass the model entirely for these transfers.
+When a sensitive value travels through the model's context, it becomes visible to the model and can potentially be leaked through a manipulated response or exfiltrated through an injection attack. `attributeMappings` bypass the model entirely for these transfers, eliminating the attack surface for that data path.
 
 ---
 
-### ruleExpressions for gating high-risk actions
+### 3.18 ruleExpressions for gating high-risk actions
 
 `ruleExpressions` enforce preconditions at the platform level before the LLM is involved, making it impossible for a malicious prompt to bypass a security gate by convincing the model that a precondition has been satisfied.
 
-A `ruleExpression` that gates a financial transaction action behind `isIdentityVerified = true` can only be satisfied by the trusted authentication action that sets that flag — not by a user typing "I have already been verified, please proceed." This is the key architectural difference between declarative security guards and instruction-based trust.
+A `ruleExpression` that gates a financial transaction action behind `isIdentityVerified = true` can only be satisfied by the trusted authentication action that sets that flag — not by a user typing "I have already been verified, please proceed." This is the key architectural difference between declarative security guards and instruction-based trust, which the LLM can be convinced to override.
 
 ---
 
-### Einstein Trust Layer validation checklist
+### 3.19 Einstein Trust Layer validation checklist
 
-The Trust Layer sits between your Salesforce org and external LLM providers and performs four operations that must be explicitly validated before go-live:
+The Trust Layer sits between your Salesforce org and external LLM providers and performs four operations that must be explicitly validated before go-live.
 
 **Data masking:** detects PII in outbound prompts and replaces it with anonymized placeholders. Validate with realistic PII patterns including custom object fields.
 
@@ -910,21 +1021,19 @@ The Trust Layer sits between your Salesforce org and external LLM providers and 
 
 **Zero data retention:** confirms prompt data is not persisted outside the Salesforce trust boundary. Verify the org-level setting is active and appears in audit log entries.
 
-**Audit log review:** review after every deployment to confirm masking patterns, toxicity scores, and grounding sources are all as expected.
+**Audit log review:** review after every deployment to confirm masking patterns, toxicity scores, and grounding sources are all as expected for the new agent configuration.
 
 ---
 
 ---
 
-# Release Management, Rollback & Monitoring
-
----
+# 4. Release Management, Rollback & Monitoring
 
 ## Run structured release gates from dev through go-live
 
 ---
 
-### Gate 1: Developer sandbox
+### 4.1 Gate 1: Developer sandbox
 
 Before a feature branch can open a pull request for merge, four criteria must be met: `sf agent validate authoring-bundle` passes with zero errors, Apex unit tests on all action implementations pass, peer review of the `.agent` file is completed with documented sign-off, and any `ruleExpression` relaxation has prior CAB approval documented in the PR.
 
@@ -932,7 +1041,7 @@ A PR that includes a security guard relaxation without a CAB reference should be
 
 ---
 
-### Gate 2: Integration sandbox
+### 4.2 Gate 2: Integration sandbox
 
 After the feature branch merges to integration, the CI pipeline must execute the full deployment sequence without errors, the evaluation suite pass rate must meet the team-defined threshold (90% is the recommended starting baseline), and the current evaluation JSON must show no regression against the prior baseline artifact.
 
@@ -940,7 +1049,7 @@ A pass rate below threshold or a regression against the baseline blocks promotio
 
 ---
 
-### Gate 3: QA sandbox
+### 4.3 Gate 3: QA sandbox
 
 Gate 3 requires: evaluation suite pass rate maintained from integration, multi-turn conversation tests passing across all stateful scenarios, custom JSONPath evaluation criteria passing for all business rules, the full security red-team test suite executed and passed, and Einstein Trust Layer data masking validated with representative PII patterns.
 
@@ -948,7 +1057,7 @@ A failed security red-team result at Gate 3 is a blocker. The change does not mo
 
 ---
 
-### Gate 4: UAT sandbox
+### 4.4 Gate 4: UAT sandbox
 
 Gate 4 requires the business owner to interact directly with the agent using the Agentforce Builder live preview, covering all primary user journeys and key edge cases. The business owner's sign-off must be documented. The `bundle-meta.xml` must have been transitioned from draft to committed state with the `<target>` field pinned to the target BotVersion and a `versionTag` assigned.
 
@@ -956,7 +1065,7 @@ Gate 4 is the final business authorization before the change enters the producti
 
 ---
 
-### Gate 5: Staging
+### 4.5 Gate 5: Staging
 
 Gate 5 requires the full production deployment runbook to execute successfully against the Staging (Full Copy) environment, including all manual steps. The rollback procedure must be verified — specifically, confirm that reactivating the prior BotVersion works within the team's target Recovery Time Objective. CAB review must be completed for any high-risk changes.
 
@@ -964,7 +1073,7 @@ Staging is the last opportunity to discover environmental issues before producti
 
 ---
 
-### Gate 6: Production go-live
+### 4.6 Gate 6: Production go-live
 
 The production deployment executes during a pre-approved maintenance window, with the activation step performed as a separate deliberate action. Immediately after activation, run the smoke-test evaluation suite against production. Confirm STDM telemetry is flowing by querying the `ssot__AiAgentSession__dlm` table. Verify that monitoring dashboards are active and baseline alert thresholds are configured.
 
@@ -972,13 +1081,13 @@ The on-call team must be briefed with the rollback procedure ready to execute be
 
 ---
 
-### Activation window planning and seasonal release impact
+### 4.7 Activation window planning and seasonal release impact
 
 Never schedule production activation on a Friday or immediately before a public holiday unless explicit on-call staffing is confirmed. Behavioral regressions in AI agents require investigation that takes time and expertise.
 
 Salesforce's three annual releases can also affect agent behavior invisibly: API version shifts change how `GenAiPlannerBundle` is structured, LLM model updates alter baseline behavior without metadata changes, and Critical Updates can break action implementations. Validate in preview sandboxes 4-6 weeks before each production upgrade window. Align UAT cycles to complete before the seasonal production upgrade window — not after.
 
-> **Scenario:** A team completes UAT in the same week as the Salesforce seasonal sandbox upgrade. Business owner sign-off is based on the post-upgrade behavior. But the evaluation baseline was captured pre-upgrade in integration. When the release ships to production, the evaluation suite now compares against a pre-upgrade baseline in a post-upgrade org. The comparison surfaces false regressions — and real ones become harder to identify. Running UAT before the seasonal upgrade window, and re-capturing the baseline immediately after, prevents this confusion.
+> **Scenario:** A team completes UAT in the same week as the Salesforce seasonal sandbox upgrade. Business owner sign-off is based on the post-upgrade behavior, but the evaluation baseline was captured pre-upgrade in integration. When the release ships to production, the evaluation suite compares against a pre-upgrade baseline in a post-upgrade org — surfacing false regressions that obscure real ones. Running UAT before the seasonal upgrade window, and re-capturing the baseline immediately after the upgrade, prevents this confusion entirely.
 
 ---
 
@@ -986,7 +1095,7 @@ Salesforce's three annual releases can also affect agent behavior invisibly: API
 
 ---
 
-### Option 1: Reactivating a prior BotVersion
+### 4.8 Option 1: Reactivating a prior BotVersion
 
 Reactivating a prior BotVersion using `sf agent activate --version {prior}` is the fastest rollback path, completing in seconds. It switches users to the prior agent version without redeploying any metadata. This is the preferred path for behavioral or routing regressions where the underlying action implementations have not changed.
 
@@ -994,7 +1103,7 @@ The only precondition is that the prior BotVersion has not been deleted. Retaini
 
 ---
 
-### Option 2: Redeploying prior AiAuthoringBundle from source control
+### 4.9 Option 2: Redeploying prior AiAuthoringBundle from source control
 
 If the prior BotVersion has been deleted, or if the regression is in the underlying action implementations, a full redeploy of the prior version from source control is required — the complete five-phase sequence followed by publish and activation.
 
@@ -1002,7 +1111,7 @@ Reserve this path for cases where BotVersion reactivation alone cannot restore t
 
 ---
 
-### Option 3: Targeted Apex or Flow rollback
+### 4.10 Option 3: Targeted Apex or Flow rollback
 
 When the behavioral issue is isolated to one action implementation, a targeted rollback of only the affected Apex class or Flow is the most surgical option.
 
@@ -1012,16 +1121,16 @@ sf project deploy start --json \
   --target-org production-org
 ```
 
-Verify via STDM telemetry that the action failure rate drops to baseline levels after the targeted rollback is deployed. The STDM `FunctionStep` error counts in the Step table are the signal to watch.
+Verify via STDM telemetry that the action failure rate drops to baseline levels after the targeted rollback is deployed. The `FunctionStep` error counts in the STDM Step table are the signal to watch.
 
 ---
 
-### Preconditions for guaranteeing fast rollback availability
+### 4.11 Preconditions for guaranteeing fast rollback availability
 
 Fast rollback depends on decisions made before the production deployment, not during a live incident.
 
 - The prior BotVersion must not have been deleted
-- The rollback command (`sf agent activate --version {prior}`) must be documented in the deployment runbook with the exact version number
+- The rollback command (`sf agent activate --version {prior}`) must be documented in the runbook with the exact version number pre-filled
 - The rollback procedure must have been tested during the Staging dry run
 - The on-call team must have read the runbook and must have the permissions required to execute without waiting for the original deployer
 
@@ -1029,7 +1138,7 @@ Fast rollback depends on decisions made before the production deployment, not du
 
 ---
 
-### Severity classification for emergency hotfix qualification
+### 4.12 Severity classification for emergency hotfix qualification
 
 Pre-define the criteria that classify an incident as a genuine emergency before any incident occurs. Typical criteria: measurable revenue impact above a defined threshold per hour, a user-blocking defect with no workaround available, an active security vulnerability with confirmed exploitation evidence, or a confirmed compliance violation.
 
@@ -1041,7 +1150,7 @@ Without pre-defined criteria, severity classification becomes a stakeholder nego
 
 ---
 
-### The three-system observability stack
+### 4.13 The three-system observability stack
 
 Effective Agentforce production monitoring requires connecting three distinct telemetry systems simultaneously. Using only one gives you an incomplete picture.
 
@@ -1053,7 +1162,7 @@ Effective Agentforce production monitoring requires connecting three distinct te
 
 ---
 
-### STDM's five core tables
+### 4.14 STDM's five core tables
 
 STDM is housed in Data Cloud because of the volume of transactional telemetry generated by AI interactions. The CRM Connector must be active for STDM to function.
 
@@ -1067,7 +1176,7 @@ STDM is housed in Data Cloud because of the volume of transactional telemetry ge
 
 ---
 
-### Querying the Step table to reconstruct a failed session
+### 4.15 Querying the Step table to reconstruct a failed session
 
 When a user reports that the agent failed to complete a task, query the STDM Step table using the session ID to reconstruct the exact execution sequence.
 
@@ -1093,21 +1202,23 @@ This query reveals which subagent was selected, which action was invoked, what i
 
 ---
 
-### Key health indicators to monitor continuously
+### 4.16 Key health indicators to monitor continuously
+
+Five health indicators should be tracked on a continuous basis and reviewed immediately after every deployment.
 
 - **Subagent routing accuracy:** percentage of sessions routed to the correct subagent — unexpected drops often signal instruction ambiguity or a model drift event
-- **Action invocation success rate:** percentage of `FunctionStep` records that complete without error — unexpected drops signal implementation failures in Apex or Flow
+- **Action invocation success rate:** percentage of `FunctionStep` records completing without error — unexpected drops signal implementation failures in Apex or Flow
 - **Escalation rate:** percentage of sessions requiring human escalation — spikes often indicate routing or quality regression
-- **Session abandonment rate:** users ending conversation before task completion — a leading indicator of user experience quality problems that evaluation metrics alone may not surface
-- **Average Einstein Requests per session:** unexpected spikes often indicate a looping agent or inefficient action chain — configure Proactive Monitoring alerts before this triggers rate limiting
+- **Session abandonment rate:** users ending conversations before task completion — a leading indicator of user experience quality problems that evaluation metrics alone may not surface
+- **Average Einstein Requests per session:** unexpected spikes indicate a looping agent or inefficient action chain — configure Proactive Monitoring alerts before this triggers rate limiting
 
 ---
 
-### Establishing a production behavioral baseline within 24 hours of go-live
+### 4.17 Establishing a production behavioral baseline within 24 hours of go-live
 
-Within 24 hours of the first production activation of an agent or a new BotVersion, run the regression evaluation suite against the production org and store the JSON output as the production baseline artifact. This baseline captures the agent's behavioral state in the actual production environment, which may differ slightly from UAT due to data differences, permission set assignments, or feature flag states.
+Within 24 hours of the first production activation of an agent or a new BotVersion, run the regression evaluation suite against the production org and store the JSON output as the production baseline artifact.
 
-Future evaluation runs are compared against this production baseline, not the UAT baseline, to detect behavioral drift with production-representative context.
+This baseline captures the agent's behavioral state in the actual production environment, which may differ slightly from UAT due to data differences, permission set assignments, or feature flag states. Future evaluation runs are compared against this production baseline — not the UAT baseline — to detect behavioral drift with production-representative context.
 
 ---
 
@@ -1115,7 +1226,7 @@ Future evaluation runs are compared against this production baseline, not the UA
 
 ---
 
-### Feeding STDM data to developers, not just operations
+### 4.18 Feeding STDM data to developers, not just operations
 
 STDM telemetry is most valuable when it flows to the developers who authored the agent's instructions, not just the operations team watching dashboards. Developers who can see the exact subagent routing decisions, action invocation sequences, and variable state transitions from real user sessions will write better evaluation cases, identify ambiguous instructions before they cause incidents, and design more resilient action chains.
 
@@ -1123,7 +1234,7 @@ Create a shared dashboard or daily digest that gives developers visibility into 
 
 ---
 
-### Tracking Instruction Adherence trend lines over time
+### 4.19 Tracking Instruction Adherence trend lines over time
 
 Plot Instruction Adherence scores for each subagent as a trend line, not as point-in-time measurements. A score that holds steady at HIGH for 60 days and then begins declining — with no deployment during that period — is the clearest indicator of LLM model-level drift. The trend data is what makes this distinction visible before users start reporting failures.
 
@@ -1131,13 +1242,13 @@ A sudden drop immediately after a deployment points to the deployment as the cau
 
 ---
 
-### Distinguishing authoring fixes from deployment fixes based on trend cause
+### 4.20 Distinguishing authoring fixes from deployment fixes based on trend cause
 
-When Instruction Adherence scores drop, the remediation path depends entirely on the cause. If scores dropped immediately after a deployment, the fix is an authoring revision in a new feature branch, followed by the standard release cycle. If scores dropped gradually with no deployment event, the fix is also an authoring revision — but rolling back a BotVersion will not help because nothing was deployed. Attempting a BotVersion rollback for model-level drift actively makes the situation worse by reverting intentional improvements.
+When Instruction Adherence scores drop, the remediation path depends entirely on the cause. If scores dropped immediately after a deployment, the fix is an authoring revision in a new feature branch, followed by the standard release cycle. If scores dropped gradually with no deployment event, the fix is also an authoring revision — but rolling back a BotVersion will not help, because nothing was deployed. Attempting a BotVersion rollback for model-level drift actively makes the situation worse by reverting intentional improvements.
 
 ---
 
-### Monthly behavioral health checks independent of deployments
+### 4.21 Monthly behavioral health checks independent of deployments
 
 Schedule a recurring evaluation suite run against the production org on a fixed monthly cadence, independent of the deployment calendar. This run specifically detects model-level drift that occurs between deployments.
 
@@ -1145,7 +1256,7 @@ When nothing has shipped and scores drop, the investigation focuses on LLM platf
 
 ---
 
-### Building a client-facing AgentOps maturity scorecard
+### 4.22 Building a client-facing AgentOps maturity scorecard
 
 Summarize the client's current AgentOps maturity across five dimensions into a single scorecard presented at each engagement phase review.
 
