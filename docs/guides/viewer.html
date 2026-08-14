@@ -21,6 +21,8 @@
       --table-stripe: #F8F8FC;
       --radius: 10px;
       --shadow: 0 1px 3px rgba(0,0,0,0.08);
+      --sidebar-w: 280px;
+      --topbar-h: 44px;
     }
     @media (prefers-color-scheme: dark) {
       :root {
@@ -40,6 +42,8 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html { scroll-padding-top: calc(var(--topbar-h) + 16px); }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
       background: var(--bg);
@@ -49,22 +53,21 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    /* ── Top bar ────────────────────────────────── */
     .back-bar {
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      right: 0;
       z-index: 100;
+      height: var(--topbar-h);
       background: var(--bg2);
       border-bottom: 1px solid var(--separator);
-      padding: 10px 20px;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
-    .back-bar-inner {
-      max-width: 820px;
-      margin: 0 auto;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      padding: 0 20px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
     .back-link {
       color: var(--link);
@@ -77,23 +80,104 @@
     }
     .back-link:hover { text-decoration: underline; }
     .back-link svg { width: 16px; height: 16px; fill: currentColor; }
-
-    .container {
-      max-width: 820px;
-      margin: 0 auto;
-      padding: 24px 20px 80px;
+    .guide-title-bar {
+      margin-left: 16px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    /* TOC */
-    .toc-wrapper {
-      margin-bottom: 32px;
+    /* ── Layout wrapper ─────────────────────────── */
+    .layout {
+      margin-top: var(--topbar-h);
+    }
+
+    /* ── Sidebar (desktop only, ≥900px) ─────────── */
+    .sidebar {
+      display: none;
+    }
+
+    @media (min-width: 900px) {
+      .sidebar {
+        display: block;
+        position: fixed;
+        top: var(--topbar-h);
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--bg2);
+        border-right: 1px solid var(--separator);
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 16px 0;
+        z-index: 50;
+        scrollbar-width: thin;
+        scrollbar-color: var(--separator) transparent;
+      }
+      .sidebar::-webkit-scrollbar { width: 4px; }
+      .sidebar::-webkit-scrollbar-track { background: transparent; }
+      .sidebar::-webkit-scrollbar-thumb { background: var(--separator); border-radius: 2px; }
+
+      .main-content {
+        margin-left: var(--sidebar-w);
+      }
+    }
+
+    .sidebar-title {
+      padding: 0 16px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text3);
+    }
+
+    .sidebar-list {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar-list li a {
+      display: block;
+      padding: 5px 16px 5px 16px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--text2);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background 0.1s, color 0.1s, border-color 0.1s;
+    }
+    .sidebar-list li a:hover {
+      background: var(--bg3);
+      color: var(--text);
+    }
+    .sidebar-list li a.active {
+      color: var(--link);
+      border-left-color: var(--link);
+      background: rgba(0, 122, 255, 0.06);
+      font-weight: 600;
+    }
+    .sidebar-list li.toc-h3 a {
+      padding-left: 32px;
+      font-size: 12.5px;
+    }
+
+    /* ── Mobile TOC (collapsible, <900px only) ──── */
+    .mobile-toc {
+      display: block;
+      margin: 0 0 24px;
       background: var(--bg2);
       border: 1px solid var(--separator);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
     }
-    .toc-wrapper summary {
+    @media (min-width: 900px) {
+      .mobile-toc { display: none; }
+    }
+    .mobile-toc summary {
       cursor: pointer;
       padding: 14px 18px;
       font-weight: 700;
@@ -105,29 +189,36 @@
       gap: 8px;
       user-select: none;
     }
-    .toc-wrapper summary::-webkit-details-marker { display: none; }
-    .toc-wrapper summary::before {
+    .mobile-toc summary::-webkit-details-marker { display: none; }
+    .mobile-toc summary::before {
       content: "▶";
       font-size: 11px;
       color: var(--text2);
       transition: transform 0.2s;
     }
-    .toc-wrapper[open] summary::before { transform: rotate(90deg); }
-    .toc-list {
+    .mobile-toc[open] summary::before { transform: rotate(90deg); }
+    .mobile-toc .toc-list {
       padding: 0 18px 14px;
       list-style: none;
     }
-    .toc-list li { padding: 4px 0; }
-    .toc-list li a {
+    .mobile-toc .toc-list li { padding: 4px 0; }
+    .mobile-toc .toc-list li a {
       color: var(--link);
       text-decoration: none;
       font-size: 14px;
       line-height: 1.5;
     }
-    .toc-list li a:hover { text-decoration: underline; }
-    .toc-list .toc-h3 { padding-left: 18px; }
+    .mobile-toc .toc-list li a:hover { text-decoration: underline; }
+    .mobile-toc .toc-list .toc-h3 { padding-left: 18px; }
 
-    /* Content */
+    /* ── Main content ───────────────────────────── */
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+    }
+
+    /* Content styles */
     .guide-content h1 {
       font-size: 28px;
       font-weight: 800;
@@ -154,24 +245,15 @@
       font-weight: 600;
       margin: 20px 0 8px;
     }
-    .guide-content p {
-      margin: 0 0 14px;
-    }
+    .guide-content p { margin: 0 0 14px; }
     .guide-content ul, .guide-content ol {
       margin: 0 0 14px;
       padding-left: 24px;
     }
-    .guide-content li {
-      margin: 4px 0;
-    }
-    .guide-content li > ul, .guide-content li > ol {
-      margin: 4px 0 4px;
-    }
+    .guide-content li { margin: 4px 0; }
+    .guide-content li > ul, .guide-content li > ol { margin: 4px 0 4px; }
     .guide-content strong { font-weight: 600; }
-    .guide-content a {
-      color: var(--link);
-      text-decoration: none;
-    }
+    .guide-content a { color: var(--link); text-decoration: none; }
     .guide-content a:hover { text-decoration: underline; }
     .guide-content hr {
       border: none;
@@ -248,15 +330,8 @@
       color: var(--text2);
       font-size: 17px;
     }
-    .loading-spinner {
-      font-size: 36px;
-      margin-bottom: 12px;
-    }
-    .error {
-      text-align: center;
-      padding: 80px 20px;
-      color: var(--text2);
-    }
+    .loading-spinner { font-size: 36px; margin-bottom: 12px; }
+    .error { text-align: center; padding: 80px 20px; color: var(--text2); }
     .error h2 { color: var(--text); margin-bottom: 8px; }
     .error a { color: var(--link); }
 
@@ -293,7 +368,8 @@
     }
 
     @media print {
-      .back-bar, .scroll-top, .toc-wrapper { display: none; }
+      .back-bar, .scroll-top, .sidebar, .mobile-toc { display: none !important; }
+      .main-content { margin-left: 0 !important; }
       .container { max-width: 100%; padding: 0; }
     }
   </style>
@@ -301,20 +377,28 @@
 <body>
 
   <div class="back-bar">
-    <div class="back-bar-inner">
-      <a class="back-link" href="../#/">
-        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-        Cert Study Hub
-      </a>
-    </div>
+    <a class="back-link" href="../#/">
+      <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      Cert Study Hub
+    </a>
+    <span class="guide-title-bar" id="guideTitle"></span>
   </div>
 
-  <div class="container">
-    <div id="toc"></div>
-    <div id="content" class="guide-content">
-      <div class="loading">
-        <div class="loading-spinner">📖</div>
-        Loading guide...
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-title">Table of Contents</div>
+      <ol class="sidebar-list" id="sidebarList"></ol>
+    </nav>
+
+    <div class="main-content">
+      <div class="container">
+        <div id="mobileToc"></div>
+        <div id="content" class="guide-content">
+          <div class="loading">
+            <div class="loading-spinner">📖</div>
+            Loading guide...
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -333,15 +417,11 @@
       }
 
       // Configure marked
-      marked.setOptions({
-        breaks: false,
-        gfm: true
-      });
+      marked.setOptions({ breaks: false, gfm: true });
 
       // Custom renderer for tables (wrap in scrollable div)
       var renderer = new marked.Renderer();
       renderer.table = function(header, body) {
-        // marked v15 passes a token object
         if (typeof header === 'object' && header.header && header.rows) {
           var token = header;
           var html = '<div class="table-wrap"><table><thead><tr>';
@@ -372,6 +452,7 @@
           var titleMatch = md.match(/^#\s+(.+)/m);
           if (titleMatch) {
             document.title = titleMatch[1] + ' — Cert Study Hub';
+            document.getElementById('guideTitle').textContent = titleMatch[1];
           }
 
           // Render markdown
@@ -381,8 +462,11 @@
           // Add IDs to headings and build TOC
           buildTOC();
 
-          // Wrap tables that didn't get wrapped by the custom renderer
+          // Wrap tables that didn't get wrapped
           wrapTables();
+
+          // Start scroll spy for sidebar
+          initScrollSpy();
         })
         .catch(function(err) {
           showError('Could not load guide', '<p>' + err.message + '</p><a href="../#/">Return to Cert Study Hub</a>');
@@ -395,32 +479,76 @@
 
         var items = [];
         headings.forEach(function(h) {
-          // Generate ID from text
           var text = h.textContent;
           var id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+          // Ensure unique IDs
+          var baseId = id;
+          var counter = 1;
+          while (document.getElementById(id)) {
+            id = baseId + '-' + counter++;
+          }
           h.id = id;
-
-          items.push({
-            level: h.tagName.toLowerCase(),
-            text: text,
-            id: id
-          });
+          items.push({ level: h.tagName.toLowerCase(), text: text, id: id });
         });
 
-        var tocHtml = '<details class="toc-wrapper"';
-        // Open by default on desktop
-        if (window.innerWidth > 768) {
-          tocHtml += ' open';
-        }
-        tocHtml += '><summary>Table of Contents</summary><ol class="toc-list">';
-
+        // Desktop sidebar
+        var sidebarHtml = '';
         items.forEach(function(item) {
           var cls = item.level === 'h3' ? ' class="toc-h3"' : '';
-          tocHtml += '<li' + cls + '><a href="#' + item.id + '">' + item.text + '</a></li>';
+          sidebarHtml += '<li' + cls + '><a href="#' + item.id + '" data-toc-id="' + item.id + '">' + item.text + '</a></li>';
+        });
+        document.getElementById('sidebarList').innerHTML = sidebarHtml;
+
+        // Mobile collapsible TOC
+        var mobileHtml = '<details class="mobile-toc"><summary>Table of Contents</summary><ol class="toc-list">';
+        items.forEach(function(item) {
+          var cls = item.level === 'h3' ? ' class="toc-h3"' : '';
+          mobileHtml += '<li' + cls + '><a href="#' + item.id + '">' + item.text + '</a></li>';
+        });
+        mobileHtml += '</ol></details>';
+        document.getElementById('mobileToc').innerHTML = mobileHtml;
+      }
+
+      function initScrollSpy() {
+        var sidebarLinks = document.querySelectorAll('.sidebar-list a[data-toc-id]');
+        if (sidebarLinks.length === 0) return;
+
+        var headingEls = [];
+        sidebarLinks.forEach(function(link) {
+          var el = document.getElementById(link.getAttribute('data-toc-id'));
+          if (el) headingEls.push({ el: el, link: link });
         });
 
-        tocHtml += '</ol></details>';
-        document.getElementById('toc').innerHTML = tocHtml;
+        var ticking = false;
+        function onScroll() {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(function() {
+            var scrollY = window.scrollY + 80; // offset for sticky header
+            var activeIdx = 0;
+            for (var i = headingEls.length - 1; i >= 0; i--) {
+              if (headingEls[i].el.offsetTop <= scrollY) {
+                activeIdx = i;
+                break;
+              }
+            }
+            sidebarLinks.forEach(function(l) { l.classList.remove('active'); });
+            headingEls[activeIdx].link.classList.add('active');
+
+            // Scroll sidebar to keep active link visible
+            var activeLink = headingEls[activeIdx].link;
+            var sidebar = document.getElementById('sidebar');
+            var linkTop = activeLink.offsetTop;
+            var sidebarHeight = sidebar.clientHeight;
+            if (linkTop < sidebar.scrollTop + 60 || linkTop > sidebar.scrollTop + sidebarHeight - 60) {
+              sidebar.scrollTo({ top: linkTop - sidebarHeight / 3, behavior: 'smooth' });
+            }
+
+            ticking = false;
+          });
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll(); // set initial state
       }
 
       function wrapTables() {
@@ -452,15 +580,14 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
 
-      // Smooth scroll for TOC anchor links
+      // Smooth scroll for TOC anchor links (both sidebar and mobile)
       document.addEventListener('click', function(e) {
-        var link = e.target.closest('.toc-list a');
+        var link = e.target.closest('.sidebar-list a, .toc-list a');
         if (link) {
           e.preventDefault();
           var target = document.getElementById(link.getAttribute('href').slice(1));
           if (target) {
             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            // Update URL hash without jumping
             history.replaceState(null, '', link.getAttribute('href'));
           }
         }
