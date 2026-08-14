@@ -164,52 +164,7 @@
       font-size: 12.5px;
     }
 
-    /* ── Mobile TOC (collapsible, <900px only) ──── */
-    .mobile-toc {
-      display: block;
-      margin: 0 0 24px;
-      background: var(--bg2);
-      border: 1px solid var(--separator);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-    @media (min-width: 900px) {
-      .mobile-toc { display: none; }
-    }
-    .mobile-toc summary {
-      cursor: pointer;
-      padding: 14px 18px;
-      font-weight: 700;
-      font-size: 15px;
-      color: var(--text);
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      user-select: none;
-    }
-    .mobile-toc summary::-webkit-details-marker { display: none; }
-    .mobile-toc summary::before {
-      content: "▶";
-      font-size: 11px;
-      color: var(--text2);
-      transition: transform 0.2s;
-    }
-    .mobile-toc[open] summary::before { transform: rotate(90deg); }
-    .mobile-toc .toc-list {
-      padding: 0 18px 14px;
-      list-style: none;
-    }
-    .mobile-toc .toc-list li { padding: 4px 0; }
-    .mobile-toc .toc-list li a {
-      color: var(--link);
-      text-decoration: none;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-    .mobile-toc .toc-list li a:hover { text-decoration: underline; }
-    .mobile-toc .toc-list .toc-h3 { padding-left: 18px; }
+    /* ── Mobile TOC removed — content-only on small screens ── */
 
     /* ── Main content ───────────────────────────── */
     .container {
@@ -368,7 +323,7 @@
     }
 
     @media print {
-      .back-bar, .scroll-top, .sidebar, .mobile-toc { display: none !important; }
+      .back-bar, .scroll-top, .sidebar { display: none !important; }
       .main-content { margin-left: 0 !important; }
       .container { max-width: 100%; padding: 0; }
     }
@@ -392,7 +347,6 @@
 
     <div class="main-content">
       <div class="container">
-        <div id="mobileToc"></div>
         <div id="content" class="guide-content">
           <div class="loading">
             <div class="loading-spinner">📖</div>
@@ -499,14 +453,7 @@
         });
         document.getElementById('sidebarList').innerHTML = sidebarHtml;
 
-        // Mobile collapsible TOC
-        var mobileHtml = '<details class="mobile-toc"><summary>Table of Contents</summary><ol class="toc-list">';
-        items.forEach(function(item) {
-          var cls = item.level === 'h3' ? ' class="toc-h3"' : '';
-          mobileHtml += '<li' + cls + '><a href="#' + item.id + '">' + item.text + '</a></li>';
-        });
-        mobileHtml += '</ol></details>';
-        document.getElementById('mobileToc').innerHTML = mobileHtml;
+        // Mobile: no TOC (sidebar handles desktop; mobile gets clean content only)
       }
 
       function initScrollSpy() {
@@ -580,9 +527,9 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
 
-      // Smooth scroll for TOC anchor links (both sidebar and mobile)
+      // Smooth scroll for TOC anchor links (sidebar)
       document.addEventListener('click', function(e) {
-        var link = e.target.closest('.sidebar-list a, .toc-list a');
+        var link = e.target.closest('.sidebar-list a');
         if (link) {
           e.preventDefault();
           var target = document.getElementById(link.getAttribute('href').slice(1));
