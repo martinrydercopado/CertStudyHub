@@ -1818,6 +1818,1607 @@ enum DataCloud360QuestionBank {
             correctIndices: [2],
             explanation: "Data Cloud's native identity resolution tools (Resolution Summary, Profile Explorer) are designed for current-state validation and troubleshooting, not as a long-term regulatory audit ledger, so meeting a strict multi-year retention requirement means exporting match rule outcomes into an external, purpose-built audit store on an ongoing basis. A is wrong because the Resolution Summary reflects the results of the most recent run and is not designed as a permanent, indefinitely retained historical audit log. B is wrong because Profile Explorer shows the current lineage for a given profile at the time you view it; it is not a historical archive of every past match decision. D is wrong because the Segment Membership DMO tracks segment membership history, not identity resolution match rule lineage — these are unrelated data cloud constructs."
         )
+,
+        Question(
+            id: "228",
+            question: "Which statement best describes the primary purpose of Salesforce Data Cloud?",
+            options: [("A", "To ingest data from multiple sources, unify customer identities, and make enriched profiles available for segmentation and activation"), ("B", "To replace existing CRM systems with a unified cloud-based platform for sales and service teams"), ("C", "To provide a managed data warehouse solution that replaces legacy on-premise database infrastructure"), ("D", "To synchronise data between Salesforce orgs in real time using a publish-subscribe messaging model")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "B is correct. Data Cloud's core purpose is to bring together data from disparate sources, resolve customer identities to create unified profiles, and then make those profiles available for downstream activation across marketing, service, and commerce channels. B: Incorrect. Data Cloud does not replace CRM systems — it complements them by enriching and unifying data from those systems. C: Incorrect. Data Cloud is not a managed data warehouse replacement. It operates as a data platform for customer data activation, not general-purpose data storage. D: Incorrect. While Data Cloud can share data across orgs, its primary purpose is not pub/sub messaging. That description more closely fits Platform Events or Change Data Capture."
+        ),
+        Question(
+            id: "229",
+            question: "What is the correct order of the Data Cloud lifecycle?",
+            options: [("A", "Ingest, Model, Unify, Segment, Activate, Analyse"), ("B", "Model, Ingest, Unify, Segment, Activate, Analyse"), ("C", "Ingest, Unify, Model, Activate, Segment, Analyse"), ("D", "Unify, Ingest, Model, Segment, Analyse, Activate")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "B is correct. The Data Cloud lifecycle follows this sequence: data is first ingested from source systems, then modelled by mapping to DMOs, then unified via identity resolution, then segmented into audiences, then activated to downstream targets, and finally analysed for performance. B: Incorrect. You cannot model data before ingesting it. C: Incorrect. Unification happens after modelling, not before. D: Incorrect. Ingestion must precede all other steps."
+        ),
+        Question(
+            id: "230",
+            question: "Which statement is true about a Unified Individual in Data Cloud?",
+            options: [("A", "A Unified Individual is created manually by a data steward who reviews and merges duplicate customer records"), ("B", "A Unified Individual represents a single source record ingested from a CRM system"), ("C", "A Unified Individual is a consolidated customer profile created by the identity resolution process from one or more source Individual records"), ("D", "A Unified Individual can only be created when data from at least three separate source systems has been ingested")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "C is correct. The identity resolution process matches Individual records from different data sources and consolidates them into a Unified Individual, which represents the single best view of a customer. A: Incorrect. Unified Individuals are created automatically by the identity resolution engine, not manually. B: Incorrect. A single source record maps to an Individual DMO record, not a Unified Individual. D: Incorrect. There is no minimum source system requirement."
+        ),
+        Question(
+            id: "231",
+            question: "Which of the following is a valid use case for Salesforce Data Cloud?",
+            options: [("A", "Replacing a company's order management system with a Salesforce-native fulfilment engine"), ("B", "Managing employee HR records and payroll processing across multiple business units"), ("C", "Unifying customer data from a loyalty platform, e-commerce site, and CRM to personalise marketing messages"), ("D", "Hosting a company's internal knowledge base and support documentation library")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "B is correct. Unifying customer data from multiple sources to enable personalised marketing is a core and well-established use case for Data Cloud. A: Incorrect. Data Cloud is not an order management system. B: Incorrect. Data Cloud is designed for customer data, not internal HR or payroll systems. D: Incorrect. Knowledge base hosting is handled by other Salesforce products such as Experience Cloud or Knowledge."
+        ),
+        Question(
+            id: "232",
+            question: "What is a Data Model Object (DMO) in Salesforce Data Cloud?",
+            options: [("A", "A configuration template used to define the schema of an incoming data stream before ingestion begins"), ("B", "A type of permission set that controls which data objects a Data Cloud user can access"), ("C", "A proprietary file format used by Data Cloud to store raw ingested data before transformation"), ("D", "A virtual or physical grouping of data created from data streams, insights, or other sources that conforms to the Salesforce data model")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "B is correct. A DMO is a grouping of data created from data streams, insights, and other sources. DMOs can be standard or custom and represent either a virtual view into the data lake or a physical data store. A: Incorrect. What is described here is closer to the configuration of a Data Source Object (DSO). B: Incorrect. DMOs are data objects, not permission constructs. C: Incorrect. Raw ingested data is stored in a Data Lake Object (DLO), not a DMO."
+        ),
+        Question(
+            id: "233",
+            question: "Which three of the following are valid subject areas in the standard Salesforce Data Cloud data model? (Choose 3)",
+            options: [("A", "Party"), ("B", "Engagement"), ("C", "Territory"), ("D", "Case"), ("E", "Fulfilment")],
+            questionType: .multiSelect,
+            correctIndices: [0, 1, 3],
+            explanation: "A, B, and D are correct. Party, Engagement, and Case are all standard subject areas in the Data Cloud data model. C: Incorrect. Territory is not a standard Data Cloud subject area. E: Incorrect. Fulfilment is not a standard Data Cloud subject area."
+        ),
+        Question(
+            id: "234",
+            question: "A consultant is speaking with a prospective customer who currently stores customer data in three separate systems: a marketing automation platform, a loyalty programme database, and a point-of-sale system. The customer's key challenge is that the same customer often appears as different records across these systems with inconsistent identifiers. Which Data Cloud capability most directly addresses this challenge?",
+            options: [("A", "Identity Resolution, which matches and links records from disparate sources to create a single Unified Individual per customer"), ("B", "Data Spaces, which partition the three data sources into logically separate environments to prevent identifier conflicts"), ("C", "Calculated Insights, which can aggregate data across all three systems into a single metrics object"), ("D", "Activation Targets, which synchronise customer records from all three systems into a single destination platform")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "C is correct. Identity Resolution is the Data Cloud capability specifically designed to reconcile records across different source systems that refer to the same individual. B: Incorrect. Data Spaces are used to logically partition data within an org for governance purposes. C: Incorrect. Calculated Insights aggregate and compute metrics but do not resolve identity conflicts. D: Incorrect. Activation Targets are destinations where segment data is sent for downstream use."
+        ),
+        Question(
+            id: "235",
+            question: "A company is evaluating Salesforce Data Cloud and wants to understand how it differs from a traditional data warehouse. Which statement accurately describes a key architectural difference?",
+            options: [("A", "Unlike a data warehouse, Data Cloud does not support SQL-based querying of stored data"), ("B", "Data Cloud requires all data to be transformed before ingestion, whereas data warehouses support raw data landing zones"), ("C", "Data Cloud stores data exclusively in structured relational tables, whereas data warehouses support semi-structured formats like JSON and Parquet"), ("D", "Data Cloud is optimised for real-time customer profile unification and activation, whereas a traditional data warehouse is optimised for historical reporting and analytical workloads")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "B is correct. Data Cloud is purpose-built for customer profile unification and downstream activation. Traditional data warehouses are optimised for batch analytical workloads and historical reporting. A: Incorrect. Data Cloud does support SQL-based querying via Calculated Insights. B: Incorrect. Data Cloud does support raw data landing via Data Lake Objects (DLOs). C: Incorrect. Data Cloud supports semi-structured formats including JSON and Parquet."
+        ),
+        Question(
+            id: "236",
+            question: "Northern Trail Outfitters operates six distinct retail brands, each with its own customer base, marketing team, and data governance requirements. The marketing director wants to ensure that segments and activations created for one brand cannot access or expose data from another brand. What Data Cloud feature should the consultant recommend to meet this requirement?",
+            options: [("A", "Separate Data Cloud orgs for each brand, as data isolation between brands cannot be achieved within a single org"), ("B", "Data Spaces, which allow logical partitioning of data within a single org so that each brand operates with its own isolated data environment"), ("C", "Identity Resolution rulesets configured per brand, each with match rules scoped to only the relevant data sources"), ("D", "Custom Permission Sets for each brand team that restrict which DMOs and segments are visible to each user group")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "B is correct. Data Spaces are specifically designed for multi-brand and multi-business-unit scenarios within a single Data Cloud org. A: Incorrect. Multiple orgs are not required. Data Spaces exist precisely to avoid this overhead. C: Incorrect. Identity Resolution rulesets control how records are matched and merged, not who can access which data. D: Incorrect. Permission sets control feature access but do not provide the same level of data-level isolation that Data Spaces offer."
+        ),
+        Question(
+            id: "237",
+            question: "A consultant is explaining the concept of a 'segment' to a new Data Cloud user. Which of the following most accurately describes what a segment is?",
+            options: [("A", "A segment is a scheduled job that extracts a subset of records from the Data Lake and sends them to an external system"), ("B", "A segment is a type of data stream that continuously ingests audience data from a connected marketing platform"), ("C", "A segment is a custom Data Model Object that stores pre-computed audience lists generated by Calculated Insights"), ("D", "A segment is a filtered subset of Unified Individual or Individual records that meet a defined set of criteria, used as the basis for activation")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "B is correct. A segment is a dynamic, filtered group of Unified Individual or Individual records that match specific criteria. Segments are the core unit of audience definition in Data Cloud. A: Incorrect. A segment is not a scheduled extraction job. B: Incorrect. A segment is not a data stream. C: Incorrect. A segment is not a DMO."
+        ),
+        Question(
+            id: "238",
+            question: "A consultant is asked to describe the difference between an Individual and a Unified Individual in Data Cloud. Which statement is most accurate?",
+            options: [("A", "An Individual represents a person record from a specific source system, while a Unified Individual is the merged profile created by linking one or more Individual records via identity resolution"), ("B", "An Individual is created by the identity resolution process, while a Unified Individual is the raw record ingested from a source system"), ("C", "An Individual and a Unified Individual are interchangeable terms that refer to the same concept depending on whether identity resolution has been configured"), ("D", "A Unified Individual can only contain data from a single source system, while an Individual can aggregate data from multiple sources")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "B is correct. An Individual is a record that maps to a person in a specific source system. A Unified Individual is the output of the identity resolution process, consolidating one or more Individual records. B: Incorrect. This reverses the relationship. C: Incorrect. These are distinct objects and are not interchangeable. D: Incorrect. This reverses the concept entirely."
+        ),
+        Question(
+            id: "239",
+            question: "Which of the following scenarios represents a dependency that must be in place before a segment can be created in Data Cloud?",
+            options: [("A", "At least one Activation Target must be configured, as Data Cloud requires a destination before a segment can be defined"), ("B", "Identity resolution must have been successfully run at least once, as segmentation can only operate on Unified Individual records"), ("C", "A Calculated Insight must exist for each attribute used in the segment filter criteria"), ("D", "Data must have been ingested, mapped to a DMO, and the DMO must be related to the Individual or Unified Individual object")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "B is correct. Before segmentation can occur, data must be ingested, mapped to a DMO, and that DMO must be related to Individual or Unified Individual. A: Incorrect. An Activation Target is required for activation, not for segment creation. B: Incorrect. You can also segment on Individual without running identity resolution. C: Incorrect. Calculated Insights are one option for segment criteria but are not required."
+        ),
+        Question(
+            id: "240",
+            question: "A company wants to use Data Cloud to deliver real-time personalised experiences on its website. A consultant is assessing whether Data Cloud is suited for this use case. Which statement most accurately describes Data Cloud's capability in this context?",
+            options: [("A", "Data Cloud can support real-time personalisation by surfacing unified profile data and segment membership to connected systems via APIs and activation targets"), ("B", "Data Cloud cannot support real-time web personalisation as it is designed exclusively for batch processing of historical customer data"), ("C", "Data Cloud supports real-time web personalisation only when used in conjunction with Marketing Cloud Personalisation, which must be purchased separately"), ("D", "Data Cloud supports real-time personalisation natively through its built-in web content management system, which renders personalised pages directly")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "B is correct. Data Cloud can support real-time personalisation use cases by making unified profile data and segment membership available to connected systems. B: Incorrect. Data Cloud supports both batch and near real-time processing. C: Incorrect. Marketing Cloud Personalisation is complementary but not a requirement. D: Incorrect. Data Cloud does not include a web content management system."
+        ),
+        Question(
+            id: "241",
+            question: "Which two statements are true about Data Spaces in Salesforce Data Cloud? (Choose 2)",
+            options: [("A", "A Data Space is a logical partition within a Data Cloud org that allows different teams or use cases to work with separate subsets of data"), ("B", "Each Data Cloud org can contain only one Data Space, which is created automatically during provisioning"), ("C", "Data Spaces can be used to isolate data by brand, region, or department within a single org"), ("D", "Data Spaces replace the need for field-level security and permission sets when controlling access to sensitive customer data")],
+            questionType: .multiSelect,
+            correctIndices: [0, 2],
+            explanation: "A and C are correct. Data Spaces are logical partitions that allow different teams, brands, or use cases to operate within the same Data Cloud org with isolated data environments. B: Incorrect. A Data Cloud org can contain multiple Data Spaces. D: Incorrect. Data Spaces work alongside permission sets and field-level security — they do not replace them."
+        ),
+        Question(
+            id: "242",
+            question: "A consultant is conducting a discovery session with a financial services firm that wants to implement Data Cloud. The client mentions that they collect consent preferences from customers via a preference centre and must honour those preferences in all downstream marketing. Which Data Cloud capability is most relevant to this requirement?",
+            options: [("A", "Data Spaces, configured to store consent data in an isolated partition to prevent unauthorised access"), ("B", "Calculated Insights, which can compute a consent score for each customer based on their preference centre responses"), ("C", "Activation Target filters, which automatically suppress records that have not consented when data is sent to Marketing Cloud"), ("D", "The Privacy subject area DMOs, which store consent and data privacy preferences and can be used to filter segment membership based on those preferences")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "B is correct. The Privacy subject area includes DMOs for storing consent and data privacy preferences, which can be referenced in segment criteria. A: Incorrect. Data Spaces control data access for internal users, not consent-based filtering. B: Incorrect. Calculated Insights are not the primary mechanism for storing or applying consent preferences. C: Incorrect. The Privacy DMO is the primary mechanism for consent management, not Activation Target filters."
+        ),
+        Question(
+            id: "243",
+            question: "What is the role of a Data Bundle in Salesforce Data Cloud?",
+            options: [("A", "A Data Bundle is a governance object that defines which data sources are permitted to contribute to a specific Data Space"), ("B", "A Data Bundle is a compressed archive format used to export Data Cloud configuration for backup and disaster recovery purposes"), ("C", "A Data Bundle is a group of related segments that can be activated to multiple targets simultaneously in a single deployment"), ("D", "A Data Bundle is a pre-built package of data stream definitions, DMO mappings, and related configuration that accelerates the connection of a specific Salesforce product to Data Cloud")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "A is correct. A Starter Data Bundle is a Salesforce-provided package of pre-built data stream definitions and DMO mappings that makes it faster to connect a specific Salesforce product to Data Cloud. A: Incorrect. Data Space membership and governance are controlled via settings and permissions, not a Data Bundle. B: Incorrect. Data Cloud uses Data Kits for packaging and deployment, not Data Bundles. C: Incorrect. There is no concept of bundling segments for simultaneous activation."
+        ),
+        Question(
+            id: "244",
+            question: "A consultant is asked to explain the difference between a Data Bundle and a Data Kit to a client. Which statement accurately describes the distinction?",
+            options: [("A", "A Data Bundle is a Salesforce-provided set of pre-built configurations for connecting a specific product to Data Cloud, while a Data Kit is a portable, packageable collection of customer-built metadata used for deployment between orgs"), ("B", "A Data Bundle is used to migrate configuration between sandbox and production orgs, while a Data Kit is a pre-built connector for a specific Salesforce product"), ("C", "A Data Bundle and a Data Kit are interchangeable terms for the same feature"), ("D", "A Data Bundle contains only data stream definitions, while a Data Kit can additionally include segments and activation configurations")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "B is correct. Data Bundles are Salesforce-provided pre-built product connectors. Data Kits are customer-built portable packages of metadata used to move configuration between orgs. B: Incorrect. This reverses the definitions. C: Incorrect. These are distinct features with different purposes. D: Incorrect. The key distinction is provenance and purpose, not content scope."
+        ),
+        Question(
+            id: "245",
+            question: "Cumulus Financial is a bank that uses multiple Salesforce clouds including Sales Cloud, Service Cloud, and Marketing Cloud. A consultant is proposing Data Cloud as part of a digital transformation programme. Which statement most accurately describes how Data Cloud would interact with these existing Salesforce products?",
+            options: [("A", "Data Cloud would ingest data from those Salesforce clouds, unify it into customer profiles, and then activate enriched data back to those platforms to improve personalisation and decision-making"), ("B", "Data Cloud would replace the existing Salesforce clouds by consolidating all customer data and process management into a single unified platform"), ("C", "Data Cloud can only ingest data from one Salesforce cloud at a time"), ("D", "Data Cloud acts purely as a read-only reporting layer on top of the existing Salesforce clouds and cannot send enriched data back to those systems")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "B is correct. Data Cloud sits across multiple Salesforce products, ingesting data from them and activating enriched profiles and segments back into those same products. B: Incorrect. Data Cloud does not replace existing Salesforce clouds. It is additive. C: Incorrect. Data Cloud can ingest from multiple Salesforce clouds simultaneously. D: Incorrect. Data Cloud is not read-only. Activated data can be written back to connected systems."
+        ),
+        Question(
+            id: "246",
+            question: "Which statement is true about how Data Cloud handles data ethics and customer consent?",
+            options: [("A", "Data Cloud automatically enforces GDPR compliance for all customers and removes the need for a separate data privacy governance programme"), ("B", "Consent management in Data Cloud is enforced at the Activation Target level only and cannot be applied during segmentation"), ("C", "Data Cloud does not natively support consent management and requires a third-party tool such as OneTrust to store and apply consent preferences"), ("D", "Data Cloud provides tools to store, manage, and apply consent preferences — but the responsibility for defining and enforcing a compliant consent framework rests with the implementing organisation")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "B is correct. Data Cloud provides Privacy DMOs and tools to store and apply consent preferences. However, achieving regulatory compliance requires the organisation to design and govern its own consent framework. A: Incorrect. No technology platform can automatically guarantee GDPR compliance. B: Incorrect. Consent can be applied at the segmentation stage by filtering on Privacy DMO attributes. C: Incorrect. Data Cloud does natively support consent management through its Privacy subject area DMOs."
+        ),
+        Question(
+            id: "247",
+            question: "A consultant is reviewing a customer's data architecture and notices that the same customer appears with different email addresses across their CRM, e-commerce platform, and loyalty system. The customer has different IDs in each system. Which Data Cloud objects are most relevant to resolving this into a single customer view?",
+            options: [("A", "Calculated Insights configured to aggregate all email addresses into a single computed attribute"), ("B", "Data Spaces and Reconciliation Rules configured to merge the three systems into a single object"), ("C", "Contact Point DMOs (such as Contact Point Email) and Identity Resolution rulesets"), ("D", "Activation Targets configured to standardise identifiers before data is sent downstream")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "A is correct. Contact Point DMOs store the various identifiers for a customer. Identity Resolution then uses match rules across these contact points to link records and create a Unified Individual. A: Incorrect. Calculated Insights compute aggregated metrics — they do not resolve identity. B: Incorrect. Data Spaces are for data governance and isolation. Reconciliation Rules determine which attribute value wins, not whether records are matched. D: Incorrect. Activation Targets are destinations for outbound data and play no role in resolving incoming customer identities."
+        ),
+        Question(
+            id: "248",
+            question: "Which statement best describes the relationship between a Data Lake Object (DLO) and a Data Model Object (DMO) in Data Cloud?",
+            options: [("A", "A DLO stores the raw ingested data and is created automatically during data stream processing; a DMO is the mapped, structured representation of that data aligned to the Salesforce data model"), ("B", "A DLO and a DMO are two names for the same object"), ("C", "A DMO stores raw ingested data in its original schema, while a DLO is the transformed version mapped to the Salesforce data model"), ("D", "A DLO is created manually by the consultant to define the target schema, while a DMO is generated automatically by the ingestion pipeline")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "B is correct. The ingestion hierarchy flows from Data Stream to DSO to DLO to DMO. The DLO holds the raw ingested data; the DMO is the structured, mapped version aligned to the Salesforce standard or custom data model. B: Incorrect. DLOs and DMOs are distinct layers with different roles. C: Incorrect. This reverses the roles. D: Incorrect. The DLO is created automatically. The DMO mapping is configured manually by the consultant."
+        ),
+        Question(
+            id: "249",
+            question: "A consultant is presenting the Data Cloud value proposition to a retail client that already uses Adobe Experience Platform (AEP) as their customer data platform. The client asks how Data Cloud differs from AEP. Which response most accurately reflects a key differentiator of Data Cloud in this context?",
+            options: [("A", "Data Cloud is exclusively for B2C use cases, while AEP supports both B2B and B2C data models"), ("B", "Data Cloud offers a significantly lower total cost of ownership than AEP because it does not charge for data storage or query compute"), ("C", "Data Cloud is natively integrated with the full Salesforce ecosystem — including Sales Cloud, Service Cloud, and Marketing Cloud — enabling bidirectional data flow without custom middleware"), ("D", "Data Cloud provides superior AI capabilities compared to AEP through the exclusive use of Einstein models trained on Salesforce's proprietary customer dataset")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "B is correct. A key differentiator for existing Salesforce customers is native, out-of-the-box integration with other Salesforce products via Starter Data Bundles, native connectors, and Data Actions. A: Incorrect. Data Cloud supports both B2B and B2C use cases. B: Incorrect. Data Cloud does have associated costs including credit consumption. D: Incorrect. Making a blanket claim about AI superiority is not an accurate or defensible differentiator."
+        ),
+        Question(
+            id: "250",
+            question: "A consultant is architecting a Data Cloud solution for a multinational retailer with operations in both the EU and the US. The EU team requires that customer data relating to EU residents never leaves EU-based infrastructure, in line with GDPR data residency requirements. What should the consultant advise?",
+            options: [("A", "Configure a separate Data Space for EU data and enable encryption at rest — this satisfies GDPR data residency requirements within a single Data Cloud org"), ("B", "Implement separate Data Cloud orgs provisioned in EU-based data centres for EU data, as Data Spaces within a single org do not provide physical data residency isolation"), ("C", "Use the Privacy subject area DMO to flag EU records and configure Activation Targets to restrict those records from being processed outside the org's primary data centre"), ("D", "Enable the GDPR Compliance toggle in Data Cloud org settings, which automatically routes EU customer data to compliant infrastructure")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "B is correct. Data residency requirements cannot be satisfied by logical partitioning tools like Data Spaces. True data residency isolation requires separate org instances provisioned in the appropriate geographic data centre. A: Incorrect. Data Spaces provide logical partitioning but do not control the physical location of data storage. C: Incorrect. The Privacy DMO manages consent, not physical data routing. D: Incorrect. There is no such GDPR Compliance toggle in Data Cloud."
+        ),
+        Question(
+            id: "251",
+            question: "A consultant is explaining the concept of 'data harmonisation' in Data Cloud to a technical architect. Which description most accurately characterises what data harmonisation means in this context?",
+            options: [("A", "Data harmonisation refers to the process of converting all incoming data to a single file format (such as CSV) before it can be ingested into Data Cloud"), ("B", "Data harmonisation is the process of mapping data from disparate source schemas to a common, standardised data model (DMOs), enabling consistent querying and cross-source analysis"), ("C", "Data harmonisation describes the automatic deduplication of records performed by the identity resolution engine after all data sources have been ingested"), ("D", "Data harmonisation is a post-activation process that standardises the attribute names and formats sent to downstream activation targets")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "B is correct. Data harmonisation in Data Cloud refers to taking data from different sources with different schemas and mapping it to a consistent, standardised data model (the DMO layer). A: Incorrect. Data Cloud supports multiple ingestion formats. Harmonisation is about schema alignment, not file format conversion. C: Incorrect. Deduplication is the function of identity resolution, a separate process. D: Incorrect. Attribute name standardisation for activation targets is a configuration step within activation, not data harmonisation."
+        ),
+        Question(
+            id: "252",
+            question: "A consultant is running a pre-sales workshop with a prospective customer. The customer asks which capabilities distinguish Data Cloud from a standard Salesforce CRM implementation. Which three capabilities should the consultant highlight as being specific to Data Cloud? (Choose 3)",
+            options: [("A", "The ability to ingest data from external non-Salesforce systems such as cloud storage and third-party data platforms"), ("B", "Identity resolution across multiple data sources to create unified customer profiles"), ("C", "The ability to create and manage standard Salesforce objects such as Contacts and Leads"), ("D", "Calculated Insights using ANSI SQL to generate aggregated metrics across the data model"), ("E", "Segment-based audience creation and activation to external marketing and advertising platforms")],
+            questionType: .multiSelect,
+            correctIndices: [1, 3, 4],
+            explanation: "B, D, and E are the most distinctly Data Cloud-specific capabilities to highlight. Identity resolution, Calculated Insights with ANSI SQL, and segment-based activation to external platforms are all unique to Data Cloud. A: While Data Cloud can ingest data from external non-Salesforce systems, this capability alone is less uniquely distinguishing in a pre-sales context — many platforms offer data ingestion. The most distinctively Data Cloud-specific capabilities are identity resolution (B), Calculated Insights with ANSI SQL (D), and segment-based activation (E). C: Incorrect. Managing standard Salesforce objects like Contacts and Leads is a core CRM capability, not specific to Data Cloud."
+        ),
+        Question(
+            id: "253",
+            question: "A Data Cloud consultant is working with a client who wants to understand which types of data can be ingested into the platform. The client specifically asks whether unstructured data such as call centre transcripts and free-text survey responses can be brought into Data Cloud. What is the most accurate response?",
+            options: [("A", "Data Cloud can store unstructured and semi-structured data, and Einstein AI capabilities within the Salesforce platform can be applied to derive insights from it, though the raw unstructured data must be mapped to a DMO field"), ("B", "Data Cloud can ingest unstructured data natively and applies built-in natural language processing to automatically extract entities and sentiment without any configuration"), ("C", "Data Cloud only supports structured, tabular data. Unstructured data must be pre-processed into a structured format by an external ETL tool before ingestion"), ("D", "Data Cloud supports unstructured data ingestion via the Streaming Ingestion API only, and automatically creates a dedicated DMO for each unstructured data source")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "C is correct. Data Cloud can ingest semi-structured and certain unstructured data. AI capabilities within the Salesforce ecosystem can process it, but data still needs to be mapped appropriately to the Data Cloud data model. B: Incorrect. Data Cloud does not automatically apply NLP to unstructured data without configuration. C: Incorrect. Data Cloud does support text-type fields and semi-structured formats. D: Incorrect. The Streaming Ingestion API does not have a special exclusive role for unstructured data."
+        ),
+        Question(
+            id: "254",
+            question: "A consultant is asked to assess whether a mid-size e-commerce company with approximately 500,000 customers is a good fit for Data Cloud. The company currently manages all customer data in a single Salesforce Sales Cloud org with no external data sources. Which response most accurately reflects the consultant's assessment?",
+            options: [("A", "The company is not a suitable candidate under any circumstances — Data Cloud requires a minimum of three connected data sources to function correctly"), ("B", "The company should implement Data Cloud immediately as all Salesforce customers are required to migrate their customer data to Data Cloud by the end of the next fiscal year"), ("C", "The company could benefit from Data Cloud in the future as they grow and add more data sources, but the value proposition is limited if all data already exists in a single well-managed Salesforce org with no unification challenge"), ("D", "The company is an ideal fit — Data Cloud is designed for single-org Salesforce customers and will significantly enhance their existing Sales Cloud implementation")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "B is correct. Data Cloud's core value comes from unifying data across multiple disconnected sources. For a customer with all data in a single well-managed org, the incremental value is limited in the near term. B: Incorrect. Data Cloud adds the most value with multiple data sources to unify. D: Incorrect. There is no mandatory migration requirement for Salesforce customers to move data to Data Cloud."
+        ),
+        Question(
+            id: "255",
+            question: "A large telecommunications company is evaluating Data Cloud and asks whether it can handle near real-time data at scale — specifically, millions of call detail records (CDRs) per day generated by their network. Which statement most accurately addresses this requirement?",
+            options: [("A", "Data Cloud is not suitable for telco-scale data volumes as it is designed for marketing use cases with lower data volumes typical of CRM systems"), ("B", "Data Cloud can process millions of records per day but only when the data is pre-aggregated into daily summary records before ingestion"), ("C", "Data Cloud supports high-volume data ingestion through the Streaming Ingestion API and Cloud Storage connectors, though the appropriate ingestion method and processing cadence should be selected based on the specific volume and latency requirements"), ("D", "Data Cloud automatically scales to any data volume without any architectural consideration, as it is built on Salesforce Hyperforce infrastructure which has no practical data volume limits")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "B is correct. Data Cloud supports high-volume ingestion via multiple mechanisms. The appropriate ingestion pattern and edition should be matched to the specific volume and latency requirements. A: Incorrect. Data Cloud is used by large enterprise customers in telco and financial services. B: Incorrect. Data Cloud does support row-level transactional data. D: Incorrect. Volume considerations do affect ingestion method selection, credit consumption, and processing design."
+        ),
+        Question(
+            id: "256",
+            question: "A consultant is asked to explain the concept of 'activation' in Data Cloud to a business stakeholder who is not technical. Which description is most appropriate for this audience?",
+            options: [("A", "Activation is the process of running SQL queries against Data Model Objects to generate computed metrics that can be used in reports and dashboards"), ("B", "Activation is the step in the Data Cloud lifecycle where a defined audience segment is delivered to a connected system — such as Marketing Cloud, an advertising platform, or a cloud storage location — so that the business can act on that audience"), ("C", "Activation is the process of provisioning a new Data Cloud org and configuring the initial data streams, permission sets, and data spaces before going live"), ("D", "Activation is the automated process by which Data Cloud applies machine learning models to customer segments to predict which individuals are most likely to convert")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "B is correct. For a business stakeholder, activation is best described as the step where a built audience is 'sent' or 'delivered' to a system that can act on it. A: Incorrect. This describes Calculated Insights, not Activation. C: Incorrect. This describes org provisioning and initial setup. D: Incorrect. Activation itself is the delivery of segment data, not an ML prediction process."
+        ),
+        Question(
+            id: "257",
+            question: "A consultant is reviewing a customer's proposed Data Cloud implementation and notices they plan to create dozens of custom DMOs rather than mapping to standard DMOs. What guidance should the consultant provide?",
+            options: [("A", "Custom DMOs should always be used over standard DMOs as they offer better performance and allow the customer to define their own primary key structure"), ("B", "Custom DMOs are required for any data ingested from non-Salesforce sources, as standard DMOs can only map data from native Salesforce connectors"), ("C", "Standard DMOs should be used wherever possible as they are designed to align with the broader Salesforce data model, enabling seamless integration with other Salesforce products and reducing long-term maintenance overhead"), ("D", "The number of custom DMOs has no practical impact on the implementation — both standard and custom DMOs are functionally equivalent and the choice is purely cosmetic")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "B is correct. Standard DMOs are aligned to the Salesforce common data model and provide built-in compatibility with other Salesforce products, features, and future platform enhancements. A: Incorrect. Custom DMOs are not inherently higher performance. B: Incorrect. Standard DMOs can map data from any source. D: Incorrect. The choice between standard and custom DMOs has significant practical implications."
+        ),
+        Question(
+            id: "258",
+            question: "A consultant is assessing the data governance requirements for a new Data Cloud implementation. Which two of the following are examples of data governance capabilities natively available in Data Cloud? (Choose 2)",
+            options: [("A", "The ability to store and apply customer consent preferences using Privacy subject area DMOs"), ("B", "Automated generation of data lineage documentation that satisfies ISO 27001 audit requirements"), ("C", "Data Spaces that allow logical partitioning of data to support multi-brand or multi-region governance"), ("D", "Built-in integration with all major regulatory frameworks including GDPR, CCPA, and HIPAA, with automatic compliance reporting")],
+            questionType: .multiSelect,
+            correctIndices: [0, 2],
+            explanation: "A and C are correct. Data Cloud natively provides Privacy DMOs for consent management and Data Spaces for logical data partitioning. B: Incorrect. Data Cloud does not automatically generate data lineage documentation in a format that satisfies specific audit standards. D: Incorrect. Data Cloud provides tools to support compliance but does not automatically guarantee compliance with specific frameworks."
+        ),
+        Question(
+            id: "259",
+            question: "A customer asks whether Salesforce Data Cloud can be used as the primary system of record for their customer data, replacing their existing MDM (Master Data Management) platform. What should the consultant advise?",
+            options: [("A", "Data Cloud can serve as a system of insight and activation that complements an MDM platform, but it is not designed to replace a dedicated MDM system — it does not provide the same stewardship, workflow, and data quality management capabilities"), ("B", "Yes — Data Cloud is a full MDM replacement. It supports bi-directional data synchronisation, golden record management, and data stewardship workflows"), ("C", "Data Cloud can replace an MDM platform only if the customer's primary data source is a Salesforce CRM"), ("D", "Data Cloud is a full MDM replacement for B2C use cases but cannot replace MDM in B2B scenarios due to the lack of account hierarchy management")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "B is correct. Data Cloud is a customer data platform for unification, segmentation, and activation — not a Master Data Management system. MDM platforms provide data stewardship workflows, exception management, data quality rules, and golden record governance. B: Incorrect. Data Cloud does not provide the full capabilities of a dedicated MDM platform. C: Incorrect. The limitation is not about the source system. D: Incorrect. The reason it is not an MDM replacement is functional, not use-case-specific."
+        ),
+        Question(
+            id: "260",
+            question: "Which statement is true about how Data Cloud credits are consumed?",
+            options: [("A", "Credits are consumed across multiple operations including data ingestion, identity resolution processing, and segment activation, with consumption varying based on data volume and complexity"), ("B", "Credits are consumed only during the activation step when segment data is sent to a downstream target"), ("C", "Credits are a fixed monthly allocation that does not vary based on the volume of data processed"), ("D", "Credits are consumed exclusively for third-party data source ingestion; native Salesforce-to-Salesforce data flows do not consume credits")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "B is correct. Data Cloud uses a credit-based consumption model where credits are consumed across multiple operations. The amount consumed varies based on the volume of records processed. B: Incorrect. Credits are consumed across the full Data Cloud lifecycle, not only during activation. C: Incorrect. Credit consumption is volume-based and variable. D: Incorrect. Native Salesforce-to-Salesforce flows do consume credits."
+        ),
+        Question(
+            id: "261",
+            question: "A consultant is conducting a requirements workshop for a retail client. The client states: 'We want to know, in real time, when a high-value customer who has not purchased in 90 days visits our website, so we can trigger a personalised offer.' Which combination of Data Cloud capabilities would be required to support this use case end to end?",
+            options: [("A", "A Streaming Insight to track visit frequency, a segment activated to Marketing Cloud, and a 24-hour activation refresh schedule"), ("B", "A Calculated Insight to identify lapsed customers, a segment based on that insight, and a Data Cloud-Triggered Flow to fire when a web visit event is ingested for a matching customer"), ("C", "A standard segment with a 90-day filter, an activation to Cloud File Storage, and a scheduled batch job to process the output file and trigger the offer"), ("D", "A custom DMO to track real-time visit events, a Calculated Insight to compute visit frequency, and a full refresh activation to Marketing Cloud every hour")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "A is correct. This use case requires: identifying lapsed customers via a Calculated Insight, a segment based on that insight, and a near real-time trigger when a web visit is detected for a matching segment member via a Data Cloud-Triggered Flow. A: Incorrect. A 24-hour activation refresh schedule does not support the real-time trigger requirement. Streaming Insights also cannot be used in segmentation. C: Incorrect. A batch job processing a Cloud File Storage output file introduces significant latency. D: Incorrect. An hourly full refresh activation is inefficient and still does not achieve the real-time trigger requirement."
+        ),
+        Question(
+            id: "262",
+            question: "A consultant is explaining to a client why a 'right to be forgotten' request from an EU customer requires more than simply deleting the record from their Salesforce CRM. In the context of Data Cloud, what additional steps must be taken to fully honour the request?",
+            options: [("A", "No additional steps are required. Deleting the record in the CRM triggers an automatic cascade delete across all Data Cloud objects via the native CRM connector"), ("B", "A Data Action must be configured to detect the deletion event in CRM and automatically archive the customer's Data Cloud record to a separate cold storage DMO"), ("C", "The customer's data must be deleted or suppressed across all Data Cloud objects where it exists — including DLOs, DMOs, Unified Individual records, and any activation targets — using Data Cloud's individual data erasure or suppression capabilities"), ("D", "The consultant should advise the client that right-to-be-forgotten requests are handled automatically by Salesforce's platform-level compliance processes and no additional action is required in Data Cloud")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "B is correct. Honouring a right-to-be-forgotten request requires deliberately removing or suppressing the individual's data across all layers of Data Cloud using its data erasure capabilities. A: Incorrect. Deleting a record in CRM does not automatically cascade through all Data Cloud layers. B: Incorrect. Archiving data to cold storage does not constitute erasure for GDPR purposes. D: Incorrect. Salesforce does not automatically handle individual GDPR erasure requests on behalf of its customers."
+        ),
+        Question(
+            id: "263",
+            question: "A consultant is conducting a Data Cloud readiness assessment for a new client. Which two factors would most strongly indicate that the client is NOT yet ready to implement Data Cloud? (Choose 2)",
+            options: [("A", "The client has no defined use cases for how unified customer profiles would be acted upon after creation"), ("B", "The client uses both Salesforce and non-Salesforce data sources"), ("C", "The client has not yet established data governance policies, data ownership accountability, or consent management processes"), ("D", "The client's customer database contains fewer than one million records")],
+            questionType: .multiSelect,
+            correctIndices: [0, 2],
+            explanation: "A and C are correct. Without clear activation use cases, Data Cloud implementation risks becoming a data lake exercise with no business value. Without data governance and consent management foundations, the implementation will face legal and operational challenges. B: Incorrect. Having multiple data sources is actually a positive indicator for Data Cloud adoption. D: Incorrect. Data Cloud does not have a minimum record count requirement."
+        ),
+        Question(
+            id: "264",
+            question: "Which permission set grants a user full administrative access to Data Cloud, including the ability to configure data streams, manage identity resolution rulesets, and create activation targets?",
+            options: [("A", "Data Cloud User"), ("B", "Data Cloud Admin"), ("C", "Data Cloud Marketing Manager"), ("D", "Data Aware Specialist")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Data Cloud Admin is the highest-privilege permission set in Data Cloud, providing full access to all configuration tasks including data streams, identity resolution, segmentation, and activation. A: Data Cloud User provides basic read access and limited interaction — it does not grant administrative configuration rights. C: Data Cloud Marketing Manager (also called Data Cloud Marketing Admin) is scoped to segmentation and activation tasks, not full platform administration. D: Data Aware Specialist allows users to surface unified profile data within other Salesforce products (e.g. Sales Cloud record pages) but has no Data Cloud configuration rights."
+        ),
+        Question(
+            id: "265",
+            question: "A marketing analyst at NTO needs to build audience segments and configure activation targets in Data Cloud. They do not need to manage data ingestion or identity resolution settings. Which permission set should the administrator assign?",
+            options: [("A", "Data Cloud User"), ("B", "Data Aware Specialist"), ("C", "Data Cloud Marketing Manager"), ("D", "Data Cloud Admin")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Data Cloud Marketing Manager (Marketing Admin) is designed for users who need to create and publish segments and configure activations, without requiring access to lower-level data engineering tasks. B: Data Cloud Admin would grant more access than required, violating the principle of least privilege. D: Data Aware Specialist is specifically for surfacing unified profile data in other Salesforce clouds — it has no segmentation or activation capabilities."
+        ),
+        Question(
+            id: "266",
+            question: "A Salesforce administrator wants to allow a service agent in Service Cloud to view a customer's unified profile data — including segment membership and calculated insights — directly on a Service Cloud contact record page. Which permission set should be assigned to this agent?",
+            options: [("A", "Data Cloud User"), ("B", "Data Cloud Marketing Manager"), ("C", "Data Cloud Admin"), ("D", "Data Aware Specialist")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Data Aware Specialist is specifically designed to surface Data Cloud profile data (unified profile, segments, calculated insights) within other Salesforce products like Service Cloud, Sales Cloud, and Experience Cloud without granting access to Data Cloud itself. A: Data Cloud User grants access within the Data Cloud UI itself, not specifically for surfacing data in other Salesforce products via embedded components. B: Data Cloud Marketing Manager is focused on segmentation and activation — it is not the appropriate choice for giving service agents read-only profile visibility. C: Data Cloud Admin would grant full administrative rights, far exceeding what a service agent requires."
+        ),
+        Question(
+            id: "267",
+            question: "Cloud Kicks is deploying Data Cloud across three distinct business units — Footwear, Apparel, and Accessories — and wants to ensure that each unit's segments, data streams, and activation targets are isolated from one another within a single Salesforce org. What feature should the consultant recommend?",
+            options: [("A", "Separate Salesforce orgs for each business unit"), ("B", "Data Kits"), ("C", "Data Spaces"), ("D", "Data Bundles")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Data Spaces are logical partitions within a single Data Cloud org that isolate data streams, segments, and activations by business unit, brand, or region — enabling multi-brand governance without requiring multiple orgs. A: Separate orgs would solve the isolation requirement but would be costly, complex to maintain, and is not the recommended approach when Data Cloud is already provisioned on a single org. B: Data Kits are portable metadata packages used for deploying configurations between environments (e.g. sandbox to production), not for logical data isolation. D: Data Bundles are Salesforce-provided pre-built connector packages, not a partitioning mechanism."
+        ),
+        Question(
+            id: "268",
+            question: "A consultant is configuring Data Cloud for a customer and notices that the org time zone setting is incorrect. What is the impact of having the wrong time zone configured in Data Cloud?",
+            options: [("A", "Data streams will fail to ingest new records until the time zone is corrected"), ("B", "Identity resolution rulesets will not process existing records"), ("C", "Segment refresh schedules and time-based calculated insights may produce incorrect results"), ("D", "Activation targets will reject all outbound data payloads")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "The org time zone setting affects how Data Cloud interprets and displays date/time values. An incorrect setting can cause segment refresh schedules to run at unintended times and cause time-based operators in calculated insights to produce incorrect results. A: Data stream ingestion is not gated by the time zone setting — records continue to ingest regardless. B: Identity resolution processing is not dependent on the org time zone configuration. D: Activation target payloads are not rejected based on time zone mismatches; the data simply reflects the incorrectly interpreted timestamps."
+        ),
+        Question(
+            id: "269",
+            question: "Cumulus Financial has built a set of custom Data Cloud configurations in a sandbox org — including data stream mappings, data model object relationships, identity resolution rulesets, and calculated insights — and now needs to deploy these configurations to production without manually recreating each one. What is the recommended approach?",
+            options: [("A", "Use Salesforce Change Sets to migrate all Data Cloud metadata between environments"), ("B", "Create a Data Kit in sandbox and install it in production"), ("C", "Export the configuration as a Data Bundle and import it into production"), ("D", "Manually recreate all configurations in production using the Data Cloud Setup wizard")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Data Kits are customer-created portable metadata packages that bundle Data Cloud configurations (data streams, DMO mappings, rulesets, calculated insights) for deployment between environments. They are the recommended mechanism for sandbox-to-production migrations. A: Salesforce Change Sets do not support Data Cloud metadata types — standard change set deployment will not work for Data Cloud configurations. C: Data Bundles are Salesforce-provided pre-built packages (not customer-created) typically used for first-time setup of common use cases like Marketing Cloud. They cannot be created by customers. D: Manual recreation is error-prone, time-consuming, and not scalable — Data Kits exist specifically to automate this process."
+        ),
+        Question(
+            id: "270",
+            question: "What is the primary purpose of a Data Bundle in Salesforce Data Cloud?",
+            options: [("A", "To package customer-built configurations for deployment between sandbox and production environments"), ("B", "To define the mapping between Data Source Objects and Data Model Objects"), ("C", "To partition data access across multiple business units within a single org"), ("D", "To provide Salesforce-built pre-configured packages that accelerate common Data Cloud setup scenarios")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Data Bundles (also called Data Kits when Salesforce-built) are pre-packaged configurations provided by Salesforce to accelerate setup for common use cases — for example, the Marketing Cloud Starter Bundle pre-configures the Marketing Cloud connector, data stream mappings, and standard DMO relationships. A: This describes a Data Kit, which is a customer-created metadata package for environment-to-environment deployment, not a Data Bundle. B: Field mapping between DSOs and DMOs is configured within the data stream setup wizard, not through Data Bundles. C: Data Spaces handle logical data partitioning — Data Bundles have nothing to do with access control or partitioning."
+        ),
+        Question(
+            id: "271",
+            question: "A Data Cloud administrator has recently provisioned a new Data Cloud org for a customer. During initial setup, the administrator cannot see any data stream connectors available in the Data Cloud Setup menu. What is the most likely cause?",
+            options: [("A", "The administrator has not been assigned the Data Cloud Admin permission set"), ("B", "Data Cloud provisioning is still completing — connector options become available once the provisioning job finishes"), ("C", "The data streams feature requires a separate license add-on beyond the base Data Cloud provisioning"), ("D", "The administrator must first create at least one Data Space before connectors become visible")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "When a Data Cloud org is first provisioned, background jobs run to set up the environment. During this period (which can take several minutes to hours), some Setup menu options including connector configuration may not yet be visible. Waiting for provisioning to complete resolves the issue. A: If the administrator could not see the Data Cloud Setup menu at all, this could be a permission issue — but if they can navigate to Setup and see some options, the permission set has likely been assigned correctly. C: Data stream connectors are included in the base Data Cloud provisioning — they do not require a separate license add-on. D: A default Data Space is automatically created during provisioning; connectors do not require manual Data Space creation before becoming available."
+        ),
+        Question(
+            id: "272",
+            question: "A consultant is troubleshooting a Data Cloud implementation where data is ingesting but unified profiles are not being created as expected. What is the first tool the consultant should use to investigate the issue?",
+            options: [("A", "The Data Cloud Diagnostics page in Setup"), ("B", "The Segment Debug tool in the Segmentation workspace"), ("C", "The Activation Monitoring dashboard"), ("D", "The Identity Resolution Audit Log in the Identity workspace")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "The Data Cloud Diagnostics page in Setup provides a centralised view of health checks and error logs across ingestion, identity resolution, and activation — it is the recommended first stop for troubleshooting issues such as profiles not unifying. B: The Segment Debug tool helps diagnose why specific records are or are not included in a segment — it is not relevant when the underlying issue is with unified profile creation. C: The Activation Monitoring dashboard tracks outbound activation status (accepted/rejected counts) — it would not help diagnose identity resolution issues. D: While identity resolution logs exist, the broader Diagnostics page should be consulted first to determine whether the root cause is in identity resolution specifically or earlier in the pipeline."
+        ),
+        Question(
+            id: "273",
+            question: "A company has a Data Cloud org shared across two brands: Brand A (luxury) and Brand B (budget). A marketing user for Brand A must be able to create segments and activations using only Brand A's data, with no visibility into Brand B's data or configurations. A Data Cloud Admin has already set up two Data Spaces — one per brand. What additional step is required to enforce this access boundary for the Brand A marketing user?",
+            options: [("A", "Assign the user the Data Cloud User permission set and restrict their profile to Brand A records"), ("B", "Create a separate Salesforce org for Brand A to ensure complete data isolation"), ("C", "Assign the user the Data Cloud Marketing Manager permission set and configure their Data Space assignment to Brand A's Data Space only"), ("D", "Enable field-level security on all Brand B Data Model Objects to prevent cross-brand access")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Data Spaces enforce logical data isolation, but users must also be assigned to the appropriate Data Space. Assigning the user the Data Cloud Marketing Manager permission set (for segmentation and activation rights) and restricting their Data Space assignment to Brand A's Data Space ensures they can only work with Brand A data. A: Data Cloud User has insufficient permissions for segmentation and activation. Profile-level record restrictions do not control Data Space access. B: Separate orgs would be a drastic architectural change and are unnecessary when Data Spaces are specifically designed for this multi-brand isolation scenario. D: Field-level security applies to fields within records, not to entire Data Space partitions — it would not prevent cross-brand access at the Data Space level."
+        ),
+        Question(
+            id: "274",
+            question: "A consultant is reviewing the permission sets available in a newly provisioned Data Cloud org. Which TWO permission sets are natively available in Salesforce Data Cloud without requiring any custom configuration?",
+            options: [("A", "Data Cloud Admin"), ("B", "Data Cloud Architect"), ("C", "Data Cloud Marketing Manager"), ("D", "Data Cloud Integration Specialist")],
+            questionType: .multiSelect,
+            correctIndices: [0, 2],
+            explanation: "Data Cloud Admin and Data Cloud Marketing Manager (also called Data Cloud Marketing Admin) are two of the standard permission sets provisioned with Data Cloud. The full set includes Data Cloud Admin, Data Cloud Marketing Manager, Data Cloud User, and Data Aware Specialist. B: Data Cloud Architect is not a standard Data Cloud permission set — it does not exist natively in the platform. D: Data Cloud Integration Specialist is not a standard Data Cloud permission set — it does not exist natively in the platform."
+        ),
+        Question(
+            id: "275",
+            question: "NTO has deployed Data Cloud and is experiencing intermittent issues where certain data streams appear to stop processing new records. The data engineering team has confirmed that new records exist in the source systems. A consultant is asked to identify the most efficient method to confirm whether the issue is a Data Cloud platform problem versus a source connectivity issue. What should the consultant check first?",
+            options: [("A", "Review the activation monitoring dashboard for rejected record counts"), ("B", "Contact Salesforce Support immediately, as intermittent processing stops always indicate a platform bug"), ("C", "Re-create the data streams from scratch to reset their processing state"), ("D", "Check the Data Stream details page for the last successful run timestamp and any error messages")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "The Data Stream details page shows the last successful run time, current status, and any error messages logged during the most recent ingestion attempt. This is the fastest way to distinguish between a connector/source issue and a platform-level problem. A: The activation monitoring dashboard shows outbound data errors — it would not reflect ingestion-level failures where data never enters Data Cloud. B: Many intermittent processing issues are caused by source system authentication expiry, API rate limits, or connector configuration drift — these should be investigated before escalating to Salesforce Support. C: Recreating data streams is destructive and would reset the ingestion watermark — this is a last resort, not a diagnostic step."
+        ),
+        Question(
+            id: "276",
+            question: "What does the Marketing Cloud Starter Bundle provide when installed in a Data Cloud org?",
+            options: [("A", "A pre-configured set of identity resolution rulesets for Marketing Cloud contact data"), ("B", "A set of pre-built audience segments based on Marketing Cloud engagement data"), ("C", "A pre-built package that sets up the Marketing Cloud connector, standard data stream mappings, and DMO relationships for Marketing Cloud data"), ("D", "Automatic activation targets for Marketing Cloud Email Studio and Mobile Studio")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "The Marketing Cloud Starter Bundle (a type of Data Bundle) installs a pre-configured connector between Data Cloud and Marketing Cloud Engagement, along with standard data stream mappings and Data Model Object relationships — accelerating the initial setup significantly. A: Identity resolution rulesets are not included in the Starter Bundle — they must be configured separately based on the customer's data quality and matching strategy. B: Pre-built segments are not included in the Starter Bundle — segment creation is always a customer-specific configuration activity. D: Activation targets must be configured manually by the administrator — they are not automatically created by the Starter Bundle."
+        ),
+        Question(
+            id: "277",
+            question: "A Data Cloud administrator wants to allow a team of five data analysts to query Data Model Objects and view unified profile data within Data Cloud, but does not want them to be able to modify data streams, create segments, or change identity resolution settings. Which permission set should be assigned?",
+            options: [("A", "Data Cloud Admin"), ("B", "Data Cloud User"), ("C", "Data Cloud Marketing Manager"), ("D", "Data Aware Specialist")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Data Cloud User provides read access to Data Model Objects and unified profile data within Data Cloud, without granting write or configuration access to data streams, identity resolution, or segmentation settings. A: Data Cloud Admin would grant full configuration access, far exceeding the read-only requirement. C: Data Cloud Marketing Manager includes segmentation and activation permissions, which is more than the analysts require. D: Data Aware Specialist is designed for surfacing Data Cloud data in other Salesforce products (e.g. Sales Cloud page layouts) — it does not grant access to browse DMOs within the Data Cloud UI."
+        ),
+        Question(
+            id: "278",
+            question: "A consultant is implementing Data Cloud for a global retailer that operates in the EU and must comply with GDPR data residency requirements. The customer's data engineers ask whether all data ingested into Data Cloud remains within the Salesforce infrastructure in their selected region. What should the consultant advise?",
+            options: [("A", "Data Cloud data residency cannot be configured — all instances share a global multi-tenant data layer"), ("B", "Data Cloud always stores data in Salesforce's US data centres regardless of the provisioned region"), ("C", "Data Cloud relies on third-party cloud providers (AWS, Azure) and customers must manage their own GDPR compliance separately"), ("D", "Data Cloud stores all data in Salesforce-managed hyperforce infrastructure, and customers can select their data residency region during provisioning")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Salesforce Data Cloud runs on Hyperforce, Salesforce's next-generation infrastructure built on public cloud. Customers can select their data residency region during provisioning, enabling compliance with regional data sovereignty requirements such as GDPR. A: Data Cloud does support region-specific provisioning — it is not limited to a shared global data layer. B: This is incorrect — Hyperforce allows regional deployment, and EU customers can have their data hosted in EU data centres. C: While Hyperforce uses public cloud infrastructure (AWS, GCP, Azure), Salesforce remains the data processor and manages compliance obligations — customers do not need to manage this separately as a result of the underlying cloud provider."
+        ),
+        Question(
+            id: "279",
+            question: "When setting up a new Data Cloud org, a consultant recommends that the customer configure their org time zone before creating any data streams or scheduled processes. Why is this configuration important to complete first?",
+            options: [("A", "Once data streams are created, the org time zone can no longer be changed"), ("B", "The time zone setting determines the default language for all Data Cloud labels and field names"), ("C", "The org time zone controls the currency conversion rate applied to financial Data Model Objects"), ("D", "Scheduled segment refreshes, data stream run times, and time-based calculations use the org time zone, so an incorrect setting will affect all time-sensitive operations")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "The org time zone affects how Data Cloud interprets and schedules time-based operations, including segment refresh windows, data stream run schedules, and time operators in calculated insights. Setting it correctly before building out configurations avoids misaligned scheduling. B: The org time zone can technically be changed after data streams are created, but doing so retroactively can cause unexpected behaviour in scheduled jobs — this is why setting it first is a best practice. C: The org time zone has no effect on labels or field names — those are determined by the org language and locale settings."
+        ),
+        Question(
+            id: "280",
+            question: "A Data Cloud consultant is designing a governance model for a large enterprise with four different business units sharing one Data Cloud org. The business units need data isolation for segmentation and activation, but the data engineering team should have visibility across all units for troubleshooting. Which TWO Data Cloud features should be used together to implement this model?",
+            options: [("A", "Permission set assignment to control which Data Space(s) each user can access"), ("B", "Separate connected Salesforce orgs per business unit"), ("C", "Data Spaces to partition data by business unit"), ("D", "Data Kits to deploy configurations per business unit")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Data Spaces create the logical partitions that isolate each business unit's data. Permission set assignments (scoped to specific Data Spaces) then control which users can see which partitions — marketing users are restricted to their own Data Space, while data engineers can be assigned to all Data Spaces. B: Data Kits are for deploying metadata configurations between environments (sandbox to production). They do not provide runtime data isolation. D: Separate orgs would solve isolation but would also prevent the shared data engineering visibility described in the scenario. The single-org multi-Data-Space model is the correct architecture."
+        ),
+        Question(
+            id: "281",
+            question: "A Salesforce Admin who has been assigned the Data Cloud Admin permission set reports they cannot access the Data Cloud Setup application. What is the most likely reason?",
+            options: [("A", "The Data Cloud Admin permission set must be combined with the System Administrator profile to access Setup"), ("B", "The administrator's Salesforce licence type does not include Data Cloud access, even with the permission set assigned"), ("C", "The Data Cloud provisioning job is still running and Setup access will become available once it completes"), ("D", "Data Cloud Setup is only accessible via a separate URL, not through the main Salesforce App Launcher")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "When a Data Cloud org is first provisioned, a background provisioning job must complete before the Data Cloud Setup interface becomes accessible. During this period, even a correctly configured Data Cloud Admin user may see limited or no access to Setup options. A: Data Cloud Admin is a permission set that can be assigned to any Salesforce user regardless of profile — System Administrator profile is not required. B: Access to Data Cloud is controlled by the permission set, not separately by licence type in the way described — if the org has Data Cloud provisioned and the permission set is assigned correctly, access should work. D: Data Cloud is accessed via the App Launcher like other Salesforce apps — there is no separate URL requirement."
+        ),
+        Question(
+            id: "282",
+            question: "Which of the following statements about Data Spaces in Salesforce Data Cloud is correct?",
+            options: [("A", "A default Data Space is automatically created when Data Cloud is provisioned"), ("B", "Data Spaces are physical partitions that store data in separate database schemas"), ("C", "Each Data Cloud org can have a maximum of two Data Spaces"), ("D", "Data Spaces can only be created by Salesforce Support, not by customers")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "When a Data Cloud org is provisioned, a default Data Space is automatically created. Administrators can then create additional Data Spaces as needed for multi-brand or multi-region segmentation and activation isolation. B: Data Spaces are logical (not physical) partitions — they segment access and configuration, not the underlying database storage. C: There is no hard limit of two Data Spaces — organisations can create multiple Data Spaces based on their governance needs. D: Data Spaces are created by Data Cloud Admins within the Data Cloud Setup interface — Salesforce Support is not required."
+        ),
+        Question(
+            id: "283",
+            question: "A consultant is auditing a customer's Data Cloud org and finds that a user with the Data Aware Specialist permission set is attempting to create calculated insights in Data Cloud but receives an access error. What is the correct explanation for this behaviour?",
+            options: [("A", "Calculated insights require the Data Cloud Marketing Manager permission set at minimum"), ("B", "The Data Aware Specialist permission set does not grant access to the Data Cloud application — it only enables embedded Data Cloud components in other Salesforce products"), ("C", "Calculated insights are locked to the Data Cloud Admin permission set and cannot be created by any other permission set"), ("D", "The user must also be assigned the Data Cloud User permission set in addition to Data Aware Specialist to access the Data Cloud UI")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Data Aware Specialist is specifically scoped to surfacing Data Cloud profile information within other Salesforce products (e.g. displaying segment membership on a Contact record in Sales Cloud). It does not grant any access to the Data Cloud application itself, so the user cannot navigate to or interact with calculated insights. A: While Data Cloud Marketing Manager can create segments, calculated insights creation typically requires Data Cloud Admin or specialised data engineering access — but this is secondary to the main issue that Data Aware Specialist gives no Data Cloud app access at all. C: Calculated insights can be created by users with appropriate Data Cloud app access permissions, not exclusively Data Cloud Admin. D: While assigning an additional permission set might help, the root explanation is that Data Aware Specialist is specifically designed for cross-cloud surface use and does not include Data Cloud app access by design."
+        ),
+        Question(
+            id: "284",
+            question: "NTO is using Data Cloud and wants to give their e-commerce development team the ability to post real-time behavioural event data (such as product views and cart additions) into Data Cloud. The team will use a server-side integration. Which type of credential should the consultant help the team set up?",
+            options: [("A", "An S3 bucket access key and secret"), ("B", "A named credential referencing a Salesforce CRM connector"), ("C", "A Marketing Cloud API key"), ("D", "Connected App with OAuth 2.0 client credentials flow")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "The Data Cloud Ingestion API requires OAuth 2.0 authentication via a Connected App. Server-side integrations use the client credentials flow (client ID and client secret) to obtain an access token and post data to the Ingestion API endpoint. A: S3 bucket credentials are used for the Cloud Storage Connector (pulling data from S3 into Data Cloud), not for posting real-time events via the Ingestion API. B: Named credentials reference external endpoints for outbound calls from Salesforce — they are not used to authenticate inbound calls to the Data Cloud Ingestion API. C: Marketing Cloud API keys are used for Marketing Cloud REST/SOAP API integrations and are unrelated to Data Cloud Ingestion API authentication."
+        ),
+        Question(
+            id: "285",
+            question: "A customer reports that after adding a new custom field to a Salesforce CRM object (Account) that is mapped to a Data Cloud data stream, the field is not appearing in Data Cloud even after waiting 24 hours. What is the most likely cause and the recommended resolution?",
+            options: [("A", "Custom fields from CRM are never supported in Data Cloud — only standard fields can be synced"), ("B", "A new data stream must be created for the Account object to include the additional field"), ("C", "The CRM connector will automatically detect and include the new field within 4 hours — the customer should wait longer"), ("D", "The new field must be manually added to the data stream mapping in Data Cloud, and a full refresh may be required to backfill historical data")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "When a new field is added to a CRM object, Data Cloud does not automatically add it to the existing data stream mapping. The administrator must navigate to the data stream, add the new field to the field mapping configuration, and trigger a full refresh so that historical records include the new field value. A: Custom fields from CRM objects are fully supported in Data Cloud data streams — this statement is incorrect. B: A new data stream is not required — the existing data stream for Account can be edited to include the new field. C: The CRM connector does not automatically detect and include new fields — this requires manual intervention in the data stream field mapping."
+        ),
+        Question(
+            id: "286",
+            question: "Which statement correctly describes the relationship between a Data Kit and a Data Bundle in Salesforce Data Cloud?",
+            options: [("A", "Data Kits and Data Bundles are different names for the same feature"), ("B", "Data Bundles are Salesforce-provided pre-built setup packages; Data Kits are customer-created packages for migrating configurations between environments"), ("C", "Data Kits are Salesforce-provided packages; Data Bundles are customer-created for deploying between environments"), ("D", "Data Bundles are created during the segmentation process; Data Kits are created during the activation process")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Data Bundles are pre-built packages provided by Salesforce to accelerate initial setup (e.g. Marketing Cloud Starter Bundle). Data Kits are created by customers or partners to package their own configurations for migration between Data Cloud environments (e.g. sandbox to production). A: They are distinct features with different purposes and different creators — they are not synonyms. C: This reverses the definitions — Salesforce provides Bundles; customers create Kits. D: Neither Data Bundles nor Data Kits have any connection to the segmentation or activation process — they are setup and deployment tools."
+        ),
+        Question(
+            id: "287",
+            question: "A consultant is helping a customer troubleshoot an issue where Data Cloud shows a 'Provisioning Failed' status for a newly requested org. The customer's Salesforce Account Executive has confirmed the contract is active and the SKU has been added to the account. What should the consultant recommend as the next step?",
+            options: [("A", "Ask the customer to create a second Data Cloud provisioning request to override the failed one"), ("B", "Review the Data Cloud Setup Diagnostics page to identify the specific provisioning error code"), ("C", "Refresh the browser and wait 48 hours, as provisioning failures are typically transient and resolve automatically"), ("D", "Open a Salesforce Support case and provide the org ID, as provisioning failures require backend intervention that is not self-serviceable")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "A 'Provisioning Failed' status indicates a backend infrastructure failure that cannot be resolved through the Data Cloud UI. The correct escalation path is to open a Salesforce Support case with the org ID so that the support team can investigate and re-trigger the provisioning job. A: Creating a second provisioning request is not possible and would not override the failed state — this is not a self-service action. B: The Data Cloud Setup Diagnostics page is useful for post-provisioning runtime issues, but it is not accessible or relevant when provisioning itself has failed. C: Provisioning failures do not resolve automatically — leaving it unattended will not result in a working org."
+        ),
+        Question(
+            id: "288",
+            question: "What is the correct order of the Data Cloud object hierarchy, from the raw source layer to the harmonised model layer?",
+            options: [("A", "DMO → DLO → DSO → Data Stream"), ("B", "Data Stream → DSO → DLO → DMO"), ("C", "Data Stream → DLO → DSO → DMO"), ("D", "DSO → Data Stream → DMO → DLO")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "The correct hierarchy is: Data Stream (raw ingest) → Data Source Object/DSO (source-shaped representation) → Data Lake Object/DLO (persisted storage layer) → Data Model Object/DMO (harmonised, mapped model layer used for segmentation and activation). A: This reverses the order entirely — DMOs are the final mapped layer, not the starting point. C: DSO and DLO are in the wrong order — DSO sits between the Data Stream and the DLO, not the other way around. D: This order is incorrect — Data Streams are the entry point and DMOs are the harmonised output layer."
+        ),
+        Question(
+            id: "289",
+            question: "A consultant is configuring a new data stream for website clickstream data in Data Cloud. When selecting the data stream category, which category is most appropriate for this type of data?",
+            options: [("A", "Engagement"), ("B", "Profile"), ("C", "Other"), ("D", "Transactional")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "The Engagement category is used for behavioural and interaction data — including website clicks, email opens, and mobile app events. Engagement data represents actions taken by individuals. B: Profile is used for person-centric data such as customer records, contact details, or account information that describes who someone is. C: Other is a catch-all category for data that doesn't fit the Profile or Engagement categories, such as product catalogues or inventory records. D: Transactional is not a valid Data Cloud data stream category — the three valid categories are Profile, Engagement, and Other."
+        ),
+        Question(
+            id: "290",
+            question: "A data engineer at Cloud Kicks notices that after setting up a CRM data stream for the Contact object, the data stream category cannot be changed. They want to change it from Profile to Engagement. What must the engineer do?",
+            options: [("A", "Edit the data stream settings and change the category field from the dropdown menu"), ("B", "Contact Salesforce Support to request a backend change to the data stream category"), ("C", "Delete the existing data stream and create a new one with the correct category"), ("D", "Change the data stream category via the Data Cloud API using a PATCH request")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "The data stream category (Profile, Engagement, or Other) is set at creation time and is immutable — it cannot be changed after the data stream is saved. To correct the category, the engineer must delete the existing data stream and create a new one with the correct category selected. A: The category field is locked after creation — there is no dropdown available for editing it once saved. B: This is not a Salesforce Support activity — the category is immutable by design and cannot be changed via backend intervention either. D: The Data Cloud API does not support changing the category of an existing data stream — immutability applies regardless of the method used."
+        ),
+        Question(
+            id: "291",
+            question: "A customer's source system stores customer ID values as numeric strings with leading zeros (e.g. '007834'). When ingesting this data into Data Cloud via the CRM connector, the team notices the leading zeros are being dropped, causing mismatches during identity resolution. What is the recommended fix?",
+            options: [("A", "Enable the 'Preserve Leading Zeros' setting in the CRM Connector configuration"), ("B", "Map the customer ID field to a Text data type in the Data Cloud field mapping"), ("C", "Map the customer ID field to a Number data type in the Data Cloud field mapping"), ("D", "Apply a formula field on the CRM object to preserve leading zeros before ingestion")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Leading zeros are only preserved when ID fields are mapped as Text (string) data type in Data Cloud. If the field is mapped as a Number, the system interprets it numerically and strips leading zeros. Mapping it as Text treats the value as a string literal. C: Formula fields on the CRM object would not solve the problem at the Data Cloud mapping layer, and formula fields have their own limitations with CRM connector ingestion. D: There is no 'Preserve Leading Zeros' setting in the CRM Connector — the solution is in the field type mapping."
+        ),
+        Question(
+            id: "292",
+            question: "A consultant is setting up the Salesforce CRM Connector for a customer who wants to ingest Opportunity data into Data Cloud. After the initial full refresh completes successfully, the customer reports that an Opportunity record updated three days ago is still not reflecting the new field values in Data Cloud, despite multiple incremental sync cycles running. What is the most likely cause?",
+            options: [("A", "The CRM connector requires a minimum 48-hour delay before incremental updates appear in Data Cloud"), ("B", "The Opportunity record's updated field is a formula field, which does not update the SystemModstamp/Last Modified Date and is therefore not captured by incremental sync"), ("C", "Incremental sync only processes newly created records, not updates to existing records"), ("D", "The CRM connector automatically excludes Opportunity objects from incremental sync — only full refreshes capture Opportunity updates")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "The CRM Connector uses the Last Modified Date (SystemModstamp) field to identify records changed since the last sync. Formula fields recalculate their values dynamically but do NOT update the Last Modified Date when they change. As a result, if only formula field values change, the incremental sync will not detect the record as modified and will not send the update to Data Cloud. A: There is no 48-hour delay requirement — the CRM connector runs on a minimum 1-hour incremental sync cycle, not 48 hours. C: Incremental sync processes both new records AND updates to existing records — it does handle modifications. D: The CRM connector supports all standard CRM objects including Opportunity — there is no exclusion for this object type."
+        ),
+        Question(
+            id: "293",
+            question: "What is the minimum sync interval supported by the Salesforce CRM Connector when configured for incremental data refreshes?",
+            options: [("A", "1 hour"), ("B", "30 minutes"), ("C", "15 minutes"), ("D", "4 hours")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "The Salesforce CRM Connector supports a minimum incremental sync interval of 1 hour. This is a platform constraint — Data Cloud does not support sub-hourly CRM sync frequencies. B: 30-minute sync is also below the minimum supported frequency of 1 hour. C: 15-minute sync intervals are not supported by the CRM Connector — this frequency is below the platform minimum. D: 4-hour sync is a valid option, but it is not the minimum — 1 hour is the shortest available interval."
+        ),
+        Question(
+            id: "294",
+            question: "A consultant is designing a real-time data ingestion pipeline for NTO's mobile app, which generates user behaviour events at high frequency. The events need to appear in Data Cloud within minutes of occurring for near-real-time personalisation. Which ingestion method should the consultant recommend?",
+            options: [("A", "CRM Connector with 1-hour incremental refresh"), ("B", "Ingestion API Streaming pattern"), ("C", "Cloud Storage Connector pulling from an S3 bucket updated every 10 minutes"), ("D", "Ingestion API Bulk pattern with CSV file uploads every 30 minutes")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "The Ingestion API Streaming pattern accepts JSON payloads in near real-time and processes them in micro-batches approximately every 3 minutes — making it the correct choice for low-latency behavioural event ingestion from mobile apps. A: The CRM Connector has a minimum 1-hour sync cycle — far too slow for near-real-time personalisation use cases. C: The Cloud Storage Connector is designed for bulk file-based ingestion — even a 10-minute S3 update cycle introduces significant delay compared to the Ingestion API Streaming pattern. D: The Ingestion API Bulk pattern uses CSV files and is optimised for large-volume periodic loads, not near-real-time streaming — 30-minute batch cycles would not meet the requirement."
+        ),
+        Question(
+            id: "295",
+            question: "Which file format does the Ingestion API Bulk pattern require for data payloads?",
+            options: [("A", "JSON"), ("B", "XML"), ("C", "CSV"), ("D", "Parquet")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "The Ingestion API Bulk pattern requires data to be submitted as CSV (comma-separated values) files. This is designed for large-volume, periodic batch loads rather than real-time streaming. A: JSON is the format used by the Ingestion API Streaming pattern, not the Bulk pattern. B: XML is not a supported format for either Ingestion API pattern. D: Parquet files are used by some cloud data lake connectors (e.g. Cloud Storage Connector from S3) but are not the required format for Ingestion API Bulk."
+        ),
+        Question(
+            id: "296",
+            question: "A company is using the Data Cloud Ingestion API Streaming pattern to ingest real-time events. A developer asks what happens if the Data Cloud endpoint is temporarily unavailable when the client sends a payload. What should the consultant advise about the Ingestion API Streaming pattern's delivery guarantee?",
+            options: [("A", "The Ingestion API queues all payloads and guarantees delivery with at-least-once semantics"), ("B", "Data Cloud automatically retries failed Streaming API calls for up to 72 hours"), ("C", "The Ingestion API uses a fire-and-forget model — if the endpoint is unavailable, the payload is lost and must be re-sent by the client"), ("D", "The Ingestion API Streaming pattern falls back to Bulk mode automatically when the streaming endpoint is unavailable")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "The Ingestion API Streaming pattern operates on a fire-and-forget model with no built-in queuing or guaranteed delivery. If the endpoint returns an error or is unavailable, the responsibility for retry logic lies with the client application — Data Cloud does not buffer or retry the payload automatically. A: At-least-once delivery is not guaranteed by the Ingestion API Streaming pattern — client-side retry logic is required. B: There is no automatic 72-hour retry mechanism — the Streaming API does not queue or retry failed deliveries. D: There is no automatic fallback from Streaming to Bulk pattern — they are independent and the client must handle failures."
+        ),
+        Question(
+            id: "297",
+            question: "Cumulus Financial wants to ingest a nightly extract of 2 million transaction records from their data warehouse into Data Cloud. The extract is produced as a CSV file and uploaded to an Amazon S3 bucket at 11 PM every night. Which Data Cloud ingestion method should the consultant recommend?",
+            options: [("A", "Ingestion API Streaming pattern with nightly scheduled batch"), ("B", "MuleSoft Anypoint Platform real-time connector"), ("C", "CRM Connector with nightly full refresh"), ("D", "Cloud Storage Connector pointed at the S3 bucket")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "The Cloud Storage Connector is designed specifically for ingesting file-based data from cloud object storage such as Amazon S3. It can be scheduled to pick up new files automatically, making it the ideal choice for nightly CSV extracts from a data warehouse. A: The Ingestion API Streaming pattern is designed for real-time event-driven data, not scheduled nightly batch CSV files. The Bulk pattern would be more applicable, but the Cloud Storage Connector is the cleaner fit for S3-sourced files. B: MuleSoft could be used as middleware to push data via the Ingestion API, but it adds unnecessary complexity when the Cloud Storage Connector can directly handle the S3-to-Data Cloud ingestion. C: The CRM Connector is for Salesforce CRM objects (Contacts, Opportunities, etc.) — it cannot connect to a data warehouse or Amazon S3."
+        ),
+        Question(
+            id: "298",
+            question: "In Data Cloud, what is the purpose of the Data Model Object (DMO)?",
+            options: [("A", "To store raw data exactly as received from source systems without any transformation"), ("B", "To act as the intermediate storage layer between Data Source Objects and the identity graph"), ("C", "To define the schema of incoming data streams before they are processed by Data Cloud"), ("D", "To represent harmonised, semantically consistent data that can be used for segmentation, identity resolution, and activation")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Data Model Objects (DMOs) are the harmonised data layer in Data Cloud. They follow a standard semantic model, allowing data from multiple sources to be mapped to common structures (e.g. Individual, Contact Point Email, Unified Individual) and then used for segmentation, identity resolution, and activation. A: Storing raw data as-is is the function of the Data Lake Object (DLO) — not the DMO. DMOs apply transformation and harmonisation. B: The intermediate storage layer between DSO and DMO is the Data Lake Object (DLO), not the DMO itself. C: Defining the schema of incoming data is the role of the Data Source Object (DSO), which reflects the source system's structure."
+        ),
+        Question(
+            id: "299",
+            question: "A consultant is mapping fields from a CRM Contact data stream to Data Model Objects. They notice there are 89+ standard DMOs available. What is the significance of using a standard DMO (such as the Individual DMO) rather than creating a custom DMO?",
+            options: [("A", "Standard DMOs allow data to participate in Salesforce-native identity resolution and segmentation processes, whereas custom DMOs cannot be used in these features"), ("B", "Standard DMOs automatically ingest data from all connected sources without requiring manual field mapping"), ("C", "Standard DMOs are pre-configured with fields, relationships, and semantic definitions that align with identity resolution, segmentation, and activation capabilities"), ("D", "Custom DMOs require a separate Data Cloud licence add-on and are not available on the base platform")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Standard DMOs are pre-built with fields and relationship definitions that align with the Data Cloud semantic model. For example, the Individual DMO has fields like First Name, Last Name, and Date of Birth that identity resolution uses. Mapping data to standard DMOs ensures compatibility with built-in platform capabilities. A: Custom DMOs can also participate in segmentation and some platform features — the key advantage of standard DMOs is their pre-defined field structures and relationships, not an outright exclusion of custom DMOs from all features. B: All data streams require manual field mapping regardless of whether the target is a standard or custom DMO — there is no auto-mapping capability. D: Custom DMOs are available as part of the standard Data Cloud licence — they do not require a separate add-on."
+        ),
+        Question(
+            id: "300",
+            question: "A consultant is designing a data model for a retailer that sells both products and services. Product purchase records and service subscription records need to be modelled separately due to different field structures, but both should contribute to a unified customer profile. What is the recommended approach for modelling these two data types in Data Cloud?",
+            options: [("A", "Create a single custom DMO that combines all fields from both product and service records"), ("B", "Map both data streams to the standard Individual DMO, using optional fields for each record type"), ("C", "Create two separate DMOs (one for product purchases and one for service subscriptions) and relate both to the Individual DMO via a foreign key relationship"), ("D", "Use two separate Data Spaces — one for product data and one for service data — with separate Individual DMOs in each")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "The recommended approach is to create separate DMOs for each data type with distinct field structures, and then relate each to the Individual DMO (the person entity) via a foreign key (Individual ID). This preserves semantic clarity, avoids data model sprawl, and ensures both contribute to the unified customer profile. A: Combining all fields into a single DMO would create a bloated, unclear schema with many null values and poor query performance. B: The Individual DMO represents person identity — it should not contain transactional or product/service record data. Mapping purchase records to Individual would be semantically incorrect. D: Using separate Data Spaces would prevent the two data types from contributing to the same unified customer profile, which is the opposite of the stated requirement."
+        ),
+        Question(
+            id: "301",
+            question: "Which Data Cloud subject area contains the Data Model Objects used to manage customer consent and privacy preferences, including GDPR opt-in and opt-out records?",
+            options: [("A", "Party"), ("B", "Privacy"), ("C", "Engagement"), ("D", "Loyalty")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "The Privacy subject area in Data Cloud contains DMOs specifically designed for managing consent and data privacy preferences — including opt-in/opt-out records, right-to-be-forgotten requests, and communication consent by channel. A: The Party subject area contains person and organisation identity DMOs (e.g. Individual, Account, Contact Point) — not consent or privacy records. C: The Engagement subject area contains behavioural and interaction DMOs — not consent management structures. D: The Loyalty subject area contains DMOs for loyalty programme membership, points, and tier data — it has no connection to GDPR consent management."
+        ),
+        Question(
+            id: "302",
+            question: "A consultant is troubleshooting a data model in which records from two different data streams — an e-commerce platform and a CRM — should both contribute to identity resolution. Both streams have been mapped to the Individual DMO. After running identity resolution, fewer unified profiles than expected are being created. What is the most likely configuration issue?",
+            options: [("A", "Identity resolution only processes records from the most recently updated data stream, not both simultaneously"), ("B", "The primary key fields in the Individual DMO mappings from each data stream are not consistently typed or formatted, preventing cross-stream matching"), ("C", "The Individual DMO can only accept data from one data stream at a time — a second DMO is needed for the second source"), ("D", "Identity resolution requires both data streams to be in the same Data Space for cross-stream matching to work")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Identity resolution matches records across sources using contact points and match rules. If the primary key or contact point fields (e.g. email, phone) from different data streams have inconsistent formatting, type mismatches, or normalisation differences, the matching engine will fail to link records that should be unified. A: Identity resolution processes records from all mapped data streams concurrently — it does not limit processing to the most recent stream. C: The Individual DMO is specifically designed to accept contributions from multiple data streams — this is fundamental to Data Cloud's multi-source unification capability. D: Data Space assignment affects user access, not identity resolution processing — data streams in the same org can contribute to identity resolution regardless of Data Space."
+        ),
+        Question(
+            id: "303",
+            question: "What is the role of a primary key field in a Data Model Object mapping?",
+            options: [("A", "It determines the sort order of records when displayed in the Data Explorer"), ("B", "It defines the relationship between two DMOs by referencing the related DMO's ID field"), ("C", "It uniquely identifies each record within that DMO and is used to prevent duplicate records and support upsert behaviour during ingestion"), ("D", "It specifies which field is used as the match attribute in identity resolution rulesets")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "A primary key field in a DMO uniquely identifies each record. During ingestion, if a new record has the same primary key as an existing record, Data Cloud performs an upsert (updates the existing record) rather than creating a duplicate. This is critical for maintaining data integrity across incremental refreshes. A: Primary keys have no effect on the display order of records in Data Explorer — this is not their function. B: The field that references a related DMO's ID is a foreign key, not a primary key. A foreign key establishes the relationship between two DMOs. D: Match attributes in identity resolution are configured separately within the identity resolution ruleset — the primary key is not automatically used as a match attribute."
+        ),
+        Question(
+            id: "304",
+            question: "A data engineer wants to understand the difference between a Data Source Object (DSO) and a Data Lake Object (DLO) in Data Cloud. Which statement correctly describes this distinction?",
+            options: [("A", "A DSO is the mapped output that is used for segmentation; a DLO is the raw input from the connector"), ("B", "A DSO is a Salesforce-standard object; a DLO is a customer-created custom object"), ("C", "A DSO reflects the source system's schema as presented by the connector; a DLO is the persisted storage representation in Data Cloud's data lake"), ("D", "DSOs and DLOs are synonymous — they refer to the same layer in the object hierarchy")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "A Data Source Object (DSO) represents the schema and structure of data as it arrives from a specific connector or data stream — it mirrors the source system's field structure. A Data Lake Object (DLO) is the persisted version of that data stored in Data Cloud's data lake, and forms the foundation from which DMO mappings are built. A: This confuses DSO/DLO with DMO — the DMO is the mapped output used for segmentation, not the DSO. B: DSOs and DLOs are both generated automatically by the platform during ingestion — neither is 'Salesforce-standard' vs 'customer-custom' in the way that profile/custom objects are in Salesforce CRM. D: DSOs and DLOs are distinct layers in the object hierarchy — they are not synonymous."
+        ),
+        Question(
+            id: "305",
+            question: "Cloud Kicks ingests product catalogue data into Data Cloud using the Cloud Storage Connector. The catalogue is a CSV file with 500,000 rows uploaded to S3 weekly. A consultant is mapping this data to a custom DMO named 'Product'. A team member asks whether this product data can be used as the primary segmentation entity. What should the consultant explain?",
+            options: [("A", "Yes — any DMO in Data Cloud can be used as the primary segmentation entity regardless of its subject area"), ("B", "No — the Cloud Storage Connector does not support DMO mapping, so this data cannot be used in segmentation at all"), ("C", "Yes — but only if the Product DMO is mapped to the Party subject area"), ("D", "No — segmentation in Data Cloud must be built on the Individual or Unified Individual DMO as the primary entity, though related DMOs like Product can be used as filters")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Segmentation in Data Cloud is always anchored to the Individual or Unified Individual DMO as the primary entity — you are always segmenting people, not products. However, related DMOs such as Product can be used as filter criteria (e.g. 'customers who purchased a product in category X'). A: Not all DMOs can serve as the primary segmentation entity — segmentation is person-centric and must be anchored to Individual or Unified Individual. B: The Cloud Storage Connector does support DMO mapping — this is a valid ingestion path. C: Mapping Product to the Party subject area would be semantically incorrect — Party is for person/organisation entities, not product catalogues."
+        ),
+        Question(
+            id: "306",
+            question: "A consultant is configuring a data stream for Salesforce CRM Contact records. During field mapping, they need to link the Contact records to the Individual DMO so they can participate in identity resolution. Which field on the Individual DMO is the required link?",
+            options: [("A", "Primary Key"), ("B", "Individual ID"), ("C", "Party Identification ID"), ("D", "Contact Point ID")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "The Individual ID is the primary identifier on the Individual DMO in Data Cloud. When mapping Contact records from CRM, the source record's unique identifier must be mapped to the Individual ID field so that the records can participate in identity resolution and be linked to a Unified Individual. A: Primary Key is a general concept for DMO field mapping — the specific field on the Individual DMO that serves as its unique identifier is called Individual ID. C: Party Identification ID is a field on the Party Identification DMO (used for external system IDs like loyalty numbers or CRM IDs) — it is not the primary link field on the Individual DMO itself. D: Contact Point ID is a field on Contact Point DMOs (e.g. Contact Point Email, Contact Point Phone) that links contact methods back to the Individual — it is not the Individual DMO's own identifier."
+        ),
+        Question(
+            id: "307",
+            question: "A consultant is reviewing data stream configurations for a retail client that ingests data from three sources: Salesforce CRM, an e-commerce platform via Ingestion API, and an Amazon S3 file containing loyalty transaction data. Which TWO statements about these ingestion methods are correct?",
+            options: [("A", "The CRM Connector triggers a full refresh automatically whenever a field is added or removed from a mapped CRM object"), ("B", "The Ingestion API Streaming pattern processes payloads in micro-batches approximately every 3 minutes"), ("C", "The Cloud Storage Connector requires data files to be in JSON format when reading from Amazon S3"), ("D", "The CRM Connector supports a minimum incremental sync of 15 minutes")],
+            questionType: .multiSelect,
+            correctIndices: [0, 1],
+            explanation: "Both A and B are correct. The CRM Connector triggers an automatic full refresh when the schema of a mapped object changes (fields added or removed) — this is required to re-align the data stream schema. The Ingestion API Streaming pattern uses a micro-batch architecture that processes submitted payloads approximately every 3 minutes. C: The Cloud Storage Connector reads CSV files from Amazon S3, not JSON files. JSON is the format used by the Ingestion API Streaming pattern. D: The minimum incremental sync interval for the CRM Connector is 1 hour, not 15 minutes — sub-hourly sync frequencies are not supported."
+        ),
+        Question(
+            id: "308",
+            question: "A data architect at NTO is designing the Data Cloud data model and asks whether a single data stream can map to multiple Data Model Objects simultaneously. What is the correct answer?",
+            options: [("A", "No — each data stream can only map to a single DMO"), ("B", "No — to map to multiple DMOs, the source data must first be split into separate data streams"), ("C", "Yes — but only if both target DMOs are in the same subject area"), ("D", "Yes — a single data stream can map to multiple DMOs, allowing related data types in one source to populate different semantic models")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "A single data stream can be mapped to multiple DMOs. For example, a CRM Contact data stream might map to both the Individual DMO (for identity information) and the Contact Point Email DMO (for email address data) simultaneously — reflecting that a single source record contains data relevant to multiple semantic models. A: This is incorrect — Data Cloud explicitly supports mapping one data stream to multiple target DMOs. B: Splitting into separate data streams would introduce unnecessary complexity — the platform supports multi-DMO mapping from a single stream. C: There is no restriction requiring target DMOs to be in the same subject area — a data stream can map to DMOs across different subject areas."
+        ),
+        Question(
+            id: "309",
+            question: "A consultant is setting up a MuleSoft integration to send data from an on-premise ERP system into Data Cloud. The ERP generates purchase order records in real time. The consultant needs to determine the correct integration pattern. Which approach is recommended?",
+            options: [("A", "Use the MuleSoft Salesforce Connector to write ERP data directly to Salesforce CRM custom objects, then sync to Data Cloud via the CRM Connector"), ("B", "Configure the Cloud Storage Connector in Data Cloud to pull from an FTP server where MuleSoft deposits ERP files"), ("C", "Use the MuleSoft Data Cloud Connector to call the Data Cloud Ingestion API Streaming pattern for real-time ERP event delivery"), ("D", "Use MuleSoft to write ERP data to a Marketing Cloud data extension, then sync to Data Cloud via the Marketing Cloud Connector")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "The MuleSoft Data Cloud Connector is specifically built to call the Data Cloud Ingestion API, enabling real-time or near-real-time delivery of data from any MuleSoft-connected source (including on-premise ERP systems) into Data Cloud using the Streaming pattern. A: Writing to CRM custom objects first adds unnecessary latency and complexity — the CRM Connector also has a minimum 1-hour refresh cycle, making it unsuitable for real-time use cases. B: The Cloud Storage Connector reads from object storage (S3/GCS), not FTP servers — this would require additional infrastructure and introduces batch latency. D: Writing to Marketing Cloud data extensions first adds multiple hops and significant latency — it is not a recommended pattern for real-time ERP integration."
+        ),
+        Question(
+            id: "310",
+            question: "When creating a data stream using the Salesforce CRM Connector, a consultant selects the Contact object and notices a 'Full Refresh' option alongside 'Incremental Refresh'. What scenario would require triggering a Full Refresh rather than relying on incremental sync?",
+            options: [("A", "When fewer than 1,000 Contact records have been updated since the last sync"), ("B", "When the Contact data stream is in the Profile category rather than the Engagement category"), ("C", "When the incremental sync has run more than 24 times without a full refresh"), ("D", "When a new field has been added to the Contact data stream mapping in Data Cloud")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "When a new field is added to the data stream's field mapping, a Full Refresh is required so that all existing historical records are re-ingested with the new field's values populated. Incremental sync only captures records changed since the last run and would not backfill the new field for unchanged records. A: Record count does not determine whether a full or incremental refresh is needed — incremental sync handles small or large update volumes without requiring a full refresh. B: The data stream category (Profile vs Engagement) has no bearing on whether full or incremental refresh is needed. C: There is no platform-enforced rule requiring a full refresh after a specific number of incremental cycles."
+        ),
+        Question(
+            id: "311",
+            question: "In Data Cloud, which of the following best describes the 'Other' data stream category?",
+            options: [("A", "Data from third-party external systems that cannot be connected via standard connectors"), ("B", "Data that has been rejected by identity resolution and needs manual review"), ("C", "A catch-all category for data that is neither person-describing (Profile) nor behavioural/interaction (Engagement) — such as product catalogues, stores, or inventory data"), ("D", "Legacy data streams that were created before the Profile and Engagement categories were introduced")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "The 'Other' category is used for reference data or contextual data that is neither directly about a person (Profile) nor an interaction/behaviour (Engagement). Examples include product catalogues, store location data, inventory records, or lookup tables. A: The data stream category is not determined by the connector type — all connector types (CRM, Ingestion API, Cloud Storage) can produce streams in any of the three categories. B: Identity resolution rejection has nothing to do with the data stream category — rejected records are handled in the identity resolution pipeline, not categorised as 'Other'. D: The three categories have been part of Data Cloud since its inception — there is no concept of legacy categories."
+        ),
+        Question(
+            id: "312",
+            question: "A consultant is reviewing a customer's Data Cloud configuration and notices that two data streams from different source systems are both mapped to the Contact Point Email DMO. The customer reports occasional duplicate email addresses appearing in unified profiles. What is the most likely cause?",
+            options: [("A", "The Contact Point Email DMO only supports a single data stream as input — the second stream is not being processed"), ("B", "Email addresses from the second data stream are being blocked by Data Cloud's deduplication engine"), ("C", "The primary key for the Contact Point Email DMO is not set consistently across both data stream mappings, resulting in duplicate records"), ("D", "The Contact Point Email DMO requires a different field to be designated as primary key for each source system")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "When multiple data streams map to the same DMO (such as Contact Point Email), each mapping must use the same field as the primary key. If the primary keys are set differently (e.g. one uses source_email_id and another uses a hash), Data Cloud cannot identify that the same email address from two sources is the same record, resulting in duplicates. A: The Contact Point Email DMO fully supports data from multiple streams — there is no single-stream limitation. B: Data Cloud's deduplication operates based on primary key matching — it does not block email records from specific streams. D: There is no requirement for different primary keys per source system — a consistent primary key strategy across all streams mapping to the same DMO is required."
+        ),
+        Question(
+            id: "313",
+            question: "A data engineer is building a data stream using the Ingestion API Streaming pattern. They want to ensure that existing records in the target DMO are updated when new data arrives with matching IDs, rather than always creating new records. What mechanism enables this behaviour?",
+            options: [("A", "Defining a primary key field in the DMO mapping so that matching records are upserted"), ("B", "Setting the data stream mode to 'Replace All' in the Ingestion API configuration"), ("C", "Enabling the 'Deduplicate Records' toggle in the Data Stream settings"), ("D", "Using the DELETE operation in the Ingestion API payload to remove old records before inserting new ones")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "When a primary key is defined in the DMO mapping, Data Cloud performs an upsert operation — if an incoming record's primary key matches an existing record in the DMO, the existing record is updated. Without a primary key, all incoming records are treated as new inserts. B: 'Replace All' mode in the Ingestion API clears all existing records and replaces them with the new payload — it is used for full table replacements, not selective upserts. C: There is no 'Deduplicate Records' toggle in Data Stream settings — deduplication is handled via primary key configuration. D: While the Ingestion API does support DELETE operations for removing specific records, this is not the mechanism for upsert behaviour — the primary key on the DMO mapping handles upserts."
+        ),
+        Question(
+            id: "314",
+            question: "A consultant is modelling a B2B data set in Data Cloud. The source data includes Company records with multiple associated Contact records. The consultant needs to represent this relationship correctly in the Data Cloud data model so that both company-level and contact-level data can inform segmentation. What is the recommended approach?",
+            options: [("A", "Map Company records to the Account DMO and Contact records to the Individual DMO, and establish a foreign key relationship between the two"), ("B", "Map all company and contact fields to a single custom DMO to simplify the model"), ("C", "Create a single data stream that merges company and contact records, then map to the Individual DMO only"), ("D", "Use two separate Data Spaces — one for Account-level data and one for Individual-level data")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "Data Cloud's standard data model includes both an Account DMO (for company/organisation entities) and an Individual DMO (for person entities). Mapping company records to Account and contact records to Individual, with a foreign key linking them, correctly represents the B2B relationship and enables segmentation that spans both company attributes and individual contact attributes. B: Merging all fields into one DMO would result in a denormalised structure with many nulls and poor query performance — it is not recommended. C: Merging company and contact records into a single stream before mapping would conflate two distinct entity types — this is bad data modelling practice. D: Separate Data Spaces would prevent unified segmentation across company and contact data — they are the same customer's data and belong in the same Data Space."
+        ),
+        Question(
+            id: "315",
+            question: "Which statement correctly describes how the Salesforce CRM Connector handles a schema change — specifically when an existing field is removed from a CRM object that is part of an active data stream?",
+            options: [("A", "The data stream automatically removes the deleted field from its mapping and continues incremental sync without interruption"), ("B", "The data stream enters an error state and must be manually repaired before ingestion can resume"), ("C", "A full refresh is automatically triggered to reconcile the schema change, and the removed field is cleared from the DLO"), ("D", "The connector raises a warning but continues to run incremental syncs, retaining the removed field's last known values in the DLO")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "When a field is removed from a CRM object that has an active data stream mapping, the CRM Connector detects the schema change and automatically triggers a full refresh. This re-aligns the data stream's schema with the current CRM object definition and clears the removed field from the Data Lake Object. A: The connector does not silently self-heal schema changes — a full refresh is required to reconcile the schema, not a simple mapping update. B: The data stream does not enter a permanent error state from schema changes — the automatic full refresh is the platform's resolution mechanism. D: The connector does not continue incremental sync while ignoring schema changes — schema integrity is maintained via the automatic full refresh mechanism."
+        ),
+        Question(
+            id: "316",
+            question: "A consultant is reviewing the subject areas available in Salesforce Data Cloud's standard data model. Which TWO of the following are valid Data Cloud subject areas?",
+            options: [("A", "Party"), ("B", "Commerce"), ("C", "Loyalty"), ("D", "Marketing")],
+            questionType: .multiSelect,
+            correctIndices: [0, 2],
+            explanation: "Party and Loyalty are both valid standard subject areas in the Data Cloud data model. The full list of standard subject areas includes: Party, Engagement, Case, Loyalty, Privacy, Sales Order, and Product. B: Commerce is not a standalone subject area in Data Cloud — commercial transaction data is modelled under the Sales Order subject area. D: Marketing is not a subject area in the Data Cloud data model. Marketing-related data such as email engagement is captured under the Engagement subject area."
+        ),
+        Question(
+            id: "317",
+            question: "A Data Cloud consultant is helping a customer plan their initial data ingestion setup. The customer wants to bring in Salesforce CRM Account, Contact, and Opportunity data, along with website behavioural events from a third-party analytics platform. The customer asks whether all four data sets can be managed within a single Data Cloud org without creating separate environments. What should the consultant advise?",
+            options: [("A", "No — website behavioural event data requires a separate Marketing Cloud org before it can be ingested into Data Cloud"), ("B", "No — each data source type requires its own Data Cloud org to avoid connector conflicts"), ("C", "Yes — but only if all data streams share the same data stream category (Profile, Engagement, or Other)"), ("D", "Yes — multiple data streams from different connectors and categories can coexist within a single Data Cloud org and Data Space")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Data Cloud is specifically designed to consolidate data from multiple sources of different types into a single org. CRM data (via CRM Connector) and web behavioural events (via Ingestion API or Cloud Storage Connector) can coexist in the same Data Cloud org across different data stream categories (Profile and Engagement respectively). A: Website behavioural event data does not need to be routed through Marketing Cloud first — it can be ingested directly into Data Cloud via the Ingestion API or Cloud Storage Connector. B: Multiple orgs are not required — Data Cloud's multi-connector, multi-category architecture is designed for exactly this consolidation scenario. C: Data streams of different categories (Profile, Engagement, Other) can and should coexist in the same Data Cloud org — there is no requirement for all streams to share the same category."
+        ),
+        Question(
+            id: "318",
+            question: "A consultant needs to ingest historical transaction data — approximately 50 million records — from a legacy system into Data Cloud as a one-time load. The data is available as a set of CSV files. Which ingestion approach is most appropriate?",
+            options: [("A", "Ingestion API Streaming pattern, sending all 50 million records as individual JSON events"), ("B", "Cloud Storage Connector pointing to an S3 bucket containing the CSV files"), ("C", "CRM Connector with a manual full refresh triggered after importing records to Salesforce CRM"), ("D", "Ingestion API Bulk pattern with multiple CSV file uploads")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "For a one-time bulk load of CSV files, the Cloud Storage Connector is the most appropriate and straightforward approach — it is designed to ingest large volumes of file-based data from cloud object storage like Amazon S3, making it well-suited to historical data migration scenarios. A: The Streaming pattern is for real-time event data — processing 50 million individual JSON payloads would be extremely slow and operationally complex. C: Importing 50 million records to Salesforce CRM first would consume CRM storage limits and introduce unnecessary complexity — the CRM Connector is not designed for historical data migration at this scale. D: The Ingestion API Bulk pattern could work technically, but the Cloud Storage Connector is the more straightforward solution when the data already exists as CSV files in a cloud storage location."
+        ),
+        Question(
+            id: "319",
+            question: "A consultant is modelling data for a telecommunications company that wants to use Data Cloud. The company has subscriber records, service usage records (calls, data consumption), and device records. The consultant needs to determine the correct Data Cloud categories for three planned data streams. Which assignment is correct?",
+            options: [("A", "Subscriber records → Profile; service usage records → Engagement; device records → Profile"), ("B", "Subscriber records → Other; service usage records → Other; device records → Profile"), ("C", "Subscriber records → Engagement; service usage records → Profile; device records → Other"), ("D", "Subscriber records → Profile; service usage records → Engagement; device records → Other")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Subscriber records describe who the customer is — this is Profile data. Service usage records represent interactions/behaviours (calls made, data consumed) — this is Engagement data. Device records describe physical or contextual entities, not persons or behaviours — this is Other data. A: Device records are not Profile data — they describe physical objects (devices), not people. The correct category for device records is Other. B: Subscriber records are clearly Profile data (person-centric identity data) — categorising them as Other is incorrect. C: Subscriber records describe people (who the subscriber is), making them Profile data, not Engagement. Service usage describes behaviours, making it Engagement, not Profile."
+        ),
+        Question(
+            id: "320",
+            question: "A consultant is configuring a data stream mapping and needs to establish a relationship between a custom 'Purchase' DMO and the Individual DMO so that purchase data can be used to filter segments. What type of field must be included in the Purchase DMO mapping to enable this relationship?",
+            options: [("A", "A primary key referencing the Purchase record's own unique ID"), ("B", "A lookup field that references the Contact Point Email DMO"), ("C", "A foreign key field that contains the Individual ID value from the Individual DMO"), ("D", "A relationship field configured in the DMO relationship map under Data Model settings")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "To relate the Purchase DMO to the Individual DMO, the Purchase DMO must include a foreign key field that stores the Individual ID — the primary key of the related Individual record. This relationship field enables Data Cloud to join purchase records to the correct individual for segmentation and activation. A: A primary key identifies the Purchase record itself — it is needed, but it alone does not establish the relationship to Individual. The foreign key is the relationship mechanism. B: A lookup to Contact Point Email would not establish a relationship to Individual DMO — email addresses are used in identity resolution, not DMO relationship modelling. D: DMO relationships are indeed configured in the data model, but the actual field that enables the join is a foreign key field in the data stream mapping — describing it as a 'relationship field' configured separately is not the correct technical mechanism."
+        ),
+        Question(
+            id: "321",
+            question: "What is the maximum number of standard Data Model Objects available in Salesforce Data Cloud out of the box?",
+            options: [("A", "12"), ("B", "89 or more"), ("C", "45"), ("D", "250")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Salesforce Data Cloud provides 89 or more standard Data Model Objects out of the box, covering subject areas such as Party, Engagement, Case, Loyalty, Privacy, Sales Order, and Product. This extensive library reduces the need to create custom DMOs for common use cases. A: 12 is far too few — this does not represent the full standard DMO library. C: 45 is also too low — the actual number exceeds 89 standard DMOs. D: 250 is too high — while the library is extensive, the documented standard DMO count is 89+."
+        ),
+        Question(
+            id: "322",
+            question: "A consultant is reviewing a Data Cloud implementation where the customer uses both the Ingestion API Streaming pattern and the CRM Connector. They notice that some unified profiles appear to be missing contact point data that was recently submitted via the Ingestion API. The CRM Connector data appears correctly. What should the consultant check first?",
+            options: [("A", "Whether the Contact Point DMO mapping for the Ingestion API data stream uses a consistent primary key with the CRM-sourced Contact Point records"), ("B", "Whether the Ingestion API endpoint returned HTTP 200 responses for the submitted payloads, confirming acceptance"), ("C", "Whether the Ingestion API payloads were sent with the correct OAuth access token"), ("D", "Whether the Ingestion API Streaming rate limit has been exceeded, causing silent payload drops")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "If both the Ingestion API and CRM Connector are populating the same Contact Point DMO (e.g. Contact Point Email), inconsistent primary key strategies between the two stream mappings would result in duplicates or missing links. The consultant should verify that the primary key fields are consistently defined so that contact points from both sources are correctly associated with the right individuals. B: HTTP 200 confirms the payload was accepted by Data Cloud — if 200s were returned, the issue lies downstream in mapping or processing, not in payload delivery. C: An invalid OAuth token would cause the Ingestion API to return authentication errors — the payloads would not be accepted at all, which is a different symptom from 'missing contact point data'. D: Rate limit exceeded would typically return HTTP 429 responses — this would result in rejected payloads that are visible as errors, not silent drops."
+        ),
+        Question(
+            id: "323",
+            question: "A data engineer is asked to delete specific individual records from Data Cloud to fulfil a GDPR right-to-erasure request. Which ingestion mechanism supports record deletion from Data Cloud DMOs?",
+            options: [("A", "CRM Connector full refresh, which overwrites all records including the ones to be deleted"), ("B", "Cloud Storage Connector, by uploading a file with a 'delete' flag column"), ("C", "Manual deletion via the Data Explorer in the Data Cloud UI"), ("D", "The Ingestion API, using the DELETE operation in the payload to remove specific records by primary key")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "The Ingestion API supports a DELETE operation that allows specific records to be removed from Data Cloud DMOs by their primary key. This is the programmatic mechanism for fulfilling right-to-erasure requests and is part of the API's standard payload specification. A: A CRM Connector full refresh re-ingests all current CRM records — it would only 'delete' records from Data Cloud if those records no longer exist in the CRM source. It is not a targeted deletion mechanism. B: The Cloud Storage Connector does not support a delete flag column — it processes CSV files as inserts/upserts, not deletes. C: The Data Explorer is a read-only tool for browsing data — it does not support record deletion."
+        ),
+        Question(
+            id: "324",
+            question: "A consultant is reviewing a data stream that ingests Marketing Cloud email engagement data (opens, clicks) via the Marketing Cloud Connector. The customer's marketer reports that segment filters based on 'email clicked in the last 30 days' are including records that should have been excluded. Upon investigation, the consultant finds that the email click timestamps are recorded in UTC but the org is configured to US Eastern Time. What is the most likely impact of this configuration?",
+            options: [("A", "Data Cloud ignores timestamp fields entirely for relative date calculations — segments use wall clock time, not stored timestamps"), ("B", "The Marketing Cloud Connector automatically normalises all timestamps to the org time zone, so there should be no impact"), ("C", "Time-based segment filters using relative operators like 'in the last 30 days' will shift forward or back by the UTC offset, potentially including or excluding records incorrectly"), ("D", "The UTC offset only affects scheduled segment refresh times, not the evaluation of time-based filter criteria within segments")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "When timestamps in the source data are in UTC and the org time zone is set to US Eastern Time (UTC-5), time-based segment operators that compare timestamps against the current date (such as 'in the last 30 days') may produce results shifted by the UTC offset. Records near the boundary of the 30-day window could be incorrectly included or excluded depending on the direction of the offset. A: Data Cloud does use stored timestamp values for relative date calculations in segment filters — it does not use wall clock time exclusively. B: The Marketing Cloud Connector does not automatically normalise timestamps to the org time zone — the timestamps are stored as they arrive. D: The UTC offset affects both scheduled refresh times AND the evaluation of time-based criteria in segment filters — the impact is not limited to scheduling."
+        ),
+        Question(
+            id: "325",
+            question: "A consultant is setting up a data stream for the Salesforce CRM Account object. Which field should be designated as the primary key for the Account's data stream mapping to the Account DMO in Data Cloud?",
+            options: [("A", "Account Name"), ("B", "Salesforce Record ID (18-character)"), ("C", "Account Number"), ("D", "Created Date")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "The Salesforce Record ID (18-character format) is the recommended primary key for CRM object data stream mappings. It is globally unique, stable, and does not change — making it the ideal candidate for identifying and deduplicating records across incremental syncs. A: Account Name is not unique — multiple accounts can share the same name, making it unsuitable as a primary key. C: Account Number is optional and often not populated — it cannot be relied upon as a unique identifier across all records. D: Created Date is a timestamp, not a unique identifier — multiple records can share the same creation time, making it entirely unsuitable as a primary key."
+        ),
+        Question(
+            id: "326",
+            question: "What is the purpose of mapping a data stream field to the Contact Point Email DMO in Data Cloud?",
+            options: [("A", "To enable Data Cloud to send marketing emails directly from the email address stored in that field"), ("B", "To validate that email addresses in the source system conform to RFC 5321 format before ingestion"), ("C", "To store email marketing campaign performance metrics such as open rates and click-through rates"), ("D", "To register email addresses as identity-bearing contact points that can be used by identity resolution to link records across sources")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Mapping email addresses to the Contact Point Email DMO registers them as identity-bearing data points. Identity resolution uses contact points (email, phone, etc.) to match and link records across different source systems, enabling the creation of a Unified Individual profile. A: Data Cloud does not send emails — it is a data platform. Email sending is the function of Marketing Cloud or other execution platforms activated from Data Cloud. B: Data Cloud does not perform email format validation at the DMO mapping stage — format validation would need to be handled upstream in the source system or during ingestion pre-processing. C: Email campaign performance metrics (opens, clicks) would be stored in Engagement data streams mapped to Email Engagement DMOs — not the Contact Point Email DMO."
+        ),
+        Question(
+            id: "327",
+            question: "A consultant is designing the ingestion architecture for a large retail brand that wants to bring data from four sources into Data Cloud: (1) Salesforce CRM for customer and account records, (2) a web analytics platform sending real-time page view events, (3) a weekly loyalty transaction export file uploaded to Amazon S3, and (4) a point-of-sale system that generates purchase events every few minutes. Which TWO ingestion methods should the consultant recommend for sources (2) and (4) respectively?",
+            options: [("A", "Ingestion API Streaming for both sources (2) and (4)"), ("B", "Ingestion API Streaming for source (2); Cloud Storage Connector for source (4)"), ("C", "Cloud Storage Connector for source (2); Ingestion API Streaming for source (4)"), ("D", "CRM Connector for source (2); Ingestion API Bulk for source (4)")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "Both source (2) — real-time web analytics page view events — and source (4) — point-of-sale purchase events generated every few minutes — require near-real-time, low-latency ingestion. The Ingestion API Streaming pattern is the correct choice for both, as it processes payloads in micro-batches approximately every 3 minutes and supports event-driven architectures. B: Using the Cloud Storage Connector for source (4) would introduce file-based batch latency — point-of-sale events generated every few minutes should use the Streaming pattern, not file uploads. C: The Cloud Storage Connector for source (2) would require buffering real-time page view events into files before uploading — this defeats the real-time requirement. The CRM Connector is not a valid choice for web analytics data. D: The CRM Connector is only for Salesforce CRM objects and cannot connect to a web analytics platform. The Ingestion API Bulk pattern introduces batch latency that is not appropriate for near-real-time POS events."
+        ),
+        Question(
+            id: "328",
+            question: "What is the primary purpose of identity resolution in Salesforce Data Cloud?",
+            options: [("A", "To match and merge individual records from multiple data sources into a single Unified Individual profile"), ("B", "To clean and deduplicate records within a single data stream before they are stored in the Data Lake Object"), ("C", "To validate the formatting of contact point fields such as email addresses and phone numbers"), ("D", "To control which Data Model Objects a user can access based on their permission set")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "Identity resolution is the process of matching records across multiple data sources — using contact points and match rules — and merging them into a single Unified Individual profile that represents one real person from all available data. B: Deduplication within a single data stream is handled at the DMO mapping level via primary keys — identity resolution operates across sources, not within a single stream. C: Contact point format validation is not the function of identity resolution — it uses contact points as matching signals, but validating their format is a data quality concern handled upstream. D: Access control based on permission sets is an administration function, entirely separate from identity resolution."
+        ),
+        Question(
+            id: "329",
+            question: "Which Data Cloud object is the output of a successful identity resolution run?",
+            options: [("A", "Individual DMO"), ("B", "Party Identification DMO"), ("C", "Contact Point Email DMO"), ("D", "Unified Individual DMO")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "The Unified Individual DMO is created by identity resolution as the merged, canonical representation of a real person, combining matched records from multiple source Individual DMO records. A: The Individual DMO contains source records — it is the input to identity resolution, not the output. B: Party Identification is a DMO for storing external system identifiers (loyalty IDs, CRM IDs, etc.) — it is also an input to identity resolution, not the merged output. C: Contact Point Email is a DMO that stores email addresses — it is a source of matching signals used by identity resolution, not the output."
+        ),
+        Question(
+            id: "330",
+            question: "A consultant is configuring an identity resolution ruleset for NTO. The customer has email addresses and phone numbers as available contact points, but knows that email addresses in their dataset frequently have typos and minor formatting variations (e.g. 'jane.doe@company.com' vs 'janedoe@company.com'). Which match rule type should the consultant use for the email address match?",
+            options: [("A", "Fuzzy match"), ("B", "Exact Normalised match"), ("C", "Exact match"), ("D", "Source Priority match")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "Fuzzy matching (also known as probabilistic or LSH-based matching in Data Cloud) is designed to match contact point values that are similar but not identical — accommodating typos, formatting variations, and minor differences in email addresses. B: Exact Normalised match applies normalisation rules (lowercasing, removing special characters) before comparing — it handles formatting inconsistencies like capitalisation or whitespace, but would still fail to match fundamentally different strings like the example given. C: Exact match requires the values to be byte-for-byte identical — it would not match 'jane.doe@company.com' to 'janedoe@company.com'. D: Source Priority is a reconciliation rule, not a match rule — it determines which source's value to use when building the unified profile, not whether two records should be considered the same person."
+        ),
+        Question(
+            id: "331",
+            question: "What is the difference between a match rule and a reconciliation rule in Salesforce Data Cloud identity resolution?",
+            options: [("A", "Match rules determine which source system's data is used in the unified profile; reconciliation rules determine which records are considered the same person"), ("B", "Match rules and reconciliation rules are the same — they serve identical purposes in the identity resolution pipeline"), ("C", "Match rules determine whether two records represent the same person; reconciliation rules determine which source's attribute values populate the Unified Individual profile when multiple sources provide different values"), ("D", "Match rules apply only to name and date of birth fields; reconciliation rules apply only to contact point fields")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Match rules define the criteria for determining whether records from different sources represent the same individual (e.g. same email address). Reconciliation rules define which source's value to use when building the Unified Individual profile for fields where different sources provide conflicting values (e.g. which source's phone number to use). A: This reverses the definitions — match rules determine identity (same person or not), while reconciliation rules determine which source's value wins. B: Match rules and reconciliation rules serve completely different purposes in the identity resolution pipeline — they are not interchangeable. D: Both match rules and reconciliation rules can apply to a wide range of fields — there is no field-type restriction of this nature."
+        ),
+        Question(
+            id: "332",
+            question: "Cloud Kicks uses CRM data and e-commerce data as two sources in Data Cloud. For the 'First Name' field, the CRM has the most accurate and up-to-date values, whereas the e-commerce data often contains self-reported values that may be inaccurate. Which reconciliation rule should the consultant configure for the First Name field on the Unified Individual?",
+            options: [("A", "Most Frequent"), ("B", "Most Recent"), ("C", "Exact Match"), ("D", "Source Priority")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Source Priority is a reconciliation rule that assigns a ranked priority order to source systems. When building the Unified Individual profile, the value from the highest-priority source (CRM in this case) is used. This is ideal when the customer knows one source is more trustworthy than another for a specific field. A: Most Frequent selects the value that appears most often across all matching source records — it does not consider which source is more trustworthy. B: Most Recent selects the value from the record with the most recent Last Modified Date — this would favour the e-commerce source if it is updated more frequently, which is not the desired behaviour. C: Exact Match is a match rule type (for determining if records are the same person), not a reconciliation rule."
+        ),
+        Question(
+            id: "333",
+            question: "A consultant is analysing identity resolution results for Cumulus Financial and notices that the consolidation rate metric is very low (close to 0%), despite the customer having multiple source systems with overlapping customers. What does a low consolidation rate indicate, and what is the most likely cause?",
+            options: [("A", "A low consolidation rate means identity resolution has been very successful — fewer unified profiles means fewer duplicates"), ("B", "A low consolidation rate is expected when all data comes from a single source, since there are no cross-source records to merge"), ("C", "A low consolidation rate means the ruleset is processing too many false positive matches, causing unrelated individuals to be merged"), ("D", "A low consolidation rate indicates that few Individual records are being matched across sources, likely due to match rules that are too strict or contact point data that is inconsistent across sources")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Consolidation rate = 1 − (Unified Profiles ÷ Source Profiles), expressed as a percentage. A rate close to 0% means almost no merging is occurring — most Individual records are becoming separate Unified Individuals rather than being merged. This suggests match rules are too strict or contact point data is too inconsistent across sources. A: A low consolidation rate does NOT indicate success — it indicates expected cross-source merges are not occurring. A high rate (e.g. 80%) would indicate strong matching and consolidation. B: The consolidation rate issue described in the scenario is with multi-source data, not single-source — and even with a single source, the metric would still apply. C: False positive over-merging would produce a very HIGH consolidation rate — many source records collapsing into few Unified Individuals. A near-0% rate is the opposite problem: under-matching."
+        ),
+        Question(
+            id: "334",
+            question: "A Data Cloud consultant is reviewing an identity resolution configuration where a customer has enabled the 'Ignore Empty Values' setting. A source system often sends Individual records where the phone number field is null. With 'Ignore Empty Values' enabled, how does Data Cloud handle these null phone number records during matching?",
+            options: [("A", "Records with null phone numbers are excluded entirely from identity resolution processing"), ("B", "Null values in the phone number field are treated as valid values that can match other null phone number records"), ("C", "Records with null phone numbers trigger a full refresh of the identity resolution ruleset to reprocess all records"), ("D", "Null values in the phone number field are skipped during matching — the identity resolution engine does not attempt to match or unmatch records based on null contact point values")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "When 'Ignore Empty Values' is enabled, null or empty contact point values are simply skipped during the matching process. The identity resolution engine does not use null values as matching signals — neither to match records nor to reject matches. Other non-null contact points on the same record are still evaluated. A: Records with null contact points are not excluded from identity resolution — they still participate using their other non-null contact points. B: Null values do not match other null values when 'Ignore Empty Values' is enabled — this setting specifically prevents null-to-null matching. C: Null contact point values do not trigger ruleset refreshes — processing of individual records continues normally."
+        ),
+        Question(
+            id: "335",
+            question: "When should a consultant recommend using the 'Most Recent' reconciliation rule for a specific field on the Unified Individual?",
+            options: [("A", "When the customer wants to use the value from the source system with the highest data quality rating"), ("B", "When the customer wants to use the most frequently occurring value across all matched source records"), ("C", "When the customer wants to ensure that only exact, character-for-character matching values are used in the unified profile"), ("D", "When the customer wants to use the value from whichever source record was most recently updated, on the assumption that newer data is more accurate")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "The 'Most Recent' reconciliation rule selects the field value from the Individual record that has the most recent Last Modified Date. This is appropriate for fields like email address or phone number where the most recently updated record is most likely to be current. A: Selecting the highest data quality source is the purpose of the 'Source Priority' reconciliation rule, not 'Most Recent'. B: Using the most frequently occurring value is the purpose of the 'Most Frequent' reconciliation rule. C: Exact character-for-character matching is an attribute of match rules, not reconciliation rules."
+        ),
+        Question(
+            id: "336",
+            question: "A consultant is designing an identity resolution ruleset for NTO, which has three data sources: CRM, e-commerce platform, and a loyalty programme. The consultant wants to match records only when BOTH an email address AND a last name match across sources, to avoid false positive merges on email alone. How should the consultant configure this requirement?",
+            options: [("A", "Create two separate identity resolution rulesets — one for email matching and one for last name matching"), ("B", "Create two match rules in the same ruleset — if either rule matches, the records are merged"), ("C", "Within a single ruleset, create a single match rule that requires both email (Exact match) and last name (Exact Normalised match) to match simultaneously"), ("D", "Enable 'Strict Mode' in the identity resolution settings to require all configured match rules to pass before merging")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Within a single identity resolution match rule, multiple matching criteria can be combined with AND logic — both conditions must be satisfied for records to be considered a match. Configuring email Exact match AND last name Exact Normalised match within the same rule requires both to match simultaneously before merging. A: Creating two separate rulesets would result in OR logic — records matching EITHER ruleset would be merged. This is the opposite of the stricter AND requirement. B: Two separate match rules within the same ruleset use OR logic — records are merged if EITHER rule matches. This would not prevent false positives from email-only matches. D: 'Strict Mode' is not a standard Data Cloud identity resolution setting — the correct mechanism is combining criteria within a single match rule using AND logic."
+        ),
+        Question(
+            id: "337",
+            question: "What is the Party Identification DMO used for in Salesforce Data Cloud?",
+            options: [("A", "To store the unified profile attributes of a Unified Individual, such as their resolved name and preferred email"), ("B", "To track which match rules were applied during identity resolution and which records were merged"), ("C", "To record the mapping between a person's Unified Individual ID and their external system identifiers (e.g. loyalty IDs, CRM IDs, e-commerce IDs)"), ("D", "To define the subject area that an Individual DMO belongs to")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "The Party Identification DMO stores cross-reference identifiers — the mapping between a person's Data Cloud Unified Individual ID and their IDs in external systems such as loyalty programme IDs, CRM Contact IDs, and e-commerce user IDs. This allows external systems to look up a person by their native ID and retrieve their unified Data Cloud profile. A: Unified profile attributes (resolved name, email, etc.) are stored on the Unified Individual DMO, not Party Identification. B: Identity resolution processing logs and audit trails are accessible via the identity resolution run history — Party Identification DMO stores cross-system ID mappings, not processing logs. D: Subject area assignment is a data modelling configuration, not a function of the Party Identification DMO."
+        ),
+        Question(
+            id: "338",
+            question: "A consultant is troubleshooting an identity resolution issue where two clearly different customers — a father and son sharing a home address — are being incorrectly merged into a single Unified Individual. The current ruleset uses a fuzzy name match combined with address matching. What change should the consultant make to prevent this false positive merge?",
+            options: [("A", "Disable identity resolution entirely and use a manual matching process"), ("B", "Switch the name match from fuzzy to exact, which will prevent any name variation from triggering a merge"), ("C", "Add an additional match criterion that requires an exact email address match in addition to the name and address match, making the rule more specific"), ("D", "Increase the consolidation rate threshold in the identity resolution settings to reduce the number of merges")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Adding a stricter additional match criterion — such as requiring an exact email address match — makes the ruleset more specific and reduces false positive merges. A father and son sharing an address but using different email addresses would then no longer be incorrectly merged. A: Disabling identity resolution entirely would prevent all unification, far exceeding what is needed to fix a specific false positive scenario. B: Switching to exact name matching would also prevent legitimate matches where names have minor formatting differences (e.g. 'Bob' vs 'Robert') — it addresses the symptom by making the match too narrow rather than by adding the right discriminating criterion. D: Consolidation rate threshold is a monitoring metric, not a configurable threshold that controls which records are merged — this is not a valid configuration option."
+        ),
+        Question(
+            id: "339",
+            question: "After running identity resolution, a customer's analyst wants to understand the relationship between a specific Unified Individual and the source Individual records that were merged to create it. Where in Data Cloud can the analyst access this information?",
+            options: [("A", "The Data Explorer, by filtering the Unified Individual DMO by a specific record and reviewing related Individual records"), ("B", "The identity resolution ruleset configuration page, which shows all merge decisions in a log"), ("C", "The Data Cloud Profile Explorer, which shows the unified profile and the contributing source records for a specific individual"), ("D", "The Activation Monitoring dashboard, which tracks the lineage of each activated profile back to source records")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "The Data Cloud Profile Explorer allows users to look up a specific Unified Individual by their ID or contact point values, and then view the contributing source Individual records that were merged to create that unified profile — including which sources contributed which attributes. A: The Data Explorer is useful for querying DMO data in bulk, but it is not the designed tool for reviewing individual profile lineage and source record contributions. B: The identity resolution ruleset configuration page shows rules and configuration, not merge decision logs for specific individuals. D: The Activation Monitoring dashboard tracks outbound activation status — it does not provide profile lineage or source record attribution."
+        ),
+        Question(
+            id: "340",
+            question: "A customer is concerned about the risk of false negative matches in their Data Cloud identity resolution setup — that is, the same real person appearing as two separate Unified Individuals. Their data quality team has confirmed that email addresses are consistently formatted across all source systems. What is the most appropriate match rule to minimise false negatives in this scenario?",
+            options: [("A", "Fuzzy match on email address, as it will capture more potential matches"), ("B", "Source Priority reconciliation rule on email address, as it ensures the highest-quality source email is used"), ("C", "Exact Normalised match on email address, as it handles formatting edge cases while being more precise than fuzzy"), ("D", "Most Frequent reconciliation rule on email address combined with exact name matching")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "If email addresses are consistently formatted across sources, Exact Normalised match is the most appropriate choice. It normalises minor differences (capitalisation, whitespace) while being more precise than fuzzy matching. This maximises true matches (reducing false negatives) without over-matching like fuzzy matching can. A: Fuzzy matching is more likely to introduce false positives (incorrectly merging different people) when email addresses are already consistently formatted — the extra flexibility is unnecessary and risky. B: Source Priority is a reconciliation rule, not a match rule — it determines which source's value populates the unified profile, not whether records should be matched. D: Most Frequent is also a reconciliation rule, not a match rule — combining reconciliation rules with a match rule is a category error."
+        ),
+        Question(
+            id: "341",
+            question: "In Data Cloud identity resolution, what does the term 'identity graph' refer to?",
+            options: [("A", "A visual chart in the Data Cloud UI showing the consolidation rate over time"), ("B", "The network of matched relationships between Individual records and their corresponding Unified Individual, representing who has been linked to whom and why"), ("C", "The set of all Data Model Objects that contribute contact point data to identity resolution"), ("D", "A Calculated Insight that computes the overlap percentage between two audience segments")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "The identity graph in Data Cloud is the internal representation of all matched relationships — the links between Individual records from different sources and the Unified Individual they resolve to. It captures who has been matched to whom across all identity resolution runs. A: There is no standard 'identity graph' chart showing consolidation rate over time in the Data Cloud UI — consolidation rate metrics appear in the identity resolution run results, not as a graph called the identity graph. C: The set of DMOs contributing contact points is part of the data model configuration — the identity graph refers specifically to the resolved relationship network, not the underlying DMO structure. D: Segment overlap analysis is a separate segmentation feature — it has nothing to do with the identity resolution identity graph."
+        ),
+        Question(
+            id: "342",
+            question: "A consultant is configuring a multi-source identity resolution ruleset for Cloud Kicks. The ruleset has two match rules: Rule 1 matches on email (Exact), and Rule 2 matches on phone number (Exact Normalised). The customer asks what happens when a record matches Rule 1 but not Rule 2. What should the consultant explain?",
+            options: [("A", "The record must satisfy ALL match rules in the ruleset — if Rule 2 is not satisfied, the record will not be merged"), ("B", "Multiple match rules within the same ruleset use OR logic — matching any one rule is sufficient to merge two records"), ("C", "The record will be placed in a 'partial match' queue for manual review before merging"), ("D", "Rule 1 overrides Rule 2 by default — the first rule that matches always takes precedence over subsequent rules")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "In Data Cloud identity resolution, multiple match rules within the same ruleset operate with OR logic — if a pair of records satisfies ANY one of the configured match rules, they are considered a match and will be merged into the same Unified Individual. Matching Rule 1 (email) alone is sufficient. A: AND logic (all rules must match) is not how multiple rules within a single ruleset work — OR logic applies across rules within a ruleset. C: Data Cloud does not have a 'partial match queue' for manual review — merging decisions are automated based on the ruleset configuration. D: Rules do not override each other based on order — any matching rule triggers the merge."
+        ),
+        Question(
+            id: "343",
+            question: "A consultant is explaining the difference between the Individual DMO and the Unified Individual DMO to a customer's data team. Which statement correctly describes this distinction?",
+            options: [("A", "Individual DMO stores merged unified profiles; Unified Individual DMO stores raw source records"), ("B", "Individual DMO is only populated by the Salesforce CRM Connector; Unified Individual DMO is populated by all other connectors"), ("C", "Individual DMO and Unified Individual DMO are identical — they are different names for the same object"), ("D", "Individual DMO stores source-level person records from each data stream; Unified Individual DMO represents the merged, canonical profile of a real person after identity resolution")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "The Individual DMO contains the source-level person records as they arrive from each data stream — one record per person per source. The Unified Individual DMO is created by identity resolution and represents the canonical, merged view of a real person across all sources — it is the output of the matching and reconciliation process. B: This reverses the relationship — Individual contains source records (input), Unified Individual contains merged profiles (output). C: The Individual DMO receives data from any connector that maps person-centric data to it — it is not limited to the CRM Connector."
+        ),
+        Question(
+            id: "344",
+            question: "NTO has multiple identity resolution rulesets configured, including one for standard customer matching and one specifically designed to handle a temporary data quality issue with imported legacy records. The consultant explains that ruleset order matters. What is the impact of ruleset processing order in Data Cloud identity resolution?",
+            options: [("A", "Rulesets are always processed in alphabetical order — the order they are displayed cannot be changed"), ("B", "Later rulesets in the processing order can override or break apart merges made by earlier rulesets"), ("C", "Rulesets are processed in sequence — each ruleset's output (the current state of Unified Individuals) becomes the input for the next ruleset, potentially resulting in further merging or refinement"), ("D", "Ruleset processing order only affects which reconciliation rule values appear on the Unified Individual — it has no effect on which records are merged")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Identity resolution rulesets are processed in sequence. Each ruleset takes the current state of Individual and Unified Individual records as its input and may further refine (merge or expand) the unified profiles. This means the output of Ruleset 1 feeds into Ruleset 2, which can result in additional merging. A: Rulesets can be reordered by the administrator — processing order is configurable, not fixed alphabetically. B: Rulesets can only merge records further — they cannot break apart merges made by earlier rulesets. Splitting merged Unified Individuals requires ruleset changes and a re-run. D: Processing order affects both which records are merged AND the reconciliation outcomes — it is not limited to only affecting reconciliation values."
+        ),
+        Question(
+            id: "345",
+            question: "A customer asks why their identity resolution consolidation rate increased significantly after adding a new data source with 500,000 customer records. What does this indicate?",
+            options: [("A", "The new data source introduced many duplicate records that reduced the quality of the unified profiles"), ("B", "The new data source contains many records that match existing Individual records from other sources, resulting in more cross-source merges and fewer separate Unified Individuals"), ("C", "The consolidation rate increase indicates that the match rules are now over-merging, causing false positives"), ("D", "The increase is purely mathematical — adding more total Individual records always increases the consolidation rate regardless of matching")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Consolidation rate = Total Individual records ÷ Total Unified Individuals. When the new source adds 500,000 Individual records that frequently match existing records from other sources, those records are merged into existing Unified Individuals rather than creating new ones — increasing the ratio and thus the consolidation rate. A: Consolidation rate = 1 − (Unified Profiles ÷ Source Profiles). A higher rate means MORE merging occurred. This is not inherently an indication of quality degradation; it simply means more cross-source matches were found. C: While over-merging (false positives) would also increase the consolidation rate, the question does not provide evidence of false positives — the increase could equally be legitimate matches. D: Adding Individual records without matching existing records does NOT increase the consolidation rate — each unmatched new Individual becomes its own Unified Individual. Matching is required for the rate to increase."
+        ),
+        Question(
+            id: "346",
+            question: "A consultant is reviewing identity resolution configuration for a financial services company. The company wants to match records using multiple contact points but needs to understand how the matching engine works. Which TWO statements correctly describe how Data Cloud identity resolution uses contact points?",
+            options: [("A", "Contact points such as email addresses and phone numbers are used as matching signals in match rules"), ("B", "A single match rule can only use one contact point type — separate rules are required for each contact point type"), ("C", "Contact Point DMOs (e.g. Contact Point Email, Contact Point Phone) must be mapped and populated for their values to be used in identity resolution"), ("D", "Identity resolution automatically uses all populated fields from the Individual DMO as matching signals without requiring explicit contact point configuration")],
+            questionType: .multiSelect,
+            correctIndices: [0, 2],
+            explanation: "Contact points (emails, phone numbers) are the primary matching signals used by identity resolution match rules (A). For these values to be available to the matching engine, the Contact Point DMOs (Contact Point Email, Contact Point Phone) must be correctly mapped and populated with data (C). B: A single match rule can combine multiple contact point types using AND logic — for example, requiring both an email match AND a last name match within the same rule. D: Identity resolution does not automatically use all Individual DMO fields as matching signals — match rules must explicitly specify which contact point fields to use as matching criteria."
+        ),
+        Question(
+            id: "347",
+            question: "A Data Cloud consultant is asked whether identity resolution needs to be re-run after new data is ingested from a source system. What is the correct answer?",
+            options: [("A", "Yes — identity resolution runs on a scheduled basis and can also be triggered manually; new records are processed in each run to update Unified Individual profiles"), ("B", "Yes — identity resolution must be manually triggered by an administrator each time new data is ingested"), ("C", "No — identity resolution only runs once during initial setup and does not need to be re-run"), ("D", "No — new records are automatically merged into existing Unified Individual profiles as they are ingested, without requiring an identity resolution run")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "Identity resolution runs on a configured schedule (typically regular intervals) and can also be triggered manually. Each run processes new and changed Individual records since the last run, updating Unified Individual profiles with newly matched or updated data. B: While identity resolution can be manually triggered, it also runs automatically on a schedule — manual triggering is not the only option. C: Identity resolution is not a one-time setup process — it must run continuously as new data arrives to keep unified profiles current. D: New records are not automatically merged in real time as they ingest — they queue for the next identity resolution run."
+        ),
+        Question(
+            id: "348",
+            question: "A consultant at Cumulus Financial is configuring identity resolution and must decide between using Exact and Exact Normalised match for phone numbers. The source systems store phone numbers in multiple formats: '+1-800-555-0100', '8005550100', and '(800) 555-0100'. Which match type should the consultant use?",
+            options: [("A", "Exact match — to ensure only identical phone number strings are matched"), ("B", "Exact Normalised match — to strip formatting characters and normalise phone numbers to a consistent format before comparing"), ("C", "Fuzzy match — to handle the wide variation in phone number formats"), ("D", "Source Priority reconciliation — to select the most trusted source's phone number format")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Exact Normalised match applies normalisation rules before comparison, including stripping non-numeric characters and standardising formatting. This would normalise '+1-800-555-0100', '8005550100', and '(800) 555-0100' to the same underlying number string, enabling correct matching. A: Exact match would fail to link these three formats since they are not byte-for-byte identical strings — all three represent the same phone number but would be treated as different values. C: Fuzzy match is more appropriate for values with approximate character similarity (e.g. name typos) — phone numbers with different formatting are better handled by Exact Normalised, which is specifically designed for this scenario. D: Source Priority is a reconciliation rule — it determines which source's phone number value appears on the Unified Individual, not whether records are considered a match."
+        ),
+        Question(
+            id: "349",
+            question: "A customer notices that after making a change to their identity resolution ruleset configuration, existing Unified Individuals have not been updated. What must the administrator do to apply the updated ruleset to all records?",
+            options: [("A", "Wait for the next scheduled incremental identity resolution run, which will automatically apply the ruleset changes"), ("B", "Delete all existing Unified Individual records and re-run identity resolution from scratch"), ("C", "Re-ingest all source data via full refresh on each data stream, which will trigger a ruleset reprocessing"), ("D", "Trigger a full identity resolution run so that all records are reprocessed under the updated ruleset")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "When a ruleset configuration changes, a full identity resolution run is required to reprocess all Individual records under the new rules. Incremental runs only process records that have changed since the last run — unchanged records would not be re-evaluated under the new ruleset without a full run. A: An incremental run would not reprocess all records — only newly changed records would be evaluated under the new ruleset. A full run is required. B: Manually deleting Unified Individual records is not required or recommended — a full run will re-evaluate and recreate unified profiles as needed. C: Re-ingesting source data is not required to apply ruleset changes — the identity resolution full run reprocesses existing records without needing new ingestion."
+        ),
+        Question(
+            id: "350",
+            question: "A consultant is designing a Data Cloud solution for a brand that operates in two completely separate markets — B2C retail and B2B wholesale. The brand wants to maintain separate unified profiles for each market, as the same individual could legitimately appear as both a retail consumer and a wholesale buyer. The consultant recommends using two separate Data Spaces. What additional consideration should the consultant raise about identity resolution in this multi-Data-Space architecture?",
+            options: [("A", "Identity resolution operates globally across all Data Spaces in the org — Data Spaces cannot prevent cross-space profile merging"), ("B", "Each Data Space maintains its own identity resolution configuration and produces its own set of Unified Individuals, independently of other Data Spaces"), ("C", "Multi-Data-Space identity resolution requires a MuleSoft integration to synchronise unified profiles between spaces"), ("D", "Identity resolution can only run in the default Data Space — custom Data Spaces do not support unified profile creation")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Each Data Space in Data Cloud maintains its own identity resolution configuration, data streams, and Unified Individual records. Identity resolution in one Data Space does not interact with or merge records from another Data Space — this is precisely the isolation behaviour the brand needs for B2C and B2B markets. A: Identity resolution is scoped to a Data Space — it does not cross Data Space boundaries. This is a key feature of Data Spaces for multi-brand or multi-market isolation. C: No MuleSoft integration is required to synchronise unified profiles — the two Data Spaces intentionally operate independently. D: Identity resolution is fully supported in custom Data Spaces — the capability is not limited to the default Data Space."
+        ),
+        Question(
+            id: "351",
+            question: "Which of the following is NOT a standard contact point DMO used as a matching signal in Data Cloud identity resolution?",
+            options: [("A", "Contact Point Loyalty ID"), ("B", "Contact Point Phone"), ("C", "Contact Point Address"), ("D", "Contact Point Email")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "Contact Point Loyalty ID is not a standard Data Cloud Contact Point DMO. The standard contact point DMOs available for identity resolution are Contact Point Email, Contact Point Phone, and Contact Point Address. Loyalty IDs and other external system identifiers are stored in the Party Identification DMO. B: Contact Point Phone is a standard DMO used in identity resolution match rules. C: Contact Point Address is a standard DMO used in identity resolution match rules. D: Contact Point Email is a standard DMO used in identity resolution match rules."
+        ),
+        Question(
+            id: "352",
+            question: "A Data Cloud consultant is helping a customer understand why their identity resolution consolidation rate decreased significantly after they removed a fuzzy email match rule and replaced it with an exact email match rule. What is the most likely explanation?",
+            options: [("A", "Exact match rules require more processing time, causing the identity resolution job to terminate early before all records are processed"), ("B", "The exact match rule is stricter, resulting in fewer successful matches between records — more Individual records are now creating separate Unified Individuals instead of being merged"), ("C", "Removing the fuzzy rule caused all previously merged Unified Individuals to be split apart permanently"), ("D", "The consolidation rate decreased because exact matching increases the number of duplicate Unified Individuals in the system")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Switching from fuzzy to exact email matching makes the match criteria stricter. Records that previously matched via fuzzy logic no longer satisfy the exact rule, so they create separate Unified Individuals instead of being merged — decreasing the consolidation rate (fewer merges = lower percentage of source records consolidated). A: Identity resolution processing time does not cause early termination — a lower consolidation rate reflects fewer matches, not a processing failure. C: After the ruleset change and a full re-run, previously merged records would be re-evaluated — those that no longer meet the new exact rule would indeed separate. But this is the correct outcome described by option A, not a separate permanent split. D: Exact matching reduces the number of merges by being stricter, which lowers the consolidation rate percentage. A lower consolidation rate means fewer source records were merged — it does not mean more duplicates are created."
+        ),
+        Question(
+            id: "353",
+            question: "A consultant is setting up identity resolution for a customer whose dataset includes many shared email addresses — such as family accounts where multiple household members use the same email. What is the risk of using email as the sole match criterion, and what is the recommended approach?",
+            options: [("A", "There is no risk — email is always a reliable unique identifier and is the recommended sole matching criterion in Data Cloud"), ("B", "The recommended approach is to exclude email from identity resolution entirely and rely solely on phone number matching"), ("C", "Using email alone is acceptable but requires enabling the 'Household Mode' setting in the identity resolution configuration"), ("D", "Using email alone risks merging different people who share an email address; the recommended approach is to combine email with additional match criteria such as first name and last name")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "When multiple individuals share an email address (e.g. a family account), using email as the sole match criterion would incorrectly merge all household members into a single Unified Individual. Adding additional match criteria such as first name or date of birth alongside email reduces false positive merges. A: Email is not always a unique individual identifier — shared family or household emails are a well-known data quality challenge in identity resolution. B: Excluding email entirely would miss many valid matches and significantly reduce the consolidation rate — the correct approach is to supplement email with additional criteria, not replace it. C: 'Household Mode' is not a standard Data Cloud identity resolution setting — this is not a valid configuration option."
+        ),
+        Question(
+            id: "354",
+            question: "A consultant has configured an identity resolution ruleset with three match rules: Rule 1 (email exact), Rule 2 (phone exact normalised), and Rule 3 (first name fuzzy + last name exact + date of birth exact). A pair of Individual records is evaluated. They share neither email nor phone number, but they have the same first name (with a minor variation: 'Jon' vs 'John'), the same last name, and the same date of birth. Will these records be merged, and why?",
+            options: [("A", "Yes — Rule 3 will match because fuzzy first name matching accommodates 'Jon' vs 'John', and last name and date of birth both match exactly"), ("B", "No — all three rules must be satisfied simultaneously; since email and phone do not match, the records will not be merged"), ("C", "Yes — but only after a manual review flag is raised because the first name variation triggers a confidence threshold warning"), ("D", "No — fuzzy name matching in identity resolution only applies to surname fields, not first names")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "Multiple rules in a ruleset use OR logic — any one rule that matches is sufficient to merge the records. Rule 3 requires fuzzy first name + exact last name + exact date of birth. 'Jon' vs 'John' is within typical fuzzy matching tolerance, and last name and DOB match exactly — so Rule 3 is satisfied and the records will be merged. B: OR logic applies across rules — email and phone failing (Rules 1 and 2) does not prevent Rule 3 from triggering a merge if its criteria are met. C: There is no manual review flag or confidence threshold warning in standard Data Cloud identity resolution — merges are fully automated. D: Fuzzy matching in Data Cloud identity resolution can be applied to both first name and last name fields — there is no restriction to surname-only fields."
+        ),
+        Question(
+            id: "355",
+            question: "After identity resolution runs, a customer's marketing team wants to use the resulting unified profiles for segmentation. Which DMO must the segmentation be anchored to in order to target the merged, cross-source view of each customer?",
+            options: [("A", "Individual DMO"), ("B", "Unified Individual DMO"), ("C", "Contact Point Email DMO"), ("D", "Party Identification DMO")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Segments built on the Unified Individual DMO target the merged, canonical person profiles created by identity resolution — these represent each real customer as a single entity, even if their data came from multiple source systems. This is the correct entity to use when the goal is to target real people with a consolidated view. A: Segmenting on the Individual DMO targets source-level records — the same real person could appear as multiple Individual records from different sources, causing duplicated audience membership. C: Contact Point Email stores email address records — it is not an entity that can serve as the segmentation anchor for person-level targeting. D: Party Identification stores cross-system ID mappings — it is not the correct entity for building audience segments."
+        ),
+        Question(
+            id: "356",
+            question: "In Salesforce Data Cloud, which two Data Model Objects can serve as the primary segmentation entity when building an audience segment?",
+            options: [("A", "Contact Point Email and Contact Point Phone"), ("B", "Party Identification and Account"), ("C", "Individual and Unified Individual"), ("D", "Data Lake Object and Data Source Object")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Segments in Data Cloud must be anchored to either the Individual DMO (source-level person records) or the Unified Individual DMO (merged profiles from identity resolution). These are the two valid primary segmentation entities. A: Contact Point Email and Phone are not segmentation entities — they are contact point DMOs used as match signals in identity resolution and as related data for filtering segments. B: Party Identification stores external IDs and Account represents organisations — neither is a valid primary segmentation entity for person-level audiences. D: Data Lake Objects and Data Source Objects are storage and source representation layers — they are not used as segmentation entities."
+        ),
+        Question(
+            id: "357",
+            question: "What is the difference between Standard Publish and Rapid Publish for segment refresh in Data Cloud?",
+            options: [("A", "Standard Publish requires a full data refresh before each segment run; Rapid Publish uses cached results from the previous run"), ("B", "Standard Publish refreshes every 12–24 hours with a 2-year data window; Rapid Publish refreshes every 1–4 hours with a 7-day data window"), ("C", "Standard Publish supports all activation targets; Rapid Publish is limited to Marketing Cloud activations only"), ("D", "Standard Publish is for Unified Individual segments; Rapid Publish is for Individual-only segments")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Standard Publish refreshes segments every 12–24 hours and evaluates data up to 2 years old. Rapid Publish refreshes more frequently (every 1–4 hours) but only considers data from the last 7 days — making it suitable for use cases that need more frequent updates but only require recent data. C: The segmentation entity (Individual or Unified Individual) is configured separately from the publish frequency — Standard and Rapid Publish are frequency and data window settings, not entity restrictions. D: Both publish modes evaluate fresh data against segment criteria — Rapid Publish is not a caching mechanism."
+        ),
+        Question(
+            id: "358",
+            question: "A marketer at NTO wants to build a segment of customers who made a purchase during the same calendar week in any previous year — for example, targeting customers who purchased during the first week of December in any past year to identify seasonal shoppers. Which segment operator should the marketer use for the purchase date field?",
+            options: [("A", "Is Between"), ("B", "Is Within Last Rolling"), ("C", "Is Anniversary Of"), ("D", "Equals")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "'Is Anniversary Of' evaluates whether a date field falls within the same period (e.g. same week, same month) in any prior year — making it ideal for identifying seasonal behaviours or anniversary-based targeting. A: 'Is Between' filters records where a date falls between two specific date values — it does not account for annual recurrence across multiple years. B: 'Is Within Last Rolling' identifies records where a date falls within a rolling window from now (e.g. last 30 days) — it is for recency-based filtering, not anniversary-based. D: 'Equals' tests for an exact date match — it cannot handle multi-year anniversary patterns."
+        ),
+        Question(
+            id: "359",
+            question: "A Data Cloud consultant is building a segment for customers aged between 25 and 40. Which segment operator should be used on the 'Date of Birth' or 'Age' field?",
+            options: [("A", "Contains"), ("B", "Is Between"), ("C", "Is Anniversary Of"), ("D", "Is Within Last Rolling")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "'Is Between' evaluates whether a numeric or date value falls within a specified range — it is the correct operator for filtering customers whose age (or date of birth) falls between two values. A: 'Contains' is a string operator used for partial text matching (e.g. an email domain contains '@company.com') — it is not appropriate for numeric or date range filters. C: 'Is Anniversary Of' evaluates recurrence within the same period across different years — not applicable for static age range filtering. D: 'Is Within Last Rolling' evaluates whether a date falls within a recent rolling window — not applicable for age range filtering."
+        ),
+        Question(
+            id: "360",
+            question: "Cloud Kicks wants to create a segment of customers who have made a purchase in the last 90 days. Which segment operator on the 'Purchase Date' field is most appropriate?",
+            options: [("A", "Is Between"), ("B", "Is Anniversary Of"), ("C", "Is Within Last Rolling"), ("D", "Equals")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "'Is Within Last Rolling' evaluates whether a date field falls within a rolling window ending at the current date — for example, 'Purchase Date is within last rolling 90 days'. This is the correct operator for recency-based membership where the window moves forward with time. A: 'Is Between' requires two fixed date values — a rolling 90-day window would require the end date to be constantly updated, making it impractical for dynamic recency filtering. B: 'Is Anniversary Of' is for annual pattern matching — not suitable for a simple recency filter. D: 'Equals' requires an exact date match — it cannot evaluate a 90-day window."
+        ),
+        Question(
+            id: "361",
+            question: "A consultant is building a segment of high-value customers in Data Cloud. The team wants to target customers who have a total purchase value greater than $500 AND who have NOT made a purchase in the last 60 days (i.e. they are high-value but lapsed). How should the consultant configure this segment?",
+            options: [("A", "Create one segment with two inclusion criteria: total purchase value > $500 AND purchase date within last 60 days"), ("B", "Create two separate segments — one for high-value customers and one for recently active customers — and activate both"), ("C", "Use a Calculated Insight to pre-compute the lapsed high-value status, then filter the segment on the insight output field"), ("D", "Create one segment with an inclusion criterion for total purchase value > $500 and an exclusion container for customers whose last purchase date is within the last 60 days")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Data Cloud segments support exclusion containers that can filter OUT records matching specific criteria. The correct approach is: include customers with total purchase value > $500, then apply an exclusion container for customers whose last purchase was within the last 60 days — effectively targeting the high-value but lapsed group. A: Including customers whose last purchase is within 60 days would target active high-value customers — the opposite of lapsed. The recency criterion must be used as an exclusion, not inclusion. B: Creating two segments and activating both would not produce the intersection logic required — two separate activations would reach both groups independently, not the intersection. C: While using a Calculated Insight is a valid approach for complex logic, it is unnecessary here — the exclusion container within the segment builder is sufficient and more straightforward."
+        ),
+        Question(
+            id: "362",
+            question: "What is a Calculated Insight in Salesforce Data Cloud?",
+            options: [("A", "A pre-built report that shows segment membership counts and trends over time"), ("B", "A SQL-based metric or aggregation defined on DMO data that can be used to enrich individual profiles and drive segmentation"), ("C", "An AI-generated prediction score that estimates the likelihood of a customer taking a specific action"), ("D", "A real-time alert that fires when a DMO field value changes beyond a defined threshold")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "A Calculated Insight is a user-defined SQL query (ANSI SQL) that computes aggregated metrics or derived attributes from Data Cloud DMO data — such as total spend, visit frequency, or average order value. The results enrich individual profiles and can be used as filter criteria in the segment canvas. A: Segment membership trend reporting is handled through Data Cloud analytics and reporting features, not Calculated Insights. C: AI prediction scores (like Einstein scoring) are a separate feature — Calculated Insights compute aggregations and metrics, not predictive scores. D: Real-time alerts based on field value changes are the function of Data Actions, not Calculated Insights."
+        ),
+        Question(
+            id: "363",
+            question: "A data analyst is writing a Calculated Insight in Data Cloud to compute each customer's total spend across all purchases. The analyst writes an ANSI SQL query that aggregates the 'Purchase Amount' field from the 'Purchase' DMO, grouped by 'Individual ID'. After saving, they cannot find the Calculated Insight in the segment canvas filters. What is the most likely cause?",
+            options: [("A", "The Calculated Insight query must include the Individual ID (or Unified Individual ID) as a dimension for the output to be available in the segment canvas"), ("B", "The segment canvas only shows Calculated Insights that have been activated to an external system at least once"), ("C", "The Calculated Insight must be published to a Marketing Cloud data extension before it appears in the segment canvas"), ("D", "Calculated Insights with numeric aggregations are not supported in the segment canvas — only text-based insights can be used as filters")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "For a Calculated Insight to appear in the segment canvas, the query must include the Individual ID or Unified Individual ID as one of its GROUP BY dimensions. This links the aggregated metric to a specific person, enabling it to be used as a filter on person-level segments. B: Calculated Insights do not need to have been activated externally before appearing in segment filters — activation and segmentation are independent. C: Calculated Insights do not need to be published to Marketing Cloud before appearing in the segment canvas — they are available within Data Cloud once saved. D: Numeric aggregations (SUM, COUNT, AVG, etc.) are fully supported as Calculated Insight dimensions in the segment canvas — this is one of the primary use cases."
+        ),
+        Question(
+            id: "364",
+            question: "A consultant is explaining Streaming Insights to a customer's analytics team. The team wants to know whether they can use a Streaming Insight as a filter criterion in the segment canvas to target customers based on their real-time behaviour. What should the consultant tell them?",
+            options: [("A", "Yes — Streaming Insights can be used directly as filter criteria in the segment canvas, just like Calculated Insights"), ("B", "Yes — but only if the Streaming Insight is first published to a Calculated Insight object"), ("C", "No — Streaming Insights cannot be used in segmentation or activation; they are for near-real-time event processing and triggering Data Actions only"), ("D", "No — Streaming Insights can only be used in Marketing Cloud Journey Builder via a direct API integration")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Streaming Insights are designed for near-real-time event processing — they evaluate conditions as data arrives and can trigger Data Actions. However, they cannot be used as filter criteria in the segment canvas and cannot be used in activation. Only Calculated Insights (batch SQL aggregations) can be used in segmentation. A: This is incorrect — Streaming Insights are not available as filter criteria in the segment canvas. Calculated Insights are the correct feature for segmentation filters. B: Streaming Insights cannot be 'published to' a Calculated Insight — they are separate features with different architectures and purposes. D: Streaming Insights trigger Data Actions (Platform Events, Webhooks, Marketing Cloud sends) — they are not limited to Journey Builder nor do they use a direct API integration."
+        ),
+        Question(
+            id: "365",
+            question: "A consultant is writing a Streaming Insight for NTO that needs to detect when a customer views more than 5 product pages within 10 minutes. Which SQL clause is required for the Streaming Insight query that other insight types do not require?",
+            options: [("A", "GROUP BY"), ("B", "HAVING"), ("C", "ORDER BY"), ("D", "WINDOW")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "The WINDOW clause is required in all Streaming Insight queries to define the time-based window over which the stream is evaluated. The window size must be between 5 minutes and 24 hours. Without the WINDOW clause, the query cannot be saved as a Streaming Insight. A: GROUP BY is used in Calculated Insights for aggregation grouping — while it may appear in Streaming Insights, it is not the defining required clause that makes a Streaming Insight distinct. B: HAVING filters grouped results in SQL — it may be used in Streaming Insights but is not the uniquely required clause. C: ORDER BY is for sorting query results — it is not required in Streaming Insight queries and would not define the event window."
+        ),
+        Question(
+            id: "366",
+            question: "What is the valid time window range for a Streaming Insight WINDOW clause in Salesforce Data Cloud?",
+            options: [("A", "1 minute to 60 minutes"), ("B", "15 minutes to 7 days"), ("C", "5 minutes to 24 hours"), ("D", "1 hour to 30 days")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Streaming Insight WINDOW clauses must define a time period between 5 minutes (minimum) and 24 hours (maximum). Windows outside this range are not supported. A: 1-minute windows are below the minimum supported window size of 5 minutes. B: 7-day windows exceed the maximum supported window size of 24 hours. D: 1-hour windows are valid, but the range of 1 hour to 30 days is incorrect — the maximum is 24 hours, not 30 days."
+        ),
+        Question(
+            id: "367",
+            question: "A consultant is reviewing a Calculated Insight that computes the average purchase value per customer. The insight query uses SUM(purchase_amount) / COUNT(purchase_id) grouped by Individual_ID. After publishing, the marketing team reports that the insight values appear in the profile explorer but the insight field is not available when building a segment. What is the most likely missing configuration?",
+            options: [("A", "The insight must be re-run at least twice before it appears in the segment canvas"), ("B", "The insight must reference Unified_Individual_ID rather than Individual_ID to appear in segments built on the Unified Individual"), ("C", "Calculated Insights that use division operations (/) are not supported in the segment canvas"), ("D", "The insight must be approved by a Data Cloud Admin before it becomes available for segmentation")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "If the segment is built on the Unified Individual DMO (which is standard for targeting real people across sources), the Calculated Insight must include Unified_Individual_ID as its dimension — not Individual_ID. Using Individual_ID would link the insight to source-level records, but not to the Unified Individual entity that the segment canvas expects. A: There is no two-run requirement — Calculated Insights become available in the segment canvas after their first successful run. C: Division operations in Calculated Insight SQL are fully supported — there is no restriction on arithmetic operations. D: There is no approval workflow for Calculated Insights — they become available upon successful publication without requiring admin approval."
+        ),
+        Question(
+            id: "368",
+            question: "A marketing analyst at Cumulus Financial wants to know the current count of members in a segment before activating it. Where in Data Cloud can the analyst see the segment's estimated or actual member count?",
+            options: [("A", "The Activation Monitoring dashboard, after the first activation run completes"), ("B", "The Segment detail page, which displays a member count that updates after each segment refresh"), ("C", "The Identity Resolution run results page"), ("D", "The Data Explorer, by manually querying the Unified Individual DMO with the same filter criteria")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "The Segment detail page in Data Cloud displays the member count for a segment, updated after each segment refresh. Analysts can view this count before configuring activations to validate that the segment logic is producing the expected audience size. A: The Activation Monitoring dashboard shows the results of activation runs (accepted/rejected counts) — it requires an activation to have already been run and does not show pre-activation segment counts. C: The Identity Resolution run results page shows unification statistics (consolidation rate, unified profile count) — not segment membership. D: While the Data Explorer can query DMO data, manually rewriting the segment criteria is unnecessary when the Segment detail page already displays the count."
+        ),
+        Question(
+            id: "369",
+            question: "A consultant is comparing Calculated Insights and Streaming Insights for a customer's real-time personalisation use case. Which TWO statements correctly describe the differences between these two insight types?",
+            options: [("A", "Calculated Insights use ANSI SQL and can include COUNT, SUM, AVG, MIN, and MAX aggregations; Streaming Insights only support COUNT aggregations"), ("B", "Calculated Insights can be used in segmentation and activation; Streaming Insights cannot be used in segmentation or activation"), ("C", "Streaming Insights are refreshed on a 12–24 hour schedule; Calculated Insights are evaluated in near-real-time as data arrives"), ("D", "Calculated Insights require the WINDOW clause; Streaming Insights do not use time-based windows")],
+            questionType: .multiSelect,
+            correctIndices: [0, 1],
+            explanation: "Both A and B are correct. Calculated Insights support the full range of SQL aggregation functions (COUNT, SUM, AVG, MIN, MAX), while Streaming Insights only support COUNT and SUM. Additionally, Calculated Insights can be used in both segmentation and activation, whereas Streaming Insights can only trigger Data Actions and cannot be used in segmentation or activation. C: This reverses the relationship — Streaming Insights are evaluated near-real-time as data arrives; Calculated Insights run on a scheduled batch basis. D: This also reverses the relationship — Streaming Insights require the WINDOW clause; Calculated Insights use standard ANSI SQL without a mandatory WINDOW clause."
+        ),
+        Question(
+            id: "370",
+            question: "A marketer at Cloud Kicks wants to create a segment of customers who have a loyalty tier of 'Gold' AND have made at least 3 purchases in the last year. The loyalty tier comes from the Loyalty DMO and purchase count comes from a Calculated Insight. How should the marketer combine these two criteria in the segment canvas?",
+            options: [("A", "Create two separate segments and combine them using a union operation in the segment canvas"), ("B", "Apply the loyalty tier filter in the segment, then apply the Calculated Insight filter using an exclusion container"), ("C", "The loyalty tier and Calculated Insight cannot be combined in the same segment — separate activations are required"), ("D", "Add both criteria in the same segment container using AND logic, filtering on both the Loyalty tier field and the Calculated Insight field")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Data Cloud's segment canvas supports adding multiple filter criteria from different related DMOs and Calculated Insights within the same segment container. Using AND logic between the loyalty tier field (from Loyalty DMO) and the purchase count Calculated Insight achieves the desired intersectional segment. A: A union operation would target customers who meet EITHER criterion — not the intersection. AND logic within a single container is required. B: An exclusion container would exclude customers with the Calculated Insight condition — the opposite of the intended AND inclusion logic. C: Loyalty DMO fields and Calculated Insight fields can both be used as filter criteria within the same segment — there is no constraint preventing their combination."
+        ),
+        Question(
+            id: "371",
+            question: "NTO is building a Calculated Insight to compute each customer's 'Recency Score' as the number of days since their last purchase. The data analyst writes the following query: SELECT Individual_ID, DATEDIFF(CURRENT_DATE, MAX(purchase_date)) AS recency_days FROM Purchase_DMO GROUP BY Individual_ID. After saving and running the insight, the team cannot use it in the segment canvas. What is missing from this query?",
+            options: [("A", "The query must also include Unified_Individual_ID as an additional dimension to link the insight to the Unified Individual entity used by the segment canvas"), ("B", "The query is missing a WHERE clause to restrict the data to the last 2 years"), ("C", "The query is missing a HAVING clause to filter out customers with no purchases"), ("D", "The DATEDIFF function is not supported in Data Cloud Calculated Insights — a different date subtraction method is required")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "For a Calculated Insight to appear in the segment canvas when building segments on Unified Individual, the query must include Unified_Individual_ID as a dimension in the GROUP BY clause. Individual_ID alone links the insight to source-level Individual records, not to the Unified Individual entity that the segment canvas expects. B: A WHERE clause for date filtering would improve data relevance but is not required for the insight to appear in the segment canvas. C: While a HAVING clause could be useful for data quality, it is not the reason the insight is unavailable in the segment canvas. D: DATEDIFF is a supported function in Data Cloud Calculated Insights — the function itself is not the issue."
+        ),
+        Question(
+            id: "372",
+            question: "A consultant is building a segment in Data Cloud for customers who have a Gmail email address. Which segment operator on the email address field should be used?",
+            options: [("A", "Equals"), ("B", "Contains"), ("C", "Starts With"), ("D", "Is Anniversary Of")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "'Contains' is used for partial string matching — filtering for email addresses that contain '@gmail.com' would correctly identify all Gmail users regardless of the local part of their email address. A: 'Equals' requires an exact full-string match — it would only match if the entire email address is exactly '@gmail.com', which is impossible. C: 'Starts With' evaluates the beginning of a string — not useful for matching a domain that appears at the end of an email address. D: 'Is Anniversary Of' is a date-based operator — it has no relevance for string field filtering."
+        ),
+        Question(
+            id: "373",
+            question: "A marketing team at Cumulus Financial wants to run a campaign targeting customers who were active last year but have not engaged at all in the current calendar year. They want the segment to automatically update monthly. Which combination of segment operators and refresh configuration is most appropriate?",
+            options: [("A", "Use 'Is Between' for last year's date range and 'Does Not Contain' for this year's engagement data; set refresh to Manual"), ("B", "Use 'Is Between' to define last year's engagement date range in the inclusion container, and 'Is Within Last Rolling' on engagement date in the exclusion container; set Standard Publish with a scheduled refresh"), ("C", "Use 'Equals' on the engagement year field for last year's value in the inclusion container; set Rapid Publish for more frequent updates"), ("D", "Use 'Is Anniversary Of' on the engagement date to match customers who engaged around this time last year; set refresh to Manual")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Using 'Is Between' (with fixed dates for last calendar year) in the inclusion container identifies customers who engaged last year. Adding 'Is Within Last Rolling' (current year, e.g. 365 days or year-to-date) in the exclusion container removes those who have already re-engaged this year. Standard Publish with a scheduled refresh ensures the segment membership is automatically updated monthly. A: 'Does Not Contain' is a string operator — it cannot be applied to engagement date data for this use case. Manual refresh also does not meet the 'automatically update monthly' requirement. C: Filtering on an 'engagement year' field assumes a derived year field exists — this is less flexible than using date range operators. Rapid Publish (1–4 hour refresh with 7-day data window) would not capture the full year's historical context needed. D: 'Is Anniversary Of' matches the same period in past years — it does not identify customers who were active throughout all of last year. Manual refresh also does not meet the monthly auto-update requirement."
+        ),
+        Question(
+            id: "374",
+            question: "A consultant is building a segment of customers who have purchased a product from the 'Running Shoes' category. The purchase category data is in a custom 'Purchase' DMO that is related to the Individual DMO via a foreign key. How does the consultant access 'Purchase' DMO fields as filter criteria in the segment canvas?",
+            options: [("A", "The Purchase DMO must first be flattened into the Individual DMO via a data stream mapping before its fields appear in the segment canvas"), ("B", "The Purchase DMO fields are available as related object filters in the segment canvas, accessible via the foreign key relationship to the Individual DMO"), ("C", "The consultant must create a Calculated Insight that joins Purchase and Individual data, then use the insight as the filter criterion"), ("D", "The segment canvas only supports filtering on Individual DMO fields — related DMO fields require a separate activation")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "In Data Cloud's segment canvas, related DMO fields are available as filter criteria via the defined foreign key relationships. If the Purchase DMO is related to the Individual DMO via Individual ID, the consultant can traverse that relationship in the segment canvas to filter on Purchase DMO fields such as product category. A: Flattening the Purchase data into the Individual DMO is not required or recommended — relationship traversal in the segment canvas handles this without denormalising the data model. C: While a Calculated Insight could be used for aggregated purchase data, it is not required for a simple category filter — direct related object filtering is simpler and more appropriate. D: The segment canvas does support filtering on related DMO fields via foreign key relationships — it is not limited to Individual DMO fields only."
+        ),
+        Question(
+            id: "375",
+            question: "Which of the following aggregation functions is NOT supported in a Data Cloud Calculated Insight query?",
+            options: [("A", "MEDIAN"), ("B", "COUNT"), ("C", "SUM"), ("D", "AVG")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "MEDIAN is not a supported aggregation function in Data Cloud Calculated Insights. The supported aggregation functions are COUNT, SUM, AVG (average), MIN, and MAX. B: COUNT is a supported aggregation function in both Calculated Insights and Streaming Insights. C: SUM is a supported aggregation function in Calculated Insights. D: AVG is a supported aggregation function in Calculated Insights."
+        ),
+        Question(
+            id: "376",
+            question: "A Data Cloud consultant is reviewing a segment built by a junior analyst at NTO. The segment is configured with the following logic: Include: [Loyalty Tier = Gold] EXCLUDE: [Email Domain Contains gmail.com]. The consultant notices that the segment is returning far fewer members than expected. What is the most likely issue with the exclusion container?",
+            options: [("A", "Exclusion containers cannot use string operators like 'Contains' — only exact value operators are supported"), ("B", "Exclusion containers remove all members from the segment, not just those matching the exclusion criteria"), ("C", "The exclusion container is removing Gold loyalty customers who have a Gmail address from the segment, which may be intentional — the consultant should verify whether this is the correct business logic"), ("D", "The 'Contains' operator in an exclusion container defaults to case-sensitive matching, which misses Gmail addresses with capitalisation variations")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "The segment logic is technically correct — the exclusion container is functioning as designed by removing Gold loyalty customers who have a Gmail email address. If the segment has fewer members than expected, the most likely explanation is that more Gold customers than anticipated have Gmail addresses. The consultant should verify with the business team whether this exclusion is intentional. A: 'Contains' and other string operators are fully supported in exclusion containers — there is no restriction to exact-value operators. B: Exclusion containers only remove records that match the exclusion criteria — they do not remove all segment members. D: The 'Contains' operator in Data Cloud is case-insensitive — capitalisation variations would not cause missed matches."
+        ),
+        Question(
+            id: "377",
+            question: "A marketer wants to build a 'VIP Birthday Month' segment — targeting customers whose birthday falls in the current calendar month and who have a lifetime spend over $1,000. The lifetime spend is computed in a Calculated Insight. Which combination of operators is correct for these two criteria?",
+            options: [("A", "Is Anniversary Of for birthday month; Greater Than for lifetime spend"), ("B", "Is Between for birthday month; Equals for lifetime spend"), ("C", "Is Within Last Rolling for birthday month; Greater Than for lifetime spend"), ("D", "Contains for birthday month; Is Between for lifetime spend")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "'Is Anniversary Of' identifies customers whose birthday (a date field) falls within the current period (e.g. current month) across any year — this is the correct operator for birthday-based targeting. 'Greater Than' is the correct operator for the lifetime spend Calculated Insight value exceeding $1,000. B: 'Is Between' requires two fixed date values — it cannot dynamically evaluate 'current calendar month' as the birthday period. C: 'Is Within Last Rolling' evaluates whether a date falls within a recent rolling window from now — a birthday field would rarely fall within the last 30 days from today unless birthday and today coincidentally align. D: 'Contains' is a string operator for partial text matching — it cannot be applied to a date field for month-based filtering."
+        ),
+        Question(
+            id: "378",
+            question: "A consultant is building a Streaming Insight for Cloud Kicks that fires when a customer adds an item to their cart but does not complete the checkout within 30 minutes. A developer asks whether the Streaming Insight can directly send an abandoned cart email via Marketing Cloud. What should the consultant explain?",
+            options: [("A", "Yes — Streaming Insights can directly trigger Marketing Cloud email sends via the native Email Studio integration"), ("B", "No — a Streaming Insight cannot directly trigger a marketing send; it must first be published as a segment, then activated to Marketing Cloud"), ("C", "No — Streaming Insights trigger Data Actions; a Data Action with a Marketing Cloud target can be used to initiate the abandoned cart journey"), ("D", "Yes — by configuring the Streaming Insight output as an Activation Target in Data Cloud's activation settings")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Streaming Insights trigger Data Actions when their conditions are met. A Data Action can have Marketing Cloud as its target, which can initiate a Marketing Cloud journey (such as an abandoned cart email sequence) in near-real-time. The Streaming Insight → Data Action → Marketing Cloud pathway is the correct architecture. A: Streaming Insights do not have a direct integration with Marketing Cloud Email Studio — they trigger Data Actions, which then interact with Marketing Cloud. B: Streaming Insights do not produce segments — they trigger Data Actions. Publishing to a segment and then activating would introduce significant latency and is not the correct pattern for near-real-time triggers. D: Streaming Insights cannot be configured as Activation Targets — activation targets are outbound destinations, not insight outputs."
+        ),
+        Question(
+            id: "379",
+            question: "Which of the following segment refresh configurations is most appropriate for a promotional campaign segment that needs to update every 2 hours to capture the latest customer purchases, but only needs to consider purchases from the last 7 days?",
+            options: [("A", "Standard Publish with a 24-hour refresh schedule"), ("B", "Standard Publish with a 12-hour refresh schedule"), ("C", "Rapid Publish"), ("D", "Manual Publish, triggered before each campaign send")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Rapid Publish refreshes segments every 1–4 hours and evaluates data from the last 7 days — this is exactly the configuration described. It is designed for segments that need frequent updates and where the 7-day data window is sufficient. A: Standard Publish with a 24-hour refresh would not meet the 2-hour update requirement. B: Standard Publish at 12-hour intervals is also too infrequent, and Standard Publish has a 2-year data window rather than the 7-day window required. D: Manual Publish requires manual intervention for each refresh — it would not automatically update every 2 hours as required."
+        ),
+        Question(
+            id: "380",
+            question: "A consultant is reviewing a Calculated Insight that was recently edited and re-published. The marketing team reports that their segment, which uses this insight as a filter, has not updated to reflect the new insight values. What is the most likely cause?",
+            options: [("A", "The segment needs to be refreshed after the Calculated Insight is updated — the segment membership will reflect the new insight values after the next segment refresh run"), ("B", "Calculated Insight changes require a new segment to be created — existing segments cannot pick up updates to referenced insights"), ("C", "Calculated Insight updates are not applied to segment canvas filters until the insight is re-published to all activation targets"), ("D", "The Data Cloud Admin must manually approve Calculated Insight updates before they propagate to segments")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "Calculated Insight values are updated when the insight is re-run. The segment membership, however, is only recalculated during the next segment refresh. After the Calculated Insight update, the next scheduled or manually triggered segment refresh will evaluate members against the new insight values. B: Existing segments automatically reflect updated Calculated Insight values after their next refresh — no new segment needs to be created. C: Activation to external targets is not required before updated insight values propagate to segment membership — segments and activations are separate. D: There is no admin approval workflow for Calculated Insight updates — changes take effect automatically after the next segment refresh."
+        ),
+        Question(
+            id: "381",
+            question: "A data analyst asks whether Data Cloud supports the ability to create a segment of customers who are NOT members of another specific segment (i.e. a segment exclusion based on segment membership). How should the consultant respond?",
+            options: [("A", "No — segments cannot reference other segments as filter criteria; only DMO fields and Calculated Insights can be used as segment filters"), ("B", "Yes — the segment canvas supports 'Is Not In Segment' as a filter type, allowing a segment to exclude members of another named segment"), ("C", "Yes — but only by exporting the first segment's member list and manually uploading it as an exclusion list via the Ingestion API"), ("D", "No — cross-segment logic requires a custom Calculated Insight that joins the two segment membership tables")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Data Cloud's segment canvas supports segment-to-segment filtering — including the ability to include or exclude members based on their membership in another named segment. This is available as a native filter type in the segment builder. A: Segment membership IS a supported filter criterion in the segment canvas — segments can reference other segments. C: Manual CSV export and re-upload is unnecessary — cross-segment exclusion is natively supported in the segment canvas. D: No custom Calculated Insight is required — the segment canvas natively supports 'In Segment' and 'Not In Segment' filter types."
+        ),
+        Question(
+            id: "382",
+            question: "A marketer wants to target customers who live in either London or Manchester. Which segment operator is most appropriate for the 'City' field?",
+            options: [("A", "Equals (applied once with 'London')"), ("B", "Is In (with values 'London' and 'Manchester')"), ("C", "Contains (with 'London,Manchester')"), ("D", "Is Between")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "'Is In' allows a field to be matched against multiple values in a single filter criterion — the record is included if the City field value equals any of the specified values. This is the correct operator for multi-value OR matching. A: 'Equals' only matches one exact value at a time — to match both cities with Equals, two separate filter conditions would be needed (which is less elegant but achievable with OR logic between them). C: 'Contains' tests whether the field value contains a substring — it is not designed for multi-value exact matching and would not correctly parse 'London,Manchester' as two separate values. D: 'Is Between' is a range operator for numeric or date fields — it is not applicable for city name string matching."
+        ),
+        Question(
+            id: "383",
+            question: "A customer asks whether Data Cloud Calculated Insights can be refreshed on-demand (triggered manually) or only run on a fixed schedule. What should the consultant explain?",
+            options: [("A", "Calculated Insights only run on a fixed schedule that is set during configuration — they cannot be manually triggered"), ("B", "Calculated Insights can be triggered manually via the Data Cloud UI or API, in addition to running on a configured schedule"), ("C", "Calculated Insights are triggered automatically whenever the underlying DMO data is updated — manual scheduling is not required"), ("D", "Calculated Insights run continuously in real-time — there is no concept of scheduled or on-demand execution")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Calculated Insights support both scheduled runs (on a configured frequency) and manual on-demand runs triggered from the Data Cloud UI or via API. This allows teams to force a refresh before a critical campaign without waiting for the next scheduled run. A: Fixed-schedule-only is incorrect — manual triggering is supported. C: Calculated Insights are not automatically triggered by DMO updates — they run on their configured schedule or are manually triggered. D: Calculated Insights are batch SQL computations, not continuous real-time streaming — continuous real-time processing is the function of Streaming Insights."
+        ),
+        Question(
+            id: "384",
+            question: "What does 'segment membership' refer to in the context of Salesforce Data Cloud?",
+            options: [("A", "The set of Unified Individual (or Individual) records that currently satisfy a segment's filter criteria after the most recent refresh"), ("B", "The list of Data Model Objects that are related to a specific segment configuration"), ("C", "The collection of activation targets that a segment has been published to"), ("D", "The set of Calculated Insights that are referenced by a segment's filter logic")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "Segment membership is the set of Unified Individual (or Individual) records that meet the segment's filter criteria as of the most recent refresh run. Membership is dynamic — it changes as new data is ingested and segment refreshes run. B: Related DMOs are part of the segment's filter configuration, not its membership — membership refers to the actual records qualifying for the segment. C: Activation targets are the destinations where segment membership is sent — they are not the membership itself. D: Calculated Insights used as filter criteria are part of the segment definition — not the membership result set."
+        ),
+        Question(
+            id: "385",
+            question: "A consultant is advising a customer on whether to use Individual or Unified Individual as the segmentation entity for a new campaign segment. The customer has three data sources ingested and identity resolution configured. Which consideration is most important in making this decision?",
+            options: [("A", "Using Individual reduces segment refresh time because there are fewer records to process than Unified Individual"), ("B", "Using Individual is required when the segment includes Calculated Insight filters, as Calculated Insights are linked to Individual records, not Unified Individual"), ("C", "Using Unified Individual ensures that each real person appears once in the segment regardless of how many source records they have — preventing duplicate campaign sends to the same person"), ("D", "Using Unified Individual is only appropriate when identity resolution has achieved a consolidation rate above 2.0")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Segmenting on Unified Individual ensures that each real person appears in the segment exactly once, even if they have multiple source Individual records. This prevents the same customer from receiving duplicate campaign communications — a critical consideration when multiple source systems are present. A: Unified Individual typically has fewer records than Individual (since multiple Individual records merge into one Unified Individual), so refresh time would often be faster for Unified Individual, not slower. B: Calculated Insights can be linked to Unified_Individual_ID and used in segments on Unified Individual — this is the recommended configuration. D: There is no minimum consolidation rate threshold required before Unified Individual segmentation is appropriate — the consolidation rate is a diagnostic metric, not a gate."
+        ),
+        Question(
+            id: "386",
+            question: "A marketer notices that a segment that was working correctly last week is now showing zero members. The segment filters on a Calculated Insight field. What is the most likely cause?",
+            options: [("A", "Rapid Publish segments automatically clear their membership after each 24-hour cycle"), ("B", "The segment was accidentally deleted and recreated with different logic"), ("C", "Zero-member segments automatically deactivate after 7 days of inactivity"), ("D", "The Calculated Insight query failed to run, resulting in null values that no records match")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "If the Calculated Insight that the segment filters on failed to run (e.g. due to a query error or data issue), the insight values would not be updated or would return null/empty. A segment filtering on null insight values would match zero records. The consultant should check the Calculated Insight run history for errors. A: Rapid Publish uses a 7-day data window but does not clear membership automatically — membership reflects current qualifying records. B: While accidental deletion is possible, the scenario states the segment was 'working correctly last week' — suggesting the segment itself is intact but something changed. A Calculated Insight failure is the more specific and likely cause given the context. C: There is no 7-day auto-deactivation rule for zero-member segments in Data Cloud."
+        ),
+        Question(
+            id: "387",
+            question: "A Data Cloud consultant is asked to explain the difference between a segment-level filter and a related attribute filter in the segment canvas. Which statement correctly describes this distinction?",
+            options: [("A", "Segment-level filters can only reference Calculated Insights; related attribute filters can only reference standard DMO fields"), ("B", "Segment-level filters use AND logic only; related attribute filters use OR logic only"), ("C", "Segment-level filters are evaluated in real-time; related attribute filters are evaluated in batch mode only"), ("D", "Segment-level filters apply to the primary segmentation entity (Unified Individual); related attribute filters apply to fields from DMOs related to the primary entity via foreign key")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "In the segment canvas, filters on the primary entity (e.g. Unified Individual fields like First Name, Age, Segment Membership) are segment-level filters. Filters on fields from related DMOs (e.g. Purchase Amount from the Purchase DMO related via Individual ID) are accessed through the related object traversal and are called related attribute filters. A: Both filter types can reference standard DMO fields and Calculated Insights — there is no such restriction. B: Both types of filters support AND and OR logic — the distinction is based on which entity the field belongs to, not the logical operator. C: Both segment-level and related attribute filters are evaluated in batch during segment refresh — neither is evaluated in real-time at the segment canvas level."
+        ),
+        Question(
+            id: "388",
+            question: "A consultant is explaining to a customer's analyst team that Streaming Insights evaluate data within a defined WINDOW. The analyst asks whether results from a Streaming Insight persist after the window closes — for example, if a customer triggered the condition 30 minutes ago and the window is 20 minutes, are they still marked as qualifying? What is the correct answer?",
+            options: [("A", "Yes — Streaming Insight results persist indefinitely once a customer qualifies, until manually reset"), ("B", "No — Streaming Insights evaluate conditions within a rolling window; once the event falls outside the window, the condition is no longer met and the Data Action is not re-triggered"), ("C", "Yes — Streaming Insight results are written to the Unified Individual DMO as a persistent attribute"), ("D", "No — and any Data Actions triggered during the window are automatically reversed when the window closes")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Streaming Insights evaluate conditions within a rolling time window. If a customer's event falls outside the current window (i.e. it happened 30 minutes ago and the window is 20 minutes), the condition is no longer met. The Data Action was fired when the condition was met, but it is not re-triggered — and the customer is no longer considered to be in the qualifying state. A: Streaming Insight results do not persist indefinitely — they are evaluated continuously within the defined window only. C: Streaming Insight results are not written as persistent attributes to the Unified Individual DMO — they are transient evaluations. D: Data Actions that have already fired are not reversed when the window closes — the action (e.g. sending a message) has already been executed."
+        ),
+        Question(
+            id: "389",
+            question: "A consultant is training a junior analyst on the Data Cloud segment canvas. The analyst asks which filter conditions would cause an individual to be EXCLUDED from a segment. Which TWO configurations correctly result in exclusion?",
+            options: [("A", "Adding a filter criterion to an inclusion container with the 'Is Not' operator"), ("B", "Adding a filter criterion to an exclusion container with the 'Is' operator"), ("C", "Setting the segment publish frequency to 'Do Not Refresh'"), ("D", "Referencing a Streaming Insight in the segment filter criteria")],
+            questionType: .multiSelect,
+            correctIndices: [0, 1],
+            explanation: "Both A and B result in exclusion. Using the 'Is Not' operator within an inclusion container excludes records matching that specific value (e.g. 'City Is Not London'). Adding any filter to an exclusion container excludes all records that match the exclusion criteria from the segment (e.g. exclusion container with 'Loyalty Tier Is Bronze' removes all Bronze members). C: 'Do Not Refresh' is a publish frequency setting that stops the segment from refreshing — it does not affect which records are included or excluded from the existing membership. D: Streaming Insights cannot be used as segment filter criteria at all — they trigger Data Actions and are not available in the segment canvas."
+        ),
+        Question(
+            id: "390",
+            question: "What is the maximum data lookback window available when using Standard Publish for segment refresh in Data Cloud?",
+            options: [("A", "90 days"), ("B", "1 year"), ("C", "5 years"), ("D", "2 years")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Standard Publish evaluates data with a 2-year lookback window — making it suitable for segments that require historical data spanning up to 2 years for filter criteria such as long-term purchase history or loyalty tenure. A: 90 days is below the Standard Publish data window — this would be too restrictive for many historical use cases. B: 1 year is also below the Standard Publish limit of 2 years. C: 5 years exceeds the maximum data window for Standard Publish, which is 2 years."
+        ),
+        Question(
+            id: "391",
+            question: "A consultant is building a Data Cloud-Triggered Flow for NTO that should fire when a customer's 'Loyalty Points Balance' on the Loyalty Points DMO crosses above 10,000 points. The consultant must choose between 'A record is updated' and 'Only when a record is updated to meet condition requirements' as the Flow trigger condition type. Which should the consultant choose, and why?",
+            options: [("A", "'Only when a record is updated to meet condition requirements' — so the Flow fires only when the Loyalty Points Balance transitions from below 10,000 to above 10,000, avoiding repeated triggers for records already above the threshold"), ("B", "'A record is updated' — so the Flow fires every time any Loyalty Points DMO record is modified, giving maximum coverage"), ("C", "'A record is updated' — because 'Only when a record is updated to meet condition requirements' only works with Streaming Insights, not DMO fields"), ("D", "'Only when a record is updated to meet condition requirements' — so the Flow fires once per day regardless of how many times the record is updated")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "'Only when a record is updated to meet condition requirements' fires the Flow only when the record transitions INTO a state that meets the condition — i.e. when the Loyalty Points Balance crosses the 10,000 threshold for the first time. This prevents the Flow from firing repeatedly for customers who are already above 10,000 and receive further points updates. B: 'A record is updated' would fire the Flow every time any Loyalty Points record changes — this would trigger the Flow for every points transaction, including updates for customers already well above 10,000 points. C: Both condition types are available for DMO-based Data Cloud-Triggered Flows — there is no restriction to Streaming Insights. D: 'Only when a record is updated to meet condition requirements' fires based on the condition transition event, not on a daily schedule."
+        ),
+        Question(
+            id: "392",
+            question: "Which three components are required to configure an activation in Salesforce Data Cloud?",
+            options: [("A", "Data Stream, Identity Resolution Ruleset, and Calculated Insight"), ("B", "Unified Individual, Contact Point Email, and Marketing Cloud Connection"), ("C", "Data Space, Data Bundle, and Reconciliation Rule"), ("D", "Segment, Activation Target, and Activation Membership")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "An activation in Data Cloud requires three components: (1) a Segment — the audience to be activated; (2) an Activation Target — the external system that will receive the data; and (3) an Activation Membership — the configuration that maps segment attributes to the target system's fields. A: Data Streams, Identity Resolution Rulesets, and Calculated Insights are inputs and enrichment components — they support the data pipeline upstream of activation but are not the three required activation components. B: Unified Individual and Contact Point Email are DMOs, and Marketing Cloud Connection is a prerequisite — these are not the three activation component types. C: Data Space, Data Bundle, and Reconciliation Rule are setup and configuration components — they are not the three required components of an activation."
+        ),
+        Question(
+            id: "393",
+            question: "Which of the following is NOT a valid activation target type in Salesforce Data Cloud?",
+            options: [("A", "Marketing Cloud Engagement"), ("B", "Salesforce Sales Cloud (directly)"), ("C", "Google Ads Customer Match"), ("D", "Cloud File Storage (Amazon S3 / Google Cloud Storage)")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Salesforce Sales Cloud is not a direct activation target type in Data Cloud. Standard activation targets include Marketing Cloud Engagement, Cloud File Storage (S3/GCS), Google Ads, Meta (Facebook/Instagram), B2C Commerce, and custom activation targets. Sales Cloud data is accessed via the CRM Connector for ingestion, but Sales Cloud is not an outbound activation target. A: Marketing Cloud Engagement is a standard, commonly used activation target. C: Google Ads Customer Match is a standard activation target used for paid media audience syndication. D: Cloud File Storage (Amazon S3 and Google Cloud Storage) is a standard activation target used for data lake and data warehouse delivery."
+        ),
+        Question(
+            id: "394",
+            question: "A consultant is configuring an activation to Marketing Cloud Engagement. The marketing team wants to send an email campaign to segment members. Which contact point must be present on the Unified Individual record for the Marketing Cloud activation to include that individual?",
+            options: [("A", "Contact Point Address"), ("B", "Contact Point Phone"), ("C", "Contact Point Social Handle"), ("D", "Contact Point Email")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "For a Marketing Cloud Email Studio activation, each Unified Individual must have a Contact Point Email associated with their record. Without a valid email contact point, the record cannot be delivered to Marketing Cloud for email sending and will be excluded from the activation. A: Contact Point Address is for postal mail — it is not required for Marketing Cloud email activations. B: Contact Point Phone is used for SMS/MMS activations — it is not the required contact point for email-based Marketing Cloud activations. C: Contact Point Social Handle is not a standard Data Cloud contact point type and is not required for Marketing Cloud activations."
+        ),
+        Question(
+            id: "395",
+            question: "When activating a segment to Marketing Cloud Engagement, how many related attribute columns (from related DMOs) can be included in the activation membership alongside the contact key?",
+            options: [("A", "20"), ("B", "10"), ("C", "5"), ("D", "Unlimited")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "When activating to Marketing Cloud Engagement, up to 20 related attribute columns can be included in the activation membership in addition to the contact key. These attributes are written to the Data Extension in Marketing Cloud as additional personalisation fields. B: 10 is also below the limit — up to 20 attributes are supported. C: 5 is below the actual limit of 20 related attributes. D: There is a defined limit of 20 related attributes — unlimited is not correct."
+        ),
+        Question(
+            id: "396",
+            question: "A consultant is configuring a Marketing Cloud activation and needs to decide between 'Upsert' and 'Full Refresh' mode for the activation membership. The marketing team plans to run this activation twice — first in Upsert mode, and then switch to Full Refresh mode for a subsequent campaign. What should the consultant warn the team about when switching from Upsert to Full Refresh mode?",
+            options: [("A", "Switching between Upsert and Full Refresh mode creates a new Data Extension in Marketing Cloud — data from the original Upsert-mode Data Extension is not migrated"), ("B", "Switching from Upsert to Full Refresh requires re-connecting the Marketing Cloud activation target"), ("C", "Full Refresh mode is not available for Marketing Cloud activations — only Upsert mode is supported"), ("D", "Switching from Upsert to Full Refresh will delete all existing records in the Marketing Cloud Data Extension and replace them with a clean set")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "When the activation mode is switched between Upsert and Full Refresh (or vice versa), Data Cloud creates a brand new Data Extension in Marketing Cloud. Data from the previous Data Extension is not transferred to the new one, and any existing Marketing Cloud journeys referencing the original Data Extension will need to be updated to point to the new one. B: Switching activation mode does not require reconnecting the activation target — the connection remains intact. C: Both Upsert and Full Refresh modes are available for Marketing Cloud activations. D: While Full Refresh does replace all records in the Data Extension on each run, the important nuance is that switching modes creates a NEW Data Extension entirely — not that it clears the existing one."
+        ),
+        Question(
+            id: "397",
+            question: "What file format is used for the data payload when activating a segment to Amazon S3 via the Cloud File Storage activation target?",
+            options: [("A", "JSON for the data payload, CSV for metadata"), ("B", "CSV for the data payload, JSON for metadata"), ("C", "Parquet for the data payload, XML for metadata"), ("D", "CSV for both the data payload and metadata")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "When activating to Cloud File Storage (Amazon S3 or Google Cloud Storage), Data Cloud writes the data payload as CSV files and writes the metadata (describing the payload structure) as a JSON file. A: This reverses the formats — the data payload is CSV, not JSON. C: Parquet and XML are not the formats used for Cloud File Storage activation — CSV and JSON are the correct formats. D: Metadata is not CSV — it is written as a JSON file alongside the CSV data payload."
+        ),
+        Question(
+            id: "398",
+            question: "When Data Cloud activates a segment to Amazon S3, how are large data files split to ensure manageable file sizes?",
+            options: [("A", "Files are split at 1 GB or 10,000 records, whichever comes first"), ("B", "Files are split only by date — one file per activation date"), ("C", "Files are never split — all records are written to a single CSV regardless of size"), ("D", "Files are split at 500 MB or 5,000 records, whichever comes first")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "When activating to Cloud File Storage (S3/GCS), Data Cloud automatically splits the output CSV files at 500 MB or 5,000 records — whichever limit is reached first. This ensures that individual files remain manageable for downstream processing. A: The limits are 500 MB and 5,000 records — not 1 GB and 10,000 records. B: File splitting is based on size and record count, not by date — date-based file naming may be part of the folder structure, but splitting itself is size/count driven. C: Files are split based on size and record count — they are not combined into a single large file."
+        ),
+        Question(
+            id: "399",
+            question: "A consultant is setting up a Cloud File Storage activation to Amazon S3 for NTO. The segment name is 'Summer Sale Prospects' and the activation name is 'S3 Export Q3'. A developer asks what the output folder name in S3 will be. What naming convention does Data Cloud use for the S3 folder path?",
+            options: [("A", "The folder name is the Salesforce org ID concatenated with the activation run timestamp"), ("B", "The folder name is always 'DataCloud_Export' — the segment and activation names are recorded only in the metadata JSON file"), ("C", "The folder name is derived from the segment name followed by the activation name, with non-alphanumeric characters replaced by hyphens (e.g. Summer-Sale-Prospects_S3-Export-Q3)"), ("D", "The folder name is set manually by the administrator in the activation target configuration")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Data Cloud uses the pattern SegmentName_ActivationName for the S3 folder path, with non-alphanumeric characters (spaces, special characters) replaced by hyphens. For 'Summer Sale Prospects' and 'S3 Export Q3', the folder name would be 'Summer-Sale-Prospects_S3-Export-Q3'. A: The org ID and timestamp are not used as the primary folder name — the segment and activation names drive the naming convention. B: The folder name is derived from the segment and activation names — 'DataCloud_Export' is not the naming convention. D: The folder name follows the automatic naming convention — administrators do not manually specify the S3 folder name in the activation target configuration."
+        ),
+        Question(
+            id: "400",
+            question: "What is the difference between a Full Refresh and an Incremental Refresh for Data Cloud activation?",
+            options: [("A", "Full Refresh sends only new segment members added since the last activation; Incremental Refresh sends all current segment members every time"), ("B", "Full Refresh sends the complete current segment membership on every activation run; Incremental Refresh sends only the changes (new members, removed members) since the last run"), ("C", "Full Refresh requires manual triggering by an administrator; Incremental Refresh runs automatically on a schedule"), ("D", "Full Refresh applies to Marketing Cloud activations only; Incremental Refresh applies to Cloud File Storage and Google Ads activations")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Full Refresh activates the complete current segment membership to the target system on every run — the target system receives all members regardless of whether they are new or unchanged. Incremental Refresh sends only the delta — new members added and members who have exited the segment since the last run. A: This reverses the definitions — Full Refresh sends ALL current members; Incremental sends only changes. C: Both Full and Incremental Refresh can be scheduled or manually triggered — there is no such restriction. D: Both Full and Incremental Refresh are available for multiple activation target types — they are not restricted by target type."
+        ),
+        Question(
+            id: "401",
+            question: "A consultant is configuring activation schedules for multiple segments. Which activation refresh schedule option should the consultant select for a segment that only needs to be activated once for a one-time campaign launch and should not automatically re-activate?",
+            options: [("A", "12-hour refresh"), ("B", "24-hour refresh"), ("C", "Do Not Refresh"), ("D", "Rapid Publish")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "'Do Not Refresh' sets the activation to run only once (on the first activation run) and then stop — it does not schedule any subsequent automatic activations. This is the correct choice for one-time campaigns that do not need ongoing audience refresh. A: 12-hour refresh would re-activate the segment every 12 hours — not appropriate for a one-time campaign. B: 24-hour refresh would re-activate daily — also not appropriate for a one-time campaign. D: Rapid Publish is a segment refresh frequency setting, not an activation schedule option — and it refers to segment membership refresh, not activation delivery."
+        ),
+        Question(
+            id: "402",
+            question: "Cloud Kicks activates a segment to Marketing Cloud Engagement. After the activation runs, the Activation Monitoring dashboard shows 850 accepted records and 150 rejected records out of 1,000 segment members. What does a rejected record in this context indicate?",
+            options: [("A", "The record was rejected by Marketing Cloud's spam filters and will not be sent an email"), ("B", "The record's data format did not match the Data Extension schema in Marketing Cloud"), ("C", "The record was rejected because the segment member has an active opt-out preference in Marketing Cloud"), ("D", "The record in Data Cloud did not have a valid email contact point (Contact Point Email) required by the Marketing Cloud activation target, and was therefore excluded from the data delivered to Marketing Cloud")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "In Data Cloud activation, rejected records are those that cannot be delivered to the target system due to a missing required attribute — most commonly, a missing email contact point for Marketing Cloud email activations. The record exists in the segment but lacks the contact information required by the activation target. A: Spam filter rejection occurs within Marketing Cloud's sending infrastructure, not at the Data Cloud activation layer — these would not appear as rejected records in the Activation Monitoring dashboard. B: Data Extension schema mismatches would typically cause an activation error, not individual record rejections — this is a different failure mode. C: Opt-out preference management is handled within Marketing Cloud's subscription management system — it does not cause Data Cloud activation rejections at the delivery layer."
+        ),
+        Question(
+            id: "403",
+            question: "A consultant is advising NTO on the importance of contact key consistency when activating to Marketing Cloud. The NTO team plans to use different contact key fields in different Data Cloud activations — one activation uses Salesforce CRM Contact ID as the contact key, and another uses a loyalty programme ID. What risk should the consultant highlight?",
+            options: [("A", "Using different contact keys across activations is not supported — all activations must use the same contact key type"), ("B", "Inconsistent contact keys can cause the same individual to appear as multiple different subscribers in Marketing Cloud, leading to duplicate sends and inflated subscriber counts"), ("C", "Marketing Cloud automatically harmonises contact keys across Data Cloud activations, so there is no risk of duplicates"), ("D", "Different contact keys are acceptable as long as they both point to an email address stored in Marketing Cloud")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "In Marketing Cloud, the contact key uniquely identifies a subscriber. If different Data Cloud activations use different fields as the contact key for the same individual, Marketing Cloud may create separate subscriber records for that person — causing them to receive duplicate sends from different activations and inflating the subscriber count. A: Different contact key types are technically possible across activations, but they are strongly discouraged for exactly this reason — the risk is not a technical restriction but a business process one. C: Marketing Cloud does not automatically harmonise contact keys — it relies on the contact key provided during each activation for subscriber deduplication. D: Pointing to an email address is not sufficient to prevent the duplicate subscriber issue — the contact key value itself must be consistent across activations."
+        ),
+        Question(
+            id: "404",
+            question: "What is a Data Action in Salesforce Data Cloud?",
+            options: [("A", "A scheduled batch job that exports segment data to an external system on a daily basis"), ("B", "An automated identity resolution run triggered when new records are ingested"), ("C", "A tool for importing data from external systems into Data Cloud via the Ingestion API"), ("D", "A near-real-time trigger that fires when a Streaming Insight condition is met or a DMO record changes, and sends an event to an external target")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "A Data Action is a near-real-time mechanism in Data Cloud that fires when specific conditions are met — either when a Streaming Insight condition is satisfied or when a Data Model Object record is created or updated. Data Actions send events to configured targets such as Salesforce Platform Events, webhooks, or Marketing Cloud. A: Scheduled batch exports are handled by activation with scheduled refresh — not Data Actions. B: Identity resolution runs are triggered separately — they are not the function of Data Actions. C: Data import is handled by connectors and the Ingestion API — Data Actions are outbound, not inbound."
+        ),
+        Question(
+            id: "405",
+            question: "Which of the following are valid Data Action target types in Salesforce Data Cloud?",
+            options: [("A", "Slack message, Salesforce Chatter post, and Salesforce Flow"), ("B", "Amazon S3 bucket, Salesforce Apex trigger, and Google Ads"), ("C", "Marketing Cloud Email Studio, SMS Studio, and Push Notification Studio"), ("D", "Salesforce Platform Event, Webhook, and Marketing Cloud")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "The three supported Data Action target types in Data Cloud are: Salesforce Platform Event (for triggering Flows or Apex in Salesforce), Webhook (for calling any HTTP endpoint), and Marketing Cloud (for initiating journey entries or triggered sends). A: Slack, Chatter, and Salesforce Flow are not direct Data Action target types — though a Webhook could call a Slack API or a Platform Event could trigger a Flow indirectly. B: Amazon S3 is an activation target, not a Data Action target. Apex triggers and Google Ads are not Data Action target types. C: These are Marketing Cloud-specific channel tools — they are not directly configurable as Data Action targets (Marketing Cloud as a whole is a target, not individual studios)."
+        ),
+        Question(
+            id: "406",
+            question: "A consultant is configuring a Data Action that fires when a customer's Loyalty Points Balance DMO record is updated. The consultant wants the Data Action to fire ONLY when the balance crosses above 10,000 points (i.e. transitions from below to above the threshold), not on every balance update. Which condition type should be selected?",
+            options: [("A", "'A record is created or updated' — to capture all loyalty points changes"), ("B", "'Always' — to ensure no qualifying updates are missed"), ("C", "'A record is deleted' — to capture when points are spent"), ("D", "'Only when a record is updated to meet condition requirements' — to fire only when the record transitions into the qualifying state")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "'Only when a record is updated to meet condition requirements' fires the Data Action only when the record transitions INTO the state where the condition is newly satisfied — i.e. when the balance crosses above 10,000. Records already above 10,000 that receive further updates will not re-trigger the action. A: 'A record is created or updated' fires on every loyalty points update regardless of the balance value — this would trigger the Data Action on every transaction, not just the threshold crossing. B: 'Always' is not a standard Data Action condition type. C: 'A record is deleted' would fire on record deletion — this is entirely the wrong condition for tracking points balance increases."
+        ),
+        Question(
+            id: "407",
+            question: "A consultant is setting up a Data Cloud-Triggered Flow that should initiate a service case in Salesforce Service Cloud when a customer's satisfaction score drops below 3 out of 10. The satisfaction score is stored in a custom DMO. What must the consultant configure in Data Cloud before the Flow can be triggered by this condition?",
+            options: [("A", "An identity resolution ruleset that links the satisfaction score DMO to the Unified Individual"), ("B", "A Streaming Insight that evaluates satisfaction scores and sends the result to a Marketing Cloud Data Extension"), ("C", "A Data Action targeting a Salesforce Platform Event, configured with the condition 'Only when a record is updated to meet condition requirements' on the satisfaction score DMO"), ("D", "A Calculated Insight that computes average satisfaction score and activates it to Cloud File Storage")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Data Cloud-Triggered Flows work via the Data Action mechanism. The consultant configures a Data Action on the satisfaction score DMO with the condition 'Only when a record is updated to meet condition requirements' (score drops below 3). The Data Action targets a Salesforce Platform Event, which then triggers the Salesforce Flow that creates the service case. A: Identity resolution links records for unified profiles — it does not trigger Flows or respond to field value conditions. B: Streaming Insights can trigger Data Actions — but the target should be a Platform Event (not a Marketing Cloud Data Extension) to trigger a Salesforce Flow. D: Calculated Insights activated to Cloud File Storage are batch data exports — they do not trigger real-time Flows."
+        ),
+        Question(
+            id: "408",
+            question: "A marketing team at Cumulus Financial wants to activate a segment to Meta (Facebook/Instagram) for a paid advertising campaign. What is required for the Meta activation to work correctly in Data Cloud?",
+            options: [("A", "The segment must be built on Individual DMO, not Unified Individual"), ("B", "A Meta Business Manager account must be connected to Data Cloud via the Meta activation target configuration"), ("C", "All segment members must have a US-based phone number as their contact point"), ("D", "The activation must use Full Refresh mode — Incremental Refresh is not supported for Meta")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "To activate a Data Cloud segment to Meta (Facebook/Instagram), the administrator must configure a Meta activation target in Data Cloud by connecting it to the customer's Meta Business Manager account. This authorisation enables Data Cloud to send audience data to Meta's Customer Lists for ad targeting. A: Meta activations, like other activations, work correctly with segments built on Unified Individual — the Unified Individual is the recommended segmentation entity. C: Meta customer match supports email addresses, phone numbers, and other identifiers — there is no US-specific phone number restriction. D: Both Full Refresh and Incremental Refresh are supported for Meta activations — there is no restriction to Full Refresh only."
+        ),
+        Question(
+            id: "409",
+            question: "A consultant is reviewing an activation to Amazon S3 that has been running daily for 3 months. The data engineering team reports that the S3 bucket is filling up rapidly. What does the consultant most likely need to review and recommend?",
+            options: [("A", "Switch from Incremental to Full Refresh to reduce the number of files written"), ("B", "Configure an S3 lifecycle policy on the bucket to archive or delete old activation files automatically"), ("C", "Reduce the number of segment members by tightening the segment filter criteria"), ("D", "Disable the activation and recreate it with a smaller attribute payload to reduce file sizes")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Data Cloud does not automatically manage the lifecycle of files it writes to Amazon S3 — files accumulate with each activation run. The recommended approach is to configure an S3 lifecycle policy (using AWS S3 lifecycle rules) to automatically transition old files to cheaper storage or delete them after a defined retention period. A: Switching from Incremental to Full Refresh would actually increase the data volume written per run (all members, not just changes) — this would make the problem worse, not better. C: Reducing segment members would reduce the per-run file size but would not address the accumulation of files from 3 months of daily runs. D: Reducing the attribute payload would reduce per-file size marginally but would not address the core issue of file accumulation over time."
+        ),
+        Question(
+            id: "410",
+            question: "A consultant is troubleshooting an activation that shows 0 accepted records and 500 rejected records in the Activation Monitoring dashboard. All 500 records are segment members. What is the most likely cause of all records being rejected?",
+            options: [("A", "None of the 500 Unified Individual records have a matching contact point required by the activation target (e.g. no email address for a Marketing Cloud email activation)"), ("B", "The segment has expired and its members have been removed from Data Cloud"), ("C", "The activation target system (e.g. Marketing Cloud) is currently unavailable and temporarily rejecting all incoming records"), ("D", "The activation refresh schedule is set to 'Do Not Refresh', preventing any records from being sent")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "When all records are rejected with 0 accepted, the most common cause is that none of the segment members have the required contact point for the activation target — for example, 0 out of 500 Unified Individuals have a Contact Point Email mapped and associated, making it impossible to deliver any records to a Marketing Cloud email activation. B: Segment expiry does not cause activation rejections — expired segments would result in 0 segment members, not 500 members all being rejected. C: Activation target unavailability typically causes an activation error or timeout, not a clean '0 accepted / 500 rejected' result — the rejected count implies the records were evaluated and individually found to be missing a required attribute. D: 'Do Not Refresh' prevents the activation from re-running automatically — but if the activation did run (as evidenced by the rejected counts), the 'Do Not Refresh' setting was not preventing execution."
+        ),
+        Question(
+            id: "411",
+            question: "A consultant is designing a real-time personalisation solution for Cloud Kicks. When a customer views a product page and adds an item to their cart without purchasing, the team wants to trigger a personalised push notification within minutes. Which TWO Data Cloud components should the consultant combine to achieve this?",
+            options: [("A", "A Streaming Insight that detects the cart addition event within a 10-minute WINDOW"), ("B", "A segment with Rapid Publish configured to refresh every hour"), ("C", "A Data Action targeting Marketing Cloud to initiate the push notification journey"), ("D", "A Calculated Insight computing the cart abandonment rate per customer")],
+            questionType: .multiSelect,
+            correctIndices: [0, 2],
+            explanation: "The correct architecture for near-real-time personalisation is: (A) a Streaming Insight that detects the cart addition event within a defined WINDOW (e.g. 10 minutes without a subsequent purchase) — triggering the condition; (C) a Data Action with Marketing Cloud as the target, firing when the Streaming Insight condition is met to initiate the push notification journey. B: Rapid Publish is a segment refresh frequency — segments with hourly refresh cannot achieve the 'within minutes' latency required for abandoned cart triggers. D: A Calculated Insight computes aggregate metrics in batch — it would calculate an abandonment rate historically, not detect a real-time cart addition event that requires an immediate response."
+        ),
+        Question(
+            id: "412",
+            question: "A consultant is reviewing a Data Cloud activation to Google Ads Customer Match. What type of customer data does Data Cloud send to Google Ads to match audience members?",
+            options: [("A", "Hashed contact point data such as email addresses and phone numbers for audience matching against Google's user base"), ("B", "Unified Individual IDs from the Data Cloud identity graph"), ("C", "Raw email addresses and names in plain text for Google's matching algorithm"), ("D", "Calculated Insight scores that Google Ads uses to determine ad bid adjustments")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "Data Cloud sends hashed contact point data (such as SHA-256 hashed email addresses and phone numbers) to Google Ads Customer Match. Google then matches this hashed data against its own user base to identify matching Google account users for ad targeting — the raw values are never transmitted. B: Unified Individual IDs are internal Data Cloud identifiers — Google has no way to use these for audience matching. C: Raw plain-text personal data is not sent to Google Ads — data is always hashed before transmission for privacy compliance. D: Calculated Insight scores are Data Cloud-internal metrics — they are not transmitted to Google Ads for bid adjustments."
+        ),
+        Question(
+            id: "413",
+            question: "A consultant has configured a Data Action using a Webhook target to notify an external recommendation engine when a customer's segment membership changes. The external team reports they are not receiving webhook calls. The Data Action shows as 'Active' in Data Cloud. What are the two most likely causes the consultant should investigate?",
+            options: [("A", "The Webhook URL is incorrect or the external endpoint is returning non-2xx HTTP response codes"), ("B", "Data Actions with Webhook targets require a Salesforce Platform Event to relay the call — direct webhooks are not supported"), ("C", "The Data Action condition 'Only when a record is updated to meet condition requirements' is too strict, and no records have transitioned into the qualifying state"), ("D", "Webhook Data Actions require a Marketing Cloud connection to function")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "When a webhook Data Action is Active but calls are not being received, the two most common causes are: (1) the webhook URL is incorrect or unreachable from Data Cloud's infrastructure; (2) the external endpoint is returning error responses (non-2xx), which Data Cloud interprets as failed delivery — requests are being sent but not successfully received. Both should be verified. B: Direct webhook targets are natively supported by Data Actions — no Platform Event relay is required. C: This could be a secondary cause if the segment membership never changes to meet the condition — but the question implies no calls are received at all, suggesting a connectivity issue rather than a condition-never-met scenario. D: Webhook Data Actions are completely independent of Marketing Cloud — no Marketing Cloud connection is required."
+        ),
+        Question(
+            id: "414",
+            question: "A consultant explains to a customer that segment activation refresh schedules have only two standard automatic interval options plus a no-refresh option. Which are the three available refresh schedule options for Data Cloud activation?",
+            options: [("A", "1 hour, 6 hours, 24 hours"), ("B", "4 hours, 12 hours, 48 hours"), ("C", "12 hours, 24 hours, Do Not Refresh"), ("D", "6 hours, 12 hours, Do Not Refresh")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Data Cloud activation supports three refresh schedule options: 12 hours (twice daily), 24 hours (daily), and Do Not Refresh (one-time, no automatic re-runs). These are the only standard scheduled options for activation refresh frequency. A: 1-hour and 6-hour activation refresh intervals are not available — activation schedules are less frequent than segment refresh schedules. B: 4-hour and 48-hour intervals are not standard activation refresh schedule options. D: 6-hour activation refresh is not a standard option — the two scheduled intervals are 12 hours and 24 hours."
+        ),
+        Question(
+            id: "415",
+            question: "NTO uses Data Cloud to activate a 'High Value Customers' segment to Marketing Cloud for a weekly email campaign. The CRM team also directly updates Marketing Cloud subscriber records independently. A consultant warns that this dual-write approach could cause issues. What is the primary risk?",
+            options: [("A", "Data Cloud activation to Marketing Cloud automatically unsubscribes existing subscribers who are not in the activated segment"), ("B", "Data Cloud and CRM cannot both connect to the same Marketing Cloud account — separate Marketing Cloud accounts are required"), ("C", "Marketing Cloud will reject Data Cloud activation records if CRM records already exist with the same email address"), ("D", "Data Cloud activation overwrites all Marketing Cloud subscriber attributes on every run, potentially undoing CRM team updates")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "When Data Cloud activates to Marketing Cloud using Upsert mode, it writes attribute values for each activated record on every run. If the CRM team independently updates subscriber attributes in Marketing Cloud, the next Data Cloud activation run may overwrite those updates with values from Data Cloud — causing data integrity issues and loss of CRM-managed updates. A: Data Cloud activation does not automatically unsubscribe existing Marketing Cloud subscribers who are absent from the activated segment — subscription status management is separate from audience activation. B: Both Data Cloud and CRM can connect to the same Marketing Cloud account — dual connectivity is a common and supported architecture. C: Marketing Cloud does not reject records based on pre-existing email subscribers — it performs upserts based on the contact key."
+        ),
+        Question(
+            id: "416",
+            question: "A consultant is configuring a B2C Commerce activation target in Data Cloud. What is the primary use case for this activation target type?",
+            options: [("A", "Replacing the B2C Commerce search engine with Data Cloud's AI recommendation engine"), ("B", "Creating B2C Commerce customer accounts directly from Data Cloud Unified Individual records"), ("C", "Sending segment-based personalisation data from Data Cloud into B2C Commerce to power personalised shopping experiences"), ("D", "Activating product catalogue data from Salesforce B2C Commerce into Data Cloud for segmentation")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "The B2C Commerce activation target allows Data Cloud to send segment membership and attribute data into Salesforce B2C Commerce, enabling personalised shopping experiences — such as personalised product recommendations, tailored promotions, and dynamic content — based on the customer's Data Cloud segment membership. B: Product catalogue data flows FROM B2C Commerce INTO Data Cloud (via the CRM connector or file-based ingestion) — this describes the ingestion direction, not activation. D: Data Cloud activation sends data to existing B2C Commerce customer profiles — it does not create new accounts."
+        ),
+        Question(
+            id: "417",
+            question: "A consultant is reviewing an activation monitoring dashboard for a Cloud File Storage activation. The activation shows 10,000 accepted records but the data engineering team reports finding only 8,500 records in the Amazon S3 bucket after processing. What is the most likely explanation?",
+            options: [("A", "The 10,000 accepted count is approximate — Data Cloud rounds activation counts to the nearest 1,000"), ("B", "The 'accepted' count in Data Cloud reflects records sent to S3; the discrepancy is likely due to duplicate records in the S3 file being deduplicated by the downstream processing job"), ("C", "The data engineering team may be reading from an old activation run's files rather than the most recent run's files — the count discrepancy could be due to reading stale data"), ("D", "The accepted/rejected counts in Data Cloud apply to segment membership evaluation — some records may still be rejected by the S3 delivery process before file creation")],
+            questionType: .singleSelect,
+            correctIndices: [2],
+            explanation: "Data Cloud writes activation output to S3 in dated/timestamped folder paths. If the data engineering team is reading from a previous run's folder rather than the most recent one, they would see fewer records (the previous run may have had a smaller segment). The consultant should confirm the team is reading from the correct folder path for the most recent activation run. A: Data Cloud does not round activation counts — the 10,000 accepted count is precise. B: Data Cloud does not write duplicate records to S3 as a general behaviour — deduplication at the S3 layer is not the expected explanation for a 1,500-record discrepancy. D: The accepted/rejected counts specifically reflect delivery status to S3 — 10,000 accepted means 10,000 records were written to S3 files; the discrepancy is not due to a secondary S3-level rejection."
+        ),
+        Question(
+            id: "418",
+            question: "A consultant is configuring a Marketing Cloud activation and needs to select the appropriate activation mode. The campaign requires that when a customer exits the segment (e.g. they no longer qualify), Marketing Cloud is informed so the customer can be removed from the ongoing journey. Which activation mode should the consultant select?",
+            options: [("A", "Full Refresh — so the complete updated segment membership replaces the previous membership in Marketing Cloud on every run"), ("B", "Upsert mode — which automatically handles both additions and removals"), ("C", "Do Not Refresh — so Marketing Cloud maintains the original snapshot without updates"), ("D", "Incremental Refresh — so only new entries and exits are sent to Marketing Cloud on each run")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Incremental Refresh sends the delta between the current and previous segment membership — including both new members (entries) and departed members (exits). This allows Marketing Cloud to be informed of segment exits so that those customers can be removed from an ongoing journey or communication sequence. A: Full Refresh sends the complete current membership on every run — while Marketing Cloud would receive the updated list, it does not explicitly send 'exit' records. Depending on the Marketing Cloud journey configuration, exits may not be cleanly handled. B: 'Upsert mode' is a data write mode (how existing records are handled in the Data Extension), not an activation refresh type that handles exits. C: 'Do Not Refresh' prevents any updates after the first run — exits would never be communicated to Marketing Cloud."
+        ),
+        Question(
+            id: "419",
+            question: "A consultant is setting up an activation from Data Cloud to Amazon S3 for a downstream data warehouse. The data warehouse team asks that the files should always reflect the complete, current snapshot of the segment rather than just the changes since the last run — so their pipeline can simply replace the existing table with the new file on each run. Which activation configuration supports this requirement?",
+            options: [("A", "Do Not Refresh — to send a single complete snapshot once"), ("B", "Incremental Refresh with a 12-hour schedule"), ("C", "Incremental Refresh with 'Append' mode in the S3 configuration"), ("D", "Full Refresh with a 24-hour schedule")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Full Refresh writes the complete current segment membership to S3 on every activation run — the data warehouse team can then replace their existing table with the new file on each run. A 24-hour schedule ensures this happens daily, keeping the warehouse current. B: 'Do Not Refresh' would send a snapshot only once — subsequent daily updates would not occur. C: Incremental Refresh sends only changes (additions and exits) — the data warehouse would need to merge these changes into their existing table rather than doing a simple replace, which adds complexity."
+        ),
+        Question(
+            id: "420",
+            question: "A marketing analyst wants to know whether they can view historical activation run results — for example, to see how many records were accepted in a run from two weeks ago. Where in Data Cloud can they find this information?",
+            options: [("A", "The Activation Monitoring dashboard, which shows accepted/rejected counts for each activation run and supports historical run history"), ("B", "The Segment detail page, which shows a history of all segment refreshes and associated activation counts"), ("C", "The Data Explorer, where the analyst can query the Activation History DMO"), ("D", "Activation run history is not retained in Data Cloud — only the most recent run's counts are visible")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "The Activation Monitoring dashboard in Data Cloud provides a view of activation run history including accepted/rejected counts for each run. Analysts can review past runs to understand historical delivery performance. B: The Segment detail page shows segment membership counts and refresh history — not activation delivery counts per run. C: There is no 'Activation History DMO' in the standard Data Cloud data model — activation run history is not stored as a queryable DMO. D: Historical activation run data is retained and viewable in the Activation Monitoring dashboard — it is not limited to the most recent run."
+        ),
+        Question(
+            id: "421",
+            question: "A consultant is reviewing a Data Action configuration for a Streaming Insight that detects when a customer's cart value exceeds $200. The Data Action fires a Salesforce Platform Event. The Salesforce administrator then builds a Record-Triggered Flow that fires on the Platform Event to send an in-app notification. However, the team reports that in-app notifications are arriving 15–20 minutes after the cart event. What is the most likely cause of the delay?",
+            options: [("A", "The Streaming Insight WINDOW is set to 15 minutes — the condition must be sustained for the full window before the Data Action fires"), ("B", "Data Cloud Streaming Insights process events in micro-batches every 3–5 minutes, and Platform Event delivery and Flow execution add additional latency"), ("C", "Platform Events can only be consumed by Marketing Cloud journeys — Salesforce Flows cannot subscribe to Platform Events triggered by Data Cloud"), ("D", "The in-app notification system has a 15-minute cache delay that is unrelated to Data Cloud")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "The 15–20 minute delay is a combination of multiple latency components: Streaming Insights process events in near-real-time micro-batches (approximately 3–5 minutes), Platform Event delivery from Data Cloud has its own processing time, and the Flow triggered by the Platform Event adds further execution time. These delays compound to produce the observed 15–20 minute end-to-end latency. A: The WINDOW clause defines the time range over which the streaming condition is evaluated — it does not mean the condition must be sustained for the full window duration before firing. C: Salesforce Record-Triggered Flows can subscribe to Platform Events — Platform Events are a standard Salesforce mechanism consumable by Flows and Apex. D: While in-app notification systems can have their own latency, attributing the full 15–20 minute delay to a cache is less likely than the compounding Data Cloud + Platform Event + Flow processing latency."
+        ),
+        Question(
+            id: "422",
+            question: "A consultant is helping a customer plan their overall activation architecture for a multi-channel campaign. The campaign requires: (1) a daily batch activation to Amazon S3 for the data warehouse, (2) a near-real-time push notification when a segment member views a specific product page, and (3) a weekly email campaign via Marketing Cloud. Which combination of Data Cloud features covers all three requirements?",
+            options: [("A", "Calculated Insight activation for (1); Segment activation (Rapid Publish) for (2); Marketing Cloud activation for (3)"), ("B", "Cloud File Storage activation (S3) for (1); Streaming Insight + Data Action (Marketing Cloud) for (2); Marketing Cloud activation for (3)"), ("C", "CRM Connector for (1); Data Action (Platform Event) for (2); Marketing Cloud activation for (3)"), ("D", "Cloud File Storage activation (S3) for (1); Streaming Insight + Data Action (Marketing Cloud) for (2); Streaming Insight for (3)")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "Option A correctly maps each requirement: (1) Cloud File Storage activation to S3 on a 24-hour schedule delivers the daily data warehouse batch; (2) a Streaming Insight detecting the product page view triggers a Data Action with a Marketing Cloud target to fire the near-real-time push notification; (3) a scheduled Marketing Cloud activation with 24-hour refresh delivers the weekly email campaign. A: Calculated Insights cannot be directly activated to S3 as a data file — a segment activation is required. 'Segment activation (Rapid Publish)' for requirement (2) would not achieve near-real-time push notifications. C: The CRM Connector is for ingesting data INTO Data Cloud, not for sending data to a data warehouse. Platform Events alone do not deliver push notifications without a corresponding Flow or Marketing Cloud journey. D: Streaming Insights cannot be used for the weekly email campaign (requirement 3) — Streaming Insights trigger Data Actions, not scheduled campaign activations."
+        ),
+        Question(
+            id: "423",
+            question: "Which statement correctly describes how Data Cloud handles the contact key when activating to Marketing Cloud Engagement?",
+            options: [("A", "Data Cloud automatically generates a new unique contact key for each activation run"), ("B", "The administrator selects which field from the Unified Individual or related DMOs to use as the contact key during activation membership configuration"), ("C", "Data Cloud always uses the Unified Individual ID as the contact key for Marketing Cloud activations"), ("D", "The contact key for Marketing Cloud activations is always the subscriber's email address")],
+            questionType: .singleSelect,
+            correctIndices: [1],
+            explanation: "During activation membership configuration, the administrator selects which field to use as the Marketing Cloud contact key. Common choices include a CRM Contact ID, loyalty ID, or email address — the choice depends on what the Marketing Cloud org uses as its subscriber key and should be consistent across all activations to that Marketing Cloud instance. A: Data Cloud does not generate new contact keys on each run — the contact key is a consistent field mapped during configuration. C: The Unified Individual ID is a Data Cloud-internal identifier that Marketing Cloud has no context for — it would not serve as a useful contact key. D: While email address is sometimes used as a contact key, it is not the always-default — the administrator configures the contact key field explicitly."
+        ),
+        Question(
+            id: "424",
+            question: "A Data Cloud consultant is explaining what happens in the target system when a segment member exits a segment and the activation is configured with Full Refresh mode. What happens to the exited member's record in Marketing Cloud on the next activation run?",
+            options: [("A", "The record remains in the Marketing Cloud Data Extension — Full Refresh replaces the Data Extension with the new complete membership, so exited members are no longer present"), ("B", "The record is deleted from the Marketing Cloud Data Extension on the next Full Refresh run"), ("C", "The record is flagged with an 'Exited' status field in the Marketing Cloud Data Extension"), ("D", "Nothing happens — Full Refresh does not remove records from Marketing Cloud; it only adds new members")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "Full Refresh replaces the entire content of the Marketing Cloud Data Extension with the new complete segment membership on each run. Since the exited member is no longer in the segment, they will not appear in the new Full Refresh — effectively removing them from the Data Extension without an explicit delete operation. B: Records are not explicitly 'deleted' — they simply no longer appear in the Full Refresh payload, so they are not present in the new Data Extension content. C: Full Refresh does not add an 'Exited' status flag — the record simply does not appear in the replacement payload. D: Full Refresh does remove records that are no longer in the segment — the entire Data Extension is replaced, not appended."
+        ),
+        Question(
+            id: "425",
+            question: "A senior consultant is reviewing the overall activation architecture for Cumulus Financial, which uses Data Cloud for multiple outbound channels. Which TWO statements about Data Cloud activation are correct?",
+            options: [("A", "Activation targets must be unique per org — only one activation target of each type (e.g. one Marketing Cloud target) can be configured per Data Cloud org"), ("B", "When activating to Amazon S3, the data payload is written in CSV format and the metadata file is written in JSON format"), ("C", "Data Actions and segment activations use the same scheduling and delivery mechanism"), ("D", "A single segment can be used in multiple activations to different targets simultaneously (e.g. Marketing Cloud and Amazon S3)")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "Both A and C are correct. A single segment can be activated to multiple different targets simultaneously — for example, the same 'High Value Customers' segment can activate to Marketing Cloud for email and to S3 for a data warehouse simultaneously. The Cloud File Storage activation format is always CSV for data and JSON for metadata. B: Multiple activation targets of the same type can be configured in one Data Cloud org — for example, multiple S3 bucket targets or multiple Marketing Cloud targets for different business units."
+        ),
+        Question(
+            id: "426",
+            question: "A consultant is reviewing a Data Action configuration that targets a Webhook endpoint. The endpoint belongs to a third-party recommendation engine that expects a specific JSON payload structure including the customer's Unified Individual ID and three personalisation attributes. When configuring the Data Action, how does the consultant define what data is sent in the webhook payload?",
+            options: [("A", "The consultant configures the payload mapping in the Data Action configuration, selecting which DMO fields and attributes to include in the webhook JSON"), ("B", "The webhook payload is automatically generated by Data Cloud and always includes all fields from the Unified Individual DMO"), ("C", "Webhook Data Actions can only send the event type and timestamp — custom payload fields require a Platform Event with an Apex handler"), ("D", "The payload structure must be uploaded as a JSON template file to the Data Action configuration before the webhook can fire")],
+            questionType: .singleSelect,
+            correctIndices: [0],
+            explanation: "When configuring a webhook Data Action, the consultant defines the payload mapping — selecting which Data Cloud DMO fields and attributes to include in the outbound JSON payload. This allows the payload to be tailored to the third-party endpoint's expected schema, including the Unified Individual ID and specific personalisation attributes. B: The payload is not automatically generated with all Unified Individual fields — it is explicitly configured by the administrator. C: Webhook Data Actions do support custom payload fields — the limitation to 'event type and timestamp only' is not accurate. D: There is no JSON template file upload requirement — payload mapping is configured directly within the Data Action setup UI."
+        ),
+        Question(
+            id: "427",
+            question: "A consultant is completing a Data Cloud implementation for NTO and is asked to validate that the end-to-end architecture is correctly configured. NTO ingests CRM data, runs identity resolution, builds a segment of high-value customers, activates to Marketing Cloud, and also uses a Streaming Insight to trigger an abandoned cart Data Action. When reviewing the activation monitoring dashboard, the consultant notices that the Marketing Cloud activation consistently shows approximately 5% rejected records on every run. The campaign team is not concerned, as the emails are being received. What is the most likely explanation for the consistent 5% rejection rate?",
+            options: [("A", "5% of the segment members have opted out in Marketing Cloud, and Data Cloud is respecting the opt-out by marking them as rejected"), ("B", "The 5% rejection rate is caused by Marketing Cloud rate limits — the system can only process 95% of records before hitting its API quota"), ("C", "The 5% rejection rate indicates a Data Cloud platform issue that should be escalated to Salesforce Support immediately"), ("D", "Approximately 5% of the Unified Individual records in the segment do not have a Contact Point Email, so they cannot be delivered to the Marketing Cloud email activation")],
+            questionType: .singleSelect,
+            correctIndices: [3],
+            explanation: "A consistent rejection rate across multiple runs typically indicates a data quality issue — specifically, a consistent subset of Unified Individual segment members who do not have a Contact Point Email. Since these individuals lack the required contact point for email delivery, they are rejected on every run. The campaign team is not concerned because the 95% who do have email addresses are receiving the campaign. A: Opt-out management (suppression) is handled within Marketing Cloud's subscription management — opted-out subscribers may still appear as 'accepted' at the Data Cloud delivery layer (since Data Cloud sends the data) and are suppressed within Marketing Cloud's sending engine. Opt-outs would not typically surface as Data Cloud activation rejections. B: Marketing Cloud API rate limits are not typically a cause of Data Cloud activation rejections — rejected counts in the Activation Monitoring dashboard reflect records that lacked required attributes, not API quota issues. C: A consistent 5% rejection rate has a clear, expected cause (missing contact points) — it does not indicate a platform issue requiring Support escalation."
+        )
 
     ]
 }

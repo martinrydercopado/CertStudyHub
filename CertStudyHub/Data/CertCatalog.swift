@@ -56,7 +56,7 @@ enum CertCatalog {
             QuizLength(id: 10, label: "10 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~5 min"),
             QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
             QuizLength(id: 60, label: "60 Questions", icon: "trophy.fill", subtitle: "Exam Simulation", duration: "~30 min"),
-            QuizLength(id: 212, label: "All 212 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~106 min")
+            QuizLength(id: 427, label: "All 427 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~214 min")
         ],
         questions: DataCloud360QuestionBank.all,
         studySections: DataCloud360StudyBank.sections,

@@ -9,7 +9,7 @@ A native SwiftUI app (iPhone + Mac) and a companion web app for studying Salesfo
 | Certification | Questions | Study Topics | Passing | Guide |
 |---|:---:|:---:|:---:|:---:|
 | Agentforce Specialist | 135 | 218 | 72% | |
-| Data 360 Consultant | 227 | 167 | 62% | |
+| Data 360 Consultant | 427 | 167 | 62% | |
 | Business Analyst | 138 | 141 | 72% | |
 | Platform Developer I | 100 | 198 | 65% | |
 | Platform App Builder | 100 | 361 | 63% | |
@@ -21,7 +21,7 @@ A native SwiftUI app (iPhone + Mac) and a companion web app for studying Salesfo
 | AgentOps: Agentforce Lifecycle | 50 | 191 | 70% | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentops) |
 | Success Architect Scenarios | — | — | 70% | |
 
-**Totals:** 1,206 questions and 1,735 study topics across 11 tracks.
+**Totals:** 1,406 questions and 1,735 study topics across 11 tracks.
 
 ## Features
 
@@ -71,6 +71,7 @@ No build step — open `docs/index.html` locally or deploy the `docs/` folder to
 ## Changelog
 
 ### 2025-08-14
+- Add 200 Data 360 Consultant questions from co-ti question bank (227 → 427 total)
 - Remove mobile TOC from reference guide viewer (content-only on small screens; desktop sidebar persists)
 
 ### 2025-08-13
