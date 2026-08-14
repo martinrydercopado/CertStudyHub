@@ -107,6 +107,18 @@
 		C10000000000000000000064 /* RAGStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000031 /* RAGStudyBank.swift */; };
 		C10000000000000000000065 /* ReferenceGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000032 /* ReferenceGuideView.swift */; };
 		C10000000000000000000066 /* ReferenceGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000032 /* ReferenceGuideView.swift */; };
+		C10000000000000000000067 /* AgentforceSalesStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000033 /* AgentforceSalesStudyBank.swift */; };
+		C10000000000000000000068 /* AgentforceSalesStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000033 /* AgentforceSalesStudyBank.swift */; };
+		C10000000000000000000069 /* AgentforceServiceStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000034 /* AgentforceServiceStudyBank.swift */; };
+		C1000000000000000000006A /* AgentforceServiceStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000034 /* AgentforceServiceStudyBank.swift */; };
+		C1000000000000000000006B /* Admin2StudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000035 /* Admin2StudyBank.swift */; };
+		C1000000000000000000006C /* Admin2StudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000035 /* Admin2StudyBank.swift */; };
+		C1000000000000000000006D /* DataArchitectStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000036 /* DataArchitectStudyBank.swift */; };
+		C1000000000000000000006E /* DataArchitectStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000036 /* DataArchitectStudyBank.swift */; };
+		C1000000000000000000006F /* SharingVisibilityStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000037 /* SharingVisibilityStudyBank.swift */; };
+		C10000000000000000000070 /* SharingVisibilityStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000037 /* SharingVisibilityStudyBank.swift */; };
+		C10000000000000000000071 /* UXDesignerStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000038 /* UXDesignerStudyBank.swift */; };
+		C10000000000000000000072 /* UXDesignerStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000038 /* UXDesignerStudyBank.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -160,6 +172,12 @@
 		C1F000000000000000000030 /* RAGQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RAGQuestionBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000031 /* RAGStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RAGStudyBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000032 /* ReferenceGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceGuideView.swift; sourceTree = "<group>"; };
+		C1F000000000000000000033 /* AgentforceSalesStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentforceSalesStudyBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000034 /* AgentforceServiceStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentforceServiceStudyBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000035 /* Admin2StudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Admin2StudyBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000036 /* DataArchitectStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataArchitectStudyBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000037 /* SharingVisibilityStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingVisibilityStudyBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000038 /* UXDesignerStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UXDesignerStudyBank.swift; sourceTree = "<group>"; };
 		C1P000000000000000000001 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1P000000000000000000002 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -243,6 +261,12 @@
 				C1F00000000000000000002F /* ReasoningEngineStudyBank.swift */,
 				C1F000000000000000000030 /* RAGQuestionBank.swift */,
 				C1F000000000000000000031 /* RAGStudyBank.swift */,
+				C1F000000000000000000033 /* AgentforceSalesStudyBank.swift */,
+				C1F000000000000000000034 /* AgentforceServiceStudyBank.swift */,
+				C1F000000000000000000035 /* Admin2StudyBank.swift */,
+				C1F000000000000000000036 /* DataArchitectStudyBank.swift */,
+				C1F000000000000000000037 /* SharingVisibilityStudyBank.swift */,
+				C1F000000000000000000038 /* UXDesignerStudyBank.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -467,6 +491,12 @@
 				C10000000000000000000061 /* RAGQuestionBank.swift in Sources */,
 				C10000000000000000000063 /* RAGStudyBank.swift in Sources */,
 				C10000000000000000000065 /* ReferenceGuideView.swift in Sources */,
+				C10000000000000000000067 /* AgentforceSalesStudyBank.swift in Sources */,
+				C10000000000000000000069 /* AgentforceServiceStudyBank.swift in Sources */,
+				C1000000000000000000006B /* Admin2StudyBank.swift in Sources */,
+				C1000000000000000000006D /* DataArchitectStudyBank.swift in Sources */,
+				C1000000000000000000006F /* SharingVisibilityStudyBank.swift in Sources */,
+				C10000000000000000000071 /* UXDesignerStudyBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,6 +553,12 @@
 				C10000000000000000000062 /* RAGQuestionBank.swift in Sources */,
 				C10000000000000000000064 /* RAGStudyBank.swift in Sources */,
 				C10000000000000000000066 /* ReferenceGuideView.swift in Sources */,
+				C10000000000000000000068 /* AgentforceSalesStudyBank.swift in Sources */,
+				C1000000000000000000006A /* AgentforceServiceStudyBank.swift in Sources */,
+				C1000000000000000000006C /* Admin2StudyBank.swift in Sources */,
+				C1000000000000000000006E /* DataArchitectStudyBank.swift in Sources */,
+				C10000000000000000000070 /* SharingVisibilityStudyBank.swift in Sources */,
+				C10000000000000000000072 /* UXDesignerStudyBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
