@@ -1,1 +1,685 @@
-[{"id": "agentforce", "name": "Agentforce Specialist", "shortName": "Agentforce", "icon": "🧠", "primaryColor": "#5856D6", "secondaryColor": "#007AFF", "headerGradient": ["#3D3390", "#384594", "#2E5299"], "passingScore": 72, "questionBank": "agentforce", "studyBank": "agentforce", "storageKeyPrefix": "agentforce", "isBonusTopic": false, "subtitle": null, "quizLengths": [{"id": 15, "label": "15 Questions", "icon": "⚡", "subtitle": "Quick Review", "duration": "~8 min", "questionIDRange": null}, {"id": 30, "label": "30 Questions", "icon": "🔥", "subtitle": "Standard Practice", "duration": "~15 min", "questionIDRange": null}, {"id": 60, "label": "60 Questions", "icon": "🏆", "subtitle": "Full Exam Simulation", "duration": "~30 min", "questionIDRange": null}, {"id": 72, "label": "Flashcards", "icon": "🃏", "subtitle": "Exam Prep — Likely on Exam", "duration": "72 Qs", "questionIDRange": [1, 72]}]}, {"id": "agentops", "name": "AgentOps: Agentforce Lifecycle", "shortName": "AgentOps", "icon": "⚙️", "primaryColor": "#D97333", "secondaryColor": "#FF9500", "headerGradient": ["#944214", "#8A471F", "#804D29"], "passingScore": 70, "questionBank": "agentops", "studyBank": "agentops", "storageKeyPrefix": "agentops", "isBonusTopic": true, "subtitle": "Bonus Topic — Not an official Salesforce certification", "guideFile": "agentops", "quizLengths": [{"id": 15, "label": "15 Questions", "icon": "⚡", "subtitle": "Quick Review", "duration": "~8 min", "questionIDRange": null}, {"id": 25, "label": "25 Questions", "icon": "🔥", "subtitle": "Standard Practice", "duration": "~15 min", "questionIDRange": null}, {"id": 50, "label": "All 50 Questions", "icon": "⭐", "subtitle": "Full Question Bank", "duration": "~30 min", "questionIDRange": null}]}, {"id": "dc360", "name": "Data 360 Consultant", "shortName": "Data 360", "icon": "☁️", "primaryColor": "#30B0C7", "secondaryColor": "#32ADE6", "headerGradient": ["#004D6B", "#00597A", "#056685"], "passingScore": 62, "questionBank": "dc360", "studyBank": "dc360", "storageKeyPrefix": "dc360", "isBonusTopic": false, "subtitle": null, "quizLengths": [{"id": 10, "label": "10 Questions", "icon": "⚡", "subtitle": "Quick Review", "duration": "~5 min", "questionIDRange": null}, {"id": 30, "label": "30 Questions", "icon": "🔥", "subtitle": "Standard Practice", "duration": "~15 min", "questionIDRange": null}, {"id": 60, "label": "60 Questions", "icon": "🏆", "subtitle": "Exam Simulation", "duration": "~30 min", "questionIDRange": null}, {"id": 427, "label": "All 427 Questions", "icon": "⭐", "subtitle": "Full Question Bank", "duration": "~214 min", "questionIDRange": null}]}, {"id": "reasoningengine", "name": "Inside Daisy: The Agentforce Reasoning Engine", "shortName": "Daisy", "icon": "🧠", "primaryColor": "#663399", "secondaryColor": "#AF52DE", "headerGradient": ["#471A7A", "#522485", "#5C2E8F"], "passingScore": 70, "questionBank": "reasoningengine", "studyBank": "reasoningengine", "storageKeyPrefix": "reasoningengine", "isBonusTopic": true, "subtitle": "Bonus Topic — Not an official Salesforce certification", "guideFile": "reasoningengine", "quizLengths": [{"id": 15, "label": "15 Questions", "icon": "⚡", "subtitle": "Quick Review", "duration": "~8 min", "questionIDRange": null}, {"id": 30, "label": "30 Questions", "icon": "🔥", "subtitle": "Standard Practice", "duration": "~15 min", "questionIDRange": null}, {"id": 39, "label": "All 39 Questions", "icon": "⭐", "subtitle": "Full Question Bank", "duration": "~20 min", "questionIDRange": null}]}, {"id": "rag", "name": "RAG, Agentforce & Data 360", "shortName": "RAG", "icon": "🔍", "primaryColor": "#3373B3", "secondaryColor": "#007AFF", "headerGradient": ["#1F4D85", "#29578F", "#336199"], "passingScore": 70, "questionBank": "rag", "studyBank": "rag", "storageKeyPrefix": "rag", "isBonusTopic": true, "subtitle": "Bonus Topic — Not an official Salesforce certification", "guideFile": "rag", "quizLengths": [{"id": 15, "label": "15 Questions", "icon": "⚡", "subtitle": "Quick Review", "duration": "~8 min", "questionIDRange": null}, {"id": 30, "label": "30 Questions", "icon": "🔥", "subtitle": "Standard Practice", "duration": "~15 min", "questionIDRange": null}, {"id": 60, "label": "60 Questions", "icon": "🏆", "subtitle": "Exam Simulation", "duration": "~30 min", "questionIDRange": null}, {"id": 72, "label": "All 72 Questions", "icon": "⭐", "subtitle": "Full Question Bank", "duration": "~36 min", "questionIDRange": null}]}, {"id": "successarchitect", "name": "Success Architect Scenarios", "shortName": "SA Scenarios", "icon": "🛡️", "primaryColor": "#993333", "secondaryColor": "#CC4D4D", "headerGradient": ["#731F1F", "#802924", "#8C3329"], "passingScore": 70, "questionBank": "successarchitect", "studyBank": null, "storageKeyPrefix": "successarchitect", "isBonusTopic": true, "subtitle": "Bonus Track — Real-world scenario practice", "quizLengths": [{"id": 45, "label": "Agentforce", "icon": "🧠", "subtitle": "45 Scenario Questions", "duration": "~25 min", "questionIDRange": [1, 45]}, {"id": 91, "label": "Data 360", "icon": "☁️", "subtitle": "46 Scenario Questions", "duration": "~25 min", "questionIDRange": [46, 91]}]}, {"id": "ba", "name": "Business Analyst", "shortName": "BA", "icon": "📊", "primaryColor": "#339ADB", "secondaryColor": "#32ADE6", "headerGradient": ["#1A5994", "#1F669E", "#2473A8"], "passingScore": 72, "questionBank": "ba", "studyBank": "ba", "storageKeyPrefix": "ba", "isBonusTopic": false, "subtitle": null, "quizLengths": [{"id": 15, "label": "15 Questions", "icon": "⚡", "subtitle": "Quick Review", "duration": "~8 min", "questionIDRange": null}, {"id": 30, "label": "30 Questions", "icon": "🔥", "subtitle": "Standard Practice", "duration": "~15 min", "questionIDRange": null}, {"id": 60, "label": "60 Questions", "icon": "🏆", "subtitle": "Exam Simulation", "duration": "~30 min", "questionIDRange": null}, {"id": 148, "label": "All 148 Questions", "icon": "⭐", "subtitle": "Full Question Bank", "duration": "~74 min", "questionIDRange": null}]}, {"id": "pdlda", "name": "Development Lifecycle & Deployment Architect", "shortName": "PDLDA", "icon": "📦", "primaryColor": "#AF52DE", "secondaryColor": "#FF2D55", "headerGradient": ["#4D1A66", "#57245C", "#612E52"], "passingScore": 65, "questionBank": "pdlda", "studyBank": "pdlda", "storageKeyPrefix": "pdlda", "isBonusTopic": false, "subtitle": null, "quizLengths": [{"id": 15, "label": "15 Questions", "icon": "⚡", "subtitle": "Quick Review", "duration": "~8 min", "questionIDRange": null}, {"id": 30, "label": "30 Questions", "icon": "🔥", "subtitle": "Standard Practice", "duration": "~15 min", "questionIDRange": null}, {"id": 60, "label": "60 Questions", "icon": "🏆", "subtitle": "Exam Simulation", "duration": "~30 min", "questionIDRange": null}, {"id": 100, "label": "All 100 Questions", "icon": "⭐", "subtitle": "Full Question Bank", "duration": "~50 min", "questionIDRange": null}]}, {"id": "appbuilder", "name": "Platform App Builder", "shortName": "App Builder", "icon": "🔨", "primaryColor": "#34C759", "secondaryColor": "#00C7BE", "headerGradient": ["#14612E", "#0F5742", "#0A4D57"], "passingScore": 63, "questionBank": "appbuilder", "studyBank": "appbuilder", "storageKeyPrefix": "appbuilder", "isBonusTopic": false, "subtitle": null, "quizLengths": [{"id": 15, "label": "15 Questions", "icon": "⚡", "subtitle": "Quick Review", "duration": "~8 min", "questionIDRange": null}, {"id": 30, "label": "30 Questions", "icon": "🔥", "subtitle": "Standard Practice", "duration": "~15 min", "questionIDRange": null}, {"id": 60, "label": "60 Questions", "icon": "🏆", "subtitle": "Exam Simulation", "duration": "~30 min", "questionIDRange": null}, {"id": 100, "label": "All 100 Questions", "icon": "⭐", "subtitle": "Full Question Bank", "duration": "~50 min", "questionIDRange": null}]}, {"id": "pd1", "name": "Platform Developer I", "shortName": "PD1", "icon": "💻", "primaryColor": "#FF9500", "secondaryColor": "#FF3B30", "headerGradient": ["#8C380D", "#802E1A", "#732626"], "passingScore": 65, "questionBank": "pd1", "studyBank": "pd1", "storageKeyPrefix": "pd1", "isBonusTopic": false, "subtitle": null, "quizLengths": [{"id": 15, "label": "15 Questions", "icon": "⚡", "subtitle": "Quick Review", "duration": "~8 min", "questionIDRange": null}, {"id": 30, "label": "30 Questions", "icon": "🔥", "subtitle": "Standard Practice", "duration": "~15 min", "questionIDRange": null}, {"id": 60, "label": "60 Questions", "icon": "🏆", "subtitle": "Exam Simulation", "duration": "~30 min", "questionIDRange": null}, {"id": 100, "label": "All 100 Questions", "icon": "⭐", "subtitle": "Full Question Bank", "duration": "~50 min", "questionIDRange": null}]}, {"id": "pia", "name": "Platform Integration Architect", "shortName": "PIA", "icon": "🔗", "primaryColor": "#2BA173", "secondaryColor": "#00C7BE", "headerGradient": ["#146147", "#1A6B51", "#20755B"], "passingScore": 62, "questionBank": "pia", "studyBank": "pia", "storageKeyPrefix": "pia", "isBonusTopic": false, "subtitle": null, "quizLengths": [{"id": 15, "label": "15 Questions", "icon": "⚡", "subtitle": "Quick Review", "duration": "~8 min", "questionIDRange": null}, {"id": 30, "label": "30 Questions", "icon": "🔥", "subtitle": "Standard Practice", "duration": "~15 min", "questionIDRange": null}, {"id": 60, "label": "60 Questions", "icon": "🏆", "subtitle": "Exam Simulation", "duration": "~30 min", "questionIDRange": null}, {"id": 154, "label": "All 154 Questions", "icon": "⭐", "subtitle": "Full Question Bank", "duration": "~77 min", "questionIDRange": null}]}]
+[
+  {
+    "id": "agentforce",
+    "name": "Agentforce Specialist",
+    "shortName": "Agentforce",
+    "icon": "🧠",
+    "primaryColor": "#5856D6",
+    "secondaryColor": "#007AFF",
+    "headerGradient": [
+      "#3D3390",
+      "#384594",
+      "#2E5299"
+    ],
+    "passingScore": 72,
+    "questionBank": "agentforce",
+    "studyBank": "agentforce",
+    "storageKeyPrefix": "agentforce",
+    "isBonusTopic": false,
+    "subtitle": null,
+    "quizLengths": [
+      {
+        "id": 15,
+        "label": "15 Questions",
+        "icon": "⚡",
+        "subtitle": "Quick Review",
+        "duration": "~8 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 30,
+        "label": "30 Questions",
+        "icon": "🔥",
+        "subtitle": "Standard Practice",
+        "duration": "~15 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 60,
+        "label": "60 Questions",
+        "icon": "🏆",
+        "subtitle": "Full Exam Simulation",
+        "duration": "~30 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 72,
+        "label": "Flashcards",
+        "icon": "🃏",
+        "subtitle": "Exam Prep — Likely on Exam",
+        "duration": "72 Qs",
+        "questionIDRange": [
+          1,
+          72
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agentops",
+    "name": "AgentOps: Agentforce Lifecycle",
+    "shortName": "AgentOps",
+    "icon": "⚙️",
+    "primaryColor": "#D97333",
+    "secondaryColor": "#FF9500",
+    "headerGradient": [
+      "#944214",
+      "#8A471F",
+      "#804D29"
+    ],
+    "passingScore": 70,
+    "questionBank": "agentops",
+    "studyBank": "agentops",
+    "storageKeyPrefix": "agentops",
+    "isBonusTopic": true,
+    "subtitle": "Bonus Topic — Not an official Salesforce certification",
+    "guideFile": "agentops",
+    "quizLengths": [
+      {
+        "id": 15,
+        "label": "15 Questions",
+        "icon": "⚡",
+        "subtitle": "Quick Review",
+        "duration": "~8 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 25,
+        "label": "25 Questions",
+        "icon": "🔥",
+        "subtitle": "Standard Practice",
+        "duration": "~15 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 50,
+        "label": "All 50 Questions",
+        "icon": "⭐",
+        "subtitle": "Full Question Bank",
+        "duration": "~30 min",
+        "questionIDRange": null
+      }
+    ]
+  },
+  {
+    "id": "dc360",
+    "name": "Data 360 Consultant",
+    "shortName": "Data 360",
+    "icon": "☁️",
+    "primaryColor": "#30B0C7",
+    "secondaryColor": "#32ADE6",
+    "headerGradient": [
+      "#004D6B",
+      "#00597A",
+      "#056685"
+    ],
+    "passingScore": 62,
+    "questionBank": "dc360",
+    "studyBank": "dc360",
+    "storageKeyPrefix": "dc360",
+    "isBonusTopic": false,
+    "subtitle": null,
+    "quizLengths": [
+      {
+        "id": 10,
+        "label": "10 Questions",
+        "icon": "⚡",
+        "subtitle": "Quick Review",
+        "duration": "~5 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 30,
+        "label": "30 Questions",
+        "icon": "🔥",
+        "subtitle": "Standard Practice",
+        "duration": "~15 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 60,
+        "label": "60 Questions",
+        "icon": "🏆",
+        "subtitle": "Exam Simulation",
+        "duration": "~30 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 427,
+        "label": "All 427 Questions",
+        "icon": "⭐",
+        "subtitle": "Full Question Bank",
+        "duration": "~214 min",
+        "questionIDRange": null
+      }
+    ]
+  },
+  {
+    "id": "reasoningengine",
+    "name": "Inside Daisy: The Agentforce Reasoning Engine",
+    "shortName": "Daisy",
+    "icon": "🧠",
+    "primaryColor": "#663399",
+    "secondaryColor": "#AF52DE",
+    "headerGradient": [
+      "#471A7A",
+      "#522485",
+      "#5C2E8F"
+    ],
+    "passingScore": 70,
+    "questionBank": "reasoningengine",
+    "studyBank": "reasoningengine",
+    "storageKeyPrefix": "reasoningengine",
+    "isBonusTopic": true,
+    "subtitle": "Bonus Topic — Not an official Salesforce certification",
+    "guideFile": "reasoningengine",
+    "quizLengths": [
+      {
+        "id": 15,
+        "label": "15 Questions",
+        "icon": "⚡",
+        "subtitle": "Quick Review",
+        "duration": "~8 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 30,
+        "label": "30 Questions",
+        "icon": "🔥",
+        "subtitle": "Standard Practice",
+        "duration": "~15 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 39,
+        "label": "All 39 Questions",
+        "icon": "⭐",
+        "subtitle": "Full Question Bank",
+        "duration": "~20 min",
+        "questionIDRange": null
+      }
+    ]
+  },
+  {
+    "id": "rag",
+    "name": "RAG, Agentforce & Data 360",
+    "shortName": "RAG",
+    "icon": "🔍",
+    "primaryColor": "#3373B3",
+    "secondaryColor": "#007AFF",
+    "headerGradient": [
+      "#1F4D85",
+      "#29578F",
+      "#336199"
+    ],
+    "passingScore": 70,
+    "questionBank": "rag",
+    "studyBank": "rag",
+    "storageKeyPrefix": "rag",
+    "isBonusTopic": true,
+    "subtitle": "Bonus Topic — Not an official Salesforce certification",
+    "guideFile": "rag",
+    "quizLengths": [
+      {
+        "id": 15,
+        "label": "15 Questions",
+        "icon": "⚡",
+        "subtitle": "Quick Review",
+        "duration": "~8 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 30,
+        "label": "30 Questions",
+        "icon": "🔥",
+        "subtitle": "Standard Practice",
+        "duration": "~15 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 60,
+        "label": "60 Questions",
+        "icon": "🏆",
+        "subtitle": "Exam Simulation",
+        "duration": "~30 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 72,
+        "label": "All 72 Questions",
+        "icon": "⭐",
+        "subtitle": "Full Question Bank",
+        "duration": "~36 min",
+        "questionIDRange": null
+      }
+    ]
+  },
+  {
+    "id": "successarchitect",
+    "name": "Success Architect Scenarios",
+    "shortName": "SA Scenarios",
+    "icon": "🛡️",
+    "primaryColor": "#993333",
+    "secondaryColor": "#CC4D4D",
+    "headerGradient": [
+      "#731F1F",
+      "#802924",
+      "#8C3329"
+    ],
+    "passingScore": 70,
+    "questionBank": "successarchitect",
+    "studyBank": null,
+    "storageKeyPrefix": "successarchitect",
+    "isBonusTopic": true,
+    "subtitle": "Bonus Track — Real-world scenario practice",
+    "quizLengths": [
+      {
+        "id": 45,
+        "label": "Agentforce",
+        "icon": "🧠",
+        "subtitle": "45 Scenario Questions",
+        "duration": "~25 min",
+        "questionIDRange": [
+          1,
+          45
+        ]
+      },
+      {
+        "id": 91,
+        "label": "Data 360",
+        "icon": "☁️",
+        "subtitle": "46 Scenario Questions",
+        "duration": "~25 min",
+        "questionIDRange": [
+          46,
+          91
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agentforcesales",
+    "name": "Agentforce Sales Consultant",
+    "shortName": "Sales Consultant",
+    "icon": "💼",
+    "primaryColor": "#2E86AB",
+    "secondaryColor": "#32ADE6",
+    "headerGradient": [
+      "#1A5C7A",
+      "#1F6685",
+      "#247090"
+    ],
+    "passingScore": 65,
+    "questionBank": null,
+    "studyBank": "agentforcesales",
+    "storageKeyPrefix": "agentforcesales",
+    "isBonusTopic": false,
+    "subtitle": null,
+    "quizLengths": []
+  },
+  {
+    "id": "agentforceservice",
+    "name": "Agentforce Service Consultant",
+    "shortName": "Service Consultant",
+    "icon": "🎧",
+    "primaryColor": "#5A9E6F",
+    "secondaryColor": "#34C759",
+    "headerGradient": [
+      "#2D6B42",
+      "#33754C",
+      "#398056"
+    ],
+    "passingScore": 65,
+    "questionBank": null,
+    "studyBank": "agentforceservice",
+    "storageKeyPrefix": "agentforceservice",
+    "isBonusTopic": false,
+    "subtitle": null,
+    "quizLengths": []
+  },
+  {
+    "id": "ba",
+    "name": "Business Analyst",
+    "shortName": "BA",
+    "icon": "📊",
+    "primaryColor": "#339ADB",
+    "secondaryColor": "#32ADE6",
+    "headerGradient": [
+      "#1A5994",
+      "#1F669E",
+      "#2473A8"
+    ],
+    "passingScore": 72,
+    "questionBank": "ba",
+    "studyBank": "ba",
+    "storageKeyPrefix": "ba",
+    "isBonusTopic": false,
+    "subtitle": null,
+    "quizLengths": [
+      {
+        "id": 15,
+        "label": "15 Questions",
+        "icon": "⚡",
+        "subtitle": "Quick Review",
+        "duration": "~8 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 30,
+        "label": "30 Questions",
+        "icon": "🔥",
+        "subtitle": "Standard Practice",
+        "duration": "~15 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 60,
+        "label": "60 Questions",
+        "icon": "🏆",
+        "subtitle": "Exam Simulation",
+        "duration": "~30 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 148,
+        "label": "All 148 Questions",
+        "icon": "⭐",
+        "subtitle": "Full Question Bank",
+        "duration": "~74 min",
+        "questionIDRange": null
+      }
+    ]
+  },
+  {
+    "id": "pdlda",
+    "name": "Development Lifecycle & Deployment Architect",
+    "shortName": "PDLDA",
+    "icon": "📦",
+    "primaryColor": "#AF52DE",
+    "secondaryColor": "#FF2D55",
+    "headerGradient": [
+      "#4D1A66",
+      "#57245C",
+      "#612E52"
+    ],
+    "passingScore": 65,
+    "questionBank": "pdlda",
+    "studyBank": "pdlda",
+    "storageKeyPrefix": "pdlda",
+    "isBonusTopic": false,
+    "subtitle": null,
+    "quizLengths": [
+      {
+        "id": 15,
+        "label": "15 Questions",
+        "icon": "⚡",
+        "subtitle": "Quick Review",
+        "duration": "~8 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 30,
+        "label": "30 Questions",
+        "icon": "🔥",
+        "subtitle": "Standard Practice",
+        "duration": "~15 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 60,
+        "label": "60 Questions",
+        "icon": "🏆",
+        "subtitle": "Exam Simulation",
+        "duration": "~30 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 100,
+        "label": "All 100 Questions",
+        "icon": "⭐",
+        "subtitle": "Full Question Bank",
+        "duration": "~50 min",
+        "questionIDRange": null
+      }
+    ]
+  },
+  {
+    "id": "admin2",
+    "name": "Platform Administrator II",
+    "shortName": "Admin II",
+    "icon": "🛠️",
+    "primaryColor": "#8B5CF6",
+    "secondaryColor": "#A78BFA",
+    "headerGradient": [
+      "#5B3A99",
+      "#654499",
+      "#6F4E99"
+    ],
+    "passingScore": 60,
+    "questionBank": null,
+    "studyBank": "admin2",
+    "storageKeyPrefix": "admin2",
+    "isBonusTopic": false,
+    "subtitle": null,
+    "quizLengths": []
+  },
+  {
+    "id": "appbuilder",
+    "name": "Platform App Builder",
+    "shortName": "App Builder",
+    "icon": "🔨",
+    "primaryColor": "#34C759",
+    "secondaryColor": "#00C7BE",
+    "headerGradient": [
+      "#14612E",
+      "#0F5742",
+      "#0A4D57"
+    ],
+    "passingScore": 63,
+    "questionBank": "appbuilder",
+    "studyBank": "appbuilder",
+    "storageKeyPrefix": "appbuilder",
+    "isBonusTopic": false,
+    "subtitle": null,
+    "quizLengths": [
+      {
+        "id": 15,
+        "label": "15 Questions",
+        "icon": "⚡",
+        "subtitle": "Quick Review",
+        "duration": "~8 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 30,
+        "label": "30 Questions",
+        "icon": "🔥",
+        "subtitle": "Standard Practice",
+        "duration": "~15 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 60,
+        "label": "60 Questions",
+        "icon": "🏆",
+        "subtitle": "Exam Simulation",
+        "duration": "~30 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 100,
+        "label": "All 100 Questions",
+        "icon": "⭐",
+        "subtitle": "Full Question Bank",
+        "duration": "~50 min",
+        "questionIDRange": null
+      }
+    ]
+  },
+  {
+    "id": "dataarchitect",
+    "name": "Platform Data Architect",
+    "shortName": "Data Architect",
+    "icon": "🗄️",
+    "primaryColor": "#0891B2",
+    "secondaryColor": "#22D3EE",
+    "headerGradient": [
+      "#065E75",
+      "#07688A",
+      "#08729F"
+    ],
+    "passingScore": 58,
+    "questionBank": null,
+    "studyBank": "dataarchitect",
+    "storageKeyPrefix": "dataarchitect",
+    "isBonusTopic": false,
+    "subtitle": null,
+    "quizLengths": []
+  },
+  {
+    "id": "pd1",
+    "name": "Platform Developer I",
+    "shortName": "PD1",
+    "icon": "💻",
+    "primaryColor": "#FF9500",
+    "secondaryColor": "#FF3B30",
+    "headerGradient": [
+      "#8C380D",
+      "#802E1A",
+      "#732626"
+    ],
+    "passingScore": 65,
+    "questionBank": "pd1",
+    "studyBank": "pd1",
+    "storageKeyPrefix": "pd1",
+    "isBonusTopic": false,
+    "subtitle": null,
+    "quizLengths": [
+      {
+        "id": 15,
+        "label": "15 Questions",
+        "icon": "⚡",
+        "subtitle": "Quick Review",
+        "duration": "~8 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 30,
+        "label": "30 Questions",
+        "icon": "🔥",
+        "subtitle": "Standard Practice",
+        "duration": "~15 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 60,
+        "label": "60 Questions",
+        "icon": "🏆",
+        "subtitle": "Exam Simulation",
+        "duration": "~30 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 100,
+        "label": "All 100 Questions",
+        "icon": "⭐",
+        "subtitle": "Full Question Bank",
+        "duration": "~50 min",
+        "questionIDRange": null
+      }
+    ]
+  },
+  {
+    "id": "pia",
+    "name": "Platform Integration Architect",
+    "shortName": "PIA",
+    "icon": "🔗",
+    "primaryColor": "#2BA173",
+    "secondaryColor": "#00C7BE",
+    "headerGradient": [
+      "#146147",
+      "#1A6B51",
+      "#20755B"
+    ],
+    "passingScore": 62,
+    "questionBank": "pia",
+    "studyBank": "pia",
+    "storageKeyPrefix": "pia",
+    "isBonusTopic": false,
+    "subtitle": null,
+    "quizLengths": [
+      {
+        "id": 15,
+        "label": "15 Questions",
+        "icon": "⚡",
+        "subtitle": "Quick Review",
+        "duration": "~8 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 30,
+        "label": "30 Questions",
+        "icon": "🔥",
+        "subtitle": "Standard Practice",
+        "duration": "~15 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 60,
+        "label": "60 Questions",
+        "icon": "🏆",
+        "subtitle": "Exam Simulation",
+        "duration": "~30 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 154,
+        "label": "All 154 Questions",
+        "icon": "⭐",
+        "subtitle": "Full Question Bank",
+        "duration": "~77 min",
+        "questionIDRange": null
+      }
+    ]
+  },
+  {
+    "id": "sharingvisibility",
+    "name": "Platform Sharing and Visibility Architect",
+    "shortName": "Sharing & Visibility",
+    "icon": "🔐",
+    "primaryColor": "#DC2626",
+    "secondaryColor": "#F87171",
+    "headerGradient": [
+      "#8B1A1A",
+      "#952424",
+      "#9F2E2E"
+    ],
+    "passingScore": 62,
+    "questionBank": null,
+    "studyBank": "sharingvisibility",
+    "storageKeyPrefix": "sharingvisibility",
+    "isBonusTopic": false,
+    "subtitle": null,
+    "quizLengths": []
+  },
+  {
+    "id": "uxdesigner",
+    "name": "Platform User Experience Designer",
+    "shortName": "UX Designer",
+    "icon": "🎨",
+    "primaryColor": "#D946EF",
+    "secondaryColor": "#E879F9",
+    "headerGradient": [
+      "#8B2E99",
+      "#95389E",
+      "#9F42A3"
+    ],
+    "passingScore": 65,
+    "questionBank": null,
+    "studyBank": "uxdesigner",
+    "storageKeyPrefix": "uxdesigner",
+    "isBonusTopic": false,
+    "subtitle": null,
+    "quizLengths": []
+  }
+]

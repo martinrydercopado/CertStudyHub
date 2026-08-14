@@ -15,13 +15,19 @@ A native SwiftUI app (iPhone + Mac) and a companion web app for studying Salesfo
 | Platform App Builder | 100 | 361 | 63% | |
 | Dev Lifecycle & Deployment Architect | 100 | 133 | 65% | |
 | Platform Integration Architect | 154 | 170 | 62% | |
+| Agentforce Sales Consultant | — | 154 | 65% | |
+| Agentforce Service Consultant | — | 302 | 65% | |
+| Platform Administrator II | — | 201 | 60% | |
+| Platform Data Architect | — | 129 | 58% | |
+| Platform Sharing & Visibility Architect | — | 186 | 62% | |
+| Platform UX Designer | — | 151 | 65% | |
 | **Bonus** | | | | |
 | Inside Daisy: Reasoning Engine | 39 | 56 | 70% | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=reasoningengine) |
 | RAG, Agentforce & Data 360 | 72 | 100 | 70% | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=rag) |
 | AgentOps: Agentforce Lifecycle | 50 | 191 | 70% | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentops) |
 | Success Architect Scenarios | — | — | 70% | |
 
-**Totals:** 1,406 questions and 1,735 study topics across 11 tracks.
+**Totals:** 1,406 questions and 2,858 study topics across 17 tracks.
 
 ## Features
 
@@ -71,6 +77,10 @@ No build step — open `docs/index.html` locally or deploy the `docs/` folder to
 ## Changelog
 
 ### 2025-08-14
+- Add 6 new study-only certifications: Agentforce Sales Consultant, Agentforce Service Consultant, Platform Administrator II, Platform Data Architect, Platform Sharing & Visibility Architect, Platform UX Designer
+- Reorder front page to user-specified 17-cert sequence
+- Support study-only certs (no quiz tab) in both web and native apps
+- Update all three bonus cert reference guides (AgentOps v2, Reasoning Engine Enhanced v2, RAG v5)
 - Add 200 Data 360 Consultant questions from co-ti question bank (227 → 427 total)
 - Remove mobile TOC from reference guide viewer (content-only on small screens; desktop sidebar persists)
 

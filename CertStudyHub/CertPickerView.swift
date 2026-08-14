@@ -169,22 +169,26 @@ struct CertCard: View {
 
             // Stats
             HStack(spacing: 16) {
-                HStack(spacing: 4) {
-                    Image(systemName: "questionmark.circle.fill")
-                        .font(.caption)
-                        .foregroundStyle(cert.primaryColor)
-                    Text("\(cert.questionCount) questions")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                if cert.questionCount > 0 {
+                    HStack(spacing: 4) {
+                        Image(systemName: "questionmark.circle.fill")
+                            .font(.caption)
+                            .foregroundStyle(cert.primaryColor)
+                        Text("\(cert.questionCount) questions")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
 
-                HStack(spacing: 4) {
-                    Image(systemName: "book.fill")
-                        .font(.caption)
-                        .foregroundStyle(cert.primaryColor)
-                    Text("\(cert.topicCount) topics")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                if cert.topicCount > 0 {
+                    HStack(spacing: 4) {
+                        Image(systemName: "book.fill")
+                            .font(.caption)
+                            .foregroundStyle(cert.primaryColor)
+                        Text("\(cert.topicCount) topics")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
 

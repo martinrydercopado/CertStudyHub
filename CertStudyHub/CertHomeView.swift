@@ -8,15 +8,25 @@ struct CertHomeView: View {
     @State private var studyVM: StudyViewModel
 
     private var isQuizOnly: Bool {
-        certConfig.studySections.isEmpty
+        certConfig.studySections.isEmpty && !certConfig.questions.isEmpty
+    }
+
+    private var isStudyOnly: Bool {
+        certConfig.questions.isEmpty && !certConfig.studySections.isEmpty
     }
 
     init(certConfig: CertConfig) {
         self.certConfig = certConfig
         self._quizVM = State(initialValue: QuizViewModel(certConfig: certConfig))
         self._studyVM = State(initialValue: StudyViewModel(certConfig: certConfig))
-        // Default to quiz tab when there are no study sections
-        self._selectedTab = State(initialValue: certConfig.studySections.isEmpty ? 1 : 0)
+        // Default to study tab when no quiz, quiz tab when no study
+        if certConfig.questions.isEmpty {
+            self._selectedTab = State(initialValue: 0)
+        } else if certConfig.studySections.isEmpty {
+            self._selectedTab = State(initialValue: 1)
+        } else {
+            self._selectedTab = State(initialValue: 0)
+        }
     }
 
     @Environment(\.dismiss) private var dismiss
@@ -26,6 +36,9 @@ struct CertHomeView: View {
             if isQuizOnly {
                 // Quiz-only mode — no tab bar, just the quiz view
                 QuizView(viewModel: quizVM, certConfig: certConfig)
+            } else if isStudyOnly {
+                // Study-only mode — no tab bar, just the study guide
+                StudyGuideView(viewModel: studyVM, certConfig: certConfig)
             } else {
                 TabView(selection: $selectedTab) {
                     StudyGuideView(viewModel: studyVM, certConfig: certConfig)

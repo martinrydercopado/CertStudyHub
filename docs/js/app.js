@@ -321,8 +321,11 @@
       // #/cert/{certId}
       if (parts.length === 2) {
         var hasSections = (state.studyData[cert.studyBank] || []).length > 0;
+        var hasQuiz = cert.quizLengths && cert.quizLengths.length > 0;
         if (!hasSections) {
           state.activeTab = 'quiz';
+        } else if (!hasQuiz) {
+          state.activeTab = 'study';
         }
         state.quiz.screen = 'start';
         render();
@@ -456,9 +459,9 @@
         '<h3 class="cert-card-name">' + escapeHtml(cert.name) + '</h3>' +
         subtitleHtml +
         '<div class="cert-card-stats">' +
-          '<span class="cert-stat">' +
-            '<span class="cert-stat-icon">&#x1F4DD;</span> ' + questionCount + ' questions' +
-          '</span>' +
+          (questionCount > 0
+            ? '<span class="cert-stat"><span class="cert-stat-icon">&#x1F4DD;</span> ' + questionCount + ' questions</span>'
+            : '') +
           (topicCount > 0
             ? '<span class="cert-stat"><span class="cert-stat-icon">&#x1F4D6;</span> ' + topicCount + ' topics</span>'
             : '') +
@@ -494,8 +497,9 @@
     var gradColors = cert.headerGradient || [cert.primaryColor, cert.secondaryColor || cert.primaryColor];
     var gradient = 'linear-gradient(135deg, ' + gradColors.join(', ') + ')';
 
+    var hasQuiz = cert.quizLengths && cert.quizLengths.length > 0;
     var tabs = '';
-    if (hasSections) {
+    if (hasSections && hasQuiz) {
       tabs =
         '<div class="tab-bar">' +
           '<button class="tab-btn' + (state.activeTab === 'study' ? ' active' : '') + '" data-action="switch-tab" data-tab="study">Study Guide</button>' +
@@ -504,7 +508,7 @@
     }
 
     var content = '';
-    if (state.activeTab === 'quiz' || !hasSections) {
+    if ((state.activeTab === 'quiz' && hasQuiz) || !hasSections) {
       if (state.quiz.screen === 'start') {
         content = renderQuizStart();
       } else if (state.quiz.screen === 'active') {
