@@ -39,6 +39,14 @@ struct CertHomeView: View {
                             Label("Quiz", systemImage: "questionmark.circle.fill")
                         }
                         .tag(1)
+
+                    if let guideURL = certConfig.guideURL {
+                        ReferenceGuideView(url: guideURL, certConfig: certConfig)
+                            .tabItem {
+                                Label("Reference", systemImage: "doc.richtext")
+                            }
+                            .tag(2)
+                    }
                 }
             }
         }

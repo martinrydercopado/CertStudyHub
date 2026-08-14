@@ -205,7 +205,8 @@ enum CertCatalog {
         studySections: AgentOpsStudyBank.sections,
         storageKeyPrefix: "agentops",
         isBonusTopic: true,
-        subtitle: "Bonus Topic — Not an official Salesforce certification"
+        subtitle: "Bonus Topic — Not an official Salesforce certification",
+        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentops")
     )
 
     static let reasoningEngine = CertConfig(
@@ -230,7 +231,8 @@ enum CertCatalog {
         studySections: ReasoningEngineStudyBank.sections,
         storageKeyPrefix: "reasoningengine",
         isBonusTopic: true,
-        subtitle: "Bonus Topic — Not an official Salesforce certification"
+        subtitle: "Bonus Topic — Not an official Salesforce certification",
+        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=reasoningengine")
     )
 
     static let rag = CertConfig(
@@ -256,7 +258,8 @@ enum CertCatalog {
         studySections: RAGStudyBank.sections,
         storageKeyPrefix: "rag",
         isBonusTopic: true,
-        subtitle: "Bonus Topic — Not an official Salesforce certification"
+        subtitle: "Bonus Topic — Not an official Salesforce certification",
+        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=rag")
     )
 
     static let successArchitect = CertConfig(

@@ -523,6 +523,18 @@
       }
     }
 
+    var guideLink = '';
+    if (cert.guideFile) {
+      guideLink =
+        '<div class="guide-link-bar">' +
+          '<a class="guide-link-btn" href="guides/viewer.html?guide=' + encodeURIComponent(cert.guideFile) + '" target="_blank" rel="noopener">' +
+            '<span class="guide-link-icon">📖</span>' +
+            '<span class="guide-link-text">Open Reference Guide</span>' +
+            '<span class="guide-link-chevron">&rsaquo;</span>' +
+          '</a>' +
+        '</div>';
+    }
+
     return (
       '<div class="screen cert-home-screen">' +
         '<div class="cert-header" style="background: ' + gradient + '">' +
@@ -534,6 +546,7 @@
             '<h2 class="cert-header-name">' + escapeHtml(cert.name) + '</h2>' +
           '</div>' +
         '</div>' +
+        guideLink +
         tabs +
         '<div class="tab-content">' + content + '</div>' +
       '</div>'
@@ -1680,6 +1693,14 @@
       '.loading-screen { display: flex; align-items: center; justify-content: center; height: 100vh; }' +
       '.loading-spinner { width: 40px; height: 40px; border: 4px solid var(--separator); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; }' +
       '@keyframes spin { to { transform: rotate(360deg); } }' +
+
+      /* Reference Guide link */
+      '.guide-link-bar { padding: 12px 16px 0; }' +
+      '.guide-link-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 16px; background: var(--card-bg); border: 1px solid var(--separator); border-radius: 12px; text-decoration: none; color: var(--text); font-size: 15px; font-weight: 500; transition: background 0.15s; }' +
+      '.guide-link-btn:hover { background: var(--hover-bg, var(--grouped-bg)); }' +
+      '.guide-link-icon { font-size: 20px; }' +
+      '.guide-link-text { flex: 1; }' +
+      '.guide-link-chevron { color: var(--secondary-text); font-size: 18px; font-weight: 300; }' +
 
       '';
     document.head.appendChild(style);

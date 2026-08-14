@@ -73,6 +73,7 @@
     "storageKeyPrefix": "agentops",
     "isBonusTopic": true,
     "subtitle": "Bonus Topic — Not an official Salesforce certification",
+    "guideFile": "agentops",
     "quizLengths": [
       {
         "id": 15,
@@ -171,6 +172,7 @@
     "storageKeyPrefix": "reasoningengine",
     "isBonusTopic": true,
     "subtitle": "Bonus Topic — Not an official Salesforce certification",
+    "guideFile": "reasoningengine",
     "quizLengths": [
       {
         "id": 15,
@@ -216,6 +218,7 @@
     "storageKeyPrefix": "rag",
     "isBonusTopic": true,
     "subtitle": "Bonus Topic — Not an official Salesforce certification",
+    "guideFile": "rag",
     "quizLengths": [
       {
         "id": 15,
