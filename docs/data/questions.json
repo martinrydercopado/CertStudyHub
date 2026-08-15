@@ -37628,7 +37628,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Parameter pinning — binding directly to @variables.verified_account_id instead of using the LLM slot-fill operator (...) — removes LLM discretion entirely, guaranteeing the exact verified value is used every time. A: Prose instructions are probabilistic hints. C: Description text is interpretive guidance, not enforced. D: available when controls visibility but not which parameter value the LLM chooses."
+      "explanation": "Parameter pinning — binding directly to @variables.verified_account_id instead of using the LLM slot-fill operator (...) — removes LLM discretion entirely, guaranteeing the exact verified value is used every time. A: Prose instructions are probabilistic hints. C: Description text is interpretive guidance, not enforced. D: available when controls visibility but not which parameter value the LLM chooses.",
+      "requiredSelections": 1
     },
     {
       "id": "41",
@@ -37655,7 +37656,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "The trace visualization's FunctionStep postVars show exactly which variables and outputs are in scope at each point in the reasoning chain — this directly reveals whether an @outputs value has expired. A: The Apex class returning the value doesn't tell you about runtime scope. B: Prose instructions cannot extend @outputs scope. D: Trust Layer logging covers screening, not variable scope lifecycle."
+      "explanation": "The trace visualization's FunctionStep postVars show exactly which variables and outputs are in scope at each point in the reasoning chain — this directly reveals whether an @outputs value has expired. A: The Apex class returning the value doesn't tell you about runtime scope. B: Prose instructions cannot extend @outputs scope. D: Trust Layer logging covers screening, not variable scope lifecycle.",
+      "requiredSelections": 1
     },
     {
       "id": "42",
@@ -37682,7 +37684,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "before_reasoning executes exactly once per turn, strictly before the reasoning loop begins. A bare transition to inside it — guarded by a condition — routes the user immediately without the LLM ever being invoked. B: available when only controls tool schema visibility during Phase 2. C: Prose instructions are processed by the LLM during Phase 2. D: Linked variables populate from external session context, not transitions."
+      "explanation": "before_reasoning executes exactly once per turn, strictly before the reasoning loop begins. A bare transition to inside it — guarded by a condition — routes the user immediately without the LLM ever being invoked. B: available when only controls tool schema visibility during Phase 2. C: Prose instructions are processed by the LLM during Phase 2. D: Linked variables populate from external session context, not transitions.",
+      "requiredSelections": 1
     },
     {
       "id": "43",
@@ -37709,7 +37712,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "The GenAiPlannerBundle is the compiled output containing the Agent Graph — including the DAG for tool dependency ordering and the FSM for subagent transitions and retry edges. A: The raw .agent file is source, not compiled output. B: Trust Layer audit log covers per-call screening, not graph structure. C: Apex test results validate action logic, not the agent's compiled graph."
+      "explanation": "The GenAiPlannerBundle is the compiled output containing the Agent Graph — including the DAG for tool dependency ordering and the FSM for subagent transitions and retry edges. A: The raw .agent file is source, not compiled output. B: Trust Layer audit log covers per-call screening, not graph structure. C: Apex test results validate action logic, not the agent's compiled graph.",
+      "requiredSelections": 1
     },
     {
       "id": "44",
@@ -39783,7 +39787,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "When a subagent is selected, its instructions replace the global system prompt rather than merging with it, meaning any critical global constraints must be repeated within the subagent. B: The LLM didn't probabilistically ignore it; it was structurally removed. C: Trust layer operates independently of subagent routing. D: Global instructions are injected into the LLM reasoning loop."
+      "explanation": "When a subagent is selected, its instructions replace the global system prompt rather than merging with it, meaning any critical global constraints must be repeated within the subagent. B: The LLM didn't probabilistically ignore it; it was structurally removed. C: Trust layer operates independently of subagent routing. D: Global instructions are injected into the LLM reasoning loop.",
+      "requiredSelections": 1
     },
     {
       "id": "74",
@@ -39810,7 +39815,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "SFDRIVE libraries have a hard platform limit of 1,000 files per library. A: No documented 10 GB limit. B: SFDRIVE supports PDF, TXT, and HTML natively. C: The max file size is 100 MB, so 5 MB is fine."
+      "explanation": "SFDRIVE libraries have a hard platform limit of 1,000 files per library. A: No documented 10 GB limit. B: SFDRIVE supports PDF, TXT, and HTML natively. C: The max file size is 100 MB, so 5 MB is fine.",
+      "requiredSelections": 1
     },
     {
       "id": "75",
@@ -39870,7 +39876,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "This five-question sequence establishes measurable outcomes, defines architecture based on content location, clarifies the permission model, sets a timeline, and identifies infrastructure readiness. A: These are Phase 2/3 implementation details. C: Skips critical prerequisites like target audience and content location. D: Subagent design occurs after the RAG pipeline and business outcome are scoped."
+      "explanation": "This five-question sequence establishes measurable outcomes, defines architecture based on content location, clarifies the permission model, sets a timeline, and identifies infrastructure readiness. A: These are Phase 2/3 implementation details. C: Skips critical prerequisites like target audience and content location. D: Subagent design occurs after the RAG pipeline and business outcome are scoped.",
+      "requiredSelections": 1
     },
     {
       "id": "77",
@@ -39897,7 +39904,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "The Action Description field is the specific runtime instruction surface the LLM reads to understand when and how to use a tool; a poorly written description directly causes incorrect action selection. A: Global instructions define persona and constraints, not individual action triggers. B: Variable injection provides session context, not tool selection logic. D: Reasoning instructions dictate conversational script, but the LLM relies on action descriptions for tool selection."
+      "explanation": "The Action Description field is the specific runtime instruction surface the LLM reads to understand when and how to use a tool; a poorly written description directly causes incorrect action selection. A: Global instructions define persona and constraints, not individual action triggers. B: Variable injection provides session context, not tool selection logic. D: Reasoning instructions dictate conversational script, but the LLM relies on action descriptions for tool selection.",
+      "requiredSelections": 1
     }
   ],
   "uxdesigner": [
@@ -39926,7 +39934,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "When direct end-user access is blocked, a knowledgeable proxy (PM, SME, or customer success manager) walking through the actual process in context surfaces real behavior and friction that a requirements doc alone cannot reveal. B is incorrect because Designing straight from a requirements doc without any behavioral grounding risks encoding stakeholder assumptions rather than actual user needs. C is incorrect because A large quantitative survey is the wrong tool for early generative discovery; it validates known hypotheses rather than exploring an unknown problem space. D is incorrect because Skipping discovery ignores organization-specific workflow nuances that generic patterns won't capture."
+      "explanation": "When direct end-user access is blocked, a knowledgeable proxy (PM, SME, or customer success manager) walking through the actual process in context surfaces real behavior and friction that a requirements doc alone cannot reveal. B is incorrect because Designing straight from a requirements doc without any behavioral grounding risks encoding stakeholder assumptions rather than actual user needs. C is incorrect because A large quantitative survey is the wrong tool for early generative discovery; it validates known hypotheses rather than exploring an unknown problem space. D is incorrect because Skipping discovery ignores organization-specific workflow nuances that generic patterns won't capture.",
+      "requiredSelections": 1
     },
     {
       "id": "2",
@@ -39986,7 +39995,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "Statistical confidence at scale requires a quantitative method with sufficient sample size, such as analytics-based time-on-task measurement across the full rep population. A is incorrect because Three interviews produce rich qualitative insight but cannot deliver statistical confidence across thousands of users. B is incorrect because A diary study is qualitative and longitudinal, valuable for behavior patterns but not for statistical validation of time savings. D is incorrect because A five-second test evaluates first impressions of a landing screen, not measured task-time reduction."
+      "explanation": "Statistical confidence at scale requires a quantitative method with sufficient sample size, such as analytics-based time-on-task measurement across the full rep population. A is incorrect because Three interviews produce rich qualitative insight but cannot deliver statistical confidence across thousands of users. B is incorrect because A diary study is qualitative and longitudinal, valuable for behavior patterns but not for statistical validation of time savings. D is incorrect because A five-second test evaluates first impressions of a landing screen, not measured task-time reduction.",
+      "requiredSelections": 1
     },
     {
       "id": "4",
@@ -40046,7 +40056,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "Affinity diagramming is purpose-built for clustering raw qualitative data points into recurring themes, which is exactly the synthesis task described. B is incorrect because A journey map sequences a single user's experience over time; it doesn't cluster themes across 40 separate interviews. C is incorrect because A stakeholder map documents who is involved and their influence, not thematic patterns in interview data. D is incorrect because Card sorting is a participatory method for evaluating information architecture, not a synthesis technique for existing interview notes."
+      "explanation": "Affinity diagramming is purpose-built for clustering raw qualitative data points into recurring themes, which is exactly the synthesis task described. B is incorrect because A journey map sequences a single user's experience over time; it doesn't cluster themes across 40 separate interviews. C is incorrect because A stakeholder map documents who is involved and their influence, not thematic patterns in interview data. D is incorrect because Card sorting is a participatory method for evaluating information architecture, not a synthesis technique for existing interview notes.",
+      "requiredSelections": 1
     },
     {
       "id": "6",
@@ -40073,7 +40084,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Tree testing validates whether users can find items within an existing, fixed hierarchy, which matches a scenario where the menu items are already decided and only findability needs validation. A is incorrect because Open card sorting is used to generate a new categorization scheme, not validate a predetermined one. C is incorrect because Contextual inquiry observes real work in the field; it doesn't isolate a specific IA/navigation hypothesis. D is incorrect because Closed card sorting checks how users would sort items into predefined categories, but doesn't test navigation findability in a live hierarchy."
+      "explanation": "Tree testing validates whether users can find items within an existing, fixed hierarchy, which matches a scenario where the menu items are already decided and only findability needs validation. A is incorrect because Open card sorting is used to generate a new categorization scheme, not validate a predetermined one. C is incorrect because Contextual inquiry observes real work in the field; it doesn't isolate a specific IA/navigation hypothesis. D is incorrect because Closed card sorting checks how users would sort items into predefined categories, but doesn't test navigation findability in a live hierarchy.",
+      "requiredSelections": 1
     },
     {
       "id": "7",
@@ -40100,7 +40112,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "A small moderated usability test with five to seven participants is well suited to catching major usability issues quickly within tight timelines, matching Nielsen's research on diminishing returns beyond that sample size for qualitative testing. A is incorrect because A statistically powered A/B test needs a large sample and longer runtime than three days allows, and requires a live environment to measure behavior at scale. B is incorrect because A twelve-week diary study is a longitudinal method entirely mismatched to a three-day deadline. D is incorrect because A company-wide SUS survey produces a perception score, not the specific comparative usability findings needed to choose between two layouts."
+      "explanation": "A small moderated usability test with five to seven participants is well suited to catching major usability issues quickly within tight timelines, matching Nielsen's research on diminishing returns beyond that sample size for qualitative testing. A is incorrect because A statistically powered A/B test needs a large sample and longer runtime than three days allows, and requires a live environment to measure behavior at scale. B is incorrect because A twelve-week diary study is a longitudinal method entirely mismatched to a three-day deadline. D is incorrect because A company-wide SUS survey produces a perception score, not the specific comparative usability findings needed to choose between two layouts.",
+      "requiredSelections": 1
     },
     {
       "id": "8",
@@ -40160,7 +40173,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "The empathy map's Say and Do quadrants are specifically designed to expose contradictions between stated behavior and observed behavior, which is exactly the gap described. B is incorrect because A stakeholder map documents organizational influence and interest, not individual behavioral contradictions. C is incorrect because A service blueprint maps front-stage and back-stage processes across systems, not an individual's say/do discrepancy. D is incorrect because A validation rule audit is a declarative configuration review, unrelated to behavioral research synthesis."
+      "explanation": "The empathy map's Say and Do quadrants are specifically designed to expose contradictions between stated behavior and observed behavior, which is exactly the gap described. B is incorrect because A stakeholder map documents organizational influence and interest, not individual behavioral contradictions. C is incorrect because A service blueprint maps front-stage and back-stage processes across systems, not an individual's say/do discrepancy. D is incorrect because A validation rule audit is a declarative configuration review, unrelated to behavioral research synthesis.",
+      "requiredSelections": 1
     },
     {
       "id": "10",
@@ -40187,7 +40201,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "A/B testing measures real behavioral outcomes between two live variants at scale, which fits comparing completion rates of two stable, deployed forms. A is incorrect because Formative testing is meant to improve a design mid-development, not compare two already-finished live variants. C is incorrect because A heuristic evaluation is an expert-led inspection against usability principles, not a live behavioral comparison. D is incorrect because A think-aloud protocol captures verbalized reasoning during a session; it doesn't measure aggregate completion-rate differences."
+      "explanation": "A/B testing measures real behavioral outcomes between two live variants at scale, which fits comparing completion rates of two stable, deployed forms. A is incorrect because Formative testing is meant to improve a design mid-development, not compare two already-finished live variants. C is incorrect because A heuristic evaluation is an expert-led inspection against usability principles, not a live behavioral comparison. D is incorrect because A think-aloud protocol captures verbalized reasoning during a session; it doesn't measure aggregate completion-rate differences.",
+      "requiredSelections": 1
     },
     {
       "id": "11",
@@ -40247,7 +40262,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "A stakeholder map is purpose-built to plot influence and interest across people connected to a project, which directly supports kickoff planning under time constraints. A is incorrect because An affinity diagram clusters qualitative research themes, unrelated to mapping stakeholder influence. B is incorrect because A journey map sequences a user's experience over time, not organizational influence and interest. C is incorrect because An empathy map captures an individual user's thoughts, feelings, and behaviors, not stakeholder influence."
+      "explanation": "A stakeholder map is purpose-built to plot influence and interest across people connected to a project, which directly supports kickoff planning under time constraints. A is incorrect because An affinity diagram clusters qualitative research themes, unrelated to mapping stakeholder influence. B is incorrect because A journey map sequences a user's experience over time, not organizational influence and interest. C is incorrect because An empathy map captures an individual user's thoughts, feelings, and behaviors, not stakeholder influence.",
+      "requiredSelections": 1
     },
     {
       "id": "13",
@@ -40274,7 +40290,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "Visibility of system status requires the interface to keep users informed through appropriate feedback within reasonable time, which is exactly what's missing after the Save action. B is incorrect because Consistency and standards concerns whether elements behave the same way across the interface, not feedback timing on a single action. C is incorrect because Error prevention is about stopping mistakes before they happen, not confirming after a successful action. D is incorrect because Recognition rather than recall concerns minimizing memory load through visible options, unrelated to post-save feedback."
+      "explanation": "Visibility of system status requires the interface to keep users informed through appropriate feedback within reasonable time, which is exactly what's missing after the Save action. B is incorrect because Consistency and standards concerns whether elements behave the same way across the interface, not feedback timing on a single action. C is incorrect because Error prevention is about stopping mistakes before they happen, not confirming after a successful action. D is incorrect because Recognition rather than recall concerns minimizing memory load through visible options, unrelated to post-save feedback.",
+      "requiredSelections": 1
     },
     {
       "id": "14",
@@ -40334,7 +40351,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "Pairing concrete evidence — quotes, observed behavior, and metrics — builds credibility and organizational buy-in far more effectively than assertions alone for stakeholders unfamiliar with UX research. A is incorrect because A recommendation list without evidence gives skeptical stakeholders no way to trust the conclusions. B is incorrect because Personal opinion without evidence undermines credibility with an audience that hasn't bought into UX research yet. D is incorrect because Skipping the readout forfeits the opportunity to build stakeholder alignment before design work begins."
+      "explanation": "Pairing concrete evidence — quotes, observed behavior, and metrics — builds credibility and organizational buy-in far more effectively than assertions alone for stakeholders unfamiliar with UX research. A is incorrect because A recommendation list without evidence gives skeptical stakeholders no way to trust the conclusions. B is incorrect because Personal opinion without evidence undermines credibility with an audience that hasn't bought into UX research yet. D is incorrect because Skipping the readout forfeits the opportunity to build stakeholder alignment before design work begins.",
+      "requiredSelections": 1
     },
     {
       "id": "16",
@@ -40394,7 +40412,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "Engineering handoff requires a validated, detailed artifact that specifies interactions precisely enough to build from, which only a validated high-fidelity prototype provides. A is incorrect because An unannotated low-fidelity sketch lacks the specification detail engineers need to implement correctly. B is incorrect because An empathy map documents user attitudes from discovery, not build-ready interaction detail. C is incorrect because A stakeholder map has no design content for engineers to build against."
+      "explanation": "Engineering handoff requires a validated, detailed artifact that specifies interactions precisely enough to build from, which only a validated high-fidelity prototype provides. A is incorrect because An unannotated low-fidelity sketch lacks the specification detail engineers need to implement correctly. B is incorrect because An empathy map documents user attitudes from discovery, not build-ready interaction detail. C is incorrect because A stakeholder map has no design content for engineers to build against.",
+      "requiredSelections": 1
     },
     {
       "id": "18",
@@ -40421,7 +40440,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "A wireframe conveys structure and layout without visual design distractions, matching a review focused purely on structural decisions. B is incorrect because A mockup adds visual design detail that isn't needed yet and could distract from a structural conversation. C is incorrect because An interactive prototype implies functioning interactions, which is more fidelity than a structure-only review requires. D is incorrect because A live build requires actual development investment before the structure has even been agreed upon."
+      "explanation": "A wireframe conveys structure and layout without visual design distractions, matching a review focused purely on structural decisions. B is incorrect because A mockup adds visual design detail that isn't needed yet and could distract from a structural conversation. C is incorrect because An interactive prototype implies functioning interactions, which is more fidelity than a structure-only review requires. D is incorrect because A live build requires actual development investment before the structure has even been agreed upon.",
+      "requiredSelections": 1
     },
     {
       "id": "19",
@@ -40448,7 +40468,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Validating flow completion with branching logic requires users to actually interact with transitions, which only an interactive prototype supports. A is incorrect because A static mockup shows visual design on one screen but can't demonstrate branching or transitions. C is incorrect because A wireframe lacks the interactivity needed to test flow completion. D is incorrect because An empathy map is a research synthesis tool, not a testable design artifact."
+      "explanation": "Validating flow completion with branching logic requires users to actually interact with transitions, which only an interactive prototype supports. A is incorrect because A static mockup shows visual design on one screen but can't demonstrate branching or transitions. C is incorrect because A wireframe lacks the interactivity needed to test flow completion. D is incorrect because An empathy map is a research synthesis tool, not a testable design artifact.",
+      "requiredSelections": 1
     },
     {
       "id": "20",
@@ -40508,7 +40529,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "A future-state journey map illustrates the intended, improved experience the design aims to create, in contrast to an as-is map that documents the present state. A is incorrect because Documenting current pain points is exactly the function of an as-is journey map, not a future-state one. B is incorrect because A SUS score is a usability testing metric, unrelated to journey mapping. C is incorrect because Stakeholder influence belongs in a stakeholder map, not a journey map of either type."
+      "explanation": "A future-state journey map illustrates the intended, improved experience the design aims to create, in contrast to an as-is map that documents the present state. A is incorrect because Documenting current pain points is exactly the function of an as-is journey map, not a future-state one. B is incorrect because A SUS score is a usability testing metric, unrelated to journey mapping. C is incorrect because Stakeholder influence belongs in a stakeholder map, not a journey map of either type.",
+      "requiredSelections": 1
     },
     {
       "id": "22",
@@ -40535,7 +40557,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "A service blueprint extends the journey map by adding back-stage processes, systems, and departmental handoffs, which is necessary when back-office complexity spans multiple systems. B is incorrect because A basic journey map typically covers only the front-stage user experience, missing back-stage system detail. C is incorrect because An empathy map captures one user's internal state, not cross-department process flow. D is incorrect because A stakeholder map shows influence and interest, not process sequencing across systems."
+      "explanation": "A service blueprint extends the journey map by adding back-stage processes, systems, and departmental handoffs, which is necessary when back-office complexity spans multiple systems. B is incorrect because A basic journey map typically covers only the front-stage user experience, missing back-stage system detail. C is incorrect because An empathy map captures one user's internal state, not cross-department process flow. D is incorrect because A stakeholder map shows influence and interest, not process sequencing across systems.",
+      "requiredSelections": 1
     },
     {
       "id": "23",
@@ -40562,7 +40585,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Low-contrast brand colors that look fine indoors can become unreadable in bright outdoor light, directly affecting a mobile field worker's ability to complete the task. A is incorrect because Trademark placement is a legal/brand compliance concern, not a usability risk tied to outdoor visibility. C is incorrect because Font inconsistency is a branding cohesion issue, not the priority risk for outdoor legibility. D is incorrect because App icon styling has no bearing on in-app contrast or outdoor readability."
+      "explanation": "Low-contrast brand colors that look fine indoors can become unreadable in bright outdoor light, directly affecting a mobile field worker's ability to complete the task. A is incorrect because Trademark placement is a legal/brand compliance concern, not a usability risk tied to outdoor visibility. C is incorrect because Font inconsistency is a branding cohesion issue, not the priority risk for outdoor legibility. D is incorrect because App icon styling has no bearing on in-app contrast or outdoor readability.",
+      "requiredSelections": 1
     },
     {
       "id": "24",
@@ -40589,7 +40613,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "SLDS tokens exist to keep custom components visually aligned with native Lightning Experience elements, so overriding them risks a jarring, inconsistent look that undermines user trust and learned patterns. A is incorrect because While CSS can affect performance, that's not the specific UX consistency risk being raised here. B is incorrect because SLDS tokens can technically be overridden; the concern is about the consequence, not technical feasibility. D is incorrect because Custom CSS overrides are not a required step for standard rebranding; declarative theming often suffices."
+      "explanation": "SLDS tokens exist to keep custom components visually aligned with native Lightning Experience elements, so overriding them risks a jarring, inconsistent look that undermines user trust and learned patterns. A is incorrect because While CSS can affect performance, that's not the specific UX consistency risk being raised here. B is incorrect because SLDS tokens can technically be overridden; the concern is about the consequence, not technical feasibility. D is incorrect because Custom CSS overrides are not a required step for standard rebranding; declarative theming often suffices.",
+      "requiredSelections": 1
     },
     {
       "id": "25",
@@ -40616,7 +40641,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "The Gestalt principle of proximity states that elements placed close together are perceived as related, so grouping related fields visually addresses the scattered layout problem directly. A is incorrect because Jobs-to-be-done reframes a feature request into a user goal; it doesn't address a layout arrangement problem. B is incorrect because Removing all fields eliminates needed information rather than addressing the grouping problem. C is incorrect because Robust concerns assistive technology compatibility, not visual grouping of fields."
+      "explanation": "The Gestalt principle of proximity states that elements placed close together are perceived as related, so grouping related fields visually addresses the scattered layout problem directly. A is incorrect because Jobs-to-be-done reframes a feature request into a user goal; it doesn't address a layout arrangement problem. B is incorrect because Removing all fields eliminates needed information rather than addressing the grouping problem. C is incorrect because Robust concerns assistive technology compatibility, not visual grouping of fields.",
+      "requiredSelections": 1
     },
     {
       "id": "26",
@@ -40643,7 +40669,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "WCAG 2.1 Level AA requires a minimum 4.5:1 contrast ratio for normal-sized text, and 3.2:1 falls short of that threshold. B is incorrect because 3.2:1 doesn't even meet the lower 3:1 threshold reserved for large text, and this is normal body text anyway. C is incorrect because WCAG guidance applies regardless of platform; Salesforce customizations are not exempt. D is incorrect because WCAG does not require pure black on white — it requires meeting a minimum ratio, which can be achieved many ways."
+      "explanation": "WCAG 2.1 Level AA requires a minimum 4.5:1 contrast ratio for normal-sized text, and 3.2:1 falls short of that threshold. B is incorrect because 3.2:1 doesn't even meet the lower 3:1 threshold reserved for large text, and this is normal body text anyway. C is incorrect because WCAG guidance applies regardless of platform; Salesforce customizations are not exempt. D is incorrect because WCAG does not require pure black on white — it requires meeting a minimum ratio, which can be achieved many ways.",
+      "requiredSelections": 1
     },
     {
       "id": "27",
@@ -40670,7 +40697,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Perceivable requires that information (including required-field status) be presented so all users, including those using screen readers, can perceive it — missing required-field cues is a perceivability failure. A is incorrect because Operable concerns the ability to interact with and navigate controls, not whether information is announced. C is incorrect because Understandable concerns predictability and clarity of content/behavior, not whether the cue is exposed to assistive tech at all. D is incorrect because Robust concerns compatibility with a range of technologies broadly, which is a narrower issue than this specific missing cue."
+      "explanation": "Perceivable requires that information (including required-field status) be presented so all users, including those using screen readers, can perceive it — missing required-field cues is a perceivability failure. A is incorrect because Operable concerns the ability to interact with and navigate controls, not whether information is announced. C is incorrect because Understandable concerns predictability and clarity of content/behavior, not whether the cue is exposed to assistive tech at all. D is incorrect because Robust concerns compatibility with a range of technologies broadly, which is a narrower issue than this specific missing cue.",
+      "requiredSelections": 1
     },
     {
       "id": "28",
@@ -40697,7 +40725,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "A keyboard trap prevents a user from operating the interface using standard input methods, which is a direct violation of the Operable principle. A is incorrect because Perceivable concerns whether content can be sensed at all, not whether it can be exited via keyboard. B is incorrect because Understandable concerns predictability of content and operation, a different concern than being physically unable to exit. D is incorrect because Robust concerns broad compatibility with assistive technologies generally, not this specific keyboard interaction failure."
+      "explanation": "A keyboard trap prevents a user from operating the interface using standard input methods, which is a direct violation of the Operable principle. A is incorrect because Perceivable concerns whether content can be sensed at all, not whether it can be exited via keyboard. B is incorrect because Understandable concerns predictability of content and operation, a different concern than being physically unable to exit. D is incorrect because Robust concerns broad compatibility with assistive technologies generally, not this specific keyboard interaction failure.",
+      "requiredSelections": 1
     },
     {
       "id": "29",
@@ -40724,7 +40753,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "Progressive disclosure reveals only the information relevant to the current step, reducing the mental burden of seeing all forty fields simultaneously. A is incorrect because Showing all fields at once is the opposite of progressive disclosure and increases cognitive load. B is incorrect because Auto-filling without any review risks incorrect data going unnoticed, trading cognitive load for accuracy risk. C is incorrect because A single free-text box removes structure entirely and creates ambiguity about what information is needed."
+      "explanation": "Progressive disclosure reveals only the information relevant to the current step, reducing the mental burden of seeing all forty fields simultaneously. A is incorrect because Showing all fields at once is the opposite of progressive disclosure and increases cognitive load. B is incorrect because Auto-filling without any review risks incorrect data going unnoticed, trading cognitive load for accuracy risk. C is incorrect because A single free-text box removes structure entirely and creates ambiguity about what information is needed.",
+      "requiredSelections": 1
     },
     {
       "id": "30",
@@ -40751,7 +40781,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "Feedback principles require the system to visibly acknowledge an action (e.g., a spinner or confirmation) so users understand something is happening, which is missing here. B is incorrect because Gestalt similarity concerns visual grouping via shared styling, unrelated to post-action feedback. C is incorrect because Jobs-to-be-done reframes requirements, not post-submission system feedback. D is incorrect because Information architecture concerns navigation structure, not real-time action feedback."
+      "explanation": "Feedback principles require the system to visibly acknowledge an action (e.g., a spinner or confirmation) so users understand something is happening, which is missing here. B is incorrect because Gestalt similarity concerns visual grouping via shared styling, unrelated to post-action feedback. C is incorrect because Jobs-to-be-done reframes requirements, not post-submission system feedback. D is incorrect because Information architecture concerns navigation structure, not real-time action feedback.",
+      "requiredSelections": 1
     },
     {
       "id": "31",
@@ -40778,7 +40809,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Good information architecture relies on predictable, consistent labeling so users can find functionality without needing to be retrained, and diverging from familiar terms like \"Cases\" undermines that. A is incorrect because Labels don't need to match API names exactly; the issue here is inconsistency with documentation and user expectations, not API alignment. C is incorrect because Frequent relabeling would make navigation less predictable, not more usable. D is incorrect because This directly contradicts established UX research on findability and learned navigation patterns."
+      "explanation": "Good information architecture relies on predictable, consistent labeling so users can find functionality without needing to be retrained, and diverging from familiar terms like \"Cases\" undermines that. A is incorrect because Labels don't need to match API names exactly; the issue here is inconsistency with documentation and user expectations, not API alignment. C is incorrect because Frequent relabeling would make navigation less predictable, not more usable. D is incorrect because This directly contradicts established UX research on findability and learned navigation patterns.",
+      "requiredSelections": 1
     },
     {
       "id": "32",
@@ -40805,7 +40837,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "Actionable, non-technical microcopy tells users specifically what went wrong and how to fix it, which is essential since most end users can't interpret raw system error codes. A is incorrect because Leaving a raw technical code as-is fails end users who have no context for what it means. B is incorrect because Removing error messages entirely leaves users with no guidance when something goes wrong. D is incorrect because Translating a cryptic message keeps it equally unusable in every language; the content itself must change first."
+      "explanation": "Actionable, non-technical microcopy tells users specifically what went wrong and how to fix it, which is essential since most end users can't interpret raw system error codes. A is incorrect because Leaving a raw technical code as-is fails end users who have no context for what it means. B is incorrect because Removing error messages entirely leaves users with no guidance when something goes wrong. D is incorrect because Translating a cryptic message keeps it equally unusable in every language; the content itself must change first.",
+      "requiredSelections": 1
     },
     {
       "id": "33",
@@ -40832,7 +40865,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "Small screens, touch-target sizing, and thumb-reach zones constrain how much can be usefully placed on a mobile screen, which is exactly why compact layouts must prioritize only the most critical fields. A is incorrect because Mobile screens have significantly less real estate than desktop, the opposite of this claim. B is incorrect because Offline capability is highly relevant for field workers who may lose connectivity at job sites. C is incorrect because Mobile users typically rely on touch input, not a full physical keyboard."
+      "explanation": "Small screens, touch-target sizing, and thumb-reach zones constrain how much can be usefully placed on a mobile screen, which is exactly why compact layouts must prioritize only the most critical fields. A is incorrect because Mobile screens have significantly less real estate than desktop, the opposite of this claim. B is incorrect because Offline capability is highly relevant for field workers who may lose connectivity at job sites. C is incorrect because Mobile users typically rely on touch input, not a full physical keyboard.",
+      "requiredSelections": 1
     },
     {
       "id": "34",
@@ -40859,7 +40893,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "Lightning Experience and Experience Cloud use responsive design, fluidly adapting component layout to the available screen width rather than serving separate fixed-breakpoint layouts. B is incorrect because Adaptive design serves distinct layouts per breakpoint, which is not how Lightning Experience primarily behaves. C is incorrect because Lightning pages do adjust to screen size; claiming otherwise misrepresents the platform. D is incorrect because Print-first design is unrelated to any Salesforce UI rendering approach."
+      "explanation": "Lightning Experience and Experience Cloud use responsive design, fluidly adapting component layout to the available screen width rather than serving separate fixed-breakpoint layouts. B is incorrect because Adaptive design serves distinct layouts per breakpoint, which is not how Lightning Experience primarily behaves. C is incorrect because Lightning pages do adjust to screen size; claiming otherwise misrepresents the platform. D is incorrect because Print-first design is unrelated to any Salesforce UI rendering approach.",
+      "requiredSelections": 1
     },
     {
       "id": "35",
@@ -40919,7 +40954,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Divergent thinking generates a wide range of possible ideas without judgment, which matches the open brainstorming phase described before any narrowing occurs. A is incorrect because Convergent thinking narrows options down to a decision, which is the opposite of the brainstorming phase described. C is incorrect because Evaluative research tests a specific existing solution, not idea generation. D is incorrect because Summative testing evaluates a finished design against benchmarks, unrelated to early ideation."
+      "explanation": "Divergent thinking generates a wide range of possible ideas without judgment, which matches the open brainstorming phase described before any narrowing occurs. A is incorrect because Convergent thinking narrows options down to a decision, which is the opposite of the brainstorming phase described. C is incorrect because Evaluative research tests a specific existing solution, not idea generation. D is incorrect because Summative testing evaluates a finished design against benchmarks, unrelated to early ideation.",
+      "requiredSelections": 1
     },
     {
       "id": "37",
@@ -40946,7 +40982,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "Contextual inquiry involves observing and questioning someone as they perform real work in their actual environment, which matches shadowing the supervisor with think-aloud commentary. A is incorrect because Card sorting evaluates categorization of items, not observed real-world work. B is incorrect because A/B testing compares two live variants in production, not an observational technique. D is incorrect because A stakeholder map documents organizational influence, not behavioral observation."
+      "explanation": "Contextual inquiry involves observing and questioning someone as they perform real work in their actual environment, which matches shadowing the supervisor with think-aloud commentary. A is incorrect because Card sorting evaluates categorization of items, not observed real-world work. B is incorrect because A/B testing compares two live variants in production, not an observational technique. D is incorrect because A stakeholder map documents organizational influence, not behavioral observation.",
+      "requiredSelections": 1
     },
     {
       "id": "38",
@@ -40973,7 +41010,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "The Develop phase is where teams generate and explore a range of potential solutions after the problem has already been defined, matching this scenario exactly. A is incorrect because Discover is the initial research phase before a problem statement exists, which has already been completed here. B is incorrect because Define is where the problem statement itself is created, which has already happened in this scenario. C is incorrect because Deliver is the final phase focused on testing and shipping a chosen solution, not generating concepts."
+      "explanation": "The Develop phase is where teams generate and explore a range of potential solutions after the problem has already been defined, matching this scenario exactly. A is incorrect because Discover is the initial research phase before a problem statement exists, which has already been completed here. B is incorrect because Define is where the problem statement itself is created, which has already happened in this scenario. C is incorrect because Deliver is the final phase focused on testing and shipping a chosen solution, not generating concepts.",
+      "requiredSelections": 1
     },
     {
       "id": "39",
@@ -41000,7 +41038,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "Human-centered design is iterative, and discovering a fundamental misunderstanding of user needs warrants cycling back to correct the foundation rather than building further on a flawed premise. B is incorrect because Continuing to build on a wrong premise compounds wasted effort rather than avoiding it. C is incorrect because Shipping a design built on a misunderstood need risks a poor launch experience that could have been caught earlier. D is incorrect because Even a single session's feedback about a core misunderstanding warrants investigation, not dismissal, especially if it aligns with earlier signals."
+      "explanation": "Human-centered design is iterative, and discovering a fundamental misunderstanding of user needs warrants cycling back to correct the foundation rather than building further on a flawed premise. B is incorrect because Continuing to build on a wrong premise compounds wasted effort rather than avoiding it. C is incorrect because Shipping a design built on a misunderstood need risks a poor launch experience that could have been caught earlier. D is incorrect because Even a single session's feedback about a core misunderstanding warrants investigation, not dismissal, especially if it aligns with earlier signals.",
+      "requiredSelections": 1
     },
     {
       "id": "40",
@@ -41065,7 +41104,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "A well-designed solution should match how users conceptually think about their work (their mental model), not just mirror the underlying data structure, and this scenario describes exactly that misalignment. A is incorrect because A color theme change is cosmetic and doesn't address the conceptual mismatch described. B is incorrect because Adding more custom objects would deepen the data-model orientation rather than resolve the mental-model mismatch. D is incorrect because Dismissing the mental model gap ignores a core human-centered design principle regardless of platform."
+      "explanation": "A well-designed solution should match how users conceptually think about their work (their mental model), not just mirror the underlying data structure, and this scenario describes exactly that misalignment. A is incorrect because A color theme change is cosmetic and doesn't address the conceptual mismatch described. B is incorrect because Adding more custom objects would deepen the data-model orientation rather than resolve the mental-model mismatch. D is incorrect because Dismissing the mental model gap ignores a core human-centered design principle regardless of platform.",
+      "requiredSelections": 1
     },
     {
       "id": "42",
@@ -41092,7 +41132,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "An assumption map plots assumptions by confidence and risk specifically to prioritize which ones need validation first, and high-risk, low-confidence assumptions are exactly the ones that should be tested before the team commits further. A is incorrect because A SUS questionnaire measures perceived usability post-test, unrelated to prioritizing unvalidated assumptions. B is incorrect because A stakeholder map addresses influence and interest, not assumption risk, and permanently deprioritizing risky unknowns ignores them rather than resolving them. C is incorrect because A journey map sequences experience over time; it isn't the tool for categorizing assumption risk."
+      "explanation": "An assumption map plots assumptions by confidence and risk specifically to prioritize which ones need validation first, and high-risk, low-confidence assumptions are exactly the ones that should be tested before the team commits further. A is incorrect because A SUS questionnaire measures perceived usability post-test, unrelated to prioritizing unvalidated assumptions. B is incorrect because A stakeholder map addresses influence and interest, not assumption risk, and permanently deprioritizing risky unknowns ignores them rather than resolving them. C is incorrect because A journey map sequences experience over time; it isn't the tool for categorizing assumption risk.",
+      "requiredSelections": 1
     },
     {
       "id": "43",
@@ -41119,7 +41160,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "A lightweight co-design workshop directly involves users in shaping the design within a short timeframe and limited budget, matching the constraint of wanting participatory input quickly. B is incorrect because An unmoderated test after the design is finalized only evaluates, it doesn't involve users in shaping the design itself. C is incorrect because A twelve-week ethnographic study far exceeds the two-week timeline available. D is incorrect because A stakeholder-only review excludes actual users entirely, contradicting the goal of user involvement."
+      "explanation": "A lightweight co-design workshop directly involves users in shaping the design within a short timeframe and limited budget, matching the constraint of wanting participatory input quickly. B is incorrect because An unmoderated test after the design is finalized only evaluates, it doesn't involve users in shaping the design itself. C is incorrect because A twelve-week ethnographic study far exceeds the two-week timeline available. D is incorrect because A stakeholder-only review excludes actual users entirely, contradicting the goal of user involvement.",
+      "requiredSelections": 1
     },
     {
       "id": "44",
@@ -41146,7 +41188,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "The Design Sprint methodology is explicitly structured as a compressed, time-boxed process moving from problem framing through a tested prototype in about a week, matching this exact constraint. A is incorrect because A full generative discovery program typically requires weeks to months, incompatible with a one-week timeline. C is incorrect because A twelve-week diary study is a longitudinal method, far exceeding the available time. D is incorrect because SUS benchmarking measures usability perception after a design exists; it isn't a rapid ideation-to-prototype methodology."
+      "explanation": "The Design Sprint methodology is explicitly structured as a compressed, time-boxed process moving from problem framing through a tested prototype in about a week, matching this exact constraint. A is incorrect because A full generative discovery program typically requires weeks to months, incompatible with a one-week timeline. C is incorrect because A twelve-week diary study is a longitudinal method, far exceeding the available time. D is incorrect because SUS benchmarking measures usability perception after a design exists; it isn't a rapid ideation-to-prototype methodology.",
+      "requiredSelections": 1
     },
     {
       "id": "45",
@@ -41211,7 +41254,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "Situational disability refers to a temporary or environmental impairment, such as a temporarily broken arm, that limits ability the same way a permanent disability might, but only for a limited duration or context. A is incorrect because A permanent disability is a lasting condition, whereas this technician's limitation is temporary and will resolve. B is incorrect because Information architecture failure concerns navigation and labeling problems, unrelated to a temporary physical impairment. C is incorrect because Cognitive overload concerns mental processing burden, not a physical, situational limitation."
+      "explanation": "Situational disability refers to a temporary or environmental impairment, such as a temporarily broken arm, that limits ability the same way a permanent disability might, but only for a limited duration or context. A is incorrect because A permanent disability is a lasting condition, whereas this technician's limitation is temporary and will resolve. B is incorrect because Information architecture failure concerns navigation and labeling problems, unrelated to a temporary physical impairment. C is incorrect because Cognitive overload concerns mental processing burden, not a physical, situational limitation.",
+      "requiredSelections": 1
     },
     {
       "id": "47",
@@ -41238,7 +41282,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "This principle holds that designing specifically for someone facing exclusion (like the one-handed technician) often produces solutions — such as larger touch targets or voice input — that improve usability broadly for everyone else too. B is incorrect because Designing only for the average user is the exclusionary approach this principle explicitly pushes back against. C is incorrect because Surveying the entire user base first isn't the mechanism of this principle, which is about starting from a specific excluded case. D is incorrect because Avoiding any specific persona removes the very starting point (solve for one) that the principle relies on."
+      "explanation": "This principle holds that designing specifically for someone facing exclusion (like the one-handed technician) often produces solutions — such as larger touch targets or voice input — that improve usability broadly for everyone else too. B is incorrect because Designing only for the average user is the exclusionary approach this principle explicitly pushes back against. C is incorrect because Surveying the entire user base first isn't the mechanism of this principle, which is about starting from a specific excluded case. D is incorrect because Avoiding any specific persona removes the very starting point (solve for one) that the principle relies on.",
+      "requiredSelections": 1
     },
     {
       "id": "48",
@@ -41265,7 +41310,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Sourcing persona research from a narrow, unrepresentative group introduces sampling bias that risks producing personas — and downstream design decisions — that don't reflect or serve the needs of the broader, more diverse actual user base. A is incorrect because Brand voice has nothing to do with whether the sampled group represents actual global user needs. C is incorrect because Personas don't self-correct after launch; biased research produces a lasting blind spot unless deliberately revisited. D is incorrect because Persona creation is directly and significantly shaped by who is interviewed, contradicting this claim."
+      "explanation": "Sourcing persona research from a narrow, unrepresentative group introduces sampling bias that risks producing personas — and downstream design decisions — that don't reflect or serve the needs of the broader, more diverse actual user base. A is incorrect because Brand voice has nothing to do with whether the sampled group represents actual global user needs. C is incorrect because Personas don't self-correct after launch; biased research produces a lasting blind spot unless deliberately revisited. D is incorrect because Persona creation is directly and significantly shaped by who is interviewed, contradicting this claim.",
+      "requiredSelections": 1
     },
     {
       "id": "49",
@@ -41325,7 +41371,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "Master-detail relationships enforce cascading deletes and tie the child record's security to the parent, matching the requirement that the repair record be removed when its parent asset is deleted. A is incorrect because A lookup relationship does not cascade deletes by default, so the repair record would remain an orphan. B is incorrect because A junction object models many-to-many relationships, not the strict one-to-one dependency described here. D is incorrect because A hierarchical field type applies to self-referencing lookups on the same object, not cross-object cascading delete behavior."
+      "explanation": "Master-detail relationships enforce cascading deletes and tie the child record's security to the parent, matching the requirement that the repair record be removed when its parent asset is deleted. A is incorrect because A lookup relationship does not cascade deletes by default, so the repair record would remain an orphan. B is incorrect because A junction object models many-to-many relationships, not the strict one-to-one dependency described here. D is incorrect because A hierarchical field type applies to self-referencing lookups on the same object, not cross-object cascading delete behavior.",
+      "requiredSelections": 1
     },
     {
       "id": "51",
@@ -41352,7 +41399,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "A lookup relationship allows the relationship field to be optional or blank, letting a Warranty Claim exist without a Case, unlike master-detail which requires the parent. A is incorrect because Master-detail relationships require a parent record at creation, which conflicts with the stated need for optional linkage. B is incorrect because A roll-up summary field is a calculation feature dependent on master-detail, not a relationship type itself. C is incorrect because A junction object is for many-to-many scenarios, not a simple optional one-to-many link."
+      "explanation": "A lookup relationship allows the relationship field to be optional or blank, letting a Warranty Claim exist without a Case, unlike master-detail which requires the parent. A is incorrect because Master-detail relationships require a parent record at creation, which conflicts with the stated need for optional linkage. B is incorrect because A roll-up summary field is a calculation feature dependent on master-detail, not a relationship type itself. C is incorrect because A junction object is for many-to-many scenarios, not a simple optional one-to-many link.",
+      "requiredSelections": 1
     },
     {
       "id": "52",
@@ -41379,7 +41427,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "Roll-up summary fields aggregate child record values onto the parent automatically, but this capability is only available across master-detail relationships, not lookups. B is incorrect because A formula field on the parent cannot natively aggregate child records across a lookup relationship without more complex workarounds. C is incorrect because A validation rule enforces data entry conditions; it does not calculate aggregated totals. D is incorrect because A compact layout surfaces key fields in a condensed view; it has no aggregation capability and no dependency on hierarchical fields."
+      "explanation": "Roll-up summary fields aggregate child record values onto the parent automatically, but this capability is only available across master-detail relationships, not lookups. B is incorrect because A formula field on the parent cannot natively aggregate child records across a lookup relationship without more complex workarounds. C is incorrect because A validation rule enforces data entry conditions; it does not calculate aggregated totals. D is incorrect because A compact layout surfaces key fields in a condensed view; it has no aggregation capability and no dependency on hierarchical fields.",
+      "requiredSelections": 1
     },
     {
       "id": "53",
@@ -41406,7 +41455,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "A junction object models the many-to-many relationship between Volunteers and Events while also providing a natural place to store per-pairing data like hours worked. A is incorrect because A single lookup field only supports one Volunteer-to-Event pairing per record, not a true many-to-many relationship. C is incorrect because A roll-up summary field aggregates values; it doesn't model the relationship structure needed here. D is incorrect because A hierarchical relationship is for self-referencing records on the same object, not cross-object many-to-many modeling."
+      "explanation": "A junction object models the many-to-many relationship between Volunteers and Events while also providing a natural place to store per-pairing data like hours worked. A is incorrect because A single lookup field only supports one Volunteer-to-Event pairing per record, not a true many-to-many relationship. C is incorrect because A roll-up summary field aggregates values; it doesn't model the relationship structure needed here. D is incorrect because A hierarchical relationship is for self-referencing records on the same object, not cross-object many-to-many modeling.",
+      "requiredSelections": 1
     },
     {
       "id": "54",
@@ -41433,7 +41483,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "The Activity Timeline is purpose-built to show Tasks (calls, logged activities) and Events (meetings) together in chronological order directly on the record, satisfying this need out of the box. A is incorrect because A validation rule enforces data entry rules; it doesn't create a chronological display. B is incorrect because A custom object would require rebuilding functionality Salesforce already provides natively through Activities. D is incorrect because A dependent picklist controls field value options, unrelated to timeline display of activities."
+      "explanation": "The Activity Timeline is purpose-built to show Tasks (calls, logged activities) and Events (meetings) together in chronological order directly on the record, satisfying this need out of the box. A is incorrect because A validation rule enforces data entry rules; it doesn't create a chronological display. B is incorrect because A custom object would require rebuilding functionality Salesforce already provides natively through Activities. D is incorrect because A dependent picklist controls field value options, unrelated to timeline display of activities.",
+      "requiredSelections": 1
     },
     {
       "id": "55",
@@ -41531,7 +41582,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "Dynamic Forms let individual fields be shown or hidden based on record context or user criteria, directly reducing clutter by surfacing only fields relevant to the current triage scenario. B is incorrect because A single long layout with all fields visible is the current problem, not a solution to it. C is incorrect because A validation rule enforces data entry conditions; it cannot hide fields from view. D is incorrect because Increasing compact layout field count adds more visible fields, worsening rather than reducing clutter."
+      "explanation": "Dynamic Forms let individual fields be shown or hidden based on record context or user criteria, directly reducing clutter by surfacing only fields relevant to the current triage scenario. B is incorrect because A single long layout with all fields visible is the current problem, not a solution to it. C is incorrect because A validation rule enforces data entry conditions; it cannot hide fields from view. D is incorrect because Increasing compact layout field count adds more visible fields, worsening rather than reducing clutter.",
+      "requiredSelections": 1
     },
     {
       "id": "58",
@@ -41558,7 +41610,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Compact layouts control which fields display in condensed views such as the highlights panel, Kanban cards, and mobile, making them the correct tool for surfacing the most critical fields in those contexts. A is incorrect because Dynamic Actions control which buttons appear based on criteria, not which fields display in condensed views. C is incorrect because Path provides stage-based guidance and key field highlighting per stage, but doesn't configure Kanban card or highlights panel fields. D is incorrect because A validation rule enforces data quality rules; it has no bearing on which fields are visually surfaced."
+      "explanation": "Compact layouts control which fields display in condensed views such as the highlights panel, Kanban cards, and mobile, making them the correct tool for surfacing the most critical fields in those contexts. A is incorrect because Dynamic Actions control which buttons appear based on criteria, not which fields display in condensed views. C is incorrect because Path provides stage-based guidance and key field highlighting per stage, but doesn't configure Kanban card or highlights panel fields. D is incorrect because A validation rule enforces data quality rules; it has no bearing on which fields are visually surfaced.",
+      "requiredSelections": 1
     },
     {
       "id": "59",
@@ -41585,7 +41638,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "List Views with filters and chosen columns are designed exactly for scanning and filtering large volumes of records efficiently, matching this high-volume triage need. A is incorrect because A related list shows child records tied to one parent record, not a filterable view across many independent records. B is incorrect because Path operates on a single record at a time and doesn't support scanning across many records. D is incorrect because A Quick Action performs a single-record task; it isn't a browsing or filtering tool."
+      "explanation": "List Views with filters and chosen columns are designed exactly for scanning and filtering large volumes of records efficiently, matching this high-volume triage need. A is incorrect because A related list shows child records tied to one parent record, not a filterable view across many independent records. B is incorrect because Path operates on a single record at a time and doesn't support scanning across many records. D is incorrect because A Quick Action performs a single-record task; it isn't a browsing or filtering tool.",
+      "requiredSelections": 1
     },
     {
       "id": "60",
@@ -41650,7 +41704,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "Since accordions typically reveal one section at a time while collapsing others, they suit sequential single-section reference; the scenario describes exactly that use case, matching option A's stated behavior. B is incorrect because Tabs also generally show one panel at a time, and the scenario explicitly does not require true multi-section simultaneous comparison, so tabs are not the better fit described here. C is incorrect because A completely flat layout undermines the entire purpose of grouping dense information for manageability. D is incorrect because A validation rule cannot control section visibility; it governs data entry conditions only."
+      "explanation": "Since accordions typically reveal one section at a time while collapsing others, they suit sequential single-section reference; the scenario describes exactly that use case, matching option A's stated behavior. B is incorrect because Tabs also generally show one panel at a time, and the scenario explicitly does not require true multi-section simultaneous comparison, so tabs are not the better fit described here. C is incorrect because A completely flat layout undermines the entire purpose of grouping dense information for manageability. D is incorrect because A validation rule cannot control section visibility; it governs data entry conditions only.",
+      "requiredSelections": 1
     },
     {
       "id": "62",
@@ -41677,7 +41732,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "A related list quick link offers a lightweight way to preview and navigate to child records without the overhead of embedding full inline editing capability the users don't need. A is incorrect because Embedding every child Contact's full detail page inline would create excessive clutter for a rarely-edited relationship. C is incorrect because A validation rule affects data entry rules, not navigation or display of related records. D is incorrect because A Path component tracks stage-based progress; it isn't designed for browsing related child records."
+      "explanation": "A related list quick link offers a lightweight way to preview and navigate to child records without the overhead of embedding full inline editing capability the users don't need. A is incorrect because Embedding every child Contact's full detail page inline would create excessive clutter for a rarely-edited relationship. C is incorrect because A validation rule affects data entry rules, not navigation or display of related records. D is incorrect because A Path component tracks stage-based progress; it isn't designed for browsing related child records.",
+      "requiredSelections": 1
     },
     {
       "id": "63",
@@ -41704,7 +41760,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "Sales Path is specifically designed to highlight key fields and provide stage-based guidance content as a record moves through a process, directly matching this coaching need. A is incorrect because A related list displays child records; it has no stage-based guidance capability. B is incorrect because A Kanban view visualizes records across stages but doesn't provide field highlighting or coaching content per stage. D is incorrect because A compact layout only controls condensed field display; it doesn't provide coaching content."
+      "explanation": "Sales Path is specifically designed to highlight key fields and provide stage-based guidance content as a record moves through a process, directly matching this coaching need. A is incorrect because A related list displays child records; it has no stage-based guidance capability. B is incorrect because A Kanban view visualizes records across stages but doesn't provide field highlighting or coaching content per stage. D is incorrect because A compact layout only controls condensed field display; it doesn't provide coaching content.",
+      "requiredSelections": 1
     },
     {
       "id": "64",
@@ -41731,7 +41788,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "Dynamic Actions allow buttons to be shown or hidden based on field-value criteria, so the Close Case button can be configured to only appear when Status is not already Closed. A is incorrect because A master-detail relationship defines a data relationship structure, unrelated to conditional button visibility. B is incorrect because A permanent global action would always display the button regardless of context, which is the current problem. C is incorrect because A roll-up summary field aggregates data; it has no control over action button visibility."
+      "explanation": "Dynamic Actions allow buttons to be shown or hidden based on field-value criteria, so the Close Case button can be configured to only appear when Status is not already Closed. A is incorrect because A master-detail relationship defines a data relationship structure, unrelated to conditional button visibility. B is incorrect because A permanent global action would always display the button regardless of context, which is the current problem. C is incorrect because A roll-up summary field aggregates data; it has no control over action button visibility.",
+      "requiredSelections": 1
     },
     {
       "id": "65",
@@ -41796,7 +41854,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Embedding a Report or Dashboard component directly on the Lightning page surfaces relevant analytics in context, letting executives see pipeline trends without leaving the record view. A is incorrect because A related list of open activities shows task-level data, not aggregated pipeline trend analytics. C is incorrect because Path shows stage-based guidance, not broader pipeline trend visualizations. D is incorrect because A Quick Action performs a task; it does not display analytics content."
+      "explanation": "Embedding a Report or Dashboard component directly on the Lightning page surfaces relevant analytics in context, letting executives see pipeline trends without leaving the record view. A is incorrect because A related list of open activities shows task-level data, not aggregated pipeline trend analytics. C is incorrect because Path shows stage-based guidance, not broader pipeline trend visualizations. D is incorrect because A Quick Action performs a task; it does not display analytics content.",
+      "requiredSelections": 1
     },
     {
       "id": "67",
@@ -41823,7 +41882,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "Global actions are available from anywhere in the org, including the global search bar and utility bar, independent of which record or object a user is currently viewing, matching this cross-context requirement. A is incorrect because A related list button appears only within a specific record's related list, not globally. B is incorrect because An object-specific action is scoped to a particular object's context and page layout, not available universally. D is incorrect because A roll-up summary field aggregates data and has no relation to action availability."
+      "explanation": "Global actions are available from anywhere in the org, including the global search bar and utility bar, independent of which record or object a user is currently viewing, matching this cross-context requirement. A is incorrect because A related list button appears only within a specific record's related list, not globally. B is incorrect because An object-specific action is scoped to a particular object's context and page layout, not available universally. D is incorrect because A roll-up summary field aggregates data and has no relation to action availability.",
+      "requiredSelections": 1
     },
     {
       "id": "68",
@@ -41850,7 +41910,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "Default field values can pre-populate fields automatically based on context (such as the originating campaign), eliminating repetitive manual entry for predictable values. A is incorrect because A master-detail relationship defines a data structure, not a field pre-population mechanism. B is incorrect because A validation rule only blocks incomplete submissions; it doesn't reduce the manual entry burden itself. C is incorrect because A roll-up summary field aggregates child data; it has no role in pre-populating lead fields."
+      "explanation": "Default field values can pre-populate fields automatically based on context (such as the originating campaign), eliminating repetitive manual entry for predictable values. A is incorrect because A master-detail relationship defines a data structure, not a field pre-population mechanism. B is incorrect because A validation rule only blocks incomplete submissions; it doesn't reduce the manual entry burden itself. C is incorrect because A roll-up summary field aggregates child data; it has no role in pre-populating lead fields.",
+      "requiredSelections": 1
     },
     {
       "id": "69",
@@ -41877,7 +41938,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "A formula field automatically calculates and displays a derived value based on other fields, such as computing elapsed days from Created Date, with zero manual input required. B is incorrect because A dependent picklist controls value choices based on another picklist, unrelated to date calculations. C is incorrect because A validation rule enforces conditions on save; it does not calculate or display a running value. D is incorrect because A Quick Action performs a task via a button; it doesn't perform ongoing automatic calculation."
+      "explanation": "A formula field automatically calculates and displays a derived value based on other fields, such as computing elapsed days from Created Date, with zero manual input required. B is incorrect because A dependent picklist controls value choices based on another picklist, unrelated to date calculations. C is incorrect because A validation rule enforces conditions on save; it does not calculate or display a running value. D is incorrect because A Quick Action performs a task via a button; it doesn't perform ongoing automatic calculation.",
+      "requiredSelections": 1
     },
     {
       "id": "70",
@@ -41904,7 +41966,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Dependent picklists constrain the available options in one field based on the value selected in a controlling field, directly preventing invalid Country/State combinations while guiding the user to valid choices. A is incorrect because A formula field can't reliably reverse-derive a specific State from a Country without additional logic Salesforce doesn't natively support this way. C is incorrect because A roll-up summary field aggregates child record data, unrelated to picklist value control. D is incorrect because A related list displays child records; it has no bearing on picklist dependency logic."
+      "explanation": "Dependent picklists constrain the available options in one field based on the value selected in a controlling field, directly preventing invalid Country/State combinations while guiding the user to valid choices. A is incorrect because A formula field can't reliably reverse-derive a specific State from a Country without additional logic Salesforce doesn't natively support this way. C is incorrect because A roll-up summary field aggregates child record data, unrelated to picklist value control. D is incorrect because A related list displays child records; it has no bearing on picklist dependency logic.",
+      "requiredSelections": 1
     },
     {
       "id": "71",
@@ -41931,7 +41994,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "A validation rule can enforce this conditional business logic at save time, but designers must weigh the friction it introduces against the data integrity benefit it provides. A is incorrect because A compact layout only affects which fields are shown in condensed views, not save-time enforcement. B is incorrect because A formula field calculates and displays values; it cannot block record saves or enforce conditional business rules. D is incorrect because A Quick Action launches a task flow; it isn't a mechanism for conditional field validation."
+      "explanation": "A validation rule can enforce this conditional business logic at save time, but designers must weigh the friction it introduces against the data integrity benefit it provides. A is incorrect because A compact layout only affects which fields are shown in condensed views, not save-time enforcement. B is incorrect because A formula field calculates and displays values; it cannot block record saves or enforce conditional business rules. D is incorrect because A Quick Action launches a task flow; it isn't a mechanism for conditional field validation.",
+      "requiredSelections": 1
     },
     {
       "id": "72",
@@ -41958,7 +42022,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "A Screen Flow presents a defined, ordered sequence of screens and can enforce that each step is completed before advancing, matching the strict, ordered enrollment process requirement. A is incorrect because A related list displays child records; it has no capability to enforce a data collection sequence. B is incorrect because A Guided Action List is designed for non-linear task completion, which conflicts with the strict ordering requirement here. C is incorrect because A single-page layout with all fields presents everything at once with no enforced sequence or step gating."
+      "explanation": "A Screen Flow presents a defined, ordered sequence of screens and can enforce that each step is completed before advancing, matching the strict, ordered enrollment process requirement. A is incorrect because A related list displays child records; it has no capability to enforce a data collection sequence. B is incorrect because A Guided Action List is designed for non-linear task completion, which conflicts with the strict ordering requirement here. C is incorrect because A single-page layout with all fields presents everything at once with no enforced sequence or step gating.",
+      "requiredSelections": 1
     },
     {
       "id": "73",
@@ -41985,7 +42050,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "Conditional visibility lets a field or component appear or hide within the same screen based on a condition, avoiding the need to branch into duplicate screens for a single differing field. B is incorrect because Building an entirely separate Flow duplicates maintenance effort for what is a single conditional field difference. C is incorrect because A roll-up summary field aggregates child records; it has no role in screen-level conditional display. D is incorrect because A dependent picklist controls picklist option availability, not general field visibility based on a numeric threshold."
+      "explanation": "Conditional visibility lets a field or component appear or hide within the same screen based on a condition, avoiding the need to branch into duplicate screens for a single differing field. B is incorrect because Building an entirely separate Flow duplicates maintenance effort for what is a single conditional field difference. C is incorrect because A roll-up summary field aggregates child records; it has no role in screen-level conditional display. D is incorrect because A dependent picklist controls picklist option availability, not general field visibility based on a numeric threshold.",
+      "requiredSelections": 1
     },
     {
       "id": "74",
@@ -42012,7 +42078,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "A Guided Action List supports completing tasks non-linearly and across multiple sessions, which matches technicians checking off items over several days in any order, unlike a rigid sequential Screen Flow. A is incorrect because A single-screen Flow without save capability can't support work spanning multiple days or sessions. C is incorrect because A validation rule only enforces save-time conditions; it has no checklist or task-tracking capability. D is incorrect because A roll-up summary field aggregates numeric data; it isn't a task-tracking tool."
+      "explanation": "A Guided Action List supports completing tasks non-linearly and across multiple sessions, which matches technicians checking off items over several days in any order, unlike a rigid sequential Screen Flow. A is incorrect because A single-screen Flow without save capability can't support work spanning multiple days or sessions. C is incorrect because A validation rule only enforces save-time conditions; it has no checklist or task-tracking capability. D is incorrect because A roll-up summary field aggregates numeric data; it isn't a task-tracking tool.",
+      "requiredSelections": 1
     },
     {
       "id": "75",
@@ -42039,7 +42106,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "A record-triggered Flow runs automatically in the background when the specified condition (stage change to Negotiation) occurs, requiring no manual action from the rep, matching this hands-off requirement. A is incorrect because A compact layout only affects field display in condensed views; it has no automation capability. B is incorrect because A Quick Action requires explicit rep interaction, contradicting the \"without the rep doing anything\" requirement. D is incorrect because A dependent picklist governs option selection, not automated field population on a triggered event."
+      "explanation": "A record-triggered Flow runs automatically in the background when the specified condition (stage change to Negotiation) occurs, requiring no manual action from the rep, matching this hands-off requirement. A is incorrect because A compact layout only affects field display in condensed views; it has no automation capability. B is incorrect because A Quick Action requires explicit rep interaction, contradicting the \"without the rep doing anything\" requirement. D is incorrect because A dependent picklist governs option selection, not automated field population on a triggered event.",
+      "requiredSelections": 1
     },
     {
       "id": "76",
@@ -42066,7 +42134,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "A Macro can bundle multiple repetitive steps, such as field updates and sending a templated email, into a single agent-triggered action, directly reducing the manual repetitive burden described. A is incorrect because A master-detail relationship defines record hierarchy, not an action automation mechanism. B is incorrect because A dependent picklist only constrains field value options; it cannot execute a multi-step action sequence. C is incorrect because A roll-up summary field aggregates numeric totals, unrelated to executing a task sequence."
+      "explanation": "A Macro can bundle multiple repetitive steps, such as field updates and sending a templated email, into a single agent-triggered action, directly reducing the manual repetitive burden described. A is incorrect because A master-detail relationship defines record hierarchy, not an action automation mechanism. B is incorrect because A dependent picklist only constrains field value options; it cannot execute a multi-step action sequence. C is incorrect because A roll-up summary field aggregates numeric totals, unrelated to executing a task sequence.",
+      "requiredSelections": 1
     },
     {
       "id": "77",
@@ -42126,7 +42195,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "The Console app navigation model supports multiple open tabs, split views, and pinned regions, enabling an agent to reference a knowledge article alongside a pinned case detail simultaneously. B is incorrect because Standard single-tab navigation only shows one primary view at a time, without the split-view or pinning capability needed here. C is incorrect because A compact layout only governs condensed field display; it isn't a navigation model. D is incorrect because A global action performs a task; it doesn't provide a multi-pane working environment."
+      "explanation": "The Console app navigation model supports multiple open tabs, split views, and pinned regions, enabling an agent to reference a knowledge article alongside a pinned case detail simultaneously. B is incorrect because Standard single-tab navigation only shows one primary view at a time, without the split-view or pinning capability needed here. C is incorrect because A compact layout only governs condensed field display; it isn't a navigation model. D is incorrect because A global action performs a task; it doesn't provide a multi-pane working environment.",
+      "requiredSelections": 1
     },
     {
       "id": "79",
@@ -42153,7 +42223,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "The utility bar persists across the console and can house frequently used tools like Notes and Open CTI, giving reps quick access without navigating away from their current record. A is incorrect because A related list is scoped to a specific record's child data; it can't provide a persistent cross-page utility tool. C is incorrect because A validation rule enforces data entry conditions; it has no bearing on persistent tool access. D is incorrect because A roll-up summary field aggregates data; it isn't a UI access mechanism."
+      "explanation": "The utility bar persists across the console and can house frequently used tools like Notes and Open CTI, giving reps quick access without navigating away from their current record. A is incorrect because A related list is scoped to a specific record's child data; it can't provide a persistent cross-page utility tool. C is incorrect because A validation rule enforces data entry conditions; it has no bearing on persistent tool access. D is incorrect because A roll-up summary field aggregates data; it isn't a UI access mechanism.",
+      "requiredSelections": 1
     },
     {
       "id": "80",
@@ -42180,7 +42251,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "Search Layouts and the org's search settings determine which objects and fields participate in global search results, so tuning them directly addresses irrelevant result clutter. A is incorrect because A roll-up summary field aggregates numeric totals; it has no role in search behavior. B is incorrect because A dependent picklist governs field value dependencies, unrelated to search scope configuration. D is incorrect because A master-detail relationship defines a data hierarchy, not search configuration."
+      "explanation": "Search Layouts and the org's search settings determine which objects and fields participate in global search results, so tuning them directly addresses irrelevant result clutter. A is incorrect because A roll-up summary field aggregates numeric totals; it has no role in search behavior. B is incorrect because A dependent picklist governs field value dependencies, unrelated to search scope configuration. D is incorrect because A master-detail relationship defines a data hierarchy, not search configuration.",
+      "requiredSelections": 1
     },
     {
       "id": "81",
@@ -42207,7 +42279,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "A docked prompt stays persistently visible within the page layout rather than disappearing after a quick glance, making it a better fit for ensuring a mandatory message is actually seen. A is incorrect because A validation rule enforces data entry rules; it has no messaging or guidance capability. B is incorrect because A targeted prompt on hover is easily missed if the user never hovers over the specific element, unlike a persistently docked prompt. C is incorrect because A Trailhead module lives outside the page and won't intercept in-context attention the way in-app guidance does."
+      "explanation": "A docked prompt stays persistently visible within the page layout rather than disappearing after a quick glance, making it a better fit for ensuring a mandatory message is actually seen. A is incorrect because A validation rule enforces data entry rules; it has no messaging or guidance capability. B is incorrect because A targeted prompt on hover is easily missed if the user never hovers over the specific element, unlike a persistently docked prompt. C is incorrect because A Trailhead module lives outside the page and won't intercept in-context attention the way in-app guidance does.",
+      "requiredSelections": 1
     },
     {
       "id": "82",
@@ -42234,7 +42307,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "A multi-step Walkthrough can guide users sequentially through each part of a changed multi-step process, which is more effective for substantial process changes than a single static prompt. B is incorrect because A single floating prompt shown once cannot adequately explain a multi-step process change. C is incorrect because Field-level help text addresses one field at a time, not an end-to-end process change. D is incorrect because A generic help menu link requires users to seek it out actively rather than guiding them proactively through the change."
+      "explanation": "A multi-step Walkthrough can guide users sequentially through each part of a changed multi-step process, which is more effective for substantial process changes than a single static prompt. B is incorrect because A single floating prompt shown once cannot adequately explain a multi-step process change. C is incorrect because Field-level help text addresses one field at a time, not an end-to-end process change. D is incorrect because A generic help menu link requires users to seek it out actively rather than guiding them proactively through the change.",
+      "requiredSelections": 1
     },
     {
       "id": "83",
@@ -42261,7 +42335,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Custom help menu items let the designer surface role-specific resources within the existing Help menu, giving users a discoverable path to onboarding material without adding permanent visual clutter. A is incorrect because A permanent banner adds ongoing visual clutter, which the requirement explicitly wants to avoid. C is incorrect because A validation rule enforces save-time conditions; it has no role in surfacing help resources. D is incorrect because A roll-up summary field aggregates data; it is unrelated to onboarding resource delivery."
+      "explanation": "Custom help menu items let the designer surface role-specific resources within the existing Help menu, giving users a discoverable path to onboarding material without adding permanent visual clutter. A is incorrect because A permanent banner adds ongoing visual clutter, which the requirement explicitly wants to avoid. C is incorrect because A validation rule enforces save-time conditions; it has no role in surfacing help resources. D is incorrect because A roll-up summary field aggregates data; it is unrelated to onboarding resource delivery.",
+      "requiredSelections": 1
     },
     {
       "id": "84",
@@ -42288,7 +42363,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "myTrailhead enables organizations to deliver branded, in-depth, self-paced learning content for ongoing skill-building, which goes beyond the scope of lightweight in-app prompts. A is incorrect because A validation rule enforces data entry rules; it has no learning delivery capability. B is incorrect because A single targeted prompt offers only brief, contextual guidance, not in-depth self-paced learning content. D is incorrect because A compact layout controls condensed field display; it is unrelated to learning content delivery."
+      "explanation": "myTrailhead enables organizations to deliver branded, in-depth, self-paced learning content for ongoing skill-building, which goes beyond the scope of lightweight in-app prompts. A is incorrect because A validation rule enforces data entry rules; it has no learning delivery capability. B is incorrect because A single targeted prompt offers only brief, contextual guidance, not in-depth self-paced learning content. D is incorrect because A compact layout controls condensed field display; it is unrelated to learning content delivery.",
+      "requiredSelections": 1
     },
     {
       "id": "85",
@@ -42315,7 +42391,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "Custom Lightning Experience themes let admins declaratively configure brand colors, logos, and default images to align the org's look with corporate brand guidelines. A is incorrect because A master-detail relationship defines a data structure, not a branding mechanism. B is incorrect because A validation rule enforces data entry conditions, unrelated to visual branding. C is incorrect because A roll-up summary field aggregates numeric data; it has no visual branding capability."
+      "explanation": "Custom Lightning Experience themes let admins declaratively configure brand colors, logos, and default images to align the org's look with corporate brand guidelines. A is incorrect because A master-detail relationship defines a data structure, not a branding mechanism. B is incorrect because A validation rule enforces data entry conditions, unrelated to visual branding. C is incorrect because A roll-up summary field aggregates numeric data; it has no visual branding capability.",
+      "requiredSelections": 1
     },
     {
       "id": "86",
@@ -42342,7 +42419,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "Experience Builder's branding panel provides a no-code interface for configuring the external site's header, footer, color palette, and fonts to align with brand standards. B is incorrect because A Screen Flow builds guided data-entry processes; it isn't a branding configuration tool. C is incorrect because A validation rule enforces data entry conditions, unrelated to site branding. D is incorrect because A roll-up summary field aggregates data, unrelated to site appearance."
+      "explanation": "Experience Builder's branding panel provides a no-code interface for configuring the external site's header, footer, color palette, and fonts to align with brand standards. B is incorrect because A Screen Flow builds guided data-entry processes; it isn't a branding configuration tool. C is incorrect because A validation rule enforces data entry conditions, unrelated to site branding. D is incorrect because A roll-up summary field aggregates data, unrelated to site appearance.",
+      "requiredSelections": 1
     },
     {
       "id": "87",
@@ -42369,7 +42447,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "When declarative branding tools can't achieve a specific visual requirement, escalating to a developer for custom CSS or SLDS token overrides is the appropriate next step within platform constraints. A is incorrect because Abandoning the requirement skips a viable escalation path that could still meet the need. C is incorrect because A validation rule enforces data conditions; it has no visual styling capability whatsoever. D is incorrect because A roll-up summary field aggregates numeric values; it cannot produce visual gradients."
+      "explanation": "When declarative branding tools can't achieve a specific visual requirement, escalating to a developer for custom CSS or SLDS token overrides is the appropriate next step within platform constraints. A is incorrect because Abandoning the requirement skips a viable escalation path that could still meet the need. C is incorrect because A validation rule enforces data conditions; it has no visual styling capability whatsoever. D is incorrect because A roll-up summary field aggregates numeric values; it cannot produce visual gradients.",
+      "requiredSelections": 1
     },
     {
       "id": "88",
@@ -42396,7 +42475,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "Different lighting environments affect how comfortable a given theme is to use, so testing a dark theme option against outdoor readability needs is a reasonable, evidence-based response rather than assuming one theme is universally best. A is incorrect because There is no such platform-wide ban on dark themes; this is a fabricated constraint. B is incorrect because Theme choice does affect visual comfort and legibility, especially in high-glare outdoor settings, contradicting this claim. D is incorrect because Asserting light themes are always superior ignores the specific outdoor glare problem described and needs validation, not assumption."
+      "explanation": "Different lighting environments affect how comfortable a given theme is to use, so testing a dark theme option against outdoor readability needs is a reasonable, evidence-based response rather than assuming one theme is universally best. A is incorrect because There is no such platform-wide ban on dark themes; this is a fabricated constraint. B is incorrect because Theme choice does affect visual comfort and legibility, especially in high-glare outdoor settings, contradicting this claim. D is incorrect because Asserting light themes are always superior ignores the specific outdoor glare problem described and needs validation, not assumption.",
+      "requiredSelections": 1
     },
     {
       "id": "89",
@@ -42423,7 +42503,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "A realistic, goal-based scenario without naming specific UI elements lets the participant discover the path naturally, revealing authentic usability issues rather than confirming a predetermined path. A is incorrect because Naming the exact button to click removes any discovery element and can't reveal whether users could find it themselves. B is incorrect because A numeric rating captures perception after the fact, not task performance during the session. C is incorrect because This is a subjective opinion question, not a task, and doesn't observe actual behavior."
+      "explanation": "A realistic, goal-based scenario without naming specific UI elements lets the participant discover the path naturally, revealing authentic usability issues rather than confirming a predetermined path. A is incorrect because Naming the exact button to click removes any discovery element and can't reveal whether users could find it themselves. B is incorrect because A numeric rating captures perception after the fact, not task performance during the session. C is incorrect because This is a subjective opinion question, not a task, and doesn't observe actual behavior.",
+      "requiredSelections": 1
     },
     {
       "id": "90",
@@ -42450,7 +42531,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "Matching the target persona's role and comfort level while excluding people already familiar with the product avoids both irrelevant feedback and bias from insider familiarity. B is incorrect because People who helped design the tool already have insider knowledge that would bias their navigation and feedback. C is incorrect because IT help desk staff are likely to have unusually high technical familiarity, not representative of the broader employee base. D is incorrect because Recruiting whoever is available ignores whether participants actually represent the target user population."
+      "explanation": "Matching the target persona's role and comfort level while excluding people already familiar with the product avoids both irrelevant feedback and bias from insider familiarity. B is incorrect because People who helped design the tool already have insider knowledge that would bias their navigation and feedback. C is incorrect because IT help desk staff are likely to have unusually high technical familiarity, not representative of the broader employee base. D is incorrect because Recruiting whoever is available ignores whether participants actually represent the target user population.",
+      "requiredSelections": 1
     },
     {
       "id": "91",
@@ -42477,7 +42559,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Usability research shows that testing with around five to seven participants typically surfaces the majority of major usability issues, making it an efficient fit for a tight budget and timeline focused on qualitative issue-finding rather than statistical measurement. A is incorrect because 200 participants is suited to quantitative statistical confidence, not quick qualitative issue-finding, and is impractical within a week. C is incorrect because A single participant risks missing issues that only a few different users would encounter. D is incorrect because Fifty participants exceeds what's needed for qualitative issue discovery and wastes time and budget."
+      "explanation": "Usability research shows that testing with around five to seven participants typically surfaces the majority of major usability issues, making it an efficient fit for a tight budget and timeline focused on qualitative issue-finding rather than statistical measurement. A is incorrect because 200 participants is suited to quantitative statistical confidence, not quick qualitative issue-finding, and is impractical within a week. C is incorrect because A single participant risks missing issues that only a few different users would encounter. D is incorrect because Fifty participants exceeds what's needed for qualitative issue discovery and wastes time and budget.",
+      "requiredSelections": 1
     },
     {
       "id": "92",
@@ -42504,7 +42587,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "Moderated remote testing lets the facilitator actively probe reasoning in real time while accommodating participants across different locations and time zones. A is incorrect because Unmoderated testing removes the facilitator's ability to probe reasoning live during the session. B is incorrect because In-person-only testing doesn't scale across geographically distributed time zones without heavy travel cost. D is incorrect because A mailed paper survey collects static responses, not real-time behavioral or verbal reasoning data."
+      "explanation": "Moderated remote testing lets the facilitator actively probe reasoning in real time while accommodating participants across different locations and time zones. A is incorrect because Unmoderated testing removes the facilitator's ability to probe reasoning live during the session. B is incorrect because In-person-only testing doesn't scale across geographically distributed time zones without heavy travel cost. D is incorrect because A mailed paper survey collects static responses, not real-time behavioral or verbal reasoning data.",
+      "requiredSelections": 1
     },
     {
       "id": "93",
@@ -42531,7 +42615,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "Guerrilla testing provides fast, low-cost, informal feedback appropriate for an early paper sketch, without the overhead of formal recruitment or lengthy setup. A is incorrect because A formal moderated test with full consent and recording processes adds overhead disproportionate to validating a rough early sketch. B is incorrect because A/B testing requires live deployable variants, which don't exist for a paper sketch. C is incorrect because A twelve-week diary study is far too slow and heavyweight for quick early-stage feedback."
+      "explanation": "Guerrilla testing provides fast, low-cost, informal feedback appropriate for an early paper sketch, without the overhead of formal recruitment or lengthy setup. A is incorrect because A formal moderated test with full consent and recording processes adds overhead disproportionate to validating a rough early sketch. B is incorrect because A/B testing requires live deployable variants, which don't exist for a paper sketch. C is incorrect because A twelve-week diary study is far too slow and heavyweight for quick early-stage feedback.",
+      "requiredSelections": 1
     },
     {
       "id": "94",
@@ -42558,7 +42643,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "A five-second test shows users a design for a brief moment and asks what they understood, directly measuring immediate comprehension of a landing page's purpose. B is incorrect because A twelve-week diary study measures behavior over time, not immediate first-glance comprehension. C is incorrect because A SUS survey measures perceived usability after interacting with a system, not immediate visual comprehension. D is incorrect because A think-aloud protocol during a multi-step task observes ongoing reasoning, not first-glance impression."
+      "explanation": "A five-second test shows users a design for a brief moment and asks what they understood, directly measuring immediate comprehension of a landing page's purpose. B is incorrect because A twelve-week diary study measures behavior over time, not immediate first-glance comprehension. C is incorrect because A SUS survey measures perceived usability after interacting with a system, not immediate visual comprehension. D is incorrect because A think-aloud protocol during a multi-step task observes ongoing reasoning, not first-glance impression.",
+      "requiredSelections": 1
     },
     {
       "id": "95",
@@ -42585,7 +42671,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Formative testing is conducted during development specifically to catch and fix usability issues iteratively before the design is finalized, matching this scenario exactly. A is incorrect because Summative testing evaluates a completed design against a benchmark, not an in-progress iterative improvement process. C is incorrect because UAT confirms a solution meets business/functional requirements, not usability improvement during design iteration. D is incorrect because A/B testing in production requires a live, finished deployment, not an in-progress prototype."
+      "explanation": "Formative testing is conducted during development specifically to catch and fix usability issues iteratively before the design is finalized, matching this scenario exactly. A is incorrect because Summative testing evaluates a completed design against a benchmark, not an in-progress iterative improvement process. C is incorrect because UAT confirms a solution meets business/functional requirements, not usability improvement during design iteration. D is incorrect because A/B testing in production requires a live, finished deployment, not an in-progress prototype.",
+      "requiredSelections": 1
     },
     {
       "id": "96",
@@ -42612,7 +42699,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "UAT confirms that a solution satisfies documented business and functional requirements, which is a different goal from a UX usability test's focus on how easily and effectively users can actually use the design. A is incorrect because A think-aloud protocol captures a participant's real-time reasoning during a task, not a formal requirements confirmation process. B is incorrect because A five-second test measures first-glance comprehension, unrelated to formal business requirement sign-off. D is incorrect because A SUS survey quantifies perceived usability, not formal business requirement validation."
+      "explanation": "UAT confirms that a solution satisfies documented business and functional requirements, which is a different goal from a UX usability test's focus on how easily and effectively users can actually use the design. A is incorrect because A think-aloud protocol captures a participant's real-time reasoning during a task, not a formal requirements confirmation process. B is incorrect because A five-second test measures first-glance comprehension, unrelated to formal business requirement sign-off. D is incorrect because A SUS survey quantifies perceived usability, not formal business requirement validation.",
+      "requiredSelections": 1
     },
     {
       "id": "97",
@@ -42639,7 +42727,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "Think-aloud protocol asks participants to verbalize their thoughts continuously while performing tasks, capturing real-time reasoning as it happens. A is incorrect because A five-second test measures brief first-impression comprehension, not ongoing narrated reasoning during a task. B is incorrect because Co-discovery involves two participants working together and discussing with each other, not a single participant narrating alone. C is incorrect because Retrospective probing occurs after the task is complete, asking participants to recall their reasoning, not during the task itself."
+      "explanation": "Think-aloud protocol asks participants to verbalize their thoughts continuously while performing tasks, capturing real-time reasoning as it happens. A is incorrect because A five-second test measures brief first-impression comprehension, not ongoing narrated reasoning during a task. B is incorrect because Co-discovery involves two participants working together and discussing with each other, not a single participant narrating alone. C is incorrect because Retrospective probing occurs after the task is complete, asking participants to recall their reasoning, not during the task itself.",
+      "requiredSelections": 1
     },
     {
       "id": "98",
@@ -42666,7 +42755,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "Co-discovery pairs two participants to work through a task together, surfacing rich discussion and differing perspectives that a single-participant session wouldn't reveal. B is incorrect because Concurrent probing involves the facilitator asking questions during a single participant's task, not two participants discussing between themselves. C is incorrect because A SUS questionnaire is a post-session survey instrument, not a live paired-observation technique. D is incorrect because A/B testing compares two live design variants statistically, unrelated to paired qualitative observation."
+      "explanation": "Co-discovery pairs two participants to work through a task together, surfacing rich discussion and differing perspectives that a single-participant session wouldn't reveal. B is incorrect because Concurrent probing involves the facilitator asking questions during a single participant's task, not two participants discussing between themselves. C is incorrect because A SUS questionnaire is a post-session survey instrument, not a live paired-observation technique. D is incorrect because A/B testing compares two live design variants statistically, unrelated to paired qualitative observation.",
+      "requiredSelections": 1
     },
     {
       "id": "99",
@@ -42693,7 +42783,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "The System Usability Scale is a standardized ten-item questionnaire producing a comparable usability score, and a low score indicates perceived usability issues that merit deeper qualitative investigation rather than being a final verdict alone. A is incorrect because A five-second test measures first-glance comprehension, not a scored questionnaire, and doesn't imply anything about color specifically. C is incorrect because A think-aloud protocol is a qualitative observation technique, not a scored questionnaire at all. D is incorrect because A journey map is a synthesis artifact, not a scored usability instrument."
+      "explanation": "The System Usability Scale is a standardized ten-item questionnaire producing a comparable usability score, and a low score indicates perceived usability issues that merit deeper qualitative investigation rather than being a final verdict alone. A is incorrect because A five-second test measures first-glance comprehension, not a scored questionnaire, and doesn't imply anything about color specifically. C is incorrect because A think-aloud protocol is a qualitative observation technique, not a scored questionnaire at all. D is incorrect because A journey map is a synthesis artifact, not a scored usability instrument.",
+      "requiredSelections": 1
     },
     {
       "id": "100",
@@ -42720,7 +42811,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "Structuring findings by severity, highlighting recurring patterns, and tying prioritized recommendations to evidence gives time-constrained stakeholders a clear, actionable picture without requiring them to review raw session data. A is incorrect because Raw unedited transcripts require significant time investment from stakeholders to extract meaning, defeating the purpose of a report. B is incorrect because A single pass/fail verdict provides no actionable detail about what to fix or why. D is incorrect because An informal verbal recap with no documentation is not persistent or precise enough to guide prioritization decisions later."
+      "explanation": "Structuring findings by severity, highlighting recurring patterns, and tying prioritized recommendations to evidence gives time-constrained stakeholders a clear, actionable picture without requiring them to review raw session data. A is incorrect because Raw unedited transcripts require significant time investment from stakeholders to extract meaning, defeating the purpose of a report. B is incorrect because A single pass/fail verdict provides no actionable detail about what to fix or why. D is incorrect because An informal verbal recap with no documentation is not persistent or precise enough to guide prioritization decisions later.",
+      "requiredSelections": 1
     },
     {
       "id": "101",
@@ -42747,7 +42839,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "Severity ratings should reflect actual impact — an issue blocking task completion for most participants is critical or serious and warrants pre-launch fixing, while a cosmetic, low-impact issue noticed by only one participant can reasonably be deferred to a later release. A is incorrect because Treating both issues as equally critical ignores the vastly different impact and participant frequency between them. B is incorrect because Severity ratings exist specifically to support prioritization decisions like this one; dismissing their usefulness contradicts their purpose. C is incorrect because Rating the cosmetic issue as critical based on discovery order rather than actual impact misapplies the severity framework."
+      "explanation": "Severity ratings should reflect actual impact — an issue blocking task completion for most participants is critical or serious and warrants pre-launch fixing, while a cosmetic, low-impact issue noticed by only one participant can reasonably be deferred to a later release. A is incorrect because Treating both issues as equally critical ignores the vastly different impact and participant frequency between them. B is incorrect because Severity ratings exist specifically to support prioritization decisions like this one; dismissing their usefulness contradicts their purpose. C is incorrect because Rating the cosmetic issue as critical based on discovery order rather than actual impact misapplies the severity framework.",
+      "requiredSelections": 1
     },
     {
       "id": "102",
@@ -42774,7 +42867,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "SLDS exists to give custom components the same visual language, spacing, and styling as native Lightning elements, so users experience visual consistency across the platform regardless of who built each piece. B is incorrect because SLDS is a visual/CSS specification, not a logic or business-rule framework; it has no bearing on Apex. C is incorrect because SLDS is a styling system, not a component framework, and doesn't replace LWC or Aura. D is incorrect because SLDS applies across Lightning Experience broadly, not just Experience Cloud."
+      "explanation": "SLDS exists to give custom components the same visual language, spacing, and styling as native Lightning elements, so users experience visual consistency across the platform regardless of who built each piece. B is incorrect because SLDS is a visual/CSS specification, not a logic or business-rule framework; it has no bearing on Apex. C is incorrect because SLDS is a styling system, not a component framework, and doesn't replace LWC or Aura. D is incorrect because SLDS applies across Lightning Experience broadly, not just Experience Cloud.",
+      "requiredSelections": 1
     },
     {
       "id": "103",
@@ -42801,7 +42895,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "SLDS defines visual styling, tokens, and markup patterns, but developers must still implement the actual interactive JavaScript behavior themselves; SLDS does not generate functional logic. A is incorrect because This contradicts the reality that SLDS is purely visual/CSS, not a behavior-generating framework. C is incorrect because SLDS supplements custom development with consistent styling; it doesn't eliminate the need for development work. D is incorrect because SLDS is intended to work with both LWC and Aura component styling, not exclusively one framework."
+      "explanation": "SLDS defines visual styling, tokens, and markup patterns, but developers must still implement the actual interactive JavaScript behavior themselves; SLDS does not generate functional logic. A is incorrect because This contradicts the reality that SLDS is purely visual/CSS, not a behavior-generating framework. C is incorrect because SLDS supplements custom development with consistent styling; it doesn't eliminate the need for development work. D is incorrect because SLDS is intended to work with both LWC and Aura component styling, not exclusively one framework.",
+      "requiredSelections": 1
     },
     {
       "id": "104",
@@ -42828,7 +42923,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "Salesforce's base Lightning components come pre-styled with SLDS out of the box, but any custom HTML markup a developer writes inside an LWC must have SLDS classes manually applied to match the platform's look. A is incorrect because SLDS styling is relevant to both LWC and Aura components, not exclusive to Aura. B is incorrect because Custom markup within an LWC does not automatically inherit SLDS styling without manual class application. D is incorrect because Custom markup absolutely benefits from and typically requires SLDS styling to match platform consistency."
+      "explanation": "Salesforce's base Lightning components come pre-styled with SLDS out of the box, but any custom HTML markup a developer writes inside an LWC must have SLDS classes manually applied to match the platform's look. A is incorrect because SLDS styling is relevant to both LWC and Aura components, not exclusive to Aura. B is incorrect because Custom markup within an LWC does not automatically inherit SLDS styling without manual class application. D is incorrect because Custom markup absolutely benefits from and typically requires SLDS styling to match platform consistency.",
+      "requiredSelections": 1
     },
     {
       "id": "105",
@@ -42855,7 +42951,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "Design tokens are named variables representing visual values (like color and spacing) that propagate globally, so updating a token's definition cascades the change everywhere it's referenced without manual rewrites. A is incorrect because A validation rule enforces data entry conditions; it has no relationship to visual styling propagation. B is incorrect because Component blueprints are markup/structure specifications for building specific UI patterns, not a mechanism for propagating global value changes. C is incorrect because Utility classes apply fixed, single-purpose styling and don't inherently propagate centrally-managed value changes the way tokens do."
+      "explanation": "Design tokens are named variables representing visual values (like color and spacing) that propagate globally, so updating a token's definition cascades the change everywhere it's referenced without manual rewrites. A is incorrect because A validation rule enforces data entry conditions; it has no relationship to visual styling propagation. B is incorrect because Component blueprints are markup/structure specifications for building specific UI patterns, not a mechanism for propagating global value changes. C is incorrect because Utility classes apply fixed, single-purpose styling and don't inherently propagate centrally-managed value changes the way tokens do.",
+      "requiredSelections": 1
     },
     {
       "id": "106",
@@ -42882,7 +42979,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "SLDS utility classes provide pre-built, single-purpose classes for spacing, alignment, text, and layout that can be applied directly in markup without writing custom CSS. B is incorrect because Component blueprints describe full markup patterns for complex UI elements, not simple, atomic utility styling. C is incorrect because A roll-up summary field aggregates data; it has no relationship to visual styling. D is incorrect because A validation rule enforces save-time conditions, unrelated to CSS styling utilities."
+      "explanation": "SLDS utility classes provide pre-built, single-purpose classes for spacing, alignment, text, and layout that can be applied directly in markup without writing custom CSS. B is incorrect because Component blueprints describe full markup patterns for complex UI elements, not simple, atomic utility styling. C is incorrect because A roll-up summary field aggregates data; it has no relationship to visual styling. D is incorrect because A validation rule enforces save-time conditions, unrelated to CSS styling utilities.",
+      "requiredSelections": 1
     },
     {
       "id": "107",
@@ -42909,7 +43007,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Component blueprints provide the exact markup structure and class specifications needed to build a UI pattern like a modal from scratch while matching native Lightning Experience appearance. A is incorrect because Design tokens define individual visual values like colors and spacing, not full structural markup patterns. C is incorrect because A roll-up summary field aggregates data; it has no bearing on component structure. D is incorrect because A dependent picklist controls field value logic, unrelated to component markup specification."
+      "explanation": "Component blueprints provide the exact markup structure and class specifications needed to build a UI pattern like a modal from scratch while matching native Lightning Experience appearance. A is incorrect because Design tokens define individual visual values like colors and spacing, not full structural markup patterns. C is incorrect because A roll-up summary field aggregates data; it has no bearing on component structure. D is incorrect because A dependent picklist controls field value logic, unrelated to component markup specification.",
+      "requiredSelections": 1
     },
     {
       "id": "108",
@@ -42936,7 +43035,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "The lightning-datatable base component already includes SLDS styling and supports an inline-editing variant out of the box, avoiding the need to hand-build and manually style a custom table. A is incorrect because A validation rule enforces data entry conditions; it cannot render a data table. B is incorrect because Building a fully custom table from scratch duplicates functionality Salesforce already provides and risks visual inconsistency without careful manual SLDS application. D is incorrect because A roll-up summary field aggregates numeric totals; it has no table rendering capability."
+      "explanation": "The lightning-datatable base component already includes SLDS styling and supports an inline-editing variant out of the box, avoiding the need to hand-build and manually style a custom table. A is incorrect because A validation rule enforces data entry conditions; it cannot render a data table. B is incorrect because Building a fully custom table from scratch duplicates functionality Salesforce already provides and risks visual inconsistency without careful manual SLDS application. D is incorrect because A roll-up summary field aggregates numeric totals; it has no table rendering capability.",
+      "requiredSelections": 1
     },
     {
       "id": "109",
@@ -42963,7 +43063,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "The custom icon category is specifically designated for representing custom objects and org-specific concepts, distinct from generic utility or action icons. A is incorrect because Doctype icons represent file types, unrelated to representing a custom object. B is incorrect because Utility icons represent generic interface actions and concepts, not custom object identity. C is incorrect because Action icons represent specific user actions (like \"new\" or \"edit\"), not object type identity."
+      "explanation": "The custom icon category is specifically designated for representing custom objects and org-specific concepts, distinct from generic utility or action icons. A is incorrect because Doctype icons represent file types, unrelated to representing a custom object. B is incorrect because Utility icons represent generic interface actions and concepts, not custom object identity. C is incorrect because Action icons represent specific user actions (like \"new\" or \"edit\"), not object type identity.",
+      "requiredSelections": 1
     },
     {
       "id": "110",
@@ -42990,7 +43091,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "The doctype icon category is specifically designed to visually represent file types like PDFs and Word documents, matching this exact use case. B is incorrect because Standard icons represent standard Salesforce objects (like Account or Contact), not file types. C is incorrect because Custom icons represent custom objects specific to an org, not generic file type indicators. D is incorrect because Action icons represent user-initiated actions, unrelated to file type representation."
+      "explanation": "The doctype icon category is specifically designed to visually represent file types like PDFs and Word documents, matching this exact use case. B is incorrect because Standard icons represent standard Salesforce objects (like Account or Contact), not file types. C is incorrect because Custom icons represent custom objects specific to an org, not generic file type indicators. D is incorrect because Action icons represent user-initiated actions, unrelated to file type representation.",
+      "requiredSelections": 1
     },
     {
       "id": "111",
@@ -43017,7 +43119,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "A data table with row actions provides the dropdown menu structure for per-row actions like \"View Details,\" directly matching this requirement. A is incorrect because A read-only table has no interactive elements at all, which conflicts with the need for a row action dropdown. C is incorrect because An inline-editing table variant focuses on editing cell values, not launching row-specific actions via a dropdown. D is incorrect because A sorting-only table variant addresses column reordering, not row-level action menus."
+      "explanation": "A data table with row actions provides the dropdown menu structure for per-row actions like \"View Details,\" directly matching this requirement. A is incorrect because A read-only table has no interactive elements at all, which conflicts with the need for a row action dropdown. C is incorrect because An inline-editing table variant focuses on editing cell values, not launching row-specific actions via a dropdown. D is incorrect because A sorting-only table variant addresses column reordering, not row-level action menus.",
+      "requiredSelections": 1
     },
     {
       "id": "112",
@@ -43044,7 +43147,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "Scoped CSS is appropriate when a specific visual requirement genuinely isn't covered by existing SLDS utilities or tokens; otherwise, reusing SLDS utilities keeps styling consistent and reduces maintenance overhead. * A: SLDS utility classes don't cover every conceivable styling need; highly specific cases can still require custom CSS. * B: Defaulting to custom CSS even when SLDS utilities would suffice increases inconsistency risk and maintenance burden unnecessarily. * D: A component with no visual requirements wouldn't need any styling decision in the first place, making this scenario nonsensical. * B: Defaulting to custom CSS even when SLDS utilities would suffice increases inconsistency risk and maintenance burden unnecessarily. * C: SLDS utility classes don't cover every conceivable styling need; highly specific cases can still require custom CSS. * D: A component with no visual requirements wouldn't need any styling decision in the first place, making this scenario nonsensical."
+      "explanation": "Scoped CSS is appropriate when a specific visual requirement genuinely isn't covered by existing SLDS utilities or tokens; otherwise, reusing SLDS utilities keeps styling consistent and reduces maintenance overhead. * A: SLDS utility classes don't cover every conceivable styling need; highly specific cases can still require custom CSS. * B: Defaulting to custom CSS even when SLDS utilities would suffice increases inconsistency risk and maintenance burden unnecessarily. * D: A component with no visual requirements wouldn't need any styling decision in the first place, making this scenario nonsensical. * B: Defaulting to custom CSS even when SLDS utilities would suffice increases inconsistency risk and maintenance burden unnecessarily. * C: SLDS utility classes don't cover every conceivable styling need; highly specific cases can still require custom CSS. * D: A component with no visual requirements wouldn't need any styling decision in the first place, making this scenario nonsensical.",
+      "requiredSelections": 1
     },
     {
       "id": "113",
@@ -43071,7 +43175,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "Using SLDS design tokens rather than hardcoded values means future palette changes only require updating the token definitions, automatically cascading to every component referencing them. A is incorrect because A roll-up summary field aggregates numeric data; it cannot store or apply styling tokens. B is incorrect because Hardcoded hex values require manual updates in every file whenever the palette changes, the opposite of the desired outcome. C is incorrect because A validation rule enforces data entry logic; it has no capability to define or apply visual color values."
+      "explanation": "Using SLDS design tokens rather than hardcoded values means future palette changes only require updating the token definitions, automatically cascading to every component referencing them. A is incorrect because A roll-up summary field aggregates numeric data; it cannot store or apply styling tokens. B is incorrect because Hardcoded hex values require manual updates in every file whenever the palette changes, the opposite of the desired outcome. C is incorrect because A validation rule enforces data entry logic; it has no capability to define or apply visual color values.",
+      "requiredSelections": 1
     },
     {
       "id": "114",
@@ -43098,7 +43203,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "When no base LWC exists for a needed pattern, SLDS Blueprints provide the reference markup and visual specification needed to build a custom implementation that still looks native to Lightning Experience. B is incorrect because A roll-up summary field aggregates data values; it has no bearing on visual component construction. C is incorrect because A validation rule enforces save-time data conditions, unrelated to visual component design. D is incorrect because A dependent picklist governs picklist option logic, unrelated to building a custom visual widget."
+      "explanation": "When no base LWC exists for a needed pattern, SLDS Blueprints provide the reference markup and visual specification needed to build a custom implementation that still looks native to Lightning Experience. B is incorrect because A roll-up summary field aggregates data values; it has no bearing on visual component construction. C is incorrect because A validation rule enforces save-time data conditions, unrelated to visual component design. D is incorrect because A dependent picklist governs picklist option logic, unrelated to building a custom visual widget.",
+      "requiredSelections": 1
     },
     {
       "id": "115",
@@ -43125,7 +43231,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "SLDS state classes like is-open and is-active are specifically designed to reflect dynamic UI states such as expanded/collapsed, toggling styling based on the component's current condition. A is incorrect because Design tokens represent static visual values like colors and spacing, not toggled interactive states. C is incorrect because A validation rule enforces save-time data conditions; it has no role in visual state representation. D is incorrect because A roll-up summary field aggregates data; it cannot represent a dynamic UI toggle state."
+      "explanation": "SLDS state classes like is-open and is-active are specifically designed to reflect dynamic UI states such as expanded/collapsed, toggling styling based on the component's current condition. A is incorrect because Design tokens represent static visual values like colors and spacing, not toggled interactive states. C is incorrect because A validation rule enforces save-time data conditions; it has no role in visual state representation. D is incorrect because A roll-up summary field aggregates data; it cannot represent a dynamic UI toggle state.",
+      "requiredSelections": 1
     },
     {
       "id": "116",
@@ -43152,7 +43259,8 @@
       "correctIndices": [
         2
       ],
-      "explanation": "SLDS validation patterns define the standard visual treatment for required-field indicators and inline error messaging, ensuring a custom form matches the accessible, familiar look of native Salesforce forms. A is incorrect because A roll-up summary field aggregates data; it has no bearing on form validation UI patterns. B is incorrect because Data table blueprints address tabular data presentation, not form-level validation styling. D is incorrect because A master-detail relationship defines data structure, unrelated to form validation styling."
+      "explanation": "SLDS validation patterns define the standard visual treatment for required-field indicators and inline error messaging, ensuring a custom form matches the accessible, familiar look of native Salesforce forms. A is incorrect because A roll-up summary field aggregates data; it has no bearing on form validation UI patterns. B is incorrect because Data table blueprints address tabular data presentation, not form-level validation styling. D is incorrect because A master-detail relationship defines data structure, unrelated to form validation styling.",
+      "requiredSelections": 1
     },
     {
       "id": "117",
@@ -43179,7 +43287,8 @@
       "correctIndices": [
         3
       ],
-      "explanation": "Loading spinners and skeleton screens communicate that the system is actively processing, preventing users from mistaking a slow load for a broken interface. A is incorrect because A validation rule enforces save-time conditions, unrelated to communicating a loading state. B is incorrect because State classes for expand/collapse address a different kind of UI state, not loading/processing feedback. C is incorrect because A roll-up summary field aggregates data values; it has no relevance to loading state communication."
+      "explanation": "Loading spinners and skeleton screens communicate that the system is actively processing, preventing users from mistaking a slow load for a broken interface. A is incorrect because A validation rule enforces save-time conditions, unrelated to communicating a loading state. B is incorrect because State classes for expand/collapse address a different kind of UI state, not loading/processing feedback. C is incorrect because A roll-up summary field aggregates data values; it has no relevance to loading state communication.",
+      "requiredSelections": 1
     },
     {
       "id": "118",
@@ -43239,7 +43348,8 @@
       "correctIndices": [
         0
       ],
-      "explanation": "Proactively validating proposed colors with a contrast checker before applying them ensures the chosen tokens will meet WCAG requirements, rather than assuming compliance or discovering issues post-deployment. B is incorrect because SLDS tokens provide consistency but don't automatically guarantee every custom combination meets contrast minimums; verification is still warranted. C is incorrect because Assuming compliance without verification risks shipping an inaccessible color combination. D is incorrect because Waiting until after production deployment to check contrast means accessibility issues reach real users before being caught."
+      "explanation": "Proactively validating proposed colors with a contrast checker before applying them ensures the chosen tokens will meet WCAG requirements, rather than assuming compliance or discovering issues post-deployment. B is incorrect because SLDS tokens provide consistency but don't automatically guarantee every custom combination meets contrast minimums; verification is still warranted. C is incorrect because Assuming compliance without verification risks shipping an inaccessible color combination. D is incorrect because Waiting until after production deployment to check contrast means accessibility issues reach real users before being caught.",
+      "requiredSelections": 1
     },
     {
       "id": "120",
@@ -43266,7 +43376,8 @@
       "correctIndices": [
         1
       ],
-      "explanation": "The standard icon category represents Salesforce's standard objects like Account, Contact, and Opportunity, ensuring visual consistency with how these objects appear elsewhere across Lightning Experience. A is incorrect because Custom icons are reserved for org-specific custom objects, not standard objects like Account. C is incorrect because Doctype icons represent file types, unrelated to representing a standard CRM object. D is incorrect because Utility icons represent generic interface actions and concepts, not specific object identity."
+      "explanation": "The standard icon category represents Salesforce's standard objects like Account, Contact, and Opportunity, ensuring visual consistency with how these objects appear elsewhere across Lightning Experience. A is incorrect because Custom icons are reserved for org-specific custom objects, not standard objects like Account. C is incorrect because Doctype icons represent file types, unrelated to representing a standard CRM object. D is incorrect because Utility icons represent generic interface actions and concepts, not specific object identity.",
+      "requiredSelections": 1
     },
     {
       "id": "121",
