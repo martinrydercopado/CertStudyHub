@@ -36615,7 +36615,7 @@
     },
     {
       "id": 5,
-      "question": "During a single reasoning iteration, which of the following happen in Phase 1, before the LLM is ever invoked? (Choose 3\\)",
+      "question": "During a single reasoning iteration, which of the following happen in Phase 1, before the LLM is ever invoked? (Choose 3)",
       "options": [
         {
           "letter": "A",
@@ -37153,7 +37153,7 @@
     },
     {
       "id": 24,
-      "question": "Which two statements correctly describe the difference between a one-way handoff and two-way delegation between subagents? (Choose 2\\)",
+      "question": "Which two statements correctly describe the difference between a one-way handoff and two-way delegation between subagents? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -37266,7 +37266,7 @@
     },
     {
       "id": 28,
-      "question": "Which three primitives are used to implement mixed posture in a subagent? (Choose 3\\)",
+      "question": "Which three primitives are used to implement mixed posture in a subagent? (Choose 3)",
       "options": [
         {
           "letter": "A",
@@ -37464,7 +37464,7 @@
     },
     {
       "id": 35,
-      "question": "Which two of the following are effective levers for keeping a reasoning payload within the token budget? (Choose 2\\)",
+      "question": "Which two of the following are effective levers for keeping a reasoning payload within the token budget? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -37573,7 +37573,7 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Why correct: A vague description gives the LLM insufficient signal to distinguish this action from others with similarly generic purposes, increasing the risk of incorrect tool selection during Phase 2\\.  \nWhy each wrong answer fails:\n\n* A: There is no minimum-length threshold that hides an action from the tool schema based on description length.  \n* C: The Trust Layer screens for security/toxicity concerns, not descriptive metadata quality.  \n* D: Description quality has no bearing on whether an action fires deterministically in `before_reasoning`."
+      "explanation": "Why correct: A vague description gives the LLM insufficient signal to distinguish this action from others with similarly generic purposes, increasing the risk of incorrect tool selection during Phase 2.  \nWhy each wrong answer fails:\n\n* A: There is no minimum-length threshold that hides an action from the tool schema based on description length.  \n* C: The Trust Layer screens for security/toxicity concerns, not descriptive metadata quality.  \n* D: Description quality has no bearing on whether an action fires deterministically in `before_reasoning`."
     },
     {
       "id": 39,
@@ -39016,7 +39016,7 @@
         },
         {
           "letter": "B",
-          "text": "A basic conversational agent without RAG does not require Data 360, but full Audit Trail and compliance reporting does require Data 360\\."
+          "text": "A basic conversational agent without RAG does not require Data 360, but full Audit Trail and compliance reporting does require Data 360."
         },
         {
           "letter": "C",
@@ -39060,7 +39060,7 @@
       "correctIndices": [
         1
       ],
-      "explanation": "**Why correct:** The requirements matrix lists Agentforce Analytics, Trust Layer Dashboards, and Bring Your Own LLM as all requiring Data 360\\.  \n**Why each wrong answer fails:**\n\n* **A:** Agentforce Analytics is explicitly listed as requiring Data 360, not running independently on standard reporting infrastructure.  \n* **C:** The Trust Layer enforces security policy, but the underlying storage and processing for Dashboards and Analytics explicitly depends on Data 360\\.  \n* **D:** Bring Your Own LLM is explicitly listed as requiring Data 360, not exempted from the requirement.\n\n---"
+      "explanation": "**Why correct:** The requirements matrix lists Agentforce Analytics, Trust Layer Dashboards, and Bring Your Own LLM as all requiring Data 360.  \n**Why each wrong answer fails:**\n\n* **A:** Agentforce Analytics is explicitly listed as requiring Data 360, not running independently on standard reporting infrastructure.  \n* **C:** The Trust Layer enforces security policy, but the underlying storage and processing for Dashboards and Analytics explicitly depends on Data 360.  \n* **D:** Bring Your Own LLM is explicitly listed as requiring Data 360, not exempted from the requirement.\n\n---"
     },
     {
       "id": 48,
@@ -39424,7 +39424,7 @@
       "correctIndices": [
         3
       ],
-      "explanation": "**Why correct:** Salesforce documentation explicitly maps Low Faithfulness \\+ High Context Relevance to a generation-ignoring-context problem, and Low Context Relevance to a wrong-content-retrieved problem.  \n**Why each wrong answer fails:**\n\n* **A:** Faithfulness and Context Relevance are explicitly described as measuring different things — groundedness versus retrieval relevance — not identical behavior.  \n* **B:** Toxicity and latency are unrelated to content retrieval accuracy diagnosis; they measure harmful content and response speed, not grounding quality.  \n* **C:** Faithfulness alone conflates two distinct failure modes; best practices require pairing it with Context Relevance to correctly diagnose which layer failed."
+      "explanation": "**Why correct:** Salesforce documentation explicitly maps Low Faithfulness + High Context Relevance to a generation-ignoring-context problem, and Low Context Relevance to a wrong-content-retrieved problem.  \n**Why each wrong answer fails:**\n\n* **A:** Faithfulness and Context Relevance are explicitly described as measuring different things — groundedness versus retrieval relevance — not identical behavior.  \n* **B:** Toxicity and latency are unrelated to content retrieval accuracy diagnosis; they measure harmful content and response speed, not grounding quality.  \n* **C:** Faithfulness alone conflates two distinct failure modes; best practices require pairing it with Context Relevance to correctly diagnose which layer failed."
     },
     {
       "id": 61,
@@ -43528,7 +43528,7 @@
     },
     {
       "id": "5",
-      "question": "A finance object rolls up child transaction amounts to a parent Account using a roll-up summary field. The business now needs the same aggregation, but the parent-child relationship is a standard lookup, not master-detail. Which approaches correctly achieve the aggregate on Account? (Choose 3\\)",
+      "question": "A finance object rolls up child transaction amounts to a parent Account using a roll-up summary field. The business now needs the same aggregation, but the parent-child relationship is a standard lookup, not master-detail. Which approaches correctly achieve the aggregate on Account? (Choose 3)",
       "options": [
         {
           "letter": "A",
@@ -43702,7 +43702,7 @@
     },
     {
       "id": "11",
-      "question": "A support system uses the WhatId field on Task to relate activities to Accounts, Opportunities, or Cases interchangeably. An architect is asked which characteristics of this polymorphic lookup pattern are accurate when deciding whether to keep it versus adding dedicated lookup fields per object type. (Choose 3\\)",
+      "question": "A support system uses the WhatId field on Task to relate activities to Accounts, Opportunities, or Cases interchangeably. An architect is asked which characteristics of this polymorphic lookup pattern are accurate when deciding whether to keep it versus adding dedicated lookup fields per object type. (Choose 3)",
       "options": [
         {
           "letter": "A",
@@ -43932,7 +43932,7 @@
     },
     {
       "id": "19",
-      "question": "In designing account and opportunity team collaboration, which statements accurately describe how Account Teams and Opportunity Teams differ in what they affect? (Choose 2\\)",
+      "question": "In designing account and opportunity team collaboration, which statements accurately describe how Account Teams and Opportunity Teams differ in what they affect? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -44089,7 +44089,7 @@
         },
         {
           "letter": "C",
-          "text": "Salesforce Shield Field Audit Trail, since it supports tracking more fields (up to 60\\) and retains history for up to 10 years, unlike standard Field History Tracking's 20-field/18-month limits."
+          "text": "Salesforce Shield Field Audit Trail, since it supports tracking more fields (up to 60) and retains history for up to 10 years, unlike standard Field History Tracking's 20-field/18-month limits."
         },
         {
           "letter": "D",
@@ -44105,7 +44105,7 @@
     },
     {
       "id": "25",
-      "question": "An architect is deciding OWD for a new Invoice object expected to have millions of records, most of which need to be visible to all internal finance users, with occasional restriction needed for a handful of sensitive executive invoices. Which approaches help balance scalability with the exception case? (Choose 2\\)",
+      "question": "An architect is deciding OWD for a new Invoice object expected to have millions of records, most of which need to be visible to all internal finance users, with occasional restriction needed for a handful of sensitive executive invoices. Which approaches help balance scalability with the exception case? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -44334,7 +44334,7 @@
     },
     {
       "id": "33",
-      "question": "When two duplicate Account records are merged using Salesforce's standard Merge Accounts feature, which outcomes accurately describe what happens to child records and sharing grants of the losing (non-surviving) record? (Choose 2\\)",
+      "question": "When two duplicate Account records are merged using Salesforce's standard Merge Accounts feature, which outcomes accurately describe what happens to child records and sharing grants of the losing (non-surviving) record? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -44423,7 +44423,7 @@
     },
     {
       "id": "36",
-      "question": "Which combination of native Salesforce tools most directly supports maintaining a golden record within a single org over time as new records are created by multiple integration channels? (Choose 2\\)",
+      "question": "Which combination of native Salesforce tools most directly supports maintaining a golden record within a single org over time as new records are created by multiple integration channels? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -44568,7 +44568,7 @@
     },
     {
       "id": "41",
-      "question": "A company operates two Salesforce orgs (EMEA and North America Sales Cloud) and needs a real-time unified customer view without merging the orgs. Which characteristics accurately describe a real-time federation approach (point-to-point APIs or Salesforce Connect Cross-Org Adapter) for this need? (Choose 3\\)",
+      "question": "A company operates two Salesforce orgs (EMEA and North America Sales Cloud) and needs a real-time unified customer view without merging the orgs. Which characteristics accurately describe a real-time federation approach (point-to-point APIs or Salesforce Connect Cross-Org Adapter) for this need? (Choose 3)",
       "options": [
         {
           "letter": "A",
@@ -44742,7 +44742,7 @@
     },
     {
       "id": "47",
-      "question": "How does Change Data Capture (CDC) support downstream data consistency for an external system needing near-real-time notification of Opportunity changes, and what are its limitations compared to synchronous after-insert/after-update triggers? (Choose 2\\)",
+      "question": "How does Change Data Capture (CDC) support downstream data consistency for an external system needing near-real-time notification of Opportunity changes, and what are its limitations compared to synchronous after-insert/after-update triggers? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -44915,7 +44915,7 @@
     },
     {
       "id": "53",
-      "question": "A logistics company's data model includes a custom Shipment object referencing Account via lookup. The team wants Shipment records to inherit the same OWD-based default visibility as their parent Account without maintaining separate sharing rules. Which statements are accurate considerations for this design? (Choose 2\\)",
+      "question": "A logistics company's data model includes a custom Shipment object referencing Account via lookup. The team wants Shipment records to inherit the same OWD-based default visibility as their parent Account without maintaining separate sharing rules. Which statements are accurate considerations for this design? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -45088,7 +45088,7 @@
     },
     {
       "id": "59",
-      "question": "A customer wants a lightweight way to expose read-only summarized Order data from an external e-commerce platform inside Salesforce Opportunity records, refreshed at most once per day, without ongoing real-time callouts. Which approaches fit this requirement well? (Choose 2\\)",
+      "question": "A customer wants a lightweight way to expose read-only summarized Order data from an external e-commerce platform inside Salesforce Opportunity records, refreshed at most once per day, without ongoing real-time callouts. Which approaches fit this requirement well? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -45289,7 +45289,7 @@
     },
     {
       "id": "66",
-      "question": "A financial services firm wants to periodically export ContentDocument (file) data attached to Cases for a compliance archive, in addition to standard object records. What should the architect account for in this export design? (Choose 2\\)",
+      "question": "A financial services firm wants to periodically export ContentDocument (file) data attached to Cases for a compliance archive, in addition to standard object records. What should the architect account for in this export design? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -45434,7 +45434,7 @@
     },
     {
       "id": "71",
-      "question": "A company's data governance program wants to formally track which business unit owns data quality for the Account object and enforce quality thresholds over time. Which components should the architect recommend combining? (Choose 2\\)",
+      "question": "A company's data governance program wants to formally track which business unit owns data quality for the Account object and enforce quality thresholds over time. Which components should the architect recommend combining? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -45551,7 +45551,7 @@
     },
     {
       "id": "75",
-      "question": "What governance considerations are specific to CCPA (California Consumer Privacy Act) compliance in Salesforce that differ from a typical GDPR-focused implementation? (Choose 2\\)",
+      "question": "What governance considerations are specific to CCPA (California Consumer Privacy Act) compliance in Salesforce that differ from a typical GDPR-focused implementation? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -45724,7 +45724,7 @@
     },
     {
       "id": "81",
-      "question": "A SOQL query on a 60-million-row object filters on a custom Date field that is frequently null for about 40% of records, using a WHERE clause of Field \\!= null. What should the architect anticipate?",
+      "question": "A SOQL query on a 60-million-row object filters on a custom Date field that is frequently null for about 40% of records, using a WHERE clause of Field != null. What should the architect anticipate?",
       "options": [
         {
           "letter": "A",
@@ -45736,7 +45736,7 @@
         },
         {
           "letter": "C",
-          "text": "Salesforce automatically rewrites any \"\\!= null\" filter into an indexed range scan with no further optimization needed."
+          "text": "Salesforce automatically rewrites any \"!= null\" filter into an indexed range scan with no further optimization needed."
         },
         {
           "letter": "D",
@@ -45747,7 +45747,7 @@
       "correctIndices": [
         3
       ],
-      "explanation": "Because null values aren't stored in the standard index, filtering for non-null values doesn't get the same indexed lookup benefit as filtering for a specific present value; a common architectural workaround is a separate always-populated flag field (e.g., a checkbox) that can be indexed and filtered on instead. A is incorrect: A field capable of containing nulls can still be marked as a custom index; the limitation is about null values specifically not being indexed, not a blanket exclusion of the field from indexing altogether. B is incorrect: Null values specifically are excluded from the index, which is the root cause of the performance concern, not indexed identically to non-null values. C is incorrect: There's no automatic query rewriting of \"\\!= null\" filters into an optimized indexed scan; the underlying null-indexing limitation persists regardless of query phrasing.",
+      "explanation": "Because null values aren't stored in the standard index, filtering for non-null values doesn't get the same indexed lookup benefit as filtering for a specific present value; a common architectural workaround is a separate always-populated flag field (e.g., a checkbox) that can be indexed and filtered on instead. A is incorrect: A field capable of containing nulls can still be marked as a custom index; the limitation is about null values specifically not being indexed, not a blanket exclusion of the field from indexing altogether. B is incorrect: Null values specifically are excluded from the index, which is the root cause of the performance concern, not indexed identically to non-null values. C is incorrect: There's no automatic query rewriting of \"!= null\" filters into an optimized indexed scan; the underlying null-indexing limitation persists regardless of query phrasing.",
       "requiredSelections": 1
     },
     {
@@ -45780,7 +45780,7 @@
     },
     {
       "id": "83",
-      "question": "An LDV object has a formula field referencing a related object's fields, and reports filtering on this formula field are timing out at 150 million records. Which statements accurately describe the problem and an appropriate fix? (Choose 2\\)",
+      "question": "An LDV object has a formula field referencing a related object's fields, and reports filtering on this formula field are timing out at 150 million records. Which statements accurately describe the problem and an appropriate fix? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -45953,7 +45953,7 @@
     },
     {
       "id": "89",
-      "question": "An LDV object includes millions of file attachments (ContentVersion records) totaling several terabytes. Which statements accurately describe the distinction between data storage and file storage that should shape the archiving strategy? (Choose 2\\)",
+      "question": "An LDV object includes millions of file attachments (ContentVersion records) totaling several terabytes. Which statements accurately describe the distinction between data storage and file storage that should shape the archiving strategy? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -46009,7 +46009,7 @@
       "correctIndices": [
         1
       ],
-      "explanation": "Lookup fields are indexed by default, and pairing that with a custom composite index including the date range field is a standard, well-supported LDV pattern for making the dominant filter combination (Customer \\+ date range) highly selective and performant. A is incorrect: Lookup fields are indexed by default in Salesforce; avoiding them contradicts this fact and would forfeit an already-available performance advantage. C is incorrect: Even at 500 million rows, selective indexed queries (matching a small percentage of records, like one customer's calls in a date range) can perform well; a blanket full table scan approach ignores this. D is incorrect: Selectivity rules apply to indexed fields broadly, not exclusively to Date-typed fields, and converting to text would not exempt the field from selectivity considerations, while losing native date range query support.",
+      "explanation": "Lookup fields are indexed by default, and pairing that with a custom composite index including the date range field is a standard, well-supported LDV pattern for making the dominant filter combination (Customer + date range) highly selective and performant. A is incorrect: Lookup fields are indexed by default in Salesforce; avoiding them contradicts this fact and would forfeit an already-available performance advantage. C is incorrect: Even at 500 million rows, selective indexed queries (matching a small percentage of records, like one customer's calls in a date range) can perform well; a blanket full table scan approach ignores this. D is incorrect: Selectivity rules apply to indexed fields broadly, not exclusively to Date-typed fields, and converting to text would not exempt the field from selectivity considerations, while losing native date range query support.",
       "requiredSelections": 1
     },
     {
@@ -46110,7 +46110,7 @@
         },
         {
           "letter": "C",
-          "text": "AND-based combined filters are evaluated by summing the two percentages (35% \\+ 5% \\= 40%), which always exceeds every threshold and can never use an index."
+          "text": "AND-based combined filters are evaluated by summing the two percentages (35% + 5% \\= 40%), which always exceeds every threshold and can never use an index."
         },
         {
           "letter": "D",
@@ -46182,7 +46182,7 @@
     },
     {
       "id": "97",
-      "question": "A 250-million-row object needs a new custom index added to support a newly introduced high-frequency query pattern. Which statements should the architect communicate to the project team about the process and timing? (Choose 2\\)",
+      "question": "A 250-million-row object needs a new custom index added to support a newly introduced high-frequency query pattern. Which statements should the architect communicate to the project team about the process and timing? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -46467,7 +46467,7 @@
     },
     {
       "id": "107",
-      "question": "Legacy data being migrated has records missing values in fields that are marked as required in Salesforce, and the business has accepted this as a known, temporary gap to be resolved in a later cleanup phase. Which statements describe appropriate governance for bypassing validation to allow this data through? (Choose 2\\)",
+      "question": "Legacy data being migrated has records missing values in fields that are marked as required in Salesforce, and the business has accepted this as a known, temporary gap to be resolved in a later cleanup phase. Which statements describe appropriate governance for bypassing validation to allow this data through? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -46640,7 +46640,7 @@
     },
     {
       "id": "113",
-      "question": "When migrating Opportunities with lookups to Accounts and Contacts, several records fail due to unresolved foreign keys because the referenced parent records hadn't yet been created at the time of load. Which practices minimize this failure pattern? (Choose 2\\)",
+      "question": "When migrating Opportunities with lookups to Accounts and Contacts, several records fail due to unresolved foreign keys because the referenced parent records hadn't yet been created at the time of load. Which practices minimize this failure pattern? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -46899,11 +46899,11 @@
     },
     {
       "id": "2",
-      "question": "A Deal Desk needs automatic, ongoing Read/Write access to all opportunities with Amount \\> $1M, regardless of owner. Which TWO configurations would correctly achieve this on a declarative basis? (Choose 2\\)",
+      "question": "A Deal Desk needs automatic, ongoing Read/Write access to all opportunities with Amount > $1M, regardless of owner. Which TWO configurations would correctly achieve this on a declarative basis? (Choose 2)",
       "options": [
         {
           "letter": "A",
-          "text": "A criteria-based sharing rule filtering on Amount \\> $1M, sharing to the Deal Desk public group"
+          "text": "A criteria-based sharing rule filtering on Amount > $1M, sharing to the Deal Desk public group"
         },
         {
           "letter": "B",
@@ -46932,7 +46932,7 @@
     },
     {
       "id": "3",
-      "question": "A custom object \"Project\\_\\_c\" has its OWD set to Controlled by Parent, with the parent being Account (Private OWD). A user has no explicit share on a given Account record. What access does this user have to that Account's related Project\\_\\_c records?",
+      "question": "A custom object \"Project__c\" has its OWD set to Controlled by Parent, with the parent being Account (Private OWD). A user has no explicit share on a given Account record. What access does this user have to that Account's related Project__c records?",
       "options": [
         {
           "letter": "A",
@@ -46955,7 +46955,7 @@
       "correctIndices": [
         1
       ],
-      "explanation": "* Controlled by Parent means the child object inherits the sharing/access level a user has on the associated parent record — no Account access means no Project\\_\\_c access. * A is incorrect: This ignores that Controlled by Parent explicitly ties child access to parent access, not independent access. C is incorrect: There's no guaranteed baseline read access under Controlled by Parent; access is entirely inherited from the parent. D is incorrect: Controlled by Parent is a valid OWD option for master-detail relationships generally and doesn't require rollup summary fields to function.",
+      "explanation": "* Controlled by Parent means the child object inherits the sharing/access level a user has on the associated parent record — no Account access means no Project__c access. * A is incorrect: This ignores that Controlled by Parent explicitly ties child access to parent access, not independent access. C is incorrect: There's no guaranteed baseline read access under Controlled by Parent; access is entirely inherited from the parent. D is incorrect: Controlled by Parent is a valid OWD option for master-detail relationships generally and doesn't require rollup summary fields to function.",
       "requiredSelections": 1
     },
     {
@@ -47156,7 +47156,7 @@
     },
     {
       "id": "11",
-      "question": "A public group used in a sharing rule includes Role X plus \"Roles and Subordinates\" for Role Y. A new user is added under a subordinate role beneath Role Y. Which TWO statements about this situation are true? (Choose 2\\)",
+      "question": "A public group used in a sharing rule includes Role X plus \"Roles and Subordinates\" for Role Y. A new user is added under a subordinate role beneath Role Y. Which TWO statements about this situation are true? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -47217,7 +47217,7 @@
     },
     {
       "id": "13",
-      "question": "A record's OWD is Private, the owner's role sits several levels below the viewing user's role in the hierarchy, Grant Access Using Hierarchies is enabled for the object, and a criteria-based sharing rule also grants access to a public group the viewer belongs to. Which TWO statements correctly describe how the viewer's final access is determined? (Choose 2\\)",
+      "question": "A record's OWD is Private, the owner's role sits several levels below the viewing user's role in the hierarchy, Grant Access Using Hierarchies is enabled for the object, and a criteria-based sharing rule also grants access to a public group the viewer belongs to. Which TWO statements correctly describe how the viewer's final access is determined? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -47502,7 +47502,7 @@
     },
     {
       "id": "23",
-      "question": "A nonprofit's OWD for Contact is Private. Field-Level Security hides the \"Donation\\_Amount\\_\\_c\" field from the Volunteer Coordinator profile, but a sharing rule grants that profile Read/Write access to all Contact records owned by the Development team. Can Volunteer Coordinators see Donation\\_Amount\\_\\_c values via a report?",
+      "question": "A nonprofit's OWD for Contact is Private. Field-Level Security hides the \"Donation_Amount__c\" field from the Volunteer Coordinator profile, but a sharing rule grants that profile Read/Write access to all Contact records owned by the Development team. Can Volunteer Coordinators see Donation_Amount__c values via a report?",
       "options": [
         {
           "letter": "A",
@@ -47558,7 +47558,7 @@
     },
     {
       "id": "25",
-      "question": "A company needs a many-to-many relationship between Projects and Consultants, where deleting a Project should not delete Consultant records but should remove the assignment records. Which TWO design elements are required to achieve this? (Choose 2\\)",
+      "question": "A company needs a many-to-many relationship between Projects and Consultants, where deleting a Project should not delete Consultant records but should remove the assignment records. Which TWO design elements are required to achieve this? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -47619,11 +47619,11 @@
     },
     {
       "id": "27",
-      "question": "A lookup relationship between Invoice\\_\\_c and Account has existed for two years with thousands of records. The admin wants to convert it to master-detail to enable roll-up summaries. What must be true first?",
+      "question": "A lookup relationship between Invoice__c and Account has existed for two years with thousands of records. The admin wants to convert it to master-detail to enable roll-up summaries. What must be true first?",
       "options": [
         {
           "letter": "A",
-          "text": "All Invoice\\_\\_c records must be deleted and recreated after the conversion"
+          "text": "All Invoice__c records must be deleted and recreated after the conversion"
         },
         {
           "letter": "B",
@@ -47631,7 +47631,7 @@
         },
         {
           "letter": "C",
-          "text": "Every existing Invoice\\_\\_c record must already have a non-null Account value in the lookup field"
+          "text": "Every existing Invoice__c record must already have a non-null Account value in the lookup field"
         },
         {
           "letter": "D",
@@ -47675,7 +47675,7 @@
     },
     {
       "id": "29",
-      "question": "An admin needs to visualize how five custom objects relate to each other and add two new lookup fields across those relationships in one continuous view. Which TWO statements about the right tool are correct? (Choose 2\\)",
+      "question": "An admin needs to visualize how five custom objects relate to each other and add two new lookup fields across those relationships in one continuous view. Which TWO statements about the right tool are correct? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -47792,7 +47792,7 @@
     },
     {
       "id": "33",
-      "question": "An org has Dynamic Forms enabled for a custom object \"Warranty\\_Claim\\_\\_c.\" The admin wants specific fields to appear only when \"Claim\\_Type\\_\\_c\" equals \"Extended.\" What is the correct declarative approach?",
+      "question": "An org has Dynamic Forms enabled for a custom object \"Warranty_Claim__c.\" The admin wants specific fields to appear only when \"Claim_Type__c\" equals \"Extended.\" What is the correct declarative approach?",
       "options": [
         {
           "letter": "A",
@@ -47800,7 +47800,7 @@
         },
         {
           "letter": "B",
-          "text": "Use a validation rule to blank the fields when Claim\\_Type\\_\\_c is not Extended"
+          "text": "Use a validation rule to blank the fields when Claim_Type__c is not Extended"
         },
         {
           "letter": "C",
@@ -47988,7 +47988,7 @@
     },
     {
       "id": "40",
-      "question": "An admin needs to surface data from a legacy on-premise inventory system inside Salesforce in near real time, without replicating or storing that data in Salesforce, and reporting requirements are minimal. Which TWO statements are correct? (Choose 2\\)",
+      "question": "An admin needs to surface data from a legacy on-premise inventory system inside Salesforce in near real time, without replicating or storing that data in Salesforce, and reporting requirements are minimal. Which TWO statements are correct? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -48245,7 +48245,7 @@
     },
     {
       "id": "49",
-      "question": "A compliance audit requires a sandbox for penetration testing that contains a complete, exact replica of all production data, including every custom object's full record set. Which TWO statements about the correct sandbox type are true? (Choose 2\\)",
+      "question": "A compliance audit requires a sandbox for penetration testing that contains a complete, exact replica of all production data, including every custom object's full record set. Which TWO statements about the correct sandbox type are true? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -48474,7 +48474,7 @@
     },
     {
       "id": "57",
-      "question": "An Account Team member is added to an Account with the \"Account Read Only\" team role, on an Account whose OWD is Private. Which TWO statements about this member's resulting access are correct? (Choose 2\\)",
+      "question": "An Account Team member is added to an Account with the \"Account Read Only\" team role, on an Account whose OWD is Private. Which TWO statements about this member's resulting access are correct? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -48703,7 +48703,7 @@
     },
     {
       "id": "65",
-      "question": "An Entitlement Process has a First Response milestone with a 4-hour completion window, linked to a Business Hours record of Monday–Friday, 9am–5pm. A case comes in Friday at 4pm. Which TWO statements about the milestone timing are correct? (Choose 2\\)",
+      "question": "An Entitlement Process has a First Response milestone with a 4-hour completion window, linked to a Business Hours record of Monday–Friday, 9am–5pm. A case comes in Friday at 4pm. Which TWO statements about the milestone timing are correct? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -49100,7 +49100,7 @@
     },
     {
       "id": "79",
-      "question": "A data steward configures a Duplicate Rule with a Matching Rule comparing Email fields, set to Block, scoped Lead-to-Lead only. A user tries to save a new Lead with an email matching an existing Contact exactly. Which TWO statements are correct? (Choose 2\\)",
+      "question": "A data steward configures a Duplicate Rule with a Matching Rule comparing Email fields, set to Block, scoped Lead-to-Lead only. A user tries to save a new Lead with an email matching an existing Contact exactly. Which TWO statements are correct? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -49217,7 +49217,7 @@
     },
     {
       "id": "83",
-      "question": "A company needs a report combining fields from Opportunity, its primary Contact Role, Account, and Campaign — four objects deep — and no standard report type covers this combination. Which TWO statements about the Custom Report Type needed are correct? (Choose 2\\)",
+      "question": "A company needs a report combining fields from Opportunity, its primary Contact Role, Account, and Campaign — four objects deep — and no standard report type covers this combination. Which TWO statements about the Custom Report Type needed are correct? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -49334,7 +49334,7 @@
     },
     {
       "id": "87",
-      "question": "A dashboard needs to display data as seen by each individual viewer's own record access, rather than a single fixed running user. The org already has 5 dynamic dashboards and the license allows only 5\\. Which TWO statements are correct? (Choose 2\\)",
+      "question": "A dashboard needs to display data as seen by each individual viewer's own record access, rather than a single fixed running user. The org already has 5 dynamic dashboards and the license allows only 5. Which TWO statements are correct? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -49362,7 +49362,7 @@
         0,
         3
       ],
-      "explanation": "* Dynamic dashboards are capped by a license-enforced limit, and exceeding that ceiling (here, 5\\) requires either freeing an existing dynamic dashboard slot or acquiring more capacity before a new one can be created. * B: Standard dashboards always run as a single specified running user, not as each individual viewer, so this claim is false. * C: This ignores the real, license-enforced limit on the number of dynamic dashboards an org can have. * E: Report-level filters don't address dashboard viewing-user behavior or the dynamic dashboard licensing limit at all.",
+      "explanation": "* Dynamic dashboards are capped by a license-enforced limit, and exceeding that ceiling (here, 5) requires either freeing an existing dynamic dashboard slot or acquiring more capacity before a new one can be created. * B: Standard dashboards always run as a single specified running user, not as each individual viewer, so this claim is false. * C: This ignores the real, license-enforced limit on the number of dynamic dashboards an org can have. * E: Report-level filters don't address dashboard viewing-user behavior or the dynamic dashboard licensing limit at all.",
       "requiredSelections": 2
     },
     {
@@ -49423,7 +49423,7 @@
     },
     {
       "id": "90",
-      "question": "Historical Trending is enabled on Opportunity, tracking 6 fields. The admin tries to add 3 more tracked fields, for a total of 9\\. What happens, given the platform's field limit for this feature?",
+      "question": "Historical Trending is enabled on Opportunity, tracking 6 fields. The admin tries to add 3 more tracked fields, for a total of 9. What happens, given the platform's field limit for this feature?",
       "options": [
         {
           "letter": "A",
@@ -49507,7 +49507,7 @@
     },
     {
       "id": "93",
-      "question": "An admin needs to import 150,000 new Contact records with upsert logic matching against an existing External\\_ID\\_\\_c field, without writing code. Which TWO statements are correct? (Choose 2\\)",
+      "question": "An admin needs to import 150,000 new Contact records with upsert logic matching against an existing External_ID__c field, without writing code. Which TWO statements are correct? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -49708,7 +49708,7 @@
     },
     {
       "id": "100",
-      "question": "A change set includes a profile with several permission changes, alongside a permission set with additional permissions. Which TWO statements about deployment behavior are correct? (Choose 2\\)",
+      "question": "A change set includes a profile with several permission changes, alongside a permission set with additional permissions. Which TWO statements about deployment behavior are correct? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -49741,7 +49741,7 @@
     },
     {
       "id": "101",
-      "question": "An admin wants to migrate a customized set of Opportunity Stage picklist values from a sandbox to production using a change set. Which TWO statements are correct? (Choose 2\\)",
+      "question": "An admin wants to migrate a customized set of Opportunity Stage picklist values from a sandbox to production using a change set. Which TWO statements are correct? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -49914,7 +49914,7 @@
     },
     {
       "id": "107",
-      "question": "A five-step approval process needs Step 3 to route to whichever user is specified in a lookup field on the record, which varies by record. Which TWO statements about approver types are correct? (Choose 2\\)",
+      "question": "A five-step approval process needs Step 3 to route to whichever user is specified in a lookup field on the record, which varies by record. Which TWO statements about approver types are correct? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -49975,7 +49975,7 @@
     },
     {
       "id": "109",
-      "question": "A validation rule checks that Amount \\> 0 on Opportunity. A before-save flow on the same object sets Amount based on a calculation involving other fields. In what order do these two mechanisms evaluate, and why does that matter for resolving a conflict?",
+      "question": "A validation rule checks that Amount > 0 on Opportunity. A before-save flow on the same object sets Amount based on a calculation involving other fields. In what order do these two mechanisms evaluate, and why does that matter for resolving a conflict?",
       "options": [
         {
           "letter": "A",
@@ -50095,7 +50095,7 @@
       "options": [
         {
           "letter": "A",
-          "text": "A decision element checking isChanged() or comparing against $Record\\_\\_Prior to only proceed if the relevant field actually changed in a meaningful way"
+          "text": "A decision element checking isChanged() or comparing against $Record__Prior to only proceed if the relevant field actually changed in a meaningful way"
         },
         {
           "letter": "B",
@@ -50114,7 +50114,7 @@
       "correctIndices": [
         0
       ],
-      "explanation": "* Comparing current values to $Record\\_\\_Prior (or using isChanged()) lets the flow detect whether the field genuinely changed since the prior execution, letting it skip redundant updates and break the recursive triggering cycle. * B is incorrect: Deactivating the flow removes the automation entirely, which doesn't solve the underlying recursion problem if the logic is still needed. C is incorrect: Converting to a Screen Flow removes automatic triggering altogether, which isn't a scoped recursion-prevention technique and changes the automation's fundamental behavior. D is incorrect: A Wait element delays execution but doesn't address or prevent the recursive re-triggering itself.",
+      "explanation": "* Comparing current values to $Record__Prior (or using isChanged()) lets the flow detect whether the field genuinely changed since the prior execution, letting it skip redundant updates and break the recursive triggering cycle. * B is incorrect: Deactivating the flow removes the automation entirely, which doesn't solve the underlying recursion problem if the logic is still needed. C is incorrect: Converting to a Screen Flow removes automatic triggering altogether, which isn't a scoped recursion-prevention technique and changes the automation's fundamental behavior. D is incorrect: A Wait element delays execution but doesn't address or prevent the recursive re-triggering itself.",
       "requiredSelections": 1
     },
     {
@@ -50147,7 +50147,7 @@
     },
     {
       "id": "115",
-      "question": "A flow performs a Get Records call inside a loop, once per iteration, to check a related record's status for 500 iterating records. Which TWO statements about this design are correct? (Choose 2\\)",
+      "question": "A flow performs a Get Records call inside a loop, once per iteration, to check a related record's status for 500 iterating records. Which TWO statements about this design are correct? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -50180,7 +50180,7 @@
     },
     {
       "id": "116",
-      "question": "A Record-Triggered Flow processes a large batch update of 3,000 records in a single transaction, with a loop iterating over related child records for each parent. Which TWO statements about governor limits here are correct? (Choose 2\\)",
+      "question": "A Record-Triggered Flow processes a large batch update of 3,000 records in a single transaction, with a loop iterating over related child records for each parent. Which TWO statements about governor limits here are correct? (Choose 2)",
       "options": [
         {
           "letter": "A",
@@ -50297,7 +50297,7 @@
     },
     {
       "id": "120",
-      "question": "An org has both a flow Email Alert action and an approval process email alert configured, both firing frequently for a high-volume standard-license user. Which TWO statements about the shared email constraint are correct? (Choose 2\\)",
+      "question": "An org has both a flow Email Alert action and an approval process email alert configured, both firing frequently for a high-volume standard-license user. Which TWO statements about the shared email constraint are correct? (Choose 2)",
       "options": [
         {
           "letter": "A",
