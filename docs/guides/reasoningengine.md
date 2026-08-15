@@ -610,7 +610,7 @@ The valid pairings must be memorized. Bare `transition to` belongs in lifecycle 
 
 Handoff and delegation represent two fundamentally different control flow models. Choosing the right one has major architectural implications.
 
-**Handoff (`@utils.transition to`):** control transfers completely to the called subagent. The caller does not resume. The destination owns the full response. The original subagent's fire if the handoff occurs mid-reasoning. Use when the destination should completely own the user experience.
+**Handoff (`@utils.transition to`):** control transfers completely to the called subagent. The caller does not resume. The destination owns the full response. The original subagent's after_reasoning does not fire if the handoff occurs mid-reasoning. Use when the destination should completely own the user experience.
 
 **Delegation (`@subagent.X` as action reference):** the parent orchestrates, the child runs its full reasoning loop and produces a result, and control returns to the parent, which synthesizes the final response. Use when the parent needs to coordinate across multiple children or incorporate results into a unified response.
 
