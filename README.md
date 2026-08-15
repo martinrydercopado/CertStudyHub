@@ -20,14 +20,14 @@ A native SwiftUI app (iPhone + Mac) and a companion web app for studying Salesfo
 | Platform Administrator II | — | 201 | 60% | |
 | Platform Data Architect | — | 129 | 58% | |
 | Platform Sharing & Visibility Architect | — | 186 | 62% | |
-| Platform UX Designer | — | 151 | 65% | |
+| Platform UX Designer | 121 | 151 | 65% | |
 | **Bonus** | | | | |
 | Inside Daisy: Reasoning Engine | 39 | 56 | 70% | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=reasoningengine) |
 | RAG, Agentforce & Data 360 | 72 | 100 | 70% | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=rag) |
 | AgentOps: Agentforce Lifecycle | 50 | 191 | 70% | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentops) |
 | Success Architect Scenarios | — | — | 70% | |
 
-**Totals:** 1,406 questions and 2,858 study topics across 17 tracks.
+**Totals:** 1,527 questions and 2,858 study topics across 17 tracks.
 
 ## Features
 
@@ -75,6 +75,9 @@ Open `CertStudyHub.xcodeproj` and build for your target device.
 No build step — open `docs/index.html` locally or deploy the `docs/` folder to any static host. GitHub Pages serves it automatically from the `main` branch.
 
 ## Changelog
+
+### 2025-08-15
+- Add 121 practice questions for Platform UX Designer certification (quiz mode now available)
 
 ### 2025-08-14
 - Add 6 new study-only certifications: Agentforce Sales Consultant, Agentforce Service Consultant, Platform Administrator II, Platform Data Architect, Platform Sharing & Visibility Architect, Platform UX Designer

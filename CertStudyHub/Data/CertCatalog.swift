@@ -402,8 +402,12 @@ enum CertCatalog {
             Color(red: 0.62, green: 0.26, blue: 0.64)
         ],
         passingScore: 65,
-        quizLengths: [],
-        questions: [],
+        quizLengths: [
+            QuizLength(count: 30, label: "Quick 30"),
+            QuizLength(count: 60, label: "Standard 60"),
+            QuizLength(count: 121, label: "Full 121")
+        ],
+        questions: UXDesignerQuestionBank.all,
         studySections: UXDesignerStudyBank.sections,
         storageKeyPrefix: "uxdesigner"
     )

@@ -119,6 +119,8 @@
 		C10000000000000000000070 /* SharingVisibilityStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000037 /* SharingVisibilityStudyBank.swift */; };
 		C10000000000000000000071 /* UXDesignerStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000038 /* UXDesignerStudyBank.swift */; };
 		C10000000000000000000072 /* UXDesignerStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000038 /* UXDesignerStudyBank.swift */; };
+		C10000000000000000000073 /* UXDesignerQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000039 /* UXDesignerQuestionBank.swift */; };
+		C10000000000000000000074 /* UXDesignerQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000039 /* UXDesignerQuestionBank.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -178,6 +180,7 @@
 		C1F000000000000000000036 /* DataArchitectStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataArchitectStudyBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000037 /* SharingVisibilityStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingVisibilityStudyBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000038 /* UXDesignerStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UXDesignerStudyBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000039 /* UXDesignerQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UXDesignerQuestionBank.swift; sourceTree = "<group>"; };
 		C1P000000000000000000001 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1P000000000000000000002 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -267,6 +270,7 @@
 				C1F000000000000000000036 /* DataArchitectStudyBank.swift */,
 				C1F000000000000000000037 /* SharingVisibilityStudyBank.swift */,
 				C1F000000000000000000038 /* UXDesignerStudyBank.swift */,
+				C1F000000000000000000039 /* UXDesignerQuestionBank.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -497,6 +501,7 @@
 				C1000000000000000000006D /* DataArchitectStudyBank.swift in Sources */,
 				C1000000000000000000006F /* SharingVisibilityStudyBank.swift in Sources */,
 				C10000000000000000000071 /* UXDesignerStudyBank.swift in Sources */,
+				C10000000000000000000073 /* UXDesignerQuestionBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,6 +564,7 @@
 				C1000000000000000000006E /* DataArchitectStudyBank.swift in Sources */,
 				C10000000000000000000070 /* SharingVisibilityStudyBank.swift in Sources */,
 				C10000000000000000000072 /* UXDesignerStudyBank.swift in Sources */,
+				C10000000000000000000074 /* UXDesignerQuestionBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

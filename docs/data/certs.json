@@ -675,11 +675,24 @@
       "#9F42A3"
     ],
     "passingScore": 65,
-    "questionBank": null,
+    "questionBank": "uxdesigner",
     "studyBank": "uxdesigner",
     "storageKeyPrefix": "uxdesigner",
     "isBonusTopic": false,
     "subtitle": null,
-    "quizLengths": []
+    "quizLengths": [
+      {
+        "count": 30,
+        "label": "Quick 30"
+      },
+      {
+        "count": 60,
+        "label": "Standard 60"
+      },
+      {
+        "count": 121,
+        "label": "Full 121"
+      }
+    ]
   }
 ]
