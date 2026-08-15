@@ -22,12 +22,12 @@ A native SwiftUI app (iPhone + Mac) and a companion web app for studying Salesfo
 | Platform Sharing & Visibility Architect | — | 186 | 62% | |
 | Platform UX Designer | 121 | 151 | 65% | |
 | **Bonus** | | | | |
-| Inside Daisy: Reasoning Engine | 39 | 56 | 70% | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=reasoningengine) |
-| RAG, Agentforce & Data 360 | 72 | 100 | 70% | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=rag) |
+| Inside Daisy: Reasoning Engine | 44 | 56 | 70% | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=reasoningengine) |
+| RAG, Agentforce & Data 360 | 77 | 100 | 70% | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=rag) |
 | AgentOps: Agentforce Lifecycle | 50 | 191 | 70% | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentops) |
 | Success Architect Scenarios | — | — | 70% | |
 
-**Totals:** 1,527 questions and 2,858 study topics across 17 tracks.
+**Totals:** 1,537 questions and 2,858 study topics across 17 tracks.
 
 ## Features
 
@@ -77,6 +77,8 @@ No build step — open `docs/index.html` locally or deploy the `docs/` folder to
 ## Changelog
 
 ### 2025-08-15
+- Add 5 new practice questions for RAG, Agentforce & Data 360 bonus cert (72 → 77)
+- Add 5 new practice questions for Inside Daisy: Reasoning Engine bonus cert (39 → 44)
 - Add 121 practice questions for Platform UX Designer certification (quiz mode now available)
 
 ### 2025-08-14

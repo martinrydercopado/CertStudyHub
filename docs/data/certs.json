@@ -191,11 +191,11 @@
         "questionIDRange": null
       },
       {
-        "id": 39,
-        "label": "All 39 Questions",
+        "id": 44,
+        "label": "All 44 Questions",
         "icon": "⭐",
         "subtitle": "Full Question Bank",
-        "duration": "~20 min",
+        "duration": "~22 min",
         "questionIDRange": null
       }
     ]
@@ -245,11 +245,11 @@
         "questionIDRange": null
       },
       {
-        "id": 72,
-        "label": "All 72 Questions",
+        "id": 77,
+        "label": "All 77 Questions",
         "icon": "⭐",
         "subtitle": "Full Question Bank",
-        "duration": "~36 min",
+        "duration": "~39 min",
         "questionIDRange": null
       }
     ]

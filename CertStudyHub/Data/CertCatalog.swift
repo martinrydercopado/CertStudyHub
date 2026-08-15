@@ -111,7 +111,7 @@ enum CertCatalog {
         quizLengths: [
             QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
             QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
-            QuizLength(id: 39, label: "All 39 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~20 min")
+            QuizLength(id: 44, label: "All 44 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~22 min")
         ],
         questions: ReasoningEngineQuestionBank.all,
         studySections: ReasoningEngineStudyBank.sections,
@@ -138,7 +138,7 @@ enum CertCatalog {
             QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
             QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
             QuizLength(id: 60, label: "60 Questions", icon: "trophy.fill", subtitle: "Exam Simulation", duration: "~30 min"),
-            QuizLength(id: 72, label: "All 72 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~36 min")
+            QuizLength(id: 77, label: "All 77 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~39 min")
         ],
         questions: RAGQuestionBank.all,
         studySections: RAGStudyBank.sections,

@@ -37602,6 +37602,143 @@
         2
       ],
       "explanation": "Why correct: A subagent-level system override completely replaces the global instructions, so any invariant not explicitly restated in the override no longer applies to that subagent — the fix is restating it directly.  \nWhy each wrong answer fails:\n\n* A: Safety invariants are not automatically preserved beneath an override; replacement is total, not selective.  \n* B: This risk applies regardless of modality; nothing in the mechanism is voice-specific.  \n* D: Subagent-level overrides are a supported, valid construct; removing the override entirely is a more drastic fix than necessary.\n\n---"
+    },
+    {
+      "id": "40",
+      "question": "A developer is configuring a secure refund subagent. The refund action requires the customer's verified account ID, which was confirmed during an earlier identity-verification subagent. The developer wants to guarantee the LLM cannot substitute a different account ID. Which approach provides the strongest security?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "Add a prose instruction telling the LLM: \"Always use the verified account ID from the identity check.\""
+        },
+        {
+          "letter": "B",
+          "text": "Bind the parameter to @variables.verified_account_id using session-persistent variable binding instead of the LLM slot-fill operator (...)."
+        },
+        {
+          "letter": "C",
+          "text": "Set the action's description to mention that only verified IDs are accepted."
+        },
+        {
+          "letter": "D",
+          "text": "Use available when @variables.is_verified == True on the refund action and let the LLM fill the account ID freely."
+        }
+      ],
+      "questionType": "singleSelect",
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Parameter pinning — binding directly to @variables.verified_account_id instead of using the LLM slot-fill operator (...) — removes LLM discretion entirely, guaranteeing the exact verified value is used every time. A: Prose instructions are probabilistic hints. C: Description text is interpretive guidance, not enforced. D: available when controls visibility but not which parameter value the LLM chooses."
+    },
+    {
+      "id": "41",
+      "question": "A developer suspects that an @outputs value captured from an action is not available when a subsequent action tries to use it two reasoning iterations later. Which diagnostic step most directly confirms the scope expiration?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "Check the action's Apex class to see if it returns the value in its output schema."
+        },
+        {
+          "letter": "B",
+          "text": "Add a prose instruction reminding the LLM to remember the value across iterations."
+        },
+        {
+          "letter": "C",
+          "text": "Inspect the trace visualization to confirm whether the FunctionStep's postVars still contain the @outputs value at the point of the second action's invocation."
+        },
+        {
+          "letter": "D",
+          "text": "Redeploy the agent with verbose logging enabled on the Einstein Trust Layer."
+        }
+      ],
+      "questionType": "singleSelect",
+      "correctIndices": [
+        2
+      ],
+      "explanation": "The trace visualization's FunctionStep postVars show exactly which variables and outputs are in scope at each point in the reasoning chain — this directly reveals whether an @outputs value has expired. A: The Apex class returning the value doesn't tell you about runtime scope. B: Prose instructions cannot extend @outputs scope. D: Trust Layer logging covers screening, not variable scope lifecycle."
+    },
+    {
+      "id": "42",
+      "question": "An architect wants a subagent to route the user to a specialized handler immediately — before the LLM reasons at all — when a specific variable is already set. Which mechanism achieves pre-LLM routing?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "A bare transition to in before_reasoning with a conditional guard on the variable."
+        },
+        {
+          "letter": "B",
+          "text": "An available when guard on an action in reasoning.actions that transitions when called."
+        },
+        {
+          "letter": "C",
+          "text": "A prose instruction in reasoning.instructions telling the LLM to transition immediately if the variable is set."
+        },
+        {
+          "letter": "D",
+          "text": "Setting the variable as a linked variable with source pointing to the destination subagent."
+        }
+      ],
+      "questionType": "singleSelect",
+      "correctIndices": [
+        0
+      ],
+      "explanation": "before_reasoning executes exactly once per turn, strictly before the reasoning loop begins. A bare transition to inside it — guarded by a condition — routes the user immediately without the LLM ever being invoked. B: available when only controls tool schema visibility during Phase 2. C: Prose instructions are processed by the LLM during Phase 2. D: Linked variables populate from external session context, not transitions."
+    },
+    {
+      "id": "43",
+      "question": "A developer wants to inspect the compiled structure of their agent to verify that the DAG and FSM were built correctly before publishing to production. Which artifact should they examine?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "The raw .agent file opened in a text editor, since the DAG/FSM structure is visible in the syntax."
+        },
+        {
+          "letter": "B",
+          "text": "The Einstein Trust Layer's audit log, which records the compiled graph structure."
+        },
+        {
+          "letter": "C",
+          "text": "The Apex test results from the action classes, which include graph validation assertions."
+        },
+        {
+          "letter": "D",
+          "text": "The GenAiPlannerBundle metadata, which contains the compiled Agent Graph with the DAG for tool dependencies and FSM for subagent transitions."
+        }
+      ],
+      "questionType": "singleSelect",
+      "correctIndices": [
+        3
+      ],
+      "explanation": "The GenAiPlannerBundle is the compiled output containing the Agent Graph — including the DAG for tool dependency ordering and the FSM for subagent transitions and retry edges. A: The raw .agent file is source, not compiled output. B: Trust Layer audit log covers per-call screening, not graph structure. C: Apex test results validate action logic, not the agent's compiled graph."
+    },
+    {
+      "id": "44",
+      "question": "An architect is optimizing a subagent that currently exposes 12 actions to the LLM, several of which are only relevant in specific workflow states. The reasoning payload is exceeding the ~10,000 token heuristic. Which two changes most effectively reduce cognitive load on the LLM and billing costs? (Choose 2)",
+      "options": [
+        {
+          "letter": "A",
+          "text": "Add available when guards to suppress irrelevant actions based on current workflow state variables."
+        },
+        {
+          "letter": "B",
+          "text": "Increase the reasoning loop iteration cap to allow more iterations with smaller payloads."
+        },
+        {
+          "letter": "C",
+          "text": "Consolidate redundant actions that perform similar tasks into fewer, well-described actions."
+        },
+        {
+          "letter": "D",
+          "text": "Move all 12 actions into before_reasoning as deterministic run calls."
+        }
+      ],
+      "questionType": "multiSelect",
+      "correctIndices": [
+        0,
+        2
+      ],
+      "requiredSelections": 2,
+      "explanation": "available when guards remove irrelevant actions from the tool schema entirely when false, directly shrinking the payload. Consolidating redundant actions reduces duplicate schema entries. B: The iteration cap (~3-4) is not user-adjustable and doesn't affect per-iteration payload size. D: Moving all actions to deterministic run fundamentally changes behavior rather than optimizing."
     }
   ],
   "rag": [
@@ -39620,6 +39757,147 @@
         2
       ],
       "explanation": "**Why correct:** Salesforce documentation explicitly flags that Data Cloud Connect API calls count against the 100-callout-per-transaction Apex governor limit, and recommends batching queries into fewer calls — directly relevant since 150 individual calls would exceed this limit.  \n**Why each wrong answer fails:**\n\n* **A:** Connect API calls are explicitly documented as counting against standard Apex callout governor limits, not exempt from them.  \n* **B:** The 3-4 loop iteration limit applies to Agent Script reasoning loops within an agent session, not to Apex code execution loops calling an API.  \n* **D:** Chunk size (512 tokens) is a content indexing constraint unrelated to Apex callout governor limits or transaction-level API call counts.\n\n---"
+    },
+    {
+      "id": "73",
+      "question": "A healthcare client's agent is configured with a global instruction to \"Never give medical advice.\" A specific \"Benefits\" subagent is also created to handle insurance coverage routing. During user testing, the Benefits subagent begins providing medical advice. Given this scenario, why is the agent failing to adhere to the restriction?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "The global instruction was overridden because subagent instructions replace the global system prompt entirely for that subagent."
+        },
+        {
+          "letter": "B",
+          "text": "The LLM probabilistically ignored the global instruction due to the semantic weight of the health-related topic."
+        },
+        {
+          "letter": "C",
+          "text": "The subagent's deterministic routing rules bypassed the trust layer's prompt defense mechanisms."
+        },
+        {
+          "letter": "D",
+          "text": "Global instructions only apply to the deterministic resolution phase, not the LLM reasoning loop."
+        }
+      ],
+      "questionType": "singleSelect",
+      "correctIndices": [
+        0
+      ],
+      "explanation": "When a subagent is selected, its instructions replace the global system prompt rather than merging with it, meaning any critical global constraints must be repeated within the subagent. B: The LLM didn't probabilistically ignore it; it was structurally removed. C: Trust layer operates independently of subagent routing. D: Global instructions are injected into the LLM reasoning loop."
+    },
+    {
+      "id": "74",
+      "question": "A manufacturing client wants to use SFDRIVE to ground their Agentforce deployment on technical product specifications. They have 2,500 individual PDF specification sheets, each averaging 5 MB in size. Given this scenario, which architectural constraint should the Success Architect highlight?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "The total storage exceeds the 10 GB workspace limit for SFDRIVE file indexing."
+        },
+        {
+          "letter": "B",
+          "text": "SFDRIVE cannot process PDF formats natively and requires pre-conversion to HTML or TXT."
+        },
+        {
+          "letter": "C",
+          "text": "The 5 MB file size exceeds the SFDRIVE per-file maximum size limit."
+        },
+        {
+          "letter": "D",
+          "text": "SFDRIVE libraries are limited to 1,000 files, so the 2,500 PDFs exceed the maximum file count constraint."
+        }
+      ],
+      "questionType": "singleSelect",
+      "correctIndices": [
+        3
+      ],
+      "explanation": "SFDRIVE libraries have a hard platform limit of 1,000 files per library. A: No documented 10 GB limit. B: SFDRIVE supports PDF, TXT, and HTML natively. C: The max file size is 100 MB, so 5 MB is fine."
+    },
+    {
+      "id": "75",
+      "question": "A retail client's Agentforce deployment has been live for 30 days. The support manager wants to systematically identify entirely new, unanticipated use cases users are trying to execute, and wants to be notified immediately if the agent starts failing to resolve issues at an abnormal volume. Given this scenario, which two features should the architect recommend? (Choose 2)",
+      "options": [
+        {
+          "letter": "A",
+          "text": "The Agentforce Testing Center's synthetic Q&A evaluation"
+        },
+        {
+          "letter": "B",
+          "text": "Conversation Clusters by Intent"
+        },
+        {
+          "letter": "C",
+          "text": "The 7-Layer Diagnostic Ladder tracker"
+        },
+        {
+          "letter": "D",
+          "text": "Phase 1 Deterministic Resolution logs"
+        },
+        {
+          "letter": "E",
+          "text": "Escalation rate spike alert"
+        }
+      ],
+      "questionType": "multiSelect",
+      "correctIndices": [
+        1,
+        4
+      ],
+      "requiredSelections": 2,
+      "explanation": "Conversation Clusters by Intent use AI to group production conversations to reveal unexpected use cases. Escalation rate spike alert proactively notifies when the agent fails to resolve at abnormal volume. A: Testing Center is for pre-deployment evaluation. C: 7-Layer Diagnostic Ladder is a manual troubleshooting methodology. D: Phase 1 logs don't group intents or trigger alerts."
+    },
+    {
+      "id": "76",
+      "question": "A Success Architect is kicking off the first meeting with a telecommunications client who wants to \"build an AI chatbot using Agentforce.\" To prevent scope drift and properly design the underlying architecture, which set of questions should the architect use as the discovery opener?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "Which embedding model is preferred, what is the chunk size, do you need hybrid search, and is MuleSoft licensed?"
+        },
+        {
+          "letter": "B",
+          "text": "What is the business outcome, where does the content live today, who is the audience, what does success look like in 90 days, and is Data Cloud already provisioned?"
+        },
+        {
+          "letter": "C",
+          "text": "What is the budget, how many agents are needed, what are the brand guidelines, and will you use Bring Your Own LLM?"
+        },
+        {
+          "letter": "D",
+          "text": "Which subagents are required, what actions will they take, which prompt templates need to be built, and what is the toxicity threshold?"
+        }
+      ],
+      "questionType": "singleSelect",
+      "correctIndices": [
+        1
+      ],
+      "explanation": "This five-question sequence establishes measurable outcomes, defines architecture based on content location, clarifies the permission model, sets a timeline, and identifies infrastructure readiness. A: These are Phase 2/3 implementation details. C: Skips critical prerequisites like target audience and content location. D: Subagent design occurs after the RAG pipeline and business outcome are scoped."
+    },
+    {
+      "id": "77",
+      "question": "A financial services agent frequently calls the LookupTransaction action when the user is actually asking to dispute a charge, resulting in a poor customer experience. The architect needs to instruct the LLM on exactly when to choose this specific tool versus when to route to a dispute subagent. Given this scenario, which instruction surface must be modified to fix this probabilistic routing error?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "Global System Instructions"
+        },
+        {
+          "letter": "B",
+          "text": "Variable Injection"
+        },
+        {
+          "letter": "C",
+          "text": "Action Descriptions"
+        },
+        {
+          "letter": "D",
+          "text": "Reasoning Instructions"
+        }
+      ],
+      "questionType": "singleSelect",
+      "correctIndices": [
+        2
+      ],
+      "explanation": "The Action Description field is the specific runtime instruction surface the LLM reads to understand when and how to use a tool; a poorly written description directly causes incorrect action selection. A: Global instructions define persona and constraints, not individual action triggers. B: Variable injection provides session context, not tool selection logic. D: Reasoning instructions dictate conversational script, but the LLM relies on action descriptions for tool selection."
     }
   ],
   "uxdesigner": [
