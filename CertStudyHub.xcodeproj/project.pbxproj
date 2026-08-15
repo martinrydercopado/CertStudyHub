@@ -123,6 +123,8 @@
 		C10000000000000000000074 /* UXDesignerQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000039 /* UXDesignerQuestionBank.swift */; };
 		C10000000000000000000075 /* DataArchitectQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000040 /* DataArchitectQuestionBank.swift */; };
 		C10000000000000000000076 /* DataArchitectQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000040 /* DataArchitectQuestionBank.swift */; };
+		C10000000000000000000077 /* Admin2QuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000041 /* Admin2QuestionBank.swift */; };
+		C10000000000000000000078 /* Admin2QuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000041 /* Admin2QuestionBank.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -184,6 +186,7 @@
 		C1F000000000000000000038 /* UXDesignerStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UXDesignerStudyBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000039 /* UXDesignerQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UXDesignerQuestionBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000040 /* DataArchitectQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataArchitectQuestionBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000041 /* Admin2QuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Admin2QuestionBank.swift; sourceTree = "<group>"; };
 		C1P000000000000000000001 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1P000000000000000000002 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -275,6 +278,7 @@
 				C1F000000000000000000038 /* UXDesignerStudyBank.swift */,
 				C1F000000000000000000039 /* UXDesignerQuestionBank.swift */,
 				C1F000000000000000000040 /* DataArchitectQuestionBank.swift */,
+				C1F000000000000000000041 /* Admin2QuestionBank.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -507,6 +511,7 @@
 				C10000000000000000000071 /* UXDesignerStudyBank.swift in Sources */,
 				C10000000000000000000073 /* UXDesignerQuestionBank.swift in Sources */,
 				C10000000000000000000075 /* DataArchitectQuestionBank.swift in Sources */,
+				C10000000000000000000077 /* Admin2QuestionBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -571,6 +576,7 @@
 				C10000000000000000000072 /* UXDesignerStudyBank.swift in Sources */,
 				C10000000000000000000074 /* UXDesignerQuestionBank.swift in Sources */,
 				C10000000000000000000076 /* DataArchitectQuestionBank.swift in Sources */,
+				C10000000000000000000078 /* Admin2QuestionBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -273,8 +273,13 @@ enum CertCatalog {
             Color(red: 0.44, green: 0.31, blue: 0.60)
         ],
         passingScore: 60,
-        quizLengths: [],
-        questions: [],
+        quizLengths: [
+            QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
+            QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
+            QuizLength(id: 60, label: "60 Questions", icon: "trophy.fill", subtitle: "Exam Simulation", duration: "~30 min"),
+            QuizLength(id: 122, label: "All 122 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~61 min")
+        ],
+        questions: Admin2QuestionBank.all,
         studySections: Admin2StudyBank.sections,
         storageKeyPrefix: "admin2"
     )

@@ -17,7 +17,7 @@ A native SwiftUI app (iPhone + Mac) and a companion web app for studying Salesfo
 | Platform Integration Architect | 154 | 170 | 62% | |
 | Agentforce Sales Consultant | — | 154 | 65% | |
 | Agentforce Service Consultant | — | 302 | 65% | |
-| Platform Administrator II | — | 201 | 60% | |
+| Platform Administrator II | 122 | 201 | 60% | |
 | Platform Data Architect | 120 | 129 | 58% | |
 | Platform Sharing & Visibility Architect | — | 186 | 62% | |
 | Platform UX Designer | 121 | 151 | 65% | |
@@ -27,7 +27,7 @@ A native SwiftUI app (iPhone + Mac) and a companion web app for studying Salesfo
 | AgentOps: Agentforce Lifecycle | 50 | 191 | 70% | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentops) |
 | Success Architect Scenarios | — | — | 70% | |
 
-**Totals:** 1,657 questions and 2,858 study topics across 17 tracks.
+**Totals:** 1,779 questions and 2,858 study topics across 17 tracks.
 
 ## Features
 
@@ -77,6 +77,7 @@ No build step — open `docs/index.html` locally or deploy the `docs/` folder to
 ## Changelog
 
 ### 2025-08-15
+- Add 122 practice questions for Platform Administrator II certification (quiz mode now available)
 - Add 120 practice questions for Platform Data Architect certification (quiz mode now available)
 - Add 5 new practice questions for RAG, Agentforce & Data 360 bonus cert (72 → 77)
 - Add 5 new practice questions for Inside Daisy: Reasoning Engine bonus cert (39 → 44)
