@@ -32,13 +32,28 @@ final class ProgressManager {
 
     // MARK: – First-Launch Tracking
     private func loadFirstLaunchDate() {
+        let buildDate = Self.executableModificationDate() ?? Date()
         if let stored = UserDefaults.standard.object(forKey: Self.firstLaunchKey) as? Date {
-            firstLaunchDate = stored
+            // If the binary is newer than the stored first-launch date, the user
+            // re-built and re-installed — reset the countdown from the new build.
+            if buildDate > stored {
+                UserDefaults.standard.set(buildDate, forKey: Self.firstLaunchKey)
+                firstLaunchDate = buildDate
+            } else {
+                firstLaunchDate = stored
+            }
         } else {
-            let now = Date()
-            UserDefaults.standard.set(now, forKey: Self.firstLaunchKey)
-            firstLaunchDate = now
+            UserDefaults.standard.set(buildDate, forKey: Self.firstLaunchKey)
+            firstLaunchDate = buildDate
         }
+    }
+
+    /// Returns the modification date of the app's main executable, which updates
+    /// every time Xcode re-builds and installs the app. This lets us detect
+    /// re-installs that reset the free-provisioning clock.
+    private static func executableModificationDate() -> Date? {
+        guard let execPath = Bundle.main.executablePath else { return nil }
+        return try? FileManager.default.attributesOfItem(atPath: execPath)[.modificationDate] as? Date
     }
 
     var estimatedExpirationDate: Date? {
