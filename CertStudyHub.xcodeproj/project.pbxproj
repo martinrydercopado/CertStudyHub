@@ -129,6 +129,8 @@
 		C1000000000000000000007A /* AgentforceServiceQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000042 /* AgentforceServiceQuestionBank.swift */; };
 		C1000000000000000000007B /* SharingVisibilityQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000043 /* SharingVisibilityQuestionBank.swift */; };
 		C1000000000000000000007C /* SharingVisibilityQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000043 /* SharingVisibilityQuestionBank.swift */; };
+		C1000000000000000000007D /* AgentforceSalesQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000044 /* AgentforceSalesQuestionBank.swift */; };
+		C1000000000000000000007E /* AgentforceSalesQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000044 /* AgentforceSalesQuestionBank.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -193,6 +195,7 @@
 		C1F000000000000000000041 /* Admin2QuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Admin2QuestionBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000042 /* AgentforceServiceQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentforceServiceQuestionBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000043 /* SharingVisibilityQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingVisibilityQuestionBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000044 /* AgentforceSalesQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentforceSalesQuestionBank.swift; sourceTree = "<group>"; };
 		C1P000000000000000000001 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1P000000000000000000002 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -287,6 +290,7 @@
 				C1F000000000000000000041 /* Admin2QuestionBank.swift */,
 				C1F000000000000000000042 /* AgentforceServiceQuestionBank.swift */,
 				C1F000000000000000000043 /* SharingVisibilityQuestionBank.swift */,
+				C1F000000000000000000044 /* AgentforceSalesQuestionBank.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -522,6 +526,7 @@
 				C10000000000000000000077 /* Admin2QuestionBank.swift in Sources */,
 				C10000000000000000000079 /* AgentforceServiceQuestionBank.swift in Sources */,
 				C1000000000000000000007B /* SharingVisibilityQuestionBank.swift in Sources */,
+				C1000000000000000000007D /* AgentforceSalesQuestionBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -589,6 +594,7 @@
 				C10000000000000000000078 /* Admin2QuestionBank.swift in Sources */,
 				C1000000000000000000007A /* AgentforceServiceQuestionBank.swift in Sources */,
 				C1000000000000000000007C /* SharingVisibilityQuestionBank.swift in Sources */,
+				C1000000000000000000007E /* AgentforceSalesQuestionBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
