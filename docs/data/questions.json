@@ -37436,7 +37436,7 @@
     },
     {
       "id": 34,
-      "question": "What is the primary consequence of a reasoning payload growing well beyond the effective \\~10,000 token heuristic?",
+      "question": "What is the primary consequence of a reasoning payload growing well beyond the effective ~10,000 token heuristic?",
       "options": [
         {
           "letter": "A",
@@ -38360,7 +38360,7 @@
       "correctIndices": [
         0
       ],
-      "explanation": "**Why correct:** The 10-15% recall threshold is met, but best practices also require confirming the client can absorb the \\~2x credit cost and that latency isn't a blocker before adopting hybrid search.  \n**Why each wrong answer fails:**\n\n* **B:** best practices set a specific 10-15% threshold plus cost/latency considerations; any improvement above zero isn't sufficient justification on its own.  \n* **C:** A 12% hybrid improvement over vector-only doesn't imply the vector component is worthless; BM25-only would lose semantic matching entirely.  \n* **D:** Pre-filters operate before similarity calculation and remain useful regardless of search strategy; hybrid search doesn't make them redundant.\n\n---"
+      "explanation": "**Why correct:** The 10-15% recall threshold is met, but best practices also require confirming the client can absorb the ~2x credit cost and that latency isn't a blocker before adopting hybrid search.  \n**Why each wrong answer fails:**\n\n* **B:** best practices set a specific 10-15% threshold plus cost/latency considerations; any improvement above zero isn't sufficient justification on its own.  \n* **C:** A 12% hybrid improvement over vector-only doesn't imply the vector component is worthless; BM25-only would lose semantic matching entirely.  \n* **D:** Pre-filters operate before similarity calculation and remain useful regardless of search strategy; hybrid search doesn't make them redundant.\n\n---"
     },
     {
       "id": 23,
@@ -38520,7 +38520,7 @@
         },
         {
           "letter": "D",
-          "text": "The Day 0 race condition, where the chunking job runs before the CRM Connector commits data; wait \\~10 minutes, then retest and re-index if still empty."
+          "text": "The Day 0 race condition, where the chunking job runs before the CRM Connector commits data; wait ~10 minutes, then retest and re-index if still empty."
         }
       ],
       "questionType": "single-select",
@@ -39172,7 +39172,7 @@
       "correctIndices": [
         1
       ],
-      "explanation": "**Why correct:** The documented processing frequency for identity resolution is near-real-time, with small batches processed as often as every 15 minutes.  \n**Why each wrong answer fails:**\n\n* **A:** Millisecond synchronous processing on every save isn't the documented model; the pipeline processes small batches on a \\~15-minute cadence, not per-transaction instantly.  \n* **C:** A rigid 24-hour nightly-only cadence contradicts the documented near-real-time, \\~15-minute batch processing frequency.  \n* **D:** Identity resolution is a continuous pipeline (matching, deep matching, clustering, reconciliation) that reprocesses changes, not a one-time process requiring full re-indexing.\n\n---"
+      "explanation": "**Why correct:** The documented processing frequency for identity resolution is near-real-time, with small batches processed as often as every 15 minutes.  \n**Why each wrong answer fails:**\n\n* **A:** Millisecond synchronous processing on every save isn't the documented model; the pipeline processes small batches on a ~15-minute cadence, not per-transaction instantly.  \n* **C:** A rigid 24-hour nightly-only cadence contradicts the documented near-real-time, ~15-minute batch processing frequency.  \n* **D:** Identity resolution is a continuous pipeline (matching, deep matching, clustering, reconciliation) that reprocesses changes, not a one-time process requiring full re-indexing.\n\n---"
     },
     {
       "id": 52,
@@ -39340,7 +39340,7 @@
       "correctIndices": [
         3
       ],
-      "explanation": "**Why correct:** Salesforce best practices provide exactly this SQL-style pre-launch verification query grouping by Language where PublishStatus \\= 'Online', compared against the agent user's LanguageLocaleKey.  \n**Why each wrong answer fails:**\n\n* **A:** Docling is a document parsing framework for layout and table extraction; it has no language-distribution reporting screen for Knowledge articles.  \n* **B:** Data Space scope governs business-unit/sensitivity partitioning, not per-article language counts, and has no documented language reporting view.  \n* **C:** Salesforce documentation explicitly provides a pre-launch verification method, contradicting the claim that this can only be discovered after failures occur in production.\n\n---"
+      "explanation": "**Why correct:** Salesforce best practices provide exactly this SQL-style pre-launch verification query grouping by Language where PublishStatus = 'Online', compared against the agent user's LanguageLocaleKey.  \n**Why each wrong answer fails:**\n\n* **A:** Docling is a document parsing framework for layout and table extraction; it has no language-distribution reporting screen for Knowledge articles.  \n* **B:** Data Space scope governs business-unit/sensitivity partitioning, not per-article language counts, and has no documented language reporting view.  \n* **C:** Salesforce documentation explicitly provides a pre-launch verification method, contradicting the claim that this can only be discovered after failures occur in production.\n\n---"
     },
     {
       "id": 58,
@@ -39612,7 +39612,7 @@
         },
         {
           "letter": "D",
-          "text": "100 credits: 4 calls to AnswerQuestionsWithKnowledge (20 each \\= 80) plus 1 Flow action execution (20) \\= 100 credits total."
+          "text": "100 credits: 4 calls to AnswerQuestionsWithKnowledge (20 each = 80) plus 1 Flow action execution (20) = 100 credits total."
         }
       ],
       "questionType": "single-select",
@@ -39620,7 +39620,7 @@
       "correctIndices": [
         3
       ],
-      "explanation": "**Why correct:** `AnswerQuestionsWithKnowledge` costs 20 credits per call (4 calls \\= 80) and a Flow action execution costs 20 credits per execution, totaling 100 credits.  \n**Why each wrong answer fails:**\n\n* **A:** Each action execution is billed per call, not capped at one billable instance per session regardless of repetition.  \n* **B:** The 2-16 credit range applies to Prompt Template invocations specifically, not to `AnswerQuestionsWithKnowledge`, which is documented at a flat 20 credits per call as an action.  \n* **C:** `AnswerQuestionsWithKnowledge` is explicitly classified as an action (20 credits per call), distinct from the free LLM reasoning turn that decides to call it.\n\n---"
+      "explanation": "**Why correct:** `AnswerQuestionsWithKnowledge` costs 20 credits per call (4 calls = 80) and a Flow action execution costs 20 credits per execution, totaling 100 credits.  \n**Why each wrong answer fails:**\n\n* **A:** Each action execution is billed per call, not capped at one billable instance per session regardless of repetition.  \n* **B:** The 2-16 credit range applies to Prompt Template invocations specifically, not to `AnswerQuestionsWithKnowledge`, which is documented at a flat 20 credits per call as an action.  \n* **C:** `AnswerQuestionsWithKnowledge` is explicitly classified as an action (20 credits per call), distinct from the free LLM reasoning turn that decides to call it.\n\n---"
     },
     {
       "id": 68,
@@ -39676,7 +39676,7 @@
       "correctIndices": [
         2
       ],
-      "explanation": "**Why correct:** Salesforce documentation explicitly recommends building explicit fallback branches — transitioning to escalation immediately on empty results — rather than relying on retry loops that risk hitting the hard iteration limit.  \n**Why each wrong answer fails:**\n\n* **A:** The loop iteration limit is described as a hard platform limit (\\~3-4 iterations), not a configurable setting an architect can raise before deployment.  \n* **B:** Retry loops are explicitly discouraged; Salesforce documentation states not to design agents that rely on retry loops given the hard 3-4 iteration cap.  \n* **D:** The Grounding Check validates response accuracy and scope; it is not the mechanism enforcing the loop iteration limit.\n\n---"
+      "explanation": "**Why correct:** Salesforce documentation explicitly recommends building explicit fallback branches — transitioning to escalation immediately on empty results — rather than relying on retry loops that risk hitting the hard iteration limit.  \n**Why each wrong answer fails:**\n\n* **A:** The loop iteration limit is described as a hard platform limit (~3-4 iterations), not a configurable setting an architect can raise before deployment.  \n* **B:** Retry loops are explicitly discouraged; Salesforce documentation states not to design agents that rely on retry loops given the hard 3-4 iteration cap.  \n* **D:** The Grounding Check validates response accuracy and scope; it is not the mechanism enforcing the loop iteration limit.\n\n---"
     },
     {
       "id": 70,
@@ -40814,7 +40814,7 @@
     },
     {
       "id": "32",
-      "question": "A validation error on a Salesforce opportunity form displays only the text \"Error: INVALID\\_FIELD\\_FOR\\_INSERT\\_UPDATE.\" Which practice should the designer recommend to improve this?",
+      "question": "A validation error on a Salesforce opportunity form displays only the text \"Error: INVALID_FIELD_FOR_INSERT_UPDATE.\" Which practice should the designer recommend to improve this?",
       "options": [
         {
           "letter": "A",
@@ -45676,7 +45676,7 @@
         },
         {
           "letter": "B",
-          "text": "A filter matching roughly a third of 80 million rows is not selective (well above the \\~10-30% selectivity threshold), so the query optimizer likely won't use a custom index efficiently and may fall back to a full table scan regardless of indexing."
+          "text": "A filter matching roughly a third of 80 million rows is not selective (well above the ~10-30% selectivity threshold), so the query optimizer likely won't use a custom index efficiently and may fall back to a full table scan regardless of indexing."
         },
         {
           "letter": "C",
@@ -45691,7 +45691,7 @@
       "correctIndices": [
         1
       ],
-      "explanation": "With each picklist value matching roughly 33% of 80 million rows, the filter falls well outside the standard selectivity thresholds (roughly under 10% for a single condition, up to \\~30% combined), so even a custom index on that field likely won't be chosen by the optimizer, resulting in a full or near-full table scan. A is incorrect: Selectivity depends on the proportion of matching rows, not merely on whether an index exists; a non-selective indexed field can still be skipped by the optimizer in favor of a table scan. C is incorrect: Picklist fields are fully subject to selectivity analysis like any other field type; there's no special exclusion for picklists in the Query Plan tool. D is incorrect: Selectivity thresholds apply broadly to indexed fields of many types, not exclusively to lookup relationships; this claim incorrectly narrows the concept.",
+      "explanation": "With each picklist value matching roughly 33% of 80 million rows, the filter falls well outside the standard selectivity thresholds (roughly under 10% for a single condition, up to ~30% combined), so even a custom index on that field likely won't be chosen by the optimizer, resulting in a full or near-full table scan. A is incorrect: Selectivity depends on the proportion of matching rows, not merely on whether an index exists; a non-selective indexed field can still be skipped by the optimizer in favor of a table scan. C is incorrect: Picklist fields are fully subject to selectivity analysis like any other field type; there's no special exclusion for picklists in the Query Plan tool. D is incorrect: Selectivity thresholds apply broadly to indexed fields of many types, not exclusively to lookup relationships; this claim incorrectly narrows the concept.",
       "requiredSelections": 1
     },
     {
@@ -45719,7 +45719,7 @@
       "correctIndices": [
         0
       ],
-      "explanation": "The commonly referenced Salesforce selectivity guidance uses roughly 10% for a single filtered field and roughly 30% for combined multi-field selectivity as the thresholds below which the optimizer is likely to use an index rather than perform a full table scan. B is incorrect: Selectivity is evaluated as a percentage of total object rows, not as a fixed absolute record count threshold like 1 million. C is incorrect: The thresholds differ meaningfully between single-field (\\~10%) and combined multi-field (\\~30%) scenarios; a single fixed 50% figure misrepresents the actual guidance. D is incorrect: The optimizer's behavior is deterministic and based on statistics and defined thresholds, not random; architects can and do reason about it using the Query Plan tool.",
+      "explanation": "The commonly referenced Salesforce selectivity guidance uses roughly 10% for a single filtered field and roughly 30% for combined multi-field selectivity as the thresholds below which the optimizer is likely to use an index rather than perform a full table scan. B is incorrect: Selectivity is evaluated as a percentage of total object rows, not as a fixed absolute record count threshold like 1 million. C is incorrect: The thresholds differ meaningfully between single-field (~10%) and combined multi-field (~30%) scenarios; a single fixed 50% figure misrepresents the actual guidance. D is incorrect: The optimizer's behavior is deterministic and based on statistics and defined thresholds, not random; architects can and do reason about it using the Query Plan tool.",
       "requiredSelections": 1
     },
     {
@@ -45813,7 +45813,7 @@
     },
     {
       "id": "84",
-      "question": "An object has 200 million records, but only about 10% are marked Active via a checkbox field, and nearly all queries filter on Active \\= true. What indexing and data model strategy should the architect propose to keep active-record queries fast without harming full-object access patterns?",
+      "question": "An object has 200 million records, but only about 10% are marked Active via a checkbox field, and nearly all queries filter on Active = true. What indexing and data model strategy should the architect propose to keep active-record queries fast without harming full-object access patterns?",
       "options": [
         {
           "letter": "A",
@@ -45836,7 +45836,7 @@
       "correctIndices": [
         3
       ],
-      "explanation": "With active records being \\~10% of the total, this filter falls right at the selective threshold, making a custom index (potentially with Salesforce Support's help via a skinny table) an effective way to keep the dominant active-record query pattern fast without needing to restructure the entire object. A is incorrect: There is no such 50-million-record indexing ceiling, and splitting one logical object into 20 arbitrary objects massively complicates reporting, automation, and integration without a real technical justification. B is incorrect: Deleting inactive records ignores legitimate business or compliance reasons for retention and is a drastic, likely unacceptable data-loss action compared to an indexing solution. C is incorrect: Converting Active to a formula field removes the ability to index it at all, working directly against the goal of fast filtering.",
+      "explanation": "With active records being ~10% of the total, this filter falls right at the selective threshold, making a custom index (potentially with Salesforce Support's help via a skinny table) an effective way to keep the dominant active-record query pattern fast without needing to restructure the entire object. A is incorrect: There is no such 50-million-record indexing ceiling, and splitting one logical object into 20 arbitrary objects massively complicates reporting, automation, and integration without a real technical justification. B is incorrect: Deleting inactive records ignores legitimate business or compliance reasons for retention and is a drastic, likely unacceptable data-loss action compared to an indexing solution. C is incorrect: Converting Active to a formula field removes the ability to index it at all, working directly against the goal of fast filtering.",
       "requiredSelections": 1
     },
     {
@@ -46110,7 +46110,7 @@
         },
         {
           "letter": "C",
-          "text": "AND-based combined filters are evaluated by summing the two percentages (35% + 5% \\= 40%), which always exceeds every threshold and can never use an index."
+          "text": "AND-based combined filters are evaluated by summing the two percentages (35% + 5% = 40%), which always exceeds every threshold and can never use an index."
         },
         {
           "letter": "D",
@@ -47599,7 +47599,7 @@
         },
         {
           "letter": "B",
-          "text": "A roll-up summary field with SUM on Amount and filter criteria limiting to Stage \\= Negotiation, on a master-detail relationship"
+          "text": "A roll-up summary field with SUM on Amount and filter criteria limiting to Stage = Negotiation, on a master-detail relationship"
         },
         {
           "letter": "C",

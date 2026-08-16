@@ -373,8 +373,37 @@
       // Configure marked
       marked.setOptions({ breaks: false, gfm: true });
 
-      // Custom renderer for tables (wrap in scrollable div)
+      // GitHub-style heading slug (matches how markdown TOC anchors are authored)
+      var usedIds = {};
+      function githubSlug(text) {
+        var slug = text.toLowerCase()
+          .replace(/<[^>]*>/g, '')          // strip HTML tags
+          .replace(/\u2014/g, '--')            // em-dash → double hyphen
+          .replace(/ & /g, ' -- ')             // spaced ampersand → double hyphen
+          .replace(/ \+ /g, ' -- ')            // spaced plus → double hyphen
+          .replace(/[^\w\s-]/g, '')         // remove non-word chars (dots, quotes, colons, etc.)
+          .replace(/\s+/g, '-')             // spaces → hyphens
+          .replace(/-{3,}/g, '--')          // collapse 3+ consecutive hyphens to exactly 2
+          .replace(/^-+|-+$/g, '');         // trim leading/trailing hyphens
+        // Ensure unique
+        if (usedIds[slug]) {
+          usedIds[slug]++;
+          slug = slug + '-' + (usedIds[slug] - 1);
+        } else {
+          usedIds[slug] = 1;
+        }
+        return slug;
+      }
+
+      // Custom renderer for headings (add IDs) and tables (wrap in scrollable div)
       var renderer = new marked.Renderer();
+      renderer.heading = function(token) {
+        var text = typeof token === 'object' && token.text ? token.text : String(token);
+        var depth = typeof token === 'object' && token.depth ? token.depth : 2;
+        var rawText = text.replace(/<[^>]*>/g, '');
+        var id = githubSlug(rawText);
+        return '<h' + depth + ' id="' + id + '">' + text + '</h' + depth + '>\n';
+      };
       renderer.table = function(header, body) {
         if (typeof header === 'object' && header.header && header.rows) {
           var token = header;
@@ -434,14 +463,13 @@
         var items = [];
         headings.forEach(function(h) {
           var text = h.textContent;
-          var id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-          // Ensure unique IDs
-          var baseId = id;
-          var counter = 1;
-          while (document.getElementById(id)) {
-            id = baseId + '-' + counter++;
+          // Use the ID already assigned by the heading renderer
+          var id = h.id;
+          if (!id) {
+            // Fallback if heading has no ID
+            id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/^-+|-+$/g, '');
+            h.id = id;
           }
-          h.id = id;
           items.push({ level: h.tagName.toLowerCase(), text: text, id: id });
         });
 
@@ -527,15 +555,19 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
 
-      // Smooth scroll for TOC anchor links (sidebar)
+      // Smooth scroll for TOC anchor links (sidebar + any in-page anchor)
       document.addEventListener('click', function(e) {
-        var link = e.target.closest('.sidebar-list a');
+        var link = e.target.closest('a[href^="#"]');
         if (link) {
           e.preventDefault();
-          var target = document.getElementById(link.getAttribute('href').slice(1));
+          var targetId = link.getAttribute('href').slice(1);
+          var target = document.getElementById(targetId);
           if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            history.replaceState(null, '', link.getAttribute('href'));
+            // Use window.scrollTo for reliable WKWebView support
+            var headerOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--topbar-h')) || 44;
+            var targetTop = target.getBoundingClientRect().top + window.pageYOffset - headerOffset - 16;
+            window.scrollTo({ top: targetTop, behavior: 'smooth' });
+            history.replaceState(null, '', '#' + targetId);
           }
         }
       });
