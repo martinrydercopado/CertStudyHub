@@ -7,7 +7,6 @@ enum CertCatalog {
         dataCloud360,
         reasoningEngine,
         rag,
-        successArchitect,
         agentforceSales,
         agentforceService,
         businessAnalyst,

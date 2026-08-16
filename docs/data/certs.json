@@ -255,49 +255,6 @@
     ]
   },
   {
-    "id": "successarchitect",
-    "name": "Success Architect Scenarios",
-    "shortName": "SA Scenarios",
-    "icon": "🛡️",
-    "primaryColor": "#993333",
-    "secondaryColor": "#CC4D4D",
-    "headerGradient": [
-      "#731F1F",
-      "#802924",
-      "#8C3329"
-    ],
-    "passingScore": 70,
-    "questionBank": "successarchitect",
-    "studyBank": null,
-    "storageKeyPrefix": "successarchitect",
-    "isBonusTopic": true,
-    "subtitle": "Bonus Track — Real-world scenario practice",
-    "quizLengths": [
-      {
-        "id": 45,
-        "label": "Agentforce",
-        "icon": "🧠",
-        "subtitle": "45 Scenario Questions",
-        "duration": "~25 min",
-        "questionIDRange": [
-          1,
-          45
-        ]
-      },
-      {
-        "id": 91,
-        "label": "Data 360",
-        "icon": "☁️",
-        "subtitle": "46 Scenario Questions",
-        "duration": "~25 min",
-        "questionIDRange": [
-          46,
-          91
-        ]
-      }
-    ]
-  },
-  {
     "id": "agentforcesales",
     "name": "Agentforce Sales Consultant",
     "shortName": "Sales Consultant",
