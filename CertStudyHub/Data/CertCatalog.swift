@@ -418,9 +418,10 @@ enum CertCatalog {
         ],
         passingScore: 65,
         quizLengths: [
-            QuizLength(count: 30, label: "Quick 30"),
-            QuizLength(count: 60, label: "Standard 60"),
-            QuizLength(count: 121, label: "Full 121")
+            QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
+            QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
+            QuizLength(id: 60, label: "60 Questions", icon: "trophy.fill", subtitle: "Exam Simulation", duration: "~30 min"),
+            QuizLength(id: 121, label: "All 121 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~61 min")
         ],
         questions: UXDesignerQuestionBank.all,
         studySections: UXDesignerStudyBank.sections,
