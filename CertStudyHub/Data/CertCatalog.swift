@@ -147,30 +147,6 @@ enum CertCatalog {
         guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=rag")
     )
 
-    static let successArchitect = CertConfig(
-        id: "successarchitect",
-        name: "Success Architect Scenarios",
-        shortName: "SA Scenarios",
-        icon: "person.badge.shield.checkmark.fill",
-        primaryColor: Color(red: 0.60, green: 0.20, blue: 0.20),
-        secondaryColor: Color(red: 0.80, green: 0.30, blue: 0.30),
-        headerGradient: [
-            Color(red: 0.45, green: 0.12, blue: 0.12),
-            Color(red: 0.50, green: 0.16, blue: 0.14),
-            Color(red: 0.55, green: 0.20, blue: 0.16)
-        ],
-        passingScore: 70,
-        quizLengths: [
-            QuizLength(id: 45, label: "Agentforce", icon: "brain.head.profile.fill", subtitle: "45 Scenario Questions", duration: "~25 min", questionIDRange: 1...45),
-            QuizLength(id: 91, label: "Data 360", icon: "cloud.fill", subtitle: "46 Scenario Questions", duration: "~25 min", questionIDRange: 46...91)
-        ],
-        questions: SuccessArchitectAgentforceQuestionBank.all + SuccessArchitectData360QuestionBank.all,
-        studySections: [],
-        storageKeyPrefix: "successarchitect",
-        isBonusTopic: true,
-        subtitle: "Bonus Track — Real-world scenario practice"
-    )
-
     // ── Study-Only Certs (no quiz yet) ──
 
     static let agentforceSales = CertConfig(

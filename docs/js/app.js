@@ -186,12 +186,6 @@
   // ── Quiz Helpers ──────────────────────────────────────────
 
   function getQuestionsForCert(cert) {
-    if (cert.id === 'successarchitect') {
-      return [].concat(
-        state.questions['successarchitect_agentforce'] || [],
-        state.questions['successarchitect_dc360'] || []
-      );
-    }
     return state.questions[cert.questionBank] || [];
   }
 
