@@ -16,7 +16,7 @@ A native SwiftUI app (iPhone + Mac) and a companion web app for studying Salesfo
 | Dev Lifecycle & Deployment Architect | 100 | 133 | 65% | |
 | Platform Integration Architect | 154 | 170 | 62% | |
 | Agentforce Sales Consultant | — | 154 | 65% | |
-| Agentforce Service Consultant | — | 302 | 65% | |
+| Agentforce Service Consultant | 125 | 302 | 65% | |
 | Platform Administrator II | 122 | 201 | 60% | |
 | Platform Data Architect | 120 | 129 | 58% | |
 | Platform Sharing & Visibility Architect | — | 186 | 62% | |
@@ -27,7 +27,7 @@ A native SwiftUI app (iPhone + Mac) and a companion web app for studying Salesfo
 | AgentOps: Agentforce Lifecycle | 50 | 191 | 70% | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentops) |
 | Success Architect Scenarios | — | — | 70% | |
 
-**Totals:** 1,779 questions and 2,858 study topics across 17 tracks.
+**Totals:** 1,904 questions and 2,858 study topics across 17 tracks.
 
 ## Features
 
@@ -75,6 +75,11 @@ Open `CertStudyHub.xcodeproj` and build for your target device.
 No build step — open `docs/index.html` locally or deploy the `docs/` folder to any static host. GitHub Pages serves it automatically from the `main` branch.
 
 ## Changelog
+
+### 2025-08-16
+- Add 125 practice questions for Agentforce Service Consultant certification (quiz mode now available)
+- Fix remaining invalid escape sequences in Swift question banks
+- Fix TOC anchor navigation in reference guide viewer for all three guides
 
 ### 2025-08-15
 - Add 122 practice questions for Platform Administrator II certification (quiz mode now available)

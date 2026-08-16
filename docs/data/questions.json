@@ -50384,5 +50384,3512 @@
       "explanation": "* With criteria set to evaluate on every edit, even unrelated field changes can trigger re-evaluation and potential re-entry into the approval process; configuring entry criteria to evaluate only when specific relevant fields change is the correct way to avoid unwanted re-submission. * A is incorrect: Whether a completed record can re-enter approval depends entirely on how entry criteria are configured, not a blanket permanent block. B is incorrect: Entry criteria settings directly govern behavior on subsequent edits, which is exactly the mechanism at play in this scenario. D is incorrect: There's no automatic universal exclusion of post-completion edits; that behavior must be deliberately configured via entry criteria. ---",
       "requiredSelections": 1
     }
+  ],
+  "agentforceservice": [
+    {
+      "id": "1",
+      "question": "A contact center director reports that average handle time (AHT) has crept up over the last quarter across the phone channel, even though headcount and case volume are unchanged. Which factor should the consultant investigate first as the most direct driver of AHT? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "The average agent skill mix and the proportion of cases requiring escalation due to knowledge gaps"
+        },
+        {
+          "label": "B",
+          "text": "The number of Knowledge articles published in the last fiscal quarter"
+        },
+        {
+          "label": "C",
+          "text": "The organization-wide default sharing setting configured on the Case object"
+        },
+        {
+          "label": "D",
+          "text": "The ratio of asynchronous messaging cases to synchronous phone cases in the queue"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "AHT is most directly shaped by how well-matched agent skills are to incoming case types and how often agents must escalate rather than resolve, since escalation and re-routing add handle time without closing the case. Why each wrong answer fails: D: Channel synchronicity affects how time is measured (real-time vs. queued), not the underlying handle time per case once an agent engages. B: Article publishing volume doesn't affect AHT unless agents actually attach and use those articles during a call. * C: OWD governs record visibility, not how efficiently an agent resolves a case once assigned.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "2",
+      "question": "Leadership wants to compare contact center performance using a single KPI that reflects overall likelihood customers will recommend the brand, rather than satisfaction with one specific interaction. Which metric should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "First Contact Resolution (FCR)"
+        },
+        {
+          "label": "B",
+          "text": "Net Promoter Score (NPS)"
+        },
+        {
+          "label": "C",
+          "text": "Customer Satisfaction (CSAT)"
+        },
+        {
+          "label": "D",
+          "text": "Average Handle Time (AHT)"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "NPS measures overall brand loyalty and likelihood to recommend, making it the right choice when the goal is relationship-level sentiment rather than transaction-level satisfaction. Why each wrong answer fails: C: CSAT is scoped to a single interaction or case, not overall brand relationship. A: FCR measures resolution efficiency, not customer sentiment or loyalty. * D: AHT is an operational efficiency metric with no direct sentiment component.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "3",
+      "question": "A support manager wants to reduce the abandon rate in the phone queue, which has been climbing alongside rising queue wait times. Which combination of changes would most directly address the root cause? (Choose 3)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Increase the case escalation rule threshold so fewer cases are flagged urgent"
+        },
+        {
+          "label": "B",
+          "text": "Archive older Knowledge articles that are no longer accurate"
+        },
+        {
+          "label": "C",
+          "text": "Add agents to reduce wait time before an agent picks up"
+        },
+        {
+          "label": "D",
+          "text": "Reduce the number of required fields on the case close screen"
+        },
+        {
+          "label": "E",
+          "text": "Improve Omni-Channel routing efficiency so calls reach an available agent faster"
+        },
+        {
+          "label": "F",
+          "text": "Configure a callback option so customers can leave the queue without abandoning the request entirely"
+        }
+      ],
+      "correctIndices": [
+        2,
+        4,
+        5
+      ],
+      "explanation": "Abandon rate is driven by how long customers wait before being connected, so directly reducing queue wait time through staffing or routing efficiency addresses the cause rather than a symptom. Why each wrong answer fails: A: Changing escalation thresholds affects internal handling, not customer wait time in queue. B: Archiving stale articles improves content quality but has no bearing on queue wait. * D: Close-screen fields affect case closure speed, not the customer's wait experience before being connected.",
+      "requiredSelections": 3
+    },
+    {
+      "id": "4",
+      "question": "A client wants to lower cost-per-contact without hiring additional agents. Which combination of strategies should the consultant recommend? (Choose 2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Deploy a chatbot to deflect routine tier-1 questions before they reach a human agent"
+        },
+        {
+          "label": "B",
+          "text": "Increase the number of required approval steps on the case escalation process"
+        },
+        {
+          "label": "C",
+          "text": "Remove case queues and route all cases to a single shared inbox"
+        },
+        {
+          "label": "D",
+          "text": "Reduce the frequency of CSAT survey sends"
+        },
+        {
+          "label": "E",
+          "text": "Expand the self-service Knowledge portal so customers can resolve common issues without creating a case"
+        }
+      ],
+      "correctIndices": [
+        0,
+        4
+      ],
+      "explanation": "Both self-service Knowledge expansion and chatbot deflection reduce the volume of cases that ever reach a paid human agent, which is the primary lever for lowering cost-per-contact without adding headcount. Why each wrong answer fails: B: Adding approval steps increases handling cost per case rather than reducing it. C: Removing queues harms routing efficiency and does not reduce contact volume. * D: Survey frequency has no bearing on the cost of handling a contact.",
+      "requiredSelections": 2
+    },
+    {
+      "id": "5",
+      "question": "A company migrating from three legacy regional support tools into a single Salesforce Service Cloud org is worried about disruption to daily operations. Which risk should the consultant flag as the most significant organizational risk of this consolidation? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Case objects cannot be shared across business units"
+        },
+        {
+          "label": "B",
+          "text": "Omni-Channel cannot route work items by skill"
+        },
+        {
+          "label": "C",
+          "text": "Salesforce Knowledge does not support multiple data categories"
+        },
+        {
+          "label": "D",
+          "text": "Agents across regions may resist adopting a unified process that differs from their legacy workflows"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Large-scale consolidations most commonly fail not on technical grounds but on change management — agents accustomed to region-specific processes often resist a standardized workflow, so adoption planning is the primary risk to manage. Why each wrong answer fails: C: Salesforce Knowledge fully supports multiple data categories, so this isn't a real technical limitation. A: Case sharing across business units is achievable through sharing rules and role hierarchy, not a platform limitation. * B: Omni-Channel natively supports skills-based routing, so this isn't accurate.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "6",
+      "question": "A client wants to quantify the business value of investing in a Knowledge Management overhaul before approving budget. Which approaches should the consultant recommend to build the business case? (Choose 2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Tie article usage and attach-to-case rates to reductions in AHT"
+        },
+        {
+          "label": "B",
+          "text": "Survey agents on how much they personally enjoy using the Knowledge sidebar"
+        },
+        {
+          "label": "C",
+          "text": "Track only the number of articles published per month"
+        },
+        {
+          "label": "D",
+          "text": "Measure only the number of Knowledge Managers on staff"
+        },
+        {
+          "label": "E",
+          "text": "Correlate article usage with FCR improvement over a baseline period"
+        }
+      ],
+      "correctIndices": [
+        0,
+        4
+      ],
+      "explanation": "Correlating Knowledge usage metrics with measurable operational KPIs like AHT reduction and FCR improvement gives a defensible, quantifiable ROI case tied to business outcomes rather than vanity metrics. Why each wrong answer fails: C: Article count measures output volume, not business value or effectiveness. B: Subjective agent enjoyment doesn't translate into a quantifiable business case. * D: Staffing levels for Knowledge Managers are an input cost, not a value metric.",
+      "requiredSelections": 2
+    },
+    {
+      "id": "7",
+      "question": "A client wants to cut AHT by 30% within two quarters but insists CSAT cannot decline. Which trade-off should the consultant surface as the primary challenge in this engagement? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "AHT and CSAT are calculated from the same underlying case field, so one cannot change without the other"
+        },
+        {
+          "label": "B",
+          "text": "Aggressive AHT reduction targets often push agents toward rushing calls, which can suppress CSAT unless deflection and knowledge improvements absorb the reduction instead"
+        },
+        {
+          "label": "C",
+          "text": "Reducing AHT always improves CSAT proportionally"
+        },
+        {
+          "label": "D",
+          "text": "CSAT can only be measured through NPS surveys, so this constraint is not measurable"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "The realistic tension is that shortening calls without improving root causes (self-service, knowledge, agent enablement) risks rushed, lower-quality interactions — so the design must target deflection and enablement rather than just pressuring agents to work faster. Why each wrong answer fails: A: AHT and CSAT are independent metrics computed from different data points, not the same field. C: There's no guaranteed proportional relationship; faster handling can just as easily hurt CSAT. * D: CSAT is commonly measured through dedicated post-case surveys, independent of NPS.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "8",
+      "question": "A client insists on staffing live agents 24/7 across all time zones rather than exploring AI-assisted self-service for after-hours coverage. Which consideration should the consultant raise? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Omni-Channel presence statuses are limited to a maximum of two per user"
+        },
+        {
+          "label": "B",
+          "text": "Case escalation rules cannot run outside standard business hours"
+        },
+        {
+          "label": "C",
+          "text": "24/7 live staffing carries significant ongoing labor cost and scheduling complexity that should be weighed against AI-assisted deflection for lower-complexity after-hours volume"
+        },
+        {
+          "label": "D",
+          "text": "Salesforce does not support configuring business hours outside a single time zone"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Round-the-clock live staffing is a major recurring cost driver, so the consultant's role is to help the client weigh that ongoing expense against a hybrid model using AI-assisted deflection for simpler after-hours needs. Why each wrong answer fails: D: Salesforce business hours fully support multiple time-zone-aware schedules. B: Escalation rules and entitlement milestones can run continuously regardless of business hours configuration. * A: Presence statuses are configurable and not capped at two.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "9",
+      "question": "A client wants an AI agent to autonomously handle tier-1 billing disputes, including issuing refunds. Which risks are the most important for the consultant to evaluate before recommending this design? (Choose 2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Whether the AI agent can be branded with the company logo"
+        },
+        {
+          "label": "B",
+          "text": "Whether the AI agent supports more than one language"
+        },
+        {
+          "label": "C",
+          "text": "Whether the case list view can be filtered by AI agent"
+        },
+        {
+          "label": "D",
+          "text": "Whether the AI agent's actions are scoped with appropriate permission and approval boundaries"
+        },
+        {
+          "label": "E",
+          "text": "Whether failed or ambiguous cases reliably escalate to a human"
+        }
+      ],
+      "correctIndices": [
+        3,
+        4
+      ],
+      "explanation": "Autonomous financial actions like refunds carry compliance and trust exposure, so the design must constrain the agent's permitted actions and guarantee reliable human escalation when confidence is low or the case is ambiguous. Why each wrong answer fails: A: Branding is a cosmetic configuration item, not a risk factor for autonomous financial actions. B: Language support is a usability feature, unrelated to the governance risk of autonomous refunds. * C: List view filtering is an agent-productivity convenience, not a control over AI agent risk.",
+      "requiredSelections": 2
+    },
+    {
+      "id": "10",
+      "question": "A client's leadership is concerned that heavy investment in case-routing automation could unintentionally hurt CSAT if automation misroutes complex cases. What safeguard should the consultant recommend when designing automation-heavy case routing? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Build in confidence thresholds and fallback human review for cases automation cannot classify with high certainty"
+        },
+        {
+          "label": "B",
+          "text": "Disable case escalation rules to prevent automation from triggering them"
+        },
+        {
+          "label": "C",
+          "text": "Rely solely on the case Subject field text for all routing decisions"
+        },
+        {
+          "label": "D",
+          "text": "Remove all manual queues so automation is the only routing path"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Automation-heavy designs need a safety net: when classification confidence is low, routing to human review rather than forcing an automated decision protects against misrouting that would otherwise erode CSAT. Why each wrong answer fails: D: Eliminating all manual queues removes the fallback path needed when automation is uncertain. B: Disabling escalation rules removes the mechanism meant to catch and correct problem cases. * C: Relying only on unstructured Subject text ignores more reliable structured fields and increases misclassification risk.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "11",
+      "question": "A consultant is asked to explain why asynchronous channels like email and messaging behave differently from synchronous channels like phone and live chat in contact center reporting. What is the key operational distinction? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Asynchronous channels cannot be assigned to Omni-Channel queues"
+        },
+        {
+          "label": "B",
+          "text": "Asynchronous channels allow the customer and agent to respond on different timelines, so metrics like AHT must be measured differently than for real-time synchronous interactions"
+        },
+        {
+          "label": "C",
+          "text": "Synchronous channels do not generate Case records"
+        },
+        {
+          "label": "D",
+          "text": "Asynchronous channels are not supported by Salesforce Service Cloud"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Because asynchronous interactions span gaps in time rather than continuous real-time engagement, handle-time and response metrics must account for elapsed wall-clock time differently than they do for a live call or chat session. Why each wrong answer fails: A: Asynchronous work items, including email and messaging, can be routed through Omni-Channel queues. C: Both synchronous and asynchronous interactions generate Case records when configured to do so. * D: Salesforce fully supports asynchronous channels including Email-to-Case and Messaging.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "12",
+      "question": "A contact center manager notices FCR is low despite agents having access to a robust Knowledge base. Root-cause analysis should focus on which combination of factors? (Choose 2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Whether the case Priority field uses a custom picklist"
+        },
+        {
+          "label": "B",
+          "text": "Whether the org uses Lightning Experience instead of Salesforce Classic"
+        },
+        {
+          "label": "C",
+          "text": "Whether agents are empowered to resolve issues without unnecessary escalation approval"
+        },
+        {
+          "label": "D",
+          "text": "Whether report folders are shared with the correct public groups"
+        },
+        {
+          "label": "E",
+          "text": "Whether the escalation path is overused for issues agents could resolve directly"
+        }
+      ],
+      "correctIndices": [
+        2,
+        4
+      ],
+      "explanation": "Low FCR despite good Knowledge access typically points to process constraints — agents lacking resolution authority or an escalation culture that routes solvable issues away from the first-contact agent unnecessarily. Why each wrong answer fails: A: Picklist customization on Priority has no bearing on whether an issue gets resolved on first contact. B: UI experience choice (Classic vs. Lightning) doesn't determine agent resolution authority. * D: Report folder sharing affects visibility of results, not the operational cause of low FCR.",
+      "requiredSelections": 2
+    },
+    {
+      "id": "13",
+      "question": "A client incorrectly configured business hours for only one region despite operating support globally. What downstream reporting impact should the consultant expect? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Omni-Channel Skills-Based Routing will be disabled org-wide"
+        },
+        {
+          "label": "B",
+          "text": "Case record types will stop functioning"
+        },
+        {
+          "label": "C",
+          "text": "SLA and milestone time calculations will be inaccurate for cases and entitlements tied to regions outside the configured business hours"
+        },
+        {
+          "label": "D",
+          "text": "Knowledge articles will become unpublishable"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Business hours settings drive milestone and SLA time calculations, so a mismatch between configured hours and actual regional coverage will produce incorrect elapsed-time and breach reporting for those regions. Why each wrong answer fails: B: Record types are independent of business hours configuration. D: Knowledge publishing workflow is unrelated to business hours settings. * A: Skills-Based Routing configuration is independent of business hours setup.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "14",
+      "question": "A client wants to understand what drives escalation rates so they can design a solution to reduce unnecessary escalations. Which factors should the consultant identify as primary drivers? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "The number of Knowledge article record types configured"
+        },
+        {
+          "label": "B",
+          "text": "Whether the org has enabled Enhanced Omni-Channel"
+        },
+        {
+          "label": "C",
+          "text": "The number of custom fields on the Case page layout"
+        },
+        {
+          "label": "D",
+          "text": "Routing configuration quality, agent training gaps, and availability of accurate self-service content"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Escalation rates are primarily shaped by whether work is routed to the right skilled agent, whether agents are trained to resolve issues at first contact, and whether customers and agents have accurate self-service or Knowledge content to avoid unnecessary escalation. Why each wrong answer fails: C: Page layout field count has no causal relationship to why agents choose to escalate. B: Enabling Enhanced Omni-Channel is a platform capability toggle, not itself a driver of escalation behavior. A: The number of record types organizes content structurally but doesn't drive agent escalation decisions. ## Implementation Strategies**",
+      "requiredSelections": 1
+    },
+    {
+      "id": "15",
+      "question": "A consultant is leading a discovery workshop for a Service Cloud implementation and wants to ensure all use cases are captured before design begins. What should the workshop prioritize? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Documenting every stakeholder's current-state process, pain points, and desired outcomes across all channels before any solution design starts"
+        },
+        {
+          "label": "B",
+          "text": "Limiting discovery to only the loudest stakeholder in the room"
+        },
+        {
+          "label": "C",
+          "text": "Skipping stakeholder interviews and relying only on the sales team's assumptions"
+        },
+        {
+          "label": "D",
+          "text": "Jumping straight into configuring page layouts during the first workshop session"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Thorough discovery across all stakeholders and channels ensures no critical use case is missed before solution design locks in a direction, reducing costly rework later. Why each wrong answer fails: D: Configuring layouts before requirements are captured risks building the wrong solution. C: Sales assumptions often miss operational nuance that only stakeholder interviews surface. * B: Limiting input to one voice risks missing requirements from other affected teams.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "16",
+      "question": "A project sponsor wants to know when discovery ends and design begins. How should the consultant characterize the distinction? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Discovery and design are the same activity performed simultaneously with no distinction"
+        },
+        {
+          "label": "B",
+          "text": "Discovery focuses on gathering and validating requirements and current-state pain points, while design translates those validated requirements into a specific solution architecture"
+        },
+        {
+          "label": "C",
+          "text": "Discovery is only relevant for technical teams, not business stakeholders"
+        },
+        {
+          "label": "D",
+          "text": "Design always happens before discovery to save time"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Discovery is about understanding and validating the problem space, while design is about architecting the solution against those validated requirements — sequencing matters to avoid designing against unconfirmed assumptions. Why each wrong answer fails: A: Treating them as identical activities risks skipping proper validation before design decisions are locked in. D: Designing before discovery risks building a solution that doesn't match actual business needs. * C: Business stakeholders are essential participants in discovery, not just technical teams.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "17",
+      "question": "Executive sponsorship is at risk of disengaging midway through a lengthy Service Cloud implementation. Which actions should the consultant take to keep the sponsor engaged? (Choose 2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Replace executive checkpoints entirely with agent-level status meetings"
+        },
+        {
+          "label": "B",
+          "text": "Only involve the sponsor at the final go-live celebration"
+        },
+        {
+          "label": "C",
+          "text": "Schedule regular executive checkpoints tied to business outcomes and milestones, not just technical status"
+        },
+        {
+          "label": "D",
+          "text": "Stop sending any updates until the project is fully complete"
+        },
+        {
+          "label": "E",
+          "text": "Proactively flag emerging risks to the sponsor before they become critical, framed in business terms"
+        }
+      ],
+      "correctIndices": [
+        2,
+        4
+      ],
+      "explanation": "Framing regular checkpoints around business outcomes keeps sponsorship relevant and engaged, since executives care more about business impact than granular technical status. Why each wrong answer fails: D: Withholding updates increases the risk of disengagement and loss of trust. B: Waiting until go-live to involve the sponsor misses the chance to course-correct earlier. * A: Agent-level meetings don't address the executive's need for business-outcome visibility.",
+      "requiredSelections": 2
+    },
+    {
+      "id": "18",
+      "question": "A client's project plan lacks a defined User Acceptance Testing (UAT) phase before go-live. What risk should the consultant flag? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "UAT should only be performed by the development team, never business users"
+        },
+        {
+          "label": "B",
+          "text": "UAT is optional and has no bearing on go-live risk"
+        },
+        {
+          "label": "C",
+          "text": "UAT can be skipped entirely if the sandbox testing passed"
+        },
+        {
+          "label": "D",
+          "text": "Without UAT, defects and usability issues may surface for the first time in production, increasing go-live risk and potential customer impact"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Skipping UAT removes the opportunity for actual business users to validate the solution against real workflows before go-live, so defects that testing would have caught instead surface in production. Why each wrong answer fails: B: UAT is a critical risk-reduction gate before go-live, not an optional step. A: UAT specifically requires business user validation, not just developer testing. * C: Sandbox testing by developers doesn't substitute for business user validation.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "19",
+      "question": "A client is nearing go-live and asks the consultant to define scope creep and how to manage it. What should the consultant explain? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Scope creep is uncontrolled expansion of project requirements beyond what was originally agreed, and it should be managed through a formal change request and impact assessment process"
+        },
+        {
+          "label": "B",
+          "text": "Scope creep cannot occur if the project has a signed statement of work"
+        },
+        {
+          "label": "C",
+          "text": "Scope creep only refers to changes requested after go-live, never before"
+        },
+        {
+          "label": "D",
+          "text": "Scope creep should always be accepted without any impact assessment to keep the client happy"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Formalizing new requests through a change request and impact assessment process protects the timeline and budget while still giving the client a path to add legitimate new requirements. Why each wrong answer fails: C: Scope creep commonly occurs throughout the project lifecycle, not just after go-live. D: Accepting every request without assessment risks blowing the timeline and budget. * B: A signed SOW doesn't prevent stakeholders from requesting additional scope during the project.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "20",
+      "question": "A key stakeholder disagrees with the proposed Service Cloud solution design partway through the engagement. What should the consultant do? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Ignore the stakeholder's concern and proceed exactly as originally planned"
+        },
+        {
+          "label": "B",
+          "text": "Facilitate a structured conversation to understand the concern, evaluate trade-offs, and escalate to the project sponsor if consensus can't be reached"
+        },
+        {
+          "label": "C",
+          "text": "Immediately redesign the entire solution based on one stakeholder's preference with no evaluation"
+        },
+        {
+          "label": "D",
+          "text": "Remove the disagreeing stakeholder from all future project meetings"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "A structured conversation to understand the concern and weigh trade-offs — with sponsor escalation if needed — resolves disagreement constructively without derailing the project or dismissing valid input. Why each wrong answer fails: A: Ignoring a legitimate stakeholder concern risks adoption problems later and erodes trust. C: Redesigning immediately without evaluation risks reacting to one voice without considering broader impact. * D: Excluding a stakeholder from meetings damages trust and removes a valuable perspective from the process.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "21",
+      "question": "A client asks what a post-go-live steady-state handoff plan should include. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "No handoff plan is needed since the project team stays engaged indefinitely"
+        },
+        {
+          "label": "B",
+          "text": "A handoff plan should only cover technical configuration, excluding support processes"
+        },
+        {
+          "label": "C",
+          "text": "Clear documentation of ongoing support processes, a defined escalation path, and a transition of operational ownership to the client's admin team"
+        },
+        {
+          "label": "D",
+          "text": "The handoff plan should be created only after issues arise post-go-live"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "A steady-state handoff plan needs to cover documentation, escalation paths, and a clear ownership transition so the client's team can operate and support the solution independently going forward. Why each wrong answer fails: A: Project teams typically transition off after go-live, making a handoff plan necessary. B: Support processes are just as critical as technical configuration in a handoff plan. * D: Waiting until issues arise to create the plan leaves the client without support processes when they're needed most.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "22",
+      "question": "A client's admin team will take over support responsibility from the project team after go-live. Which elements should the consultant ensure are in place before that transition? (Choose 3)",
+      "options": [
+        {
+          "label": "A",
+          "text": "The project team should retain all support responsibility permanently"
+        },
+        {
+          "label": "B",
+          "text": "No transition activities are necessary since admins can figure it out themselves"
+        },
+        {
+          "label": "C",
+          "text": "Documentation should be created only if the client specifically pays extra for it"
+        },
+        {
+          "label": "D",
+          "text": "Knowledge transfer sessions covering configuration decisions"
+        },
+        {
+          "label": "E",
+          "text": "Documentation of common issues and their resolutions"
+        },
+        {
+          "label": "F",
+          "text": "A clearly defined escalation path for issues the admin team cannot resolve"
+        }
+      ],
+      "correctIndices": [
+        3,
+        4,
+        5
+      ],
+      "explanation": "Structured knowledge transfer and documentation equip the client's admin team to actually support the solution independently, rather than being left to reverse-engineer configuration decisions. Why each wrong answer fails: B: Without proper knowledge transfer, admins are likely to struggle with configuration decisions they didn't make themselves. A: Permanent project team ownership doesn't match the stated plan to transition support to the client's admin team. * C: Adequate documentation is a standard part of a responsible transition, not an optional paid add-on.",
+      "requiredSelections": 3
+    },
+    {
+      "id": "23",
+      "question": "A client with 500 agents across three regions with different business processes is planning a Service Cloud rollout. What deployment strategy should the consultant recommend evaluating? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A single big-bang deployment to all 500 agents simultaneously regardless of regional process differences"
+        },
+        {
+          "label": "B",
+          "text": "A phased rollout by region, allowing each region's distinct processes to be validated and adjusted before expanding further"
+        },
+        {
+          "label": "C",
+          "text": "Deploying to a random subset of agents with no regard for region or process"
+        },
+        {
+          "label": "D",
+          "text": "Skipping deployment planning entirely since Salesforce configuration is universal"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "A phased, region-by-region rollout allows each region's distinct process variations to be validated and refined before scaling to the next region, reducing risk compared to deploying everywhere at once. Why each wrong answer fails: A: A big-bang deployment across regions with different processes multiplies the risk of issues surfacing simultaneously everywhere. C: Deploying without regard for region or process ignores the very complexity the client described. * D: Regional process differences mean configuration and training needs are not universal across the org.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "24",
+      "question": "A client is deciding whether to use a pilot group before a full rollout. What should determine this decision? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Pilots are only appropriate for organizations with fewer than ten total users"
+        },
+        {
+          "label": "B",
+          "text": "The decision should be made without considering data migration readiness at all"
+        },
+        {
+          "label": "C",
+          "text": "Pilots should never be used regardless of risk tolerance"
+        },
+        {
+          "label": "D",
+          "text": "The client's risk tolerance and how ready the data migration and processes are — a pilot is preferred when confidence in readiness is lower"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Lower confidence in data migration readiness or process design should push toward a pilot group first, since it allows issues to be caught on a smaller population before a full-scale rollout. Why each wrong answer fails: C: Pilots are a standard risk-mitigation tool and are often appropriate depending on context. A: Pilot group sizing is a client-specific decision, not capped at a fixed small number. * B: Data migration readiness is directly relevant to how much risk a full rollout carries.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "25",
+      "question": "A client has agents in highly diverse roles (phone, chat, back-office) and a tight go-live timeline. What training strategy should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "No training at all, since agents will learn on the job after go-live"
+        },
+        {
+          "label": "B",
+          "text": "Only self-paced training with no role-specific content"
+        },
+        {
+          "label": "C",
+          "text": "A blended approach — role-based training modules delivered efficiently, potentially supplemented by train-the-trainer for scale, given the tight timeline and role diversity"
+        },
+        {
+          "label": "D",
+          "text": "One single generic training session covering all roles identically"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Role-based training tailored to each function, combined with train-the-trainer to help meet the tight timeline at scale, addresses both the diversity of roles and the time constraint better than a one-size-fits-all approach. Why each wrong answer fails: D: A single generic session doesn't address the meaningfully different workflows across phone, chat, and back-office roles. A: No training increases the risk of errors and slow adoption right at go-live, the highest-risk period. * B: Purely self-paced training with no role-specific content risks leaving role-specific gaps unaddressed.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "26",
+      "question": "A client migrating from a legacy case management system wants minimal disruption during cutover. What should the consultant plan for? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Migrating data with agents actively creating new cases in the legacy system throughout the cutover with no freeze at all"
+        },
+        {
+          "label": "B",
+          "text": "An indefinite freeze with no planned cutover date"
+        },
+        {
+          "label": "C",
+          "text": "A defined data freeze window and cutover sequence, minimizing the time agents are unable to create or update cases in either system"
+        },
+        {
+          "label": "D",
+          "text": "Skipping data migration planning since case history isn't important"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "A clearly defined freeze window and cutover sequence minimizes the operational gap where agents can't reliably use either system, reducing disruption during the transition. Why each wrong answer fails: B: An indefinite freeze with no planned end date creates ongoing operational disruption rather than a clean transition. A: Allowing case creation in the legacy system during cutover with no freeze risks data being lost or out of sync. * D: Case history often matters for continuity of service and reporting, so skipping migration planning is risky.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "27",
+      "question": "A client wants to minimize risk during the weeks immediately following go-live. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Immediately reducing support staffing right after go-live to cut costs"
+        },
+        {
+          "label": "B",
+          "text": "No special support plan, since go-live issues are rare"
+        },
+        {
+          "label": "C",
+          "text": "Waiting a full month before addressing any post-go-live issues"
+        },
+        {
+          "label": "D",
+          "text": "A hypercare plan with heightened support staffing, rapid issue triage, and daily check-ins for a defined post-go-live period"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "A hypercare period with elevated support and fast issue triage directly addresses the higher likelihood of issues surfacing right after go-live, when users are least familiar with the new system. Why each wrong answer fails: A: Reducing staffing right when issues are most likely increases risk rather than mitigating it. B: Go-live issues are common enough that a dedicated support plan is standard practice, not unnecessary. * C: Waiting a month to address issues risks prolonged disruption and user frustration.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "28",
+      "question": "A client's data migration plan reveals significant duplicate contact and case records in the legacy system. Which steps should the consultant recommend before migration? (Choose 3)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Migrate all duplicate records as-is and clean them up sometime after go-live"
+        },
+        {
+          "label": "B",
+          "text": "A data cleansing pass on the legacy data before migrating it into Salesforce"
+        },
+        {
+          "label": "C",
+          "text": "Skip migration of contact and case data entirely to avoid the duplicate issue"
+        },
+        {
+          "label": "D",
+          "text": "Assume Salesforce will automatically detect and merge all duplicates with no upfront cleansing needed"
+        },
+        {
+          "label": "E",
+          "text": "A deduplication pass using matching rules to identify likely duplicate contacts and cases"
+        },
+        {
+          "label": "F",
+          "text": "Validating record counts and spot-checking a sample after cleansing but before the full migration load"
+        }
+      ],
+      "correctIndices": [
+        1,
+        4,
+        5
+      ],
+      "explanation": "Cleansing and deduplicating before migration prevents carrying forward the same data quality problems into the new system, which is far easier than cleaning up after go-live. Why each wrong answer fails: A: Migrating duplicates as-is just relocates the same data quality problem into the new system. C: Skipping migration of core case and contact data entirely isn't a realistic option for most implementations. D: Salesforce doesn't automatically detect and merge all duplicates without configuration and review; relying on this assumption risks leaving duplicates in place. --- ## Service Cloud Solution Design**",
+      "requiredSelections": 3
+    },
+    {
+      "id": "29",
+      "question": "A high-volume phone support team needs agents to work multiple cases at once without losing context between calls. Which Service Console capability should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A custom Visualforce page replacing the console entirely"
+        },
+        {
+          "label": "B",
+          "text": "A standard Lightning App with a single case tab open at a time"
+        },
+        {
+          "label": "C",
+          "text": "The Lightning Service Console with split view and the utility bar configured for quick access to macros and multi-tab case navigation"
+        },
+        {
+          "label": "D",
+          "text": "Salesforce Classic with multiple browser windows open"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "The Service Console's split view and utility bar are purpose-built for high-volume agents to manage multiple simultaneous cases while retaining full context. Why each wrong answer fails: B: A standard Lightning App lacks the console's split-view and multi-session navigation. A: A custom Visualforce rebuild is unnecessary when the native console already supports this. * D: Multiple browser windows create disjointed context with no native session management.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "30",
+      "question": "A client wants agents to see only fields relevant to the case's current status and record type, without page clutter. Which combination should the consultant recommend? (Choose 2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Removing all related lists from the case page entirely"
+        },
+        {
+          "label": "B",
+          "text": "A single static page layout shared across every case record type"
+        },
+        {
+          "label": "C",
+          "text": "Dynamic Related Lists to surface only contextually relevant related records"
+        },
+        {
+          "label": "D",
+          "text": "Disabling the Lightning App Builder"
+        },
+        {
+          "label": "E",
+          "text": "Dynamic Forms to show or hide fields based on record type and status"
+        }
+      ],
+      "correctIndices": [
+        2,
+        4
+      ],
+      "explanation": "Dynamic Forms and Dynamic Related Lists adapt visibility based on record context, reducing clutter without maintaining separate static layouts. Why each wrong answer fails: B: A single static layout can't adapt to context. A: Removing all related lists eliminates needed information rather than making it context-relevant. * D: Disabling App Builder prevents configuring these features at all.",
+      "requiredSelections": 2
+    },
+    {
+      "id": "31",
+      "question": "A support organization wants one console layout used by every agent tier rather than several role-specific layouts. What trade-off should the consultant highlight? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A universal layout eliminates the need for any permission sets"
+        },
+        {
+          "label": "B",
+          "text": "A universal layout automatically satisfies every reporting requirement"
+        },
+        {
+          "label": "C",
+          "text": "A universal layout is always faster to load than role-specific layouts"
+        },
+        {
+          "label": "D",
+          "text": "A universal layout reduces maintenance overhead but may show irrelevant fields or components to agents whose roles don't need them"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Consolidating layouts simplifies admin but risks showing irrelevant fields to specialized roles — a trade-off the consultant must surface. Why each wrong answer fails: C: Load performance depends on rendered components, not layout count. A: Permission sets still govern field/object access regardless of layout count. * B: Reporting depends on data structure, not console layout choice.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "32",
+      "question": "A client needs a 360-degree customer view including case history and external billing data while working a case. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Recommend against showing external data due to platform limitations"
+        },
+        {
+          "label": "B",
+          "text": "Ask agents to manually check a separate browser tab for billing data"
+        },
+        {
+          "label": "C",
+          "text": "Export case data nightly into a spreadsheet"
+        },
+        {
+          "label": "D",
+          "text": "Configure Related Lists and activity timeline for native data, and integrate external billing data using Salesforce Connect or an Apex callout"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Native Related Lists cover Salesforce data while Salesforce Connect or an Apex callout brings real-time external billing data into the same console view. Why each wrong answer fails: B: Manual tab-switching breaks workflow and increases handle time. C: A nightly export produces stale data. * A: Real-time external data integration is fully supported through several patterns.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "33",
+      "question": "A technical support team wants their case feed to surface actionable updates while suppressing routine system-generated field changes. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Remove the case feed entirely and rely only on Related Lists"
+        },
+        {
+          "label": "B",
+          "text": "Case feed filters and feed layout configured to highlight targeted feed item types"
+        },
+        {
+          "label": "C",
+          "text": "Create a manual report agents check instead of using the feed"
+        },
+        {
+          "label": "D",
+          "text": "Disable all feed tracking on the Case object"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Feed filters and layout configuration let agents see only relevant feed item types, matching the requirement directly. Why each wrong answer fails: A: Removing the feed eliminates the chronological actionable view entirely. D: Disabling tracking removes visibility into the actionable items too. * C: A manually checked report defeats the purpose of a real-time feed.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "34",
+      "question": "A client asks the consultant to distinguish Quick Text, macros, and email templates. Which statement is accurate? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Email templates can execute multi-step automation like macros"
+        },
+        {
+          "label": "B",
+          "text": "Macros can only be triggered from Flow, never run manually"
+        },
+        {
+          "label": "C",
+          "text": "Quick Text, macros, and email templates are functionally identical"
+        },
+        {
+          "label": "D",
+          "text": "Quick Text inserts reusable text snippets, macros automate multi-step actions across the UI, and email templates provide structured outbound messages"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Each tool serves a distinct purpose in the agent's workflow. Why each wrong answer fails: C: The tools solve different problems and aren't interchangeable. B: Macros are commonly triggered manually by agents. * A: Email templates only format content; they don't run multi-step UI automation.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "35",
+      "question": "Field agents need case details and Knowledge articles from mobile devices with limited connectivity. What must the consultant account for? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Offline access requires a separate additional license"
+        },
+        {
+          "label": "B",
+          "text": "Mobile users cannot access Knowledge articles under any circumstance"
+        },
+        {
+          "label": "C",
+          "text": "The Mobile App has full parity with the desktop Console with zero limitations"
+        },
+        {
+          "label": "D",
+          "text": "The Salesforce Mobile App supports offline briefcase caching, but some desktop console features and complex custom components may have reduced mobile support"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Offline caching is supported, but the consultant must still validate whether specific custom components render properly on mobile. Why each wrong answer fails: C: Full parity isn't guaranteed for complex components. B: Knowledge is accessible via the Mobile App when configured. * A: Offline access is a Mobile App configuration feature, not a separate license.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "36",
+      "question": "A company wants Email-to-Case and Web-to-Case to deliver consistent customer treatment regardless of channel. What should the consultant ensure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Web-to-Case cannot trigger auto-response rules"
+        },
+        {
+          "label": "B",
+          "text": "Email-to-Case and Web-to-Case must always use entirely separate assignment rules"
+        },
+        {
+          "label": "C",
+          "text": "Both channels route through the same underlying assignment rule and auto-response logic so customers get consistent treatment regardless of origin"
+        },
+        {
+          "label": "D",
+          "text": "Email-to-Case cases cannot be routed through Omni-Channel"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Shared assignment and auto-response logic is what actually delivers consistent treatment across channels. Why each wrong answer fails: B: Forcing separate rule sets undermines consistency. A: Web-to-Case fully supports auto-response rules. * D: Email-to-Case cases route through Omni-Channel like any other case.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "37",
+      "question": "A client wants a self-service portal that reduces case volume while letting customers who can't self-resolve easily reach a human. What should the design prioritize? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Hiding all Knowledge articles so customers go straight to case creation"
+        },
+        {
+          "label": "B",
+          "text": "Removing the case creation form entirely"
+        },
+        {
+          "label": "C",
+          "text": "Making the case form the first thing customers see"
+        },
+        {
+          "label": "D",
+          "text": "Surfacing relevant Knowledge articles before the case submission form, while keeping an easy escalation path"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Leading with Knowledge content deflects customers who can self-resolve while preserving an escalation path for those who need it. Why each wrong answer fails: B: Removing the form frustrates customers who can't self-resolve. A: Hiding content abandons the deflection strategy. * C: Leading with the form encourages case creation over self-service.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "38",
+      "question": "A customer starts in a chatbot but the request is too complex; the client wants a live-agent handoff without repeating information. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Route escalations to a generic queue with no context attached"
+        },
+        {
+          "label": "B",
+          "text": "Configure the bot-to-agent handoff to pass conversation context and collected data to the receiving agent, noting this depends on proper handoff configuration"
+        },
+        {
+          "label": "C",
+          "text": "Require the customer to restate their issue to the live agent"
+        },
+        {
+          "label": "D",
+          "text": "End the chat with no handoff option, forcing a new case"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "A properly configured handoff carries the transcript and collected data forward, though this depends on correct setup. Why each wrong answer fails: C: Forcing repetition defeats the seamless handoff goal. D: Ending with no handoff loses all context. * A: Routing without context leaves the agent unequipped to help efficiently.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "39",
+      "question": "A client wants automated case status notifications without notification fatigue. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Send duplicate notifications through every channel for every update"
+        },
+        {
+          "label": "B",
+          "text": "Send a notification for every field change, including internal-only fields"
+        },
+        {
+          "label": "C",
+          "text": "Disable all customer notifications entirely"
+        },
+        {
+          "label": "D",
+          "text": "Configure notifications only for meaningful status transitions rather than every field update"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Limiting notifications to meaningful transitions keeps customers informed without overwhelming them. Why each wrong answer fails: B: Notifying on every change is the exact fatigue problem to avoid. C: Disabling all notifications removes visibility customers want. * A: Multi-channel duplication compounds fatigue.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "40",
+      "question": "A client wants an automated post-case CSAT survey. What must the consultant configure to trigger the send? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A dashboard component displaying closure counts"
+        },
+        {
+          "label": "B",
+          "text": "A manual process where agents individually email each customer"
+        },
+        {
+          "label": "C",
+          "text": "An automation (such as a Flow) triggered on case closure that sends the survey through the appropriate channel"
+        },
+        {
+          "label": "D",
+          "text": "A monthly report summarizing closed cases with no survey sent"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "An automated trigger on closure ensures every closed case reliably fires the survey without relying on agents to remember. Why each wrong answer fails: B: Manual sends are inconsistent under workload pressure. D: A report only summarizes data; it sends nothing. * A: A dashboard visualizes metrics but triggers no outbound survey.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "41",
+      "question": "A client is deciding between a fully branded Experience Cloud portal and a third-party site integrated via API. What trade-off should the consultant present? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Experience Cloud cannot display Knowledge articles to external users"
+        },
+        {
+          "label": "B",
+          "text": "Experience Cloud offers tighter native integration with Salesforce data and automation, while a third-party site may offer specific UX features but adds integration complexity and sync maintenance"
+        },
+        {
+          "label": "C",
+          "text": "There is no meaningful difference between the two approaches"
+        },
+        {
+          "label": "D",
+          "text": "A third-party website always requires zero integration effort"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Native integration reduces overhead, while a third-party site may fit a specific UX vision but adds ongoing sync burden. Why each wrong answer fails: D: A third-party site still requires real integration work. A: Experience Cloud fully supports exposing Knowledge to external users. * C: The approaches differ meaningfully in integration complexity and maintenance.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "42",
+      "question": "A company wants separate structures for internal procedures and external FAQs. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Separate Knowledge article record types for internal procedures and external FAQs, each with its own layout and visibility rules"
+        },
+        {
+          "label": "B",
+          "text": "Store internal procedures outside Salesforce Knowledge entirely"
+        },
+        {
+          "label": "C",
+          "text": "Merge both content types into one record type with no differentiation"
+        },
+        {
+          "label": "D",
+          "text": "A single record type with internal/external tracked in the title"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Separate record types enable distinct layouts and enforced visibility rules per category. Why each wrong answer fails: B: Moving content outside Salesforce loses integration and reporting benefits. C: An undifferentiated record type makes restricting internal-only content difficult. * D: Title-based tracking is fragile and unenforced.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "43",
+      "question": "A global client wants articles filtered by topic and business unit for search relevance and visibility. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Removing all categorization since search works independently of categories"
+        },
+        {
+          "label": "B",
+          "text": "Role hierarchy alone, with no data categories"
+        },
+        {
+          "label": "C",
+          "text": "A single flat list of categories with no hierarchy"
+        },
+        {
+          "label": "D",
+          "text": "A data category hierarchy structured by topic and business unit, applied to articles and referenced in visibility and search configuration"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "A structured hierarchy improves search relevance and enables precise per-category visibility. Why each wrong answer fails: A: Data categories directly influence both relevance and visibility. B: Role hierarchy governs record ownership, not Knowledge categorization. * C: A flat list can't represent nested topic/business-unit relationships.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "44",
+      "question": "A client wants no article to go live without expert review. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A permission set giving every user Publisher rights"
+        },
+        {
+          "label": "B",
+          "text": "A report showing article view counts as the review mechanism"
+        },
+        {
+          "label": "C",
+          "text": "An approval process requiring designated reviewer sign-off before publishing"
+        },
+        {
+          "label": "D",
+          "text": "A validation rule blocking all edits to any article"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "An approval process enforces a mandatory review gate before publishing. Why each wrong answer fails: A: Broad Publisher rights removes the governance gate entirely. B: View counts measure post-publish usage, not a pre-publish gate. * D: Blocking all edits prevents legitimate authoring.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "45",
+      "question": "A client wants stale articles automatically flagged based on negative feedback ratings. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Delete every article that receives even a single negative rating"
+        },
+        {
+          "label": "B",
+          "text": "Manually review every article every day regardless of ratings"
+        },
+        {
+          "label": "C",
+          "text": "Ignore article ratings since they don't reflect content quality"
+        },
+        {
+          "label": "D",
+          "text": "Use feedback and ratings data with an automation (e.g., Flow) to trigger a review task when ratings fall below a threshold"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Automating a rating-triggered review surfaces likely stale content without daily manual audits. Why each wrong answer fails: A: Deleting on one negative rating overreacts to a single data point. B: Daily manual review of everything is an inefficient use of reviewer time. * C: Ratings are a direct quality signal that should inform prioritization.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "46",
+      "question": "What happens to a case referencing a Knowledge article when that article is archived and replaced? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "The case's article link auto-updates to the newer version with no verification needed"
+        },
+        {
+          "label": "B",
+          "text": "Archiving an article prevents the case from ever being closed"
+        },
+        {
+          "label": "C",
+          "text": "The historical link on the case typically persists, but agents should verify whether the archived content is still accurate for ongoing use"
+        },
+        {
+          "label": "D",
+          "text": "The case is automatically deleted"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "The case keeps its historical reference, but agents should confirm currency before relying on it further. Why each wrong answer fails: A: There's no automatic silent re-pointing to a newer version. B: Archival status doesn't affect whether a case can close. * D: Archiving has no automated effect that deletes related cases.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "47",
+      "question": "A client wants to bulk-import hundreds of legacy articles into Salesforce Knowledge. What should the consultant flag? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "CSV import guarantees perfect formatting fidelity for all rich text"
+        },
+        {
+          "label": "B",
+          "text": "Salesforce Knowledge has no supported import mechanism"
+        },
+        {
+          "label": "C",
+          "text": "The Knowledge Article CSV import process can bring in content and metadata, but has limitations (formatting fidelity, attachments) that should be validated with a test batch"
+        },
+        {
+          "label": "D",
+          "text": "Only ten articles can ever be imported at a time"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "CSV import is supported, but limitations should be validated with a test batch before full-scale import. Why each wrong answer fails: A: Formatting fidelity isn't guaranteed for all rich content. B: A supported CSV import mechanism does exist. * D: There's no fixed ten-record cap on imports.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "48",
+      "question": "Agents need to search and attach Knowledge articles without leaving the case record. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Require agents to open a separate tab and copy article links manually"
+        },
+        {
+          "label": "B",
+          "text": "Disable Knowledge entirely and rely on agent memory"
+        },
+        {
+          "label": "C",
+          "text": "Add the Lightning Knowledge component to the case page layout, enabling search and one-click attachment"
+        },
+        {
+          "label": "D",
+          "text": "Configure Knowledge only for the Experience Cloud portal, not the console"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Adding the component to the layout lets agents search and attach articles in context. Why each wrong answer fails: A: Manual copy-paste breaks workflow. B: Disabling Knowledge removes a core productivity tool. * D: Limiting to the external portal ignores the internal need.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "49",
+      "question": "A company wants some articles visible to all customers and others only to a premium tier. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Data category visibility settings mapped to the profiles or permission sets representing each customer segment"
+        },
+        {
+          "label": "B",
+          "text": "A single publicly visible category with no segmentation"
+        },
+        {
+          "label": "C",
+          "text": "Manually emailing premium-tier articles instead of publishing them"
+        },
+        {
+          "label": "D",
+          "text": "Object-level security on the Knowledge object alone, with no data categories"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Mapping category visibility to segment-specific profiles/permission sets controls exactly who sees what. Why each wrong answer fails: B: An unsegmented category can't distinguish premium-only content. C: Manual emailing bypasses the governed self-service model. * D: Object-level security alone doesn't control per-category visibility.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "50",
+      "question": "A client wants AI-suggested articles surfaced automatically during a live chat. What must be configured? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A permission set giving broad Publisher rights to all agents"
+        },
+        {
+          "label": "B",
+          "text": "An approval process routing draft articles to a designated technical reviewer before publish"
+        },
+        {
+          "label": "C",
+          "text": "A validation rule that blocks any edits to existing articles"
+        },
+        {
+          "label": "D",
+          "text": "A dashboard showing article view counts with no review gate"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "A reviewer sign-off gate before publish ensures only vetted content is surfaced to AI-suggested article recommendations. Why each wrong answer fails: A: Broad Publisher rights bypass the intended review gate. C: Blocking all edits prevents legitimate authoring and updates. * D: View counts are a post-publish usage metric, not a pre-publish review mechanism.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "51",
+      "question": "Leadership wants to demonstrate Knowledge ROI using measurable usage data. Which metrics should the consultant recommend? (Choose 2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "The number of Knowledge Managers on staff"
+        },
+        {
+          "label": "B",
+          "text": "The color scheme used in the article template"
+        },
+        {
+          "label": "C",
+          "text": "Article view counts and case-attach rates"
+        },
+        {
+          "label": "D",
+          "text": "The total number of case record types in the org"
+        },
+        {
+          "label": "E",
+          "text": "Thumbs up/down feedback ratings"
+        }
+      ],
+      "correctIndices": [
+        2,
+        4
+      ],
+      "explanation": "View/attach counts show usage; ratings show perceived quality — together they form a defensible ROI basis. Why each wrong answer fails: A: Headcount is an input cost, not a value measure. B: Template color has no bearing on demonstrated ROI. * D: Record type count is unrelated to usage effectiveness.",
+      "requiredSelections": 2
+    },
+    {
+      "id": "52",
+      "question": "A company wants internal-only articles never visible on their external portal, while internal agents can still find them. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Remove Knowledge entirely from the Experience Cloud site"
+        },
+        {
+          "label": "B",
+          "text": "Restrict the internal article's data category visibility to exclude the guest/customer profile used by the portal, while internal agent profiles retain access"
+        },
+        {
+          "label": "C",
+          "text": "Publish all articles identically with no differentiation"
+        },
+        {
+          "label": "D",
+          "text": "Rely on customers not knowing the article exists"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Scoping category visibility to exclude the guest profile enforces the restriction directly while preserving internal access. Why each wrong answer fails: A: Removing Knowledge from the portal eliminates legitimate external content too. C: Identical publishing removes any real separation. D: Relying on obscurity isn't a real access control. ## Intake and Interaction Channels**",
+      "requiredSelections": 1
+    },
+    {
+      "id": "53",
+      "question": "A client receives requests via email at moderate volume and wants automated case creation with routing based on subject-line keywords. Which intake option fits? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Standard Email-to-Case configured with assignment rules keyed on subject or body content"
+        },
+        {
+          "label": "B",
+          "text": "On-Demand Email-to-Case with no routing configuration since routing isn't supported"
+        },
+        {
+          "label": "C",
+          "text": "Web-to-Case, since email intake requires a public-facing form"
+        },
+        {
+          "label": "D",
+          "text": "A fully custom Apex email service replacing native Email-to-Case"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Standard Email-to-Case natively creates cases and works with assignment rules for keyword-based routing. Why each wrong answer fails: B: On-Demand Email-to-Case still supports assignment rules. C: Web-to-Case is for form submissions, not inbound email. * D: A fully custom service duplicates native functionality unnecessarily.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "54",
+      "question": "A client needs high email volume handled but firewall restrictions block an on-premise mail agent. Which option fits, and why? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Neither option supports firewall-restricted environments"
+        },
+        {
+          "label": "B",
+          "text": "Standard Email-to-Case, since it requires no email server configuration"
+        },
+        {
+          "label": "C",
+          "text": "On-Demand Email-to-Case, since it processes email through Salesforce's own service without an on-premise agent"
+        },
+        {
+          "label": "D",
+          "text": "On-Demand Email-to-Case requires manual download and cannot scale"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "On-Demand Email-to-Case avoids the on-premise mail agent that firewall restrictions would block. Why each wrong answer fails: A: On-Demand Email-to-Case is designed for exactly this scenario. B: Standard Email-to-Case's on-premise agent is exactly what the firewall restricts. * D: It scales through Salesforce's hosted service, no manual download needed.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "55",
+      "question": "A client's Web-to-Case form is receiving bot-driven spam submissions. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Disable Web-to-Case entirely since spam cannot be prevented"
+        },
+        {
+          "label": "B",
+          "text": "Remove all required fields so submissions always succeed"
+        },
+        {
+          "label": "C",
+          "text": "Add CAPTCHA or similar bot detection combined with validation rules on submitted data"
+        },
+        {
+          "label": "D",
+          "text": "Route every submission to a single agent to manually filter spam"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Bot detection plus validation reduces spam at the entry point, more scalable than manual filtering. Why each wrong answer fails: A: Disabling the channel removes a legitimate intake path unnecessarily. B: Removing required fields makes spam easier, not harder. * D: Manual filtering doesn't scale and delays legitimate triage.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "56",
+      "question": "A company receives requests via email, phone, chat, and social, wanting each routed to the right queue with appropriate priority. What should the consultant design? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A single shared queue for all channels with no differentiation"
+        },
+        {
+          "label": "B",
+          "text": "Manual reassignment by a supervisor for every incoming case"
+        },
+        {
+          "label": "C",
+          "text": "An Omni-Channel routing strategy with service channels and routing configurations per work type, mapped to the right queue and priority"
+        },
+        {
+          "label": "D",
+          "text": "Routing based solely on case creation timestamp"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Omni-Channel lets each channel's work be defined with its own routing configuration for priority-aware delivery. Why each wrong answer fails: A: A single queue ignores channel-specific priority needs. B: Manual reassignment for every case doesn't scale. * D: Timestamp-only routing ignores priority and channel needs.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "57",
+      "question": "During a peak spike, one queue is overwhelmed while other agents sit idle. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Permanently assign every agent to only one queue with no overflow"
+        },
+        {
+          "label": "B",
+          "text": "Turn off Omni-Channel routing during peaks and revert to manual assignment"
+        },
+        {
+          "label": "C",
+          "text": "Increase priority uniformly on every case regardless of actual urgency"
+        },
+        {
+          "label": "D",
+          "text": "Configure Omni-Channel capacity models and routing rules allowing overflow to cross-trained agents or secondary queues"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Overflow-capable capacity models dynamically rebalance load instead of leaving one queue overwhelmed. Why each wrong answer fails: A: Rigid single-queue assignment causes the imbalance described. B: Reverting to manual assignment removes automation exactly when needed most. * C: Uniform priority removes any real urgency signal.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "58",
+      "question": "A client asks about telephony options for Service Cloud Voice. Which statement is accurate? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Service Cloud Voice supports Amazon Connect, select partner telephony, and Bring Your Own Telephony"
+        },
+        {
+          "label": "B",
+          "text": "Service Cloud Voice requires replacing all existing telephony hardware regardless of provider"
+        },
+        {
+          "label": "C",
+          "text": "Service Cloud Voice only works with Amazon Connect"
+        },
+        {
+          "label": "D",
+          "text": "Bring Your Own Telephony is not supported"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Multiple telephony paths give flexibility based on the client's existing infrastructure. Why each wrong answer fails: B: BYOT specifically avoids mandatory hardware replacement. C: Partner telephony and BYOT are also supported. * D: BYOT is an explicitly supported option.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "59",
+      "question": "A client has a long-term contract with a telephony provider not on the native/partner list. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Force a migration to Amazon Connect regardless of the existing contract"
+        },
+        {
+          "label": "B",
+          "text": "Recommend against any Service Cloud Voice implementation"
+        },
+        {
+          "label": "C",
+          "text": "Use Open CTI instead, since Voice cannot connect to any non-listed vendor"
+        },
+        {
+          "label": "D",
+          "text": "Evaluate Bring Your Own Telephony to integrate the existing provider with Service Cloud Voice"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "BYOT is designed for retaining an existing vendor relationship while gaining console integration. Why each wrong answer fails: A: Forcing a migration ignores an existing contract and the BYOT alternative. B: Additional providers are supportable through BYOT. * C: Service Cloud Voice explicitly supports BYOT for non-listed providers.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "60",
+      "question": "A client wants real-time chat for urgent issues and messaging for less urgent ones. How do these differ operationally? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Chat requires the customer to stay actively connected, while messaging supports asynchronous, session-persistent conversations"
+        },
+        {
+          "label": "B",
+          "text": "Messaging requires the customer to stay on the same screen the entire time, like chat"
+        },
+        {
+          "label": "C",
+          "text": "Chat and messaging are functionally identical"
+        },
+        {
+          "label": "D",
+          "text": "Chat channels support multi-day persistence exactly like messaging"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Chat is synchronous and connected; messaging is asynchronous and persists across time. Why each wrong answer fails: B: Messaging is designed to not require continuous engagement. C: The two differ meaningfully in session persistence. * D: Chat sessions are generally time-boxed, unlike messaging.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "61",
+      "question": "A client using classic Live Agent chat is evaluating MIAW. What is a key differentiator? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "MIAW supports asynchronous, persistent conversations and richer bot-to-agent handoff compared to classic chat's real-time-only model"
+        },
+        {
+          "label": "B",
+          "text": "Classic chat supports multi-day persistence by default"
+        },
+        {
+          "label": "C",
+          "text": "Classic chat and MIAW are simply two names for the same feature"
+        },
+        {
+          "label": "D",
+          "text": "MIAW cannot hand off from a bot to a live agent under any configuration"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "MIAW's persistent, asynchronous model with richer handoff is a meaningful step beyond classic chat. Why each wrong answer fails: B: Classic chat sessions are generally time-boxed. C: They are architecturally distinct features. * D: MIAW explicitly supports bot-to-agent handoff.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "62",
+      "question": "A client wants to add SMS and WhatsApp channels. How does messaging setup differ from chat setup? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "SMS channels require no phone number or provider configuration"
+        },
+        {
+          "label": "B",
+          "text": "Messaging channels use the exact same object as chat with no distinct setup"
+        },
+        {
+          "label": "C",
+          "text": "Messaging requires configuring a channel type tied to a provider/number, whereas chat setup centers on an embedded deployment and chat button"
+        },
+        {
+          "label": "D",
+          "text": "WhatsApp cannot be configured as a Salesforce messaging channel"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Messaging setup is centered on provider/number configuration, structurally different from chat's embedded deployment setup. Why each wrong answer fails: A: SMS setup requires provider/number configuration. B: The two use different underlying configuration flows. * D: WhatsApp is an explicitly supported channel type.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "63",
+      "question": "A retail brand wants social media mentions connected to case creation. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Ignoring social mentions since Salesforce has no native social integration"
+        },
+        {
+          "label": "B",
+          "text": "Routing all social mentions to the Knowledge object instead of Case"
+        },
+        {
+          "label": "C",
+          "text": "Social Customer Service, which connects monitored social channels to case creation and standard agent workflows"
+        },
+        {
+          "label": "D",
+          "text": "Manually screenshotting posts into case descriptions"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Social Customer Service connects mentions into case creation, letting agents use the familiar case workflow. Why each wrong answer fails: A: Native social integration exists specifically through this feature. B: Social requests needing a response are better modeled as Cases. * D: Manual screenshotting is inefficient and loses structure.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "64",
+      "question": "A client wants peer-to-peer support to reduce inbound case volume. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Disabling Knowledge articles within the community"
+        },
+        {
+          "label": "B",
+          "text": "An Experience Cloud community enabling peer discussion as a deflection channel alongside Knowledge and case submission"
+        },
+        {
+          "label": "C",
+          "text": "An unmoderated community with no structure"
+        },
+        {
+          "label": "D",
+          "text": "Removing the case submission option entirely to force community usage"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "A community layered alongside Knowledge and case channels gives customers another self-service path that meaningfully deflects simple questions. Why each wrong answer fails: A: Removing Knowledge discards a proven deflection source. C: Unmoderated communities risk misinformation. * D: Removing the case option leaves complex issues with no support path.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "65",
+      "question": "What distinguishes an Einstein Bot/Flow bot from an Agentforce AI Agent? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Bots typically follow structured dialog-tree paths, while Agentforce AI Agents use a reasoning engine to dynamically plan actions"
+        },
+        {
+          "label": "B",
+          "text": "Agentforce AI Agents cannot take any action beyond replying with text"
+        },
+        {
+          "label": "C",
+          "text": "Both use identical configuration approaches with no meaningful difference"
+        },
+        {
+          "label": "D",
+          "text": "Einstein Bots use a reasoning engine while Agentforce Agents follow rigid dialog trees"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Bots follow structured flows; Agentforce Agents use reasoning to handle less predictable conversations. Why each wrong answer fails: B: Agentforce Agents are designed to take real actions, not just reply. C: The underlying conversation models differ meaningfully. * D: This reverses the actual distinction.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "66",
+      "question": "Before enabling a work type for automated routing, what must be configured in Omni-Channel? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A Service Channel and Routing Configuration must be defined for that work type"
+        },
+        {
+          "label": "B",
+          "text": "Routing Configurations only apply to the Case object"
+        },
+        {
+          "label": "C",
+          "text": "Only a case queue is required, with no service channel"
+        },
+        {
+          "label": "D",
+          "text": "Nothing; Omni-Channel routes any object automatically"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "A Service Channel plus Routing Configuration is required before Omni-Channel can route that work type. Why each wrong answer fails: B: Routing Configurations can apply to multiple object types. C: A queue alone doesn't establish routing logic. * D: This explicit configuration is required, not automatic.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "67",
+      "question": "A client on Classic Omni-Channel is considering Enhanced Omni-Channel. What should the consultant flag? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Enhanced Omni-Channel introduces expanded capability and different architecture, so migration should be planned and tested"
+        },
+        {
+          "label": "B",
+          "text": "Enhanced Omni-Channel removes queues entirely"
+        },
+        {
+          "label": "C",
+          "text": "There is no functional difference between the two"
+        },
+        {
+          "label": "D",
+          "text": "Migration requires no testing since it's fully backward compatible"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Real architectural differences warrant testing before migrating existing routing configurations. Why each wrong answer fails: B: Queues remain usable under Enhanced Omni-Channel. C: Real functional differences exist. * D: Assuming zero-impact compatibility risks production issues.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "68",
+      "question": "A manager wants agent workload balanced fairly across a shift. What should the consultant evaluate? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Removing all capacity limits for unlimited concurrent assignment"
+        },
+        {
+          "label": "B",
+          "text": "Capacity models weighting different work item types so no agent is overloaded relative to peers"
+        },
+        {
+          "label": "C",
+          "text": "A fixed capacity number for every agent regardless of complexity"
+        },
+        {
+          "label": "D",
+          "text": "Manual spreadsheet-based capacity tracking outside Salesforce"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Properly weighted models account for relative effort across work types, avoiding overload. Why each wrong answer fails: A: Removing limits defeats balanced distribution. C: A uniform number ignores differing effort weights. * D: External tracking doesn't drive real-time routing.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "69",
+      "question": "A client's routing sends all cases to generic queues regardless of required expertise. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Queue-Based Routing exclusively, since it's always superior"
+        },
+        {
+          "label": "B",
+          "text": "Random routing with no skill or queue logic"
+        },
+        {
+          "label": "C",
+          "text": "Routing based only on case creation date"
+        },
+        {
+          "label": "D",
+          "text": "Skills-Based Routing, matching cases to agents with relevant expertise"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Skills-Based Routing directly addresses the mismatch between generic queues and specialized case needs. Why each wrong answer fails: A: Queue-Based Routing alone is the generic approach causing the mismatch. B: Random routing adds no matching logic. * C: Creation date ignores expertise requirements.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "70",
+      "question": "A supervisor wants real-time visibility into agent status, queue backlog, and wait times. What should the consultant point them to? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "The Omni-Channel Supervisor panel"
+        },
+        {
+          "label": "B",
+          "text": "Manually asking each agent hourly"
+        },
+        {
+          "label": "C",
+          "text": "The Knowledge Manager dashboard"
+        },
+        {
+          "label": "D",
+          "text": "A static weekly report emailed to the supervisor"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "The Supervisor panel is purpose-built for real-time cross-channel monitoring. Why each wrong answer fails: B: Manual check-ins are far less timely. C: That dashboard tracks article metrics, not live queue data. * D: A static report can't provide real-time visibility.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "71",
+      "question": "A client wants Email-to-Case auto-acknowledgment without causing duplicate cases from customer replies. What should the consultant design? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Auto-response replying from a different address than the monitored one"
+        },
+        {
+          "label": "B",
+          "text": "Auto-response with no threading configuration, accepting duplicates"
+        },
+        {
+          "label": "C",
+          "text": "An auto-response rule paired with proper email threading so replies append to the original case"
+        },
+        {
+          "label": "D",
+          "text": "Disabling auto-response entirely"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Threading plus acknowledgment avoids both duplicate cases and agent confusion. Why each wrong answer fails: A: A mismatched address breaks threading. B: Ignoring threading accepts the exact duplicate problem to avoid. * D: Disabling removes the acknowledgment the client wants.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "72",
+      "question": "A client wants an embedded chat widget with pre-chat form, offline fallback, and brand styling. How does this differ from a simple Chat Button? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A Chat Button alone provides identical capabilities"
+        },
+        {
+          "label": "B",
+          "text": "Embedded Service Deployments cannot support offline fallback"
+        },
+        {
+          "label": "C",
+          "text": "Pre-chat forms are only available through Experience Cloud"
+        },
+        {
+          "label": "D",
+          "text": "An Embedded Service Deployment supports pre-chat forms, offline states, and branding beyond a standalone Chat Button"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "The Embedded Service Deployment wraps the chat button with richer configuration options the bare button lacks. Why each wrong answer fails: A: A standalone button lacks these richer options. B: Offline fallback is explicitly supported. * C: Pre-chat forms are native to Embedded Service Deployments. ---",
+      "requiredSelections": 1
+    },
+    {
+      "id": "73",
+      "question": "A client needs agents to see only their team's cases while regional managers see all cases in their region. Which combination should the consultant configure? (Choose 2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Removing all case queues from the org"
+        },
+        {
+          "label": "B",
+          "text": "Sharing rules or manual sharing for cross-team visibility beyond the default"
+        },
+        {
+          "label": "C",
+          "text": "A restrictive Case OWD combined with a role hierarchy granting managers regional visibility"
+        },
+        {
+          "label": "D",
+          "text": "Field-level security set to hidden on the entire Case object"
+        },
+        {
+          "label": "E",
+          "text": "A public OWD with no role hierarchy"
+        }
+      ],
+      "correctIndices": [
+        1,
+        2
+      ],
+      "explanation": "A restrictive OWD plus role hierarchy grants managers visibility into their team's cases, while sharing rules extend visibility for any additional cross-team need. Why each wrong answer fails: D: Hiding the whole object blocks agents from their own cases too. A: Removing queues affects routing, not record visibility. * E: A public OWD grants everyone visibility, contradicting the restriction goal.",
+      "requiredSelections": 2
+    },
+    {
+      "id": "74",
+      "question": "A healthcare client must hide certain PII fields from agents while they still work the case normally. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Restrict access to the entire Case object for all agents"
+        },
+        {
+          "label": "B",
+          "text": "Remove the PII fields from the database entirely"
+        },
+        {
+          "label": "C",
+          "text": "Field-level security restricting the specific PII fields for the agent profile or permission set"
+        },
+        {
+          "label": "D",
+          "text": "Set the Case OWD to Private with no exceptions"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Field-level security hides only the sensitive fields while preserving normal case access. Why each wrong answer fails: A: Restricting the whole object prevents agents from working cases at all. D: A blanket private OWD with no exceptions blocks legitimate access needed for daily work. * B: Removing the data entirely eliminates it for roles that may legitimately need it.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "75",
+      "question": "A client operating across the EU and US needs both PII field security and regional record segregation. What should the consultant explain about combining these controls? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Field-level security can restrict which records a user can see"
+        },
+        {
+          "label": "B",
+          "text": "Record-level security alone can restrict which fields on a visible record are shown"
+        },
+        {
+          "label": "C",
+          "text": "Configuring one security layer automatically satisfies all others"
+        },
+        {
+          "label": "D",
+          "text": "Object-level, record-level, and field-level security operate independently and often must be layered together, since satisfying one doesn't address a different requirement"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Each security layer controls a different access dimension, so a multi-part compliance requirement typically needs more than one layer configured together. Why each wrong answer fails: C: Each layer addresses a distinct dimension; configuring one doesn't cover the others. B: Record-level security controls whether a record is visible at all, not field visibility within it. A: Field-level security controls field visibility, not which records a user can see. ## Knowledge Management**",
+      "requiredSelections": 1
+    },
+    {
+      "id": "76",
+      "question": "A new Knowledge Manager asks about the article lifecycle stages before configuring approvals. What is the correct sequence? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Articles have no lifecycle stages; they are simply visible or invisible"
+        },
+        {
+          "label": "B",
+          "text": "Archived, then Draft, then Published, with no way to return to Draft"
+        },
+        {
+          "label": "C",
+          "text": "Draft, then Published, then optionally Archived once outdated or superseded"
+        },
+        {
+          "label": "D",
+          "text": "Published, then Draft, then permanently deleted"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Articles move from editable Draft, to visible Published, and can later be Archived once no longer accurate. Why each wrong answer fails: A: Salesforce explicitly models lifecycle stages, not a binary flag. B: Archived articles can be reactivated via a new draft version. * D: Starting Published skips the review Draft is meant to provide.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "77",
+      "question": "A team wants to update a published article without disrupting what customers currently see. What feature should the consultant point to? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Data categories, which control versioning behavior"
+        },
+        {
+          "label": "B",
+          "text": "Editing the published article directly with no draft step"
+        },
+        {
+          "label": "C",
+          "text": "Deleting the current article and creating a brand-new one"
+        },
+        {
+          "label": "D",
+          "text": "Article versioning, letting a new draft version be edited and reviewed before replacing the currently published version"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Versioning lets a new draft be refined without affecting the live version until explicitly published. Why each wrong answer fails: A: Data categories control classification, not version control. B: Editing live content risks showing incomplete content mid-edit. * C: Deleting and recreating loses history, URL, and metrics.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "78",
+      "question": "A client wants their Knowledge program to align with KCS methodology. Which principle should guide governance? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Capturing and improving knowledge as a byproduct of the agent's normal case-resolution workflow"
+        },
+        {
+          "label": "B",
+          "text": "Restricting article creation exclusively to a small dedicated writing team"
+        },
+        {
+          "label": "C",
+          "text": "Publishing every article permanently with no review or feedback loop"
+        },
+        {
+          "label": "D",
+          "text": "Preventing agents from ever suggesting new articles"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "KCS treats knowledge capture as embedded in daily problem-solving rather than a separate authoring silo. Why each wrong answer fails: B: Restricting to a small team contradicts distributed KCS contribution. C: KCS relies on continuous feedback, not permanent unreviewed content. * D: Preventing agent suggestions removes KCS's core capture mechanism.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "79",
+      "question": "A client wants only trained users to move an article from Draft to Published, while broader staff can view it. Which roles fit? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Give every user Knowledge Manager by default"
+        },
+        {
+          "label": "B",
+          "text": "Assign Publisher to trained reviewers, while general staff retain Viewer-level access"
+        },
+        {
+          "label": "C",
+          "text": "Assign Author to control publishing, since Authors have full publish rights"
+        },
+        {
+          "label": "D",
+          "text": "Remove the Viewer role entirely"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Publisher permissions enforce the governance gate; Viewer access lets staff consume finished content. Why each wrong answer fails: A: Broad Knowledge Manager access removes the governance control being sought. C: Author is scoped to drafting, not publishing rights. * D: Viewer access is exactly what general staff need.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "80",
+      "question": "A client wants MIAW to collect an account number before reaching an agent, to pre-populate the case. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Wait for the agent to manually ask after the conversation starts"
+        },
+        {
+          "label": "B",
+          "text": "Pre-chat data collection is not supported in MIAW"
+        },
+        {
+          "label": "C",
+          "text": "Fill the field in only after case closure"
+        },
+        {
+          "label": "D",
+          "text": "A pre-conversation data collection form mapping the account number to case fields"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Pre-conversation data collection pre-populates context for faster routing, as required. Why each wrong answer fails: A: Manual asking delays context gathering. B: MIAW does support pre-conversation data collection. * C: Populating after closure provides no routing benefit.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "81",
+      "question": "A client wants sentiment captured right after a MIAW conversation ends. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A manual phone call after every conversation"
+        },
+        {
+          "label": "B",
+          "text": "A quarterly NPS survey to the whole customer base"
+        },
+        {
+          "label": "C",
+          "text": "No survey capability exists within MIAW"
+        },
+        {
+          "label": "D",
+          "text": "A post-conversation survey within MIAW triggered automatically at session end"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "A native post-conversation survey captures sentiment in the moment without extra customer effort. Why each wrong answer fails: A: Manual calls don't scale. B: A broad quarterly survey doesn't tie to this specific conversation. * C: MIAW natively supports post-conversation surveys.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "82",
+      "question": "A client wants an Agentforce Service Agent to resolve password resets autonomously, with safe handling of anything out of scope. What should the consultant evaluate first? (Choose 2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "The color palette of the chat window"
+        },
+        {
+          "label": "B",
+          "text": "Whether the org has ever used Salesforce Classic"
+        },
+        {
+          "label": "C",
+          "text": "What actions the agent can take out of the box versus what requires custom configuration"
+        },
+        {
+          "label": "D",
+          "text": "The number of Knowledge article record types configured, regardless of relevance"
+        },
+        {
+          "label": "E",
+          "text": "The escalation and handoff path for requests it cannot confidently resolve"
+        }
+      ],
+      "correctIndices": [
+        2,
+        4
+      ],
+      "explanation": "Confirming native vs. custom actions determines feasibility, and a clear escalation path ensures safe handling of anything out of scope. Why each wrong answer fails: A: Styling is cosmetic and unrelated to functional safety. B: Prior Classic use has no bearing on Agentforce configuration. D: Record type count alone doesn't indicate content relevance or sufficiency. ## Case Management**",
+      "requiredSelections": 2
+    },
+    {
+      "id": "83",
+      "question": "A client wants a case status picklist that supports clean KPI reporting without confusing agents. Which characteristics should the consultant recommend for the picklist? (Choose 2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A status picklist with 40 highly granular values"
+        },
+        {
+          "label": "B",
+          "text": "A single status value used for all cases"
+        },
+        {
+          "label": "C",
+          "text": "Removing the Status field entirely and tracking stage in free-text comments"
+        },
+        {
+          "label": "D",
+          "text": "A concise set of statuses mapped to distinct lifecycle stages"
+        },
+        {
+          "label": "E",
+          "text": "Status values with no overlapping or ambiguous meaning between them"
+        }
+      ],
+      "correctIndices": [
+        3,
+        4
+      ],
+      "explanation": "A small set of clearly distinct statuses gives agents unambiguous choices while remaining reportable. Why each wrong answer fails: A: Overly granular values create agent confusion and inconsistent selection. B: A single value provides no lifecycle differentiation. * C: Free-text can't be reliably aggregated for KPI reporting.",
+      "requiredSelections": 2
+    },
+    {
+      "id": "84",
+      "question": "A client wants cases routed to the correct queue based on product, origin, and customer tier. Which configuration elements should the consultant include? (Choose 2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A single default queue with manual reassignment based on tier"
+        },
+        {
+          "label": "B",
+          "text": "Assignment rules evaluating only the Subject field"
+        },
+        {
+          "label": "C",
+          "text": "Removing queues and assigning every case directly to a named agent"
+        },
+        {
+          "label": "D",
+          "text": "Case assignment rules with criteria on product, origin, and tier fields"
+        },
+        {
+          "label": "E",
+          "text": "Queues aligned to the routing outcomes the assignment rules produce"
+        }
+      ],
+      "correctIndices": [
+        3,
+        4
+      ],
+      "explanation": "Rules spanning these fields automatically route cases without manual triage. Why each wrong answer fails: A: A default queue with manual reassignment reintroduces manual triage. B: Subject alone ignores the structured fields that drive correct routing. * C: Direct named-agent assignment removes flexibility as availability changes.",
+      "requiredSelections": 2
+    },
+    {
+      "id": "85",
+      "question": "How should queues, assignment rules, and Omni-Channel work together for end-to-end routing? (Choose 3)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Omni-Channel replaces the need for queues or assignment rules entirely"
+        },
+        {
+          "label": "B",
+          "text": "Assignment rules and Omni-Channel cannot be used together"
+        },
+        {
+          "label": "C",
+          "text": "Queues alone are sufficient with no need for Omni-Channel"
+        },
+        {
+          "label": "D",
+          "text": "Assignment rules and queues establish the initial bucket for a case"
+        },
+        {
+          "label": "E",
+          "text": "Omni-Channel then delivers work from that queue to the right available agent"
+        },
+        {
+          "label": "F",
+          "text": "Agent skill and capacity determine which queued item Omni-Channel pushes next"
+        }
+      ],
+      "correctIndices": [
+        3,
+        4,
+        5
+      ],
+      "explanation": "The two layers are complementary — rules/queues bucket the work, Omni-Channel delivers it to an available skilled agent. Why each wrong answer fails: A: Omni-Channel routes work already organized by queues; it doesn't eliminate them. B: They're designed to work together. * C: Queues alone don't handle real-time delivery to a specific agent.",
+      "requiredSelections": 3
+    },
+    {
+      "id": "86",
+      "question": "A customer's email reply unexpectedly creates a new case instead of appending to the original. Which factors are the likely cause? (Choose 2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Email-to-Case is fundamentally incapable of threading replies"
+        },
+        {
+          "label": "B",
+          "text": "A Priority field change always breaks threading"
+        },
+        {
+          "label": "C",
+          "text": "The customer's reply was sent from a different device"
+        },
+        {
+          "label": "D",
+          "text": "Email threading configuration is broken, so the system can't match the reply to the original case"
+        },
+        {
+          "label": "E",
+          "text": "The email subject line's thread identifier was stripped or altered before reaching Salesforce"
+        }
+      ],
+      "correctIndices": [
+        3,
+        4
+      ],
+      "explanation": "A missing or altered thread identifier prevents the system from matching the reply to the original case. Why each wrong answer fails: A: Email-to-Case is fully capable of threading when configured correctly. B: Priority changes don't affect the threading mechanism. * C: The originating device doesn't affect email headers.",
+      "requiredSelections": 2
+    },
+    {
+      "id": "87",
+      "question": "A client wants automatic escalation aligned with existing entitlement-based SLA reporting. Which elements should the consultant recommend? (Choose 3)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A separate workflow-based escalation with no connection to entitlements"
+        },
+        {
+          "label": "B",
+          "text": "Manually tracking SLA hours in a parallel spreadsheet"
+        },
+        {
+          "label": "C",
+          "text": "Disabling entitlements and relying solely on Priority for escalation timing"
+        },
+        {
+          "label": "D",
+          "text": "Configure escalation through entitlement milestones"
+        },
+        {
+          "label": "E",
+          "text": "Ensure the milestone trigger aligns with the same SLA framework used for reporting"
+        },
+        {
+          "label": "F",
+          "text": "Set milestone actions to notify or reassign before a breach occurs"
+        }
+      ],
+      "correctIndices": [
+        3,
+        4,
+        5
+      ],
+      "explanation": "Tying escalation directly to entitlement milestones keeps escalation timing consistent with the same SLA framework used for reporting, and proactive notify/reassign actions catch issues before a breach. Why each wrong answer fails: A: A disconnected escalation risks diverging from reported SLA times. B: A parallel spreadsheet risks falling out of sync. * C: Priority alone lacks the time-based milestone logic entitlements provide.",
+      "requiredSelections": 3
+    },
+    {
+      "id": "88",
+      "question": "A complex case needs input from three departments without shuffling ownership. Which elements should the consultant configure? (Choose 3)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Reassigning the case owner repeatedly to whoever is currently working it"
+        },
+        {
+          "label": "B",
+          "text": "Creating three duplicate cases, one per department"
+        },
+        {
+          "label": "C",
+          "text": "Case Teams are not supported in Salesforce"
+        },
+        {
+          "label": "D",
+          "text": "A Case Team with defined roles for each contributing department"
+        },
+        {
+          "label": "E",
+          "text": "Team member access levels scoped to what each role needs on the case"
+        },
+        {
+          "label": "F",
+          "text": "Collaboration happening on the single case record so ownership stays unchanged"
+        }
+      ],
+      "correctIndices": [
+        3,
+        4,
+        5
+      ],
+      "explanation": "Case Teams let multiple agents collaborate on one record without shuffling the Owner field. Why each wrong answer fails: A: Repeated reassignment obscures true ownership history. B: Duplicating fragments the case history. * C: Case Teams are a fully supported native feature.",
+      "requiredSelections": 3
+    },
+    {
+      "id": "89",
+      "question": "A multi-part issue includes billing and technical problems needing different specialist teams. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Create entirely unrelated, unlinked cases"
+        },
+        {
+          "label": "B",
+          "text": "Split into parent and child cases so each team manages their portion while linked to the overall issue"
+        },
+        {
+          "label": "C",
+          "text": "Force both teams onto a single undifferentiated case"
+        },
+        {
+          "label": "D",
+          "text": "Refuse to log the technical issue since only one case can exist per customer"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Parent-child structure lets each team manage their sub-issue while preserving the relationship to the overall issue. Why each wrong answer fails: A: Unlinked cases lose the relationship to the overall issue. C: An undifferentiated case makes tracking each sub-issue difficult. * D: Salesforce has no one-case-per-customer restriction.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "90",
+      "question": "A client wants multiple contacts associated with a single case beyond the primary Contact lookup. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Listing additional contacts' names in the Description field only"
+        },
+        {
+          "label": "B",
+          "text": "Creating a separate case for every additional contact"
+        },
+        {
+          "label": "C",
+          "text": "The standard Contact lookup field already supports unlimited multiple contacts"
+        },
+        {
+          "label": "D",
+          "text": "A custom case-contact relationship (junction object) to represent multiple associated contacts"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Since the standard field is a single lookup, a junction object is the standard pattern for a many-to-many relationship. Why each wrong answer fails: A: Free-text names aren't queryable or reportable. B: Duplicate cases fragment case history unnecessarily. * C: The standard field is a single lookup, not a multi-contact field.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "91",
+      "question": "A client wants agents to document resolution type and root cause before closing a case. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Allow closure with all fields optional, cleaning up data later"
+        },
+        {
+          "label": "B",
+          "text": "A case close screen with required fields for resolution type and root cause before closure"
+        },
+        {
+          "label": "C",
+          "text": "Track resolution type and root cause in a separate spreadsheet outside Salesforce"
+        },
+        {
+          "label": "D",
+          "text": "Require these fields only at case creation, not at closure"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "A close screen with required fields enforces completeness at the point when the agent knows the resolution. Why each wrong answer fails: A: Optional fields with retroactive cleanup produce unreliable data. C: An external spreadsheet breaks the connection to the case record. * D: Requiring these fields at creation is premature.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "92",
+      "question": "Two agents create duplicate cases for the same issue via different channels. What should the consultant recommend once discovered? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Use the case merge feature to consolidate the duplicates, provided they're eligible and merge is the appropriate resolution"
+        },
+        {
+          "label": "B",
+          "text": "Always link duplicate cases rather than merge, in every scenario without exception"
+        },
+        {
+          "label": "C",
+          "text": "Delete one of the duplicate cases outright with no review"
+        },
+        {
+          "label": "D",
+          "text": "Leave both cases open indefinitely"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Case merge is the native feature for consolidating true duplicates, after confirming eligibility. Why each wrong answer fails: B: Linking is valid in some scenarios but not a blanket rule against merge when merge fits better. C: Deleting without review risks losing captured information. * D: Salesforce natively supports consolidating duplicates.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "93",
+      "question": "A client wants some case comments visible to customers on a portal, while other agent notes stay strictly internal. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Use public and private case comments appropriately, marking internal-only notes private"
+        },
+        {
+          "label": "B",
+          "text": "Store internal notes only in the case Description field, which is always visible externally"
+        },
+        {
+          "label": "C",
+          "text": "Disable case comments entirely"
+        },
+        {
+          "label": "D",
+          "text": "Make all case comments public by default"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Correctly distinguishing public/private comments ensures customer-visible notes are shared while internal notes stay private. Why each wrong answer fails: B: Description isn't access-controlled the way comments are. C: Disabling removes a useful communication channel. * D: Public-by-default risks exposing internal information.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "94",
+      "question": "A self-service site should show help content before offering a case form, to reduce case volume. What is the correct approach? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Make the case form the default landing experience with no Knowledge search"
+        },
+        {
+          "label": "B",
+          "text": "Configure search/navigation to surface Knowledge articles first, with the case form as a secondary fallback"
+        },
+        {
+          "label": "C",
+          "text": "Remove the case submission form entirely"
+        },
+        {
+          "label": "D",
+          "text": "Hide all Knowledge content so customers go straight to case creation"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Prioritizing Knowledge content gives customers a chance to self-resolve while keeping the form available as fallback. Why each wrong answer fails: A: Leading with the form encourages case creation over self-service. C: Removing the form blocks customers who can't self-resolve. * D: Hiding content removes the deflection mechanism.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "95",
+      "question": "A client wants to measure Agentforce's contribution to case deflection as a standalone KPI. What should the consultant recommend tracking? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Average handle time for human agents only, excluding AI-resolved interactions"
+        },
+        {
+          "label": "B",
+          "text": "The rate of interactions the AI agent resolves autonomously without escalating, relative to total inbound volume"
+        },
+        {
+          "label": "C",
+          "text": "The total number of Knowledge articles published, regardless of AI involvement"
+        },
+        {
+          "label": "D",
+          "text": "The number of Agentforce agents configured"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Deflection rate measures the proportion resolved autonomously, directly quantifying the AI agent's contribution. Why each wrong answer fails: A: Excluding AI-resolved interactions misses the data needed. C: Publish count doesn't measure actual resolution usage. * D: Agent count says nothing about deflection performance.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "96",
+      "question": "A client wants a 20% case volume reduction using Knowledge, Experience Cloud, and Agentforce together. What is the right design approach? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Rely solely on a portal with no Knowledge content and no AI agent"
+        },
+        {
+          "label": "B",
+          "text": "Implement only Agentforce and skip Knowledge and Experience Cloud investment"
+        },
+        {
+          "label": "C",
+          "text": "Layer well-maintained Knowledge content, a portal surfacing that content, and an AI agent resolving common requests, each reinforcing the others"
+        },
+        {
+          "label": "D",
+          "text": "Achieve the reduction only by making the case form harder to find"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Deflection strategies reinforce each other; good Knowledge content feeds both the portal and the AI agent's resolution ability. Why each wrong answer fails: A: A portal without Knowledge or AI offers little deflection value. B: An AI agent without good Knowledge content has limited resolution ability. * D: Hiding the form frustrates customers rather than solving the issue.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "97",
+      "question": "A client wants to prove ROI on their deflection investment to leadership. What should the consultant recommend tracking? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Only total cases created, with no baseline comparison"
+        },
+        {
+          "label": "B",
+          "text": "Deflection events tracked and reported against a baseline case volume period"
+        },
+        {
+          "label": "C",
+          "text": "A dashboard showing agent headcount with no connection to deflection"
+        },
+        {
+          "label": "D",
+          "text": "Deflection cannot be measured or reported in Salesforce"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Comparing deflection events against a baseline period shows leadership a clear before/after impact. Why each wrong answer fails: A: Total case count alone doesn't isolate the investment's effect. C: Headcount is unrelated to deflection impact. * D: Salesforce reporting can track deflection-related events.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "98",
+      "question": "What is the correct distinction between a Service Contract, Entitlement, and Entitlement Process? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "All three describe the exact same object"
+        },
+        {
+          "label": "B",
+          "text": "An Entitlement Process is a type of Service Contract unrelated to milestones"
+        },
+        {
+          "label": "C",
+          "text": "A Service Contract enforces SLA milestones directly with no need for Entitlements"
+        },
+        {
+          "label": "D",
+          "text": "A Service Contract represents the overall agreement, an Entitlement defines what support is granted, and an Entitlement Process enforces time-based milestones"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "Each object serves a distinct layer of the support-agreement model. Why each wrong answer fails: A: These are three distinct objects with different roles. B: Entitlement Processes are the milestone enforcement mechanism specifically. * C: Service Contracts don't directly enforce milestones; that's the Entitlement Process's role.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "99",
+      "question": "A client wants milestone timers to pause overnight and over weekends. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Business Hours linked to the relevant entitlement process/milestones"
+        },
+        {
+          "label": "B",
+          "text": "Set Priority to Low, which automatically pauses timers"
+        },
+        {
+          "label": "C",
+          "text": "A custom Apex trigger to manually pause every timer"
+        },
+        {
+          "label": "D",
+          "text": "Milestones cannot account for business hours"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Linking Business Hours makes milestone calculations respect the defined operating windows. Why each wrong answer fails: B: Priority has no automatic effect on timers. C: A custom trigger duplicates native functionality. * D: Milestones explicitly respect linked Business Hours.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "100",
+      "question": "A client has different SLA tiers for Standard and Premium contracts needing different timeframes. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "One case Priority value shared across both tiers with no separate milestone logic"
+        },
+        {
+          "label": "B",
+          "text": "A single entitlement process with the same timeline for every customer"
+        },
+        {
+          "label": "C",
+          "text": "Separate entitlement processes with distinct milestone timelines per tier"
+        },
+        {
+          "label": "D",
+          "text": "Manually tracked SLA deadlines outside Salesforce for premium customers only"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Separate processes let each tier's distinct timeframe be enforced and tracked independently. Why each wrong answer fails: A: Priority alone doesn't carry tier-specific timeline logic. B: A single shared timeline can't represent genuinely different SLAs. * D: Manual external tracking loses automated enforcement and reporting.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "101",
+      "question": "A client wants product-specific support history visible for equipment a customer owns. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Track product history only in free-text case comments"
+        },
+        {
+          "label": "B",
+          "text": "Assets are unrelated to cases and cannot be linked"
+        },
+        {
+          "label": "C",
+          "text": "Create a new case record type for every unique asset"
+        },
+        {
+          "label": "D",
+          "text": "Use the Asset object linked to the customer and case, showing the product's support history and related entitlement"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "The Asset object is designed to represent a customer's owned product and links to cases and entitlements. Why each wrong answer fails: A: Free-text comments aren't structured or reportable. B: Assets are natively relatable to cases. * C: Record types per asset conflates categorization with asset identity.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "102",
+      "question": "A client wants both automated time-based escalation and ad hoc manual escalation by agent judgment. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Rely only on manual escalation"
+        },
+        {
+          "label": "B",
+          "text": "Configure automated escalation rules or milestones plus a manual escalation action agents can invoke at their discretion"
+        },
+        {
+          "label": "C",
+          "text": "Disable escalation since both paths cannot coexist"
+        },
+        {
+          "label": "D",
+          "text": "Rely only on automated escalation rules"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Both mechanisms together cover the systematic SLA need and the judgment-based ad hoc need. Why each wrong answer fails: A: Manual-only removes systematic SLA enforcement. C: Both paths can coexist without conflict. * D: Automated-only removes agent judgment before the time threshold.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "103",
+      "question": "A client wants public case comments to mirror email communication style without agents drafting separate messages. What fits best? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Public case comments configured to mirror customer-facing email format, avoiding duplicate drafting"
+        },
+        {
+          "label": "B",
+          "text": "Manually copying every comment into a separate email client"
+        },
+        {
+          "label": "C",
+          "text": "Only private case comments, since public comments can't be customer-facing"
+        },
+        {
+          "label": "D",
+          "text": "A workflow rule unrelated to case comments"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Public comments aligned to portal/email format let one entry serve as the customer-facing message. Why each wrong answer fails: B: Manual duplication is exactly the redundant effort to avoid. C: Public comments are specifically the customer-facing mechanism. * D: An unrelated workflow rule doesn't address comment visibility/format.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "104",
+      "question": "A contact field update should automatically update related open cases. Which automation tool fits? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A macro agents must remember to run themselves"
+        },
+        {
+          "label": "B",
+          "text": "A Record-Triggered Flow on Contact updating related open Cases when the field changes"
+        },
+        {
+          "label": "C",
+          "text": "A Screen Flow that only runs when manually opened from a case"
+        },
+        {
+          "label": "D",
+          "text": "A Quick Text snippet inserted manually by agents"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "A Record-Triggered Flow fires automatically in the background, matching the automatic propagation need. Why each wrong answer fails: A: A manual macro reintroduces reliability risk. C: Manual launch doesn't provide the automatic background trigger needed. * D: Quick Text is a static insertion tool, not automation.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "105",
+      "question": "Internal stakeholders need email alerts for high-priority case creation, separate from customer-facing comments. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Use case comment notifications for both internal stakeholders and the customer"
+        },
+        {
+          "label": "B",
+          "text": "Send internal notifications through the same public comment mechanism used for customers"
+        },
+        {
+          "label": "C",
+          "text": "Rely on internal stakeholders manually checking a report"
+        },
+        {
+          "label": "D",
+          "text": "An email alert scoped to internal stakeholders, kept separate from the customer-facing comment channel"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "A dedicated internal alert keeps stakeholder notifications separate from the customer-facing channel. Why each wrong answer fails: A: Mixing channels risks internal-only information leaking externally. B: Using the public mechanism risks exposing internal content. C: Manual report checks remove the proactive notification requested. ## Contact Center Analytics**",
+      "requiredSelections": 1
+    },
+    {
+      "id": "106",
+      "question": "A manager wants a report combining Case, AgentWork, and Entitlement data in one view for SLA compliance alongside agent workload. What report type should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A summary report, since it can natively span three unrelated objects"
+        },
+        {
+          "label": "B",
+          "text": "A matrix report, since matrix reports cannot group by more than one dimension"
+        },
+        {
+          "label": "C",
+          "text": "A joined report, since it can combine multiple report types from otherwise unrelated objects into a single view"
+        },
+        {
+          "label": "D",
+          "text": "A dashboard component with no underlying report"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "A joined report is specifically designed to combine multiple unrelated report blocks into one unified view. Why each wrong answer fails: A: A summary report is built on one primary type and can't natively combine three unrelated objects. B: Matrix reports actually support grouping by two dimensions; that's their defining feature. * D: A dashboard component still requires an underlying report to source its data.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "107",
+      "question": "An executive wants a single high-level view of contact center health without digging into case details. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Direct access to the raw Case list view with every field exposed"
+        },
+        {
+          "label": "B",
+          "text": "A detailed matrix report broken out by individual agent for daily review"
+        },
+        {
+          "label": "C",
+          "text": "No reporting solution, relying on verbal updates only"
+        },
+        {
+          "label": "D",
+          "text": "A dashboard with summary-level components sourced from underlying reports"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "A dashboard with a few well-chosen summary components gives the high-level signal needed without case-level detail. Why each wrong answer fails: A: A raw list view exposes too much operational detail for this need. B: An agent-level matrix report is too granular for the executive use case. * C: Verbal-only updates lack consistency and data rigor.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "108",
+      "question": "A manager wants a dashboard showing open case volume, SLA compliance, and AHT broken out by queue. What should the consultant design? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A report with no grouping at all, listing every case in a flat list"
+        },
+        {
+          "label": "B",
+          "text": "A dashboard showing only the highest-volume queue"
+        },
+        {
+          "label": "C",
+          "text": "A dashboard sourced from reports grouped by Queue, with components for case count, SLA compliance, and AHT"
+        },
+        {
+          "label": "D",
+          "text": "A single pie chart showing total case count with no queue breakdown"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Grouping by Queue and combining these three components gives exactly the queue-level view requested. Why each wrong answer fails: A: A flat list doesn't organize data by queue. B: Omitting lower-volume queues hides needed data. * D: An ungrouped pie chart can't show the queue-level breakdown.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "109",
+      "question": "A client wants regional managers to see only their region's reports, excluding general agents. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Rely on record-level case sharing alone, since folder sharing doesn't exist"
+        },
+        {
+          "label": "B",
+          "text": "Share one folder individually with every user by name, with no groups"
+        },
+        {
+          "label": "C",
+          "text": "Folder-level sharing with public groups scoped to each region"
+        },
+        {
+          "label": "D",
+          "text": "Make all report folders public to every user"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Scoping folder sharing to regional public groups gives managers exactly their relevant reports while excluding agents. Why each wrong answer fails: A: Salesforce does support folder-level sharing independent of record sharing. B: Individual-by-name sharing is hard to maintain as teams change. * D: Public folders expose manager-level reports to agents.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "110",
+      "question": "A client wants each agent to see their own performance metrics from one shared dashboard, without seeing others' data. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A separate static dashboard manually cloned for every agent"
+        },
+        {
+          "label": "B",
+          "text": "A single static dashboard running as one fixed user, shown identically to everyone"
+        },
+        {
+          "label": "C",
+          "text": "Dashboards cannot filter data per viewer under any configuration"
+        },
+        {
+          "label": "D",
+          "text": "A dynamic dashboard configured to run as the viewing user"
+        }
+      ],
+      "correctIndices": [
+        3
+      ],
+      "explanation": "A dynamic dashboard set to run as the viewing user automatically scopes data to whoever is viewing it. Why each wrong answer fails: A: Manual cloning per agent creates heavy maintenance overhead. B: A fixed-user dashboard shows the same data to everyone. * C: Dynamic dashboards are specifically designed for per-viewer filtering. --- ---",
+      "requiredSelections": 1
+    },
+    {
+      "id": "111",
+      "question": "A client wants to report on agent availability, AHT, and routing efficiency using Omni-Channel-specific data. Which objects should the consultant use? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "AgentWork and UserServicePresence"
+        },
+        {
+          "label": "B",
+          "text": "The Knowledge Article object"
+        },
+        {
+          "label": "C",
+          "text": "The Entitlement object exclusively"
+        },
+        {
+          "label": "D",
+          "text": "Only the Case object, since it contains all Omni-Channel data natively"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "These objects specifically capture Omni-Channel routing assignments and agent presence data. Why each wrong answer fails: B: Knowledge Article data is unrelated to routing or presence. C: Entitlement tracks SLA data, not presence or routing efficiency. * D: Case doesn't natively carry presence or routing assignment data.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "112",
+      "question": "A client wants to report SLA compliance using entitlement milestones. What should the consultant confirm first? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "That milestone data is reportable, and that any custom report type needed to expose milestone fields has been created"
+        },
+        {
+          "label": "B",
+          "text": "That milestone data can only be viewed on the case record page, never in a report"
+        },
+        {
+          "label": "C",
+          "text": "That entitlements have no reportable data and this requirement cannot be met"
+        },
+        {
+          "label": "D",
+          "text": "That Knowledge article ratings are required to report on milestone compliance"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Milestone data is reportable, but a custom report type may be needed to expose the right fields and relationships. Why each wrong answer fails: B: Milestone data can be surfaced in reports, not just the case page. C: Entitlement/milestone data is reportable in Salesforce. * D: Article ratings are unrelated to milestone SLA reporting.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "113",
+      "question": "A client wants to correlate Knowledge article usage with case deflection outcomes in one report. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A report combining case data with article view/attach metrics via the relevant relationship or custom report type"
+        },
+        {
+          "label": "B",
+          "text": "A report on Knowledge articles alone with no connection to case data"
+        },
+        {
+          "label": "C",
+          "text": "Manual cross-referencing of two entirely separate exported spreadsheets"
+        },
+        {
+          "label": "D",
+          "text": "Ignoring article metrics since they cannot be tied to case outcomes"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Combining case data with usage metrics through the right relationship lets the client correlate usage with deflection. Why each wrong answer fails: B: An article-only report can't show the deflection correlation. C: Manual spreadsheet cross-referencing is error-prone. * D: Salesforce reporting can tie usage metrics into case-level analysis.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "114",
+      "question": "A client wants to track First Contact Resolution (FCR) rate by case type and agent. What is required? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A custom field or process capturing first-contact resolution status, populated consistently, then grouped by case type and agent"
+        },
+        {
+          "label": "B",
+          "text": "FCR cannot be reported on by agent, only in aggregate"
+        },
+        {
+          "label": "C",
+          "text": "No configuration required, since FCR is a standard auto-populated field"
+        },
+        {
+          "label": "D",
+          "text": "FCR can only be measured through NPS survey responses"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Since FCR isn't a standard auto-populated field, a custom field or process is needed to capture it consistently. Why each wrong answer fails: B: Reports can group and filter FCR by individual agent. C: FCR is not a standard auto-populated field. * D: FCR is a resolution metric, not derived from sentiment surveys.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "115",
+      "question": "A client wants to segment case volume by resolution type without new custom fields. What technique fits? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Bucketing existing field values directly within the report"
+        },
+        {
+          "label": "B",
+          "text": "Manually exporting all cases to a spreadsheet every time"
+        },
+        {
+          "label": "C",
+          "text": "Cross-filters, which cannot group or bucket field values at all"
+        },
+        {
+          "label": "D",
+          "text": "Creating five new custom picklist fields on the Case object"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "Bucketing groups existing field values within the report itself, avoiding a schema change. Why each wrong answer fails: B: Manual exports duplicate effort every cycle. C: Cross-filters include/exclude records by related criteria, not bucket values. * D: New custom fields are exactly what the client wants to avoid.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "116",
+      "question": "A client wants a report metric for days between case creation and closure, without a new formula field on the object. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A row-level formula field within the report, calculating the difference using CreatedDate and ClosedDate"
+        },
+        {
+          "label": "B",
+          "text": "A new custom formula field added permanently to the Case object"
+        },
+        {
+          "label": "C",
+          "text": "This metric cannot be calculated without modifying the Case object schema"
+        },
+        {
+          "label": "D",
+          "text": "Manually calculating the day count in a spreadsheet after export"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "A row-level report formula computes the metric from existing fields without any schema change. Why each wrong answer fails: B: A permanent object-level field is exactly the schema change to avoid. C: Row-level report formulas are designed for exactly this kind of derived metric. * D: Manual spreadsheet calculation duplicates effort every cycle.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "117",
+      "question": "A VP wants an automated weekly KPI summary delivered with no manual effort. What should the consultant configure? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A manual email sent by an analyst each week compiling data by hand"
+        },
+        {
+          "label": "B",
+          "text": "A one-time report run and sent only once"
+        },
+        {
+          "label": "C",
+          "text": "A report or dashboard subscription with a scheduled delivery cadence"
+        },
+        {
+          "label": "D",
+          "text": "Reports and dashboards cannot be scheduled for automated delivery"
+        }
+      ],
+      "correctIndices": [
+        2
+      ],
+      "explanation": "Subscriptions support scheduled automated delivery, eliminating manual weekly compilation. Why each wrong answer fails: A: Manual compilation is exactly what the automation avoids. B: A one-time send doesn't meet the recurring weekly need. * D: Scheduled subscription delivery is a native Salesforce capability.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "118",
+      "question": "A client needs predictive modeling and cross-channel data blending beyond standard reports. What should the consultant recommend? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "CRM Analytics (formerly Tableau CRM/Einstein Analytics) as a supplement to standard reporting"
+        },
+        {
+          "label": "B",
+          "text": "Standard Salesforce reports alone, since they support unlimited predictive modeling"
+        },
+        {
+          "label": "C",
+          "text": "Manually building predictive models in exported spreadsheet formulas"
+        },
+        {
+          "label": "D",
+          "text": "Deleting all existing case data and switching to an unrelated system"
+        }
+      ],
+      "correctIndices": [
+        0
+      ],
+      "explanation": "CRM Analytics is purpose-built for advanced analytics, blending, and predictive modeling beyond standard reports. Why each wrong answer fails: B: Standard reports don't support predictive modeling at this level. C: Manual spreadsheet modeling is far less scalable. * D: Discarding data is disproportionate when a supplementary tool exists.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "119",
+      "question": "A client asks why standard reports struggle with a rolling 13-month trend blending case, chat, and social data with predictive scoring. What should the consultant explain? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "This kind of analysis is impossible in any Salesforce-connected tool"
+        },
+        {
+          "label": "B",
+          "text": "Standard reports suit structured, moderate-complexity needs, but advanced blending and predictive scoring are better handled by a purpose-built analytics platform"
+        },
+        {
+          "label": "C",
+          "text": "The client should stop tracking chat and social data entirely to fit standard reporting"
+        },
+        {
+          "label": "D",
+          "text": "Standard Salesforce reports have no limitations for any analytics scenario"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Standard reports fit structured needs, while a supplementary analytics platform fits advanced blending and predictive scoring. Why each wrong answer fails: A: This analysis is achievable through the right supplementary tool. C: Abandoning valuable channel data sacrifices insight rather than solving the gap. D: Real limitations exist around predictive modeling and complex blending. ## Integrations**",
+      "requiredSelections": 1
+    },
+    {
+      "id": "120",
+      "question": "A company has account data in an external ERP, and agents need real-time balance information while working a case, without duplicating that data into Salesforce. What integration pattern fits? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Manually re-entering the account balance into a case comment before each call"
+        },
+        {
+          "label": "B",
+          "text": "Salesforce Connect using external objects, showing real-time ERP data in the console without storing a duplicate copy"
+        },
+        {
+          "label": "C",
+          "text": "A nightly batch export of the entire ERP database into custom Salesforce objects"
+        },
+        {
+          "label": "D",
+          "text": "Asking agents to log into the ERP system in a separate browser tab during every case"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Salesforce Connect surfaces real-time external data in the UI without duplication, meeting both requirements directly. Why each wrong answer fails: A: Manual re-entry is error-prone and doesn't scale. C: A nightly export produces stale data, contradicting the real-time requirement. * D: A separate tab breaks the in-console workflow.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "121",
+      "question": "A client's Salesforce org needs to trigger a shipment update in an external logistics platform the moment a case is marked Resolved, without polling. Which integration approach fits best? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "A scheduled Apex job that runs every 24 hours to check for resolved cases"
+        },
+        {
+          "label": "B",
+          "text": "A Platform Event published on case resolution, consumed by the external system via a subscribed listener"
+        },
+        {
+          "label": "C",
+          "text": "Manually exporting a CSV of resolved cases each week for the logistics team"
+        },
+        {
+          "label": "D",
+          "text": "Asking agents to email the logistics team when they resolve a case"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Platform Events provide near real-time, event-driven notification to external systems without polling delays. Why each wrong answer fails: A: A daily scheduled job introduces up to a 24-hour delay, not real-time. C: Weekly manual export is neither timely nor automated. * D: Manual email is error-prone and unscalable.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "122",
+      "question": "An integration user account authenticating into Salesforce from a middleware platform keeps hitting API request limits during peak hours. Which factors should the consultant investigate first? (Choose 2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Whether the middleware is making unnecessarily granular, high-frequency API calls instead of bulk operations"
+        },
+        {
+          "label": "B",
+          "text": "Whether the case page layout has too many fields"
+        },
+        {
+          "label": "C",
+          "text": "Whether the integration user's daily API request allocation is being consumed by inefficient call patterns"
+        },
+        {
+          "label": "D",
+          "text": "Whether agents are using Lightning Experience instead of Salesforce Classic"
+        },
+        {
+          "label": "E",
+          "text": "Whether Knowledge articles are set to Draft status"
+        }
+      ],
+      "correctIndices": [
+        0,
+        2
+      ],
+      "explanation": "API limits are governed by the org's daily allocation and consumption pattern; inefficient, non-bulk calls burn through that allocation faster. Why each wrong answer fails: B: Page layout field count has no bearing on API consumption. D: Experience choice for human agents doesn't affect a separate integration user's API usage. * E: Knowledge article status is unrelated to API limits.",
+      "requiredSelections": 2
+    },
+    {
+      "id": "123",
+      "question": "A client wants Agentforce to look up order status from an external commerce platform in real time during a chat conversation, without building a custom integration from scratch. Which approach best fits the requirement? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Have the agent manually search the commerce platform's admin site and paste the answer into chat"
+        },
+        {
+          "label": "B",
+          "text": "An Agentforce Action backed by a pre-built or flow-based integration that calls the commerce platform's API"
+        },
+        {
+          "label": "C",
+          "text": "Wait for the nightly sync job to bring the order data into Salesforce before answering"
+        },
+        {
+          "label": "D",
+          "text": "Ask the customer to check their own order status on the commerce site instead"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "An Agentforce Action calling out to the external API surfaces real-time data directly in the conversation without a custom build from scratch. Why each wrong answer fails: A: Manual lookup doesn't scale and isn't something Agentforce automates. C: A nightly sync introduces delay, defeating the real-time requirement. * D: Deflecting to the customer fails the service objective of resolving the request in-channel.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "124",
+      "question": "An integration between Salesforce and an external billing system uses Named Credentials for authentication. What is the primary benefit of this approach over hardcoding credentials in Apex? (Choose 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "It makes the callout run faster"
+        },
+        {
+          "label": "B",
+          "text": "It centralizes and secures endpoint and authentication details, so they aren't exposed or duplicated in code"
+        },
+        {
+          "label": "C",
+          "text": "It removes the need for any authentication at all"
+        },
+        {
+          "label": "D",
+          "text": "It allows the callout to bypass Apex governor limits"
+        }
+      ],
+      "correctIndices": [
+        1
+      ],
+      "explanation": "Named Credentials store endpoint and auth details securely in setup, separate from code, so credentials aren't hardcoded or exposed. Why each wrong answer fails: A: Named Credentials don't change callout performance. C: Authentication is still required; Named Credentials manage it, not eliminate it. * D: Governor limits apply regardless of how authentication is configured.",
+      "requiredSelections": 1
+    },
+    {
+      "id": "125",
+      "question": "A client's middleware pushes case updates into Salesforce via REST API, but intermittent network issues sometimes cause updates to be dropped silently. Which design changes should the consultant recommend? (Choose 2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "Ignore the issue since REST callouts are always guaranteed to succeed"
+        },
+        {
+          "label": "B",
+          "text": "Have the middleware retry failed calls with an idempotent request design so retries don't create duplicates"
+        },
+        {
+          "label": "C",
+          "text": "Switch entirely to manual data entry by agents to avoid using integrations"
+        },
+        {
+          "label": "D",
+          "text": "Implement logging and alerting on failed callouts so issues are caught quickly"
+        },
+        {
+          "label": "E",
+          "text": "Reduce the case page layout to fewer fields"
+        }
+      ],
+      "correctIndices": [
+        1,
+        3
+      ],
+      "explanation": "Idempotent retries prevent data loss without creating duplicates, and logging/alerting ensures failures are caught rather than silently lost. Why each wrong answer fails: A: REST callouts are not guaranteed; network issues can cause silent failures. C: Abandoning the integration sacrifices efficiency rather than solving the reliability gap. * E: Page layout field count has no bearing on middleware delivery reliability.",
+      "requiredSelections": 2
+    }
   ]
 }

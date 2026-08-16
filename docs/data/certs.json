@@ -330,12 +330,41 @@
       "#398056"
     ],
     "passingScore": 65,
-    "questionBank": null,
+    "questionBank": "agentforceservice",
     "studyBank": "agentforceservice",
     "storageKeyPrefix": "agentforceservice",
     "isBonusTopic": false,
     "subtitle": null,
-    "quizLengths": []
+    "quizLengths": [
+      {
+        "id": 15,
+        "label": "15 Questions",
+        "icon": "⚡",
+        "subtitle": "Quick Review",
+        "duration": "~8 min"
+      },
+      {
+        "id": 30,
+        "label": "30 Questions",
+        "icon": "🔥",
+        "subtitle": "Standard Practice",
+        "duration": "~15 min"
+      },
+      {
+        "id": 60,
+        "label": "60 Questions",
+        "icon": "🏆",
+        "subtitle": "Exam Simulation",
+        "duration": "~30 min"
+      },
+      {
+        "id": 125,
+        "label": "All 125 Questions",
+        "icon": "⭐",
+        "subtitle": "Full Question Bank",
+        "duration": "~63 min"
+      }
+    ]
   },
   {
     "id": "ba",
