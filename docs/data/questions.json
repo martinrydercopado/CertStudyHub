@@ -50391,20 +50391,20 @@
       "question": "A contact center director reports that average handle time (AHT) has crept up over the last quarter across the phone channel, even though headcount and case volume are unchanged. Which factor should the consultant investigate first as the most direct driver of AHT? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "The average agent skill mix and the proportion of cases requiring escalation due to knowledge gaps"
+          "text": "The average agent skill mix and the proportion of cases requiring escalation due to knowledge gaps",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "The number of Knowledge articles published in the last fiscal quarter"
+          "text": "The number of Knowledge articles published in the last fiscal quarter",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "The organization-wide default sharing setting configured on the Case object"
+          "text": "The organization-wide default sharing setting configured on the Case object",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "The ratio of asynchronous messaging cases to synchronous phone cases in the queue"
+          "text": "The ratio of asynchronous messaging cases to synchronous phone cases in the queue",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50418,20 +50418,20 @@
       "question": "Leadership wants to compare contact center performance using a single KPI that reflects overall likelihood customers will recommend the brand, rather than satisfaction with one specific interaction. Which metric should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "First Contact Resolution (FCR)"
+          "text": "First Contact Resolution (FCR)",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Net Promoter Score (NPS)"
+          "text": "Net Promoter Score (NPS)",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Customer Satisfaction (CSAT)"
+          "text": "Customer Satisfaction (CSAT)",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Average Handle Time (AHT)"
+          "text": "Average Handle Time (AHT)",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50445,28 +50445,28 @@
       "question": "A support manager wants to reduce the abandon rate in the phone queue, which has been climbing alongside rising queue wait times. Which combination of changes would most directly address the root cause? (Choose 3)",
       "options": [
         {
-          "label": "A",
-          "text": "Increase the case escalation rule threshold so fewer cases are flagged urgent"
+          "text": "Increase the case escalation rule threshold so fewer cases are flagged urgent",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Archive older Knowledge articles that are no longer accurate"
+          "text": "Archive older Knowledge articles that are no longer accurate",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Add agents to reduce wait time before an agent picks up"
+          "text": "Add agents to reduce wait time before an agent picks up",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Reduce the number of required fields on the case close screen"
+          "text": "Reduce the number of required fields on the case close screen",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Improve Omni-Channel routing efficiency so calls reach an available agent faster"
+          "text": "Improve Omni-Channel routing efficiency so calls reach an available agent faster",
+          "letter": "E"
         },
         {
-          "label": "F",
-          "text": "Configure a callback option so customers can leave the queue without abandoning the request entirely"
+          "text": "Configure a callback option so customers can leave the queue without abandoning the request entirely",
+          "letter": "F"
         }
       ],
       "correctIndices": [
@@ -50482,24 +50482,24 @@
       "question": "A client wants to lower cost-per-contact without hiring additional agents. Which combination of strategies should the consultant recommend? (Choose 2)",
       "options": [
         {
-          "label": "A",
-          "text": "Deploy a chatbot to deflect routine tier-1 questions before they reach a human agent"
+          "text": "Deploy a chatbot to deflect routine tier-1 questions before they reach a human agent",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Increase the number of required approval steps on the case escalation process"
+          "text": "Increase the number of required approval steps on the case escalation process",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Remove case queues and route all cases to a single shared inbox"
+          "text": "Remove case queues and route all cases to a single shared inbox",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Reduce the frequency of CSAT survey sends"
+          "text": "Reduce the frequency of CSAT survey sends",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Expand the self-service Knowledge portal so customers can resolve common issues without creating a case"
+          "text": "Expand the self-service Knowledge portal so customers can resolve common issues without creating a case",
+          "letter": "E"
         }
       ],
       "correctIndices": [
@@ -50514,20 +50514,20 @@
       "question": "A company migrating from three legacy regional support tools into a single Salesforce Service Cloud org is worried about disruption to daily operations. Which risk should the consultant flag as the most significant organizational risk of this consolidation? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Case objects cannot be shared across business units"
+          "text": "Case objects cannot be shared across business units",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Omni-Channel cannot route work items by skill"
+          "text": "Omni-Channel cannot route work items by skill",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Salesforce Knowledge does not support multiple data categories"
+          "text": "Salesforce Knowledge does not support multiple data categories",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Agents across regions may resist adopting a unified process that differs from their legacy workflows"
+          "text": "Agents across regions may resist adopting a unified process that differs from their legacy workflows",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50541,24 +50541,24 @@
       "question": "A client wants to quantify the business value of investing in a Knowledge Management overhaul before approving budget. Which approaches should the consultant recommend to build the business case? (Choose 2)",
       "options": [
         {
-          "label": "A",
-          "text": "Tie article usage and attach-to-case rates to reductions in AHT"
+          "text": "Tie article usage and attach-to-case rates to reductions in AHT",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Survey agents on how much they personally enjoy using the Knowledge sidebar"
+          "text": "Survey agents on how much they personally enjoy using the Knowledge sidebar",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Track only the number of articles published per month"
+          "text": "Track only the number of articles published per month",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Measure only the number of Knowledge Managers on staff"
+          "text": "Measure only the number of Knowledge Managers on staff",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Correlate article usage with FCR improvement over a baseline period"
+          "text": "Correlate article usage with FCR improvement over a baseline period",
+          "letter": "E"
         }
       ],
       "correctIndices": [
@@ -50573,20 +50573,20 @@
       "question": "A client wants to cut AHT by 30% within two quarters but insists CSAT cannot decline. Which trade-off should the consultant surface as the primary challenge in this engagement? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "AHT and CSAT are calculated from the same underlying case field, so one cannot change without the other"
+          "text": "AHT and CSAT are calculated from the same underlying case field, so one cannot change without the other",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Aggressive AHT reduction targets often push agents toward rushing calls, which can suppress CSAT unless deflection and knowledge improvements absorb the reduction instead"
+          "text": "Aggressive AHT reduction targets often push agents toward rushing calls, which can suppress CSAT unless deflection and knowledge improvements absorb the reduction instead",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Reducing AHT always improves CSAT proportionally"
+          "text": "Reducing AHT always improves CSAT proportionally",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "CSAT can only be measured through NPS surveys, so this constraint is not measurable"
+          "text": "CSAT can only be measured through NPS surveys, so this constraint is not measurable",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50600,20 +50600,20 @@
       "question": "A client insists on staffing live agents 24/7 across all time zones rather than exploring AI-assisted self-service for after-hours coverage. Which consideration should the consultant raise? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Omni-Channel presence statuses are limited to a maximum of two per user"
+          "text": "Omni-Channel presence statuses are limited to a maximum of two per user",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Case escalation rules cannot run outside standard business hours"
+          "text": "Case escalation rules cannot run outside standard business hours",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "24/7 live staffing carries significant ongoing labor cost and scheduling complexity that should be weighed against AI-assisted deflection for lower-complexity after-hours volume"
+          "text": "24/7 live staffing carries significant ongoing labor cost and scheduling complexity that should be weighed against AI-assisted deflection for lower-complexity after-hours volume",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Salesforce does not support configuring business hours outside a single time zone"
+          "text": "Salesforce does not support configuring business hours outside a single time zone",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50627,24 +50627,24 @@
       "question": "A client wants an AI agent to autonomously handle tier-1 billing disputes, including issuing refunds. Which risks are the most important for the consultant to evaluate before recommending this design? (Choose 2)",
       "options": [
         {
-          "label": "A",
-          "text": "Whether the AI agent can be branded with the company logo"
+          "text": "Whether the AI agent can be branded with the company logo",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Whether the AI agent supports more than one language"
+          "text": "Whether the AI agent supports more than one language",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Whether the case list view can be filtered by AI agent"
+          "text": "Whether the case list view can be filtered by AI agent",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Whether the AI agent's actions are scoped with appropriate permission and approval boundaries"
+          "text": "Whether the AI agent's actions are scoped with appropriate permission and approval boundaries",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Whether failed or ambiguous cases reliably escalate to a human"
+          "text": "Whether failed or ambiguous cases reliably escalate to a human",
+          "letter": "E"
         }
       ],
       "correctIndices": [
@@ -50659,20 +50659,20 @@
       "question": "A client's leadership is concerned that heavy investment in case-routing automation could unintentionally hurt CSAT if automation misroutes complex cases. What safeguard should the consultant recommend when designing automation-heavy case routing? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Build in confidence thresholds and fallback human review for cases automation cannot classify with high certainty"
+          "text": "Build in confidence thresholds and fallback human review for cases automation cannot classify with high certainty",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Disable case escalation rules to prevent automation from triggering them"
+          "text": "Disable case escalation rules to prevent automation from triggering them",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Rely solely on the case Subject field text for all routing decisions"
+          "text": "Rely solely on the case Subject field text for all routing decisions",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Remove all manual queues so automation is the only routing path"
+          "text": "Remove all manual queues so automation is the only routing path",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50686,20 +50686,20 @@
       "question": "A consultant is asked to explain why asynchronous channels like email and messaging behave differently from synchronous channels like phone and live chat in contact center reporting. What is the key operational distinction? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Asynchronous channels cannot be assigned to Omni-Channel queues"
+          "text": "Asynchronous channels cannot be assigned to Omni-Channel queues",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Asynchronous channels allow the customer and agent to respond on different timelines, so metrics like AHT must be measured differently than for real-time synchronous interactions"
+          "text": "Asynchronous channels allow the customer and agent to respond on different timelines, so metrics like AHT must be measured differently than for real-time synchronous interactions",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Synchronous channels do not generate Case records"
+          "text": "Synchronous channels do not generate Case records",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Asynchronous channels are not supported by Salesforce Service Cloud"
+          "text": "Asynchronous channels are not supported by Salesforce Service Cloud",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50713,24 +50713,24 @@
       "question": "A contact center manager notices FCR is low despite agents having access to a robust Knowledge base. Root-cause analysis should focus on which combination of factors? (Choose 2)",
       "options": [
         {
-          "label": "A",
-          "text": "Whether the case Priority field uses a custom picklist"
+          "text": "Whether the case Priority field uses a custom picklist",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Whether the org uses Lightning Experience instead of Salesforce Classic"
+          "text": "Whether the org uses Lightning Experience instead of Salesforce Classic",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Whether agents are empowered to resolve issues without unnecessary escalation approval"
+          "text": "Whether agents are empowered to resolve issues without unnecessary escalation approval",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Whether report folders are shared with the correct public groups"
+          "text": "Whether report folders are shared with the correct public groups",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Whether the escalation path is overused for issues agents could resolve directly"
+          "text": "Whether the escalation path is overused for issues agents could resolve directly",
+          "letter": "E"
         }
       ],
       "correctIndices": [
@@ -50745,20 +50745,20 @@
       "question": "A client incorrectly configured business hours for only one region despite operating support globally. What downstream reporting impact should the consultant expect? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Omni-Channel Skills-Based Routing will be disabled org-wide"
+          "text": "Omni-Channel Skills-Based Routing will be disabled org-wide",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Case record types will stop functioning"
+          "text": "Case record types will stop functioning",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "SLA and milestone time calculations will be inaccurate for cases and entitlements tied to regions outside the configured business hours"
+          "text": "SLA and milestone time calculations will be inaccurate for cases and entitlements tied to regions outside the configured business hours",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Knowledge articles will become unpublishable"
+          "text": "Knowledge articles will become unpublishable",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50772,20 +50772,20 @@
       "question": "A client wants to understand what drives escalation rates so they can design a solution to reduce unnecessary escalations. Which factors should the consultant identify as primary drivers? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "The number of Knowledge article record types configured"
+          "text": "The number of Knowledge article record types configured",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Whether the org has enabled Enhanced Omni-Channel"
+          "text": "Whether the org has enabled Enhanced Omni-Channel",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "The number of custom fields on the Case page layout"
+          "text": "The number of custom fields on the Case page layout",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Routing configuration quality, agent training gaps, and availability of accurate self-service content"
+          "text": "Routing configuration quality, agent training gaps, and availability of accurate self-service content",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50799,20 +50799,20 @@
       "question": "A consultant is leading a discovery workshop for a Service Cloud implementation and wants to ensure all use cases are captured before design begins. What should the workshop prioritize? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Documenting every stakeholder's current-state process, pain points, and desired outcomes across all channels before any solution design starts"
+          "text": "Documenting every stakeholder's current-state process, pain points, and desired outcomes across all channels before any solution design starts",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Limiting discovery to only the loudest stakeholder in the room"
+          "text": "Limiting discovery to only the loudest stakeholder in the room",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Skipping stakeholder interviews and relying only on the sales team's assumptions"
+          "text": "Skipping stakeholder interviews and relying only on the sales team's assumptions",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Jumping straight into configuring page layouts during the first workshop session"
+          "text": "Jumping straight into configuring page layouts during the first workshop session",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50826,20 +50826,20 @@
       "question": "A project sponsor wants to know when discovery ends and design begins. How should the consultant characterize the distinction? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Discovery and design are the same activity performed simultaneously with no distinction"
+          "text": "Discovery and design are the same activity performed simultaneously with no distinction",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Discovery focuses on gathering and validating requirements and current-state pain points, while design translates those validated requirements into a specific solution architecture"
+          "text": "Discovery focuses on gathering and validating requirements and current-state pain points, while design translates those validated requirements into a specific solution architecture",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Discovery is only relevant for technical teams, not business stakeholders"
+          "text": "Discovery is only relevant for technical teams, not business stakeholders",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Design always happens before discovery to save time"
+          "text": "Design always happens before discovery to save time",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50853,24 +50853,24 @@
       "question": "Executive sponsorship is at risk of disengaging midway through a lengthy Service Cloud implementation. Which actions should the consultant take to keep the sponsor engaged? (Choose 2)",
       "options": [
         {
-          "label": "A",
-          "text": "Replace executive checkpoints entirely with agent-level status meetings"
+          "text": "Replace executive checkpoints entirely with agent-level status meetings",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Only involve the sponsor at the final go-live celebration"
+          "text": "Only involve the sponsor at the final go-live celebration",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Schedule regular executive checkpoints tied to business outcomes and milestones, not just technical status"
+          "text": "Schedule regular executive checkpoints tied to business outcomes and milestones, not just technical status",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Stop sending any updates until the project is fully complete"
+          "text": "Stop sending any updates until the project is fully complete",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Proactively flag emerging risks to the sponsor before they become critical, framed in business terms"
+          "text": "Proactively flag emerging risks to the sponsor before they become critical, framed in business terms",
+          "letter": "E"
         }
       ],
       "correctIndices": [
@@ -50885,20 +50885,20 @@
       "question": "A client's project plan lacks a defined User Acceptance Testing (UAT) phase before go-live. What risk should the consultant flag? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "UAT should only be performed by the development team, never business users"
+          "text": "UAT should only be performed by the development team, never business users",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "UAT is optional and has no bearing on go-live risk"
+          "text": "UAT is optional and has no bearing on go-live risk",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "UAT can be skipped entirely if the sandbox testing passed"
+          "text": "UAT can be skipped entirely if the sandbox testing passed",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Without UAT, defects and usability issues may surface for the first time in production, increasing go-live risk and potential customer impact"
+          "text": "Without UAT, defects and usability issues may surface for the first time in production, increasing go-live risk and potential customer impact",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50912,20 +50912,20 @@
       "question": "A client is nearing go-live and asks the consultant to define scope creep and how to manage it. What should the consultant explain? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Scope creep is uncontrolled expansion of project requirements beyond what was originally agreed, and it should be managed through a formal change request and impact assessment process"
+          "text": "Scope creep is uncontrolled expansion of project requirements beyond what was originally agreed, and it should be managed through a formal change request and impact assessment process",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Scope creep cannot occur if the project has a signed statement of work"
+          "text": "Scope creep cannot occur if the project has a signed statement of work",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Scope creep only refers to changes requested after go-live, never before"
+          "text": "Scope creep only refers to changes requested after go-live, never before",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Scope creep should always be accepted without any impact assessment to keep the client happy"
+          "text": "Scope creep should always be accepted without any impact assessment to keep the client happy",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50939,20 +50939,20 @@
       "question": "A key stakeholder disagrees with the proposed Service Cloud solution design partway through the engagement. What should the consultant do? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Ignore the stakeholder's concern and proceed exactly as originally planned"
+          "text": "Ignore the stakeholder's concern and proceed exactly as originally planned",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Facilitate a structured conversation to understand the concern, evaluate trade-offs, and escalate to the project sponsor if consensus can't be reached"
+          "text": "Facilitate a structured conversation to understand the concern, evaluate trade-offs, and escalate to the project sponsor if consensus can't be reached",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Immediately redesign the entire solution based on one stakeholder's preference with no evaluation"
+          "text": "Immediately redesign the entire solution based on one stakeholder's preference with no evaluation",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Remove the disagreeing stakeholder from all future project meetings"
+          "text": "Remove the disagreeing stakeholder from all future project meetings",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50966,20 +50966,20 @@
       "question": "A client asks what a post-go-live steady-state handoff plan should include. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "No handoff plan is needed since the project team stays engaged indefinitely"
+          "text": "No handoff plan is needed since the project team stays engaged indefinitely",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A handoff plan should only cover technical configuration, excluding support processes"
+          "text": "A handoff plan should only cover technical configuration, excluding support processes",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Clear documentation of ongoing support processes, a defined escalation path, and a transition of operational ownership to the client's admin team"
+          "text": "Clear documentation of ongoing support processes, a defined escalation path, and a transition of operational ownership to the client's admin team",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "The handoff plan should be created only after issues arise post-go-live"
+          "text": "The handoff plan should be created only after issues arise post-go-live",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -50993,28 +50993,28 @@
       "question": "A client's admin team will take over support responsibility from the project team after go-live. Which elements should the consultant ensure are in place before that transition? (Choose 3)",
       "options": [
         {
-          "label": "A",
-          "text": "The project team should retain all support responsibility permanently"
+          "text": "The project team should retain all support responsibility permanently",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "No transition activities are necessary since admins can figure it out themselves"
+          "text": "No transition activities are necessary since admins can figure it out themselves",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Documentation should be created only if the client specifically pays extra for it"
+          "text": "Documentation should be created only if the client specifically pays extra for it",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Knowledge transfer sessions covering configuration decisions"
+          "text": "Knowledge transfer sessions covering configuration decisions",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Documentation of common issues and their resolutions"
+          "text": "Documentation of common issues and their resolutions",
+          "letter": "E"
         },
         {
-          "label": "F",
-          "text": "A clearly defined escalation path for issues the admin team cannot resolve"
+          "text": "A clearly defined escalation path for issues the admin team cannot resolve",
+          "letter": "F"
         }
       ],
       "correctIndices": [
@@ -51030,20 +51030,20 @@
       "question": "A client with 500 agents across three regions with different business processes is planning a Service Cloud rollout. What deployment strategy should the consultant recommend evaluating? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A single big-bang deployment to all 500 agents simultaneously regardless of regional process differences"
+          "text": "A single big-bang deployment to all 500 agents simultaneously regardless of regional process differences",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A phased rollout by region, allowing each region's distinct processes to be validated and adjusted before expanding further"
+          "text": "A phased rollout by region, allowing each region's distinct processes to be validated and adjusted before expanding further",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Deploying to a random subset of agents with no regard for region or process"
+          "text": "Deploying to a random subset of agents with no regard for region or process",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Skipping deployment planning entirely since Salesforce configuration is universal"
+          "text": "Skipping deployment planning entirely since Salesforce configuration is universal",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51057,20 +51057,20 @@
       "question": "A client is deciding whether to use a pilot group before a full rollout. What should determine this decision? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Pilots are only appropriate for organizations with fewer than ten total users"
+          "text": "Pilots are only appropriate for organizations with fewer than ten total users",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "The decision should be made without considering data migration readiness at all"
+          "text": "The decision should be made without considering data migration readiness at all",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Pilots should never be used regardless of risk tolerance"
+          "text": "Pilots should never be used regardless of risk tolerance",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "The client's risk tolerance and how ready the data migration and processes are — a pilot is preferred when confidence in readiness is lower"
+          "text": "The client's risk tolerance and how ready the data migration and processes are — a pilot is preferred when confidence in readiness is lower",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51084,20 +51084,20 @@
       "question": "A client has agents in highly diverse roles (phone, chat, back-office) and a tight go-live timeline. What training strategy should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "No training at all, since agents will learn on the job after go-live"
+          "text": "No training at all, since agents will learn on the job after go-live",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Only self-paced training with no role-specific content"
+          "text": "Only self-paced training with no role-specific content",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A blended approach — role-based training modules delivered efficiently, potentially supplemented by train-the-trainer for scale, given the tight timeline and role diversity"
+          "text": "A blended approach — role-based training modules delivered efficiently, potentially supplemented by train-the-trainer for scale, given the tight timeline and role diversity",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "One single generic training session covering all roles identically"
+          "text": "One single generic training session covering all roles identically",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51111,20 +51111,20 @@
       "question": "A client migrating from a legacy case management system wants minimal disruption during cutover. What should the consultant plan for? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Migrating data with agents actively creating new cases in the legacy system throughout the cutover with no freeze at all"
+          "text": "Migrating data with agents actively creating new cases in the legacy system throughout the cutover with no freeze at all",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "An indefinite freeze with no planned cutover date"
+          "text": "An indefinite freeze with no planned cutover date",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A defined data freeze window and cutover sequence, minimizing the time agents are unable to create or update cases in either system"
+          "text": "A defined data freeze window and cutover sequence, minimizing the time agents are unable to create or update cases in either system",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Skipping data migration planning since case history isn't important"
+          "text": "Skipping data migration planning since case history isn't important",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51138,20 +51138,20 @@
       "question": "A client wants to minimize risk during the weeks immediately following go-live. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Immediately reducing support staffing right after go-live to cut costs"
+          "text": "Immediately reducing support staffing right after go-live to cut costs",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "No special support plan, since go-live issues are rare"
+          "text": "No special support plan, since go-live issues are rare",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Waiting a full month before addressing any post-go-live issues"
+          "text": "Waiting a full month before addressing any post-go-live issues",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A hypercare plan with heightened support staffing, rapid issue triage, and daily check-ins for a defined post-go-live period"
+          "text": "A hypercare plan with heightened support staffing, rapid issue triage, and daily check-ins for a defined post-go-live period",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51165,28 +51165,28 @@
       "question": "A client's data migration plan reveals significant duplicate contact and case records in the legacy system. Which steps should the consultant recommend before migration? (Choose 3)",
       "options": [
         {
-          "label": "A",
-          "text": "Migrate all duplicate records as-is and clean them up sometime after go-live"
+          "text": "Migrate all duplicate records as-is and clean them up sometime after go-live",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A data cleansing pass on the legacy data before migrating it into Salesforce"
+          "text": "A data cleansing pass on the legacy data before migrating it into Salesforce",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Skip migration of contact and case data entirely to avoid the duplicate issue"
+          "text": "Skip migration of contact and case data entirely to avoid the duplicate issue",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Assume Salesforce will automatically detect and merge all duplicates with no upfront cleansing needed"
+          "text": "Assume Salesforce will automatically detect and merge all duplicates with no upfront cleansing needed",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "A deduplication pass using matching rules to identify likely duplicate contacts and cases"
+          "text": "A deduplication pass using matching rules to identify likely duplicate contacts and cases",
+          "letter": "E"
         },
         {
-          "label": "F",
-          "text": "Validating record counts and spot-checking a sample after cleansing but before the full migration load"
+          "text": "Validating record counts and spot-checking a sample after cleansing but before the full migration load",
+          "letter": "F"
         }
       ],
       "correctIndices": [
@@ -51202,20 +51202,20 @@
       "question": "A high-volume phone support team needs agents to work multiple cases at once without losing context between calls. Which Service Console capability should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A custom Visualforce page replacing the console entirely"
+          "text": "A custom Visualforce page replacing the console entirely",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A standard Lightning App with a single case tab open at a time"
+          "text": "A standard Lightning App with a single case tab open at a time",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "The Lightning Service Console with split view and the utility bar configured for quick access to macros and multi-tab case navigation"
+          "text": "The Lightning Service Console with split view and the utility bar configured for quick access to macros and multi-tab case navigation",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Salesforce Classic with multiple browser windows open"
+          "text": "Salesforce Classic with multiple browser windows open",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51229,24 +51229,24 @@
       "question": "A client wants agents to see only fields relevant to the case's current status and record type, without page clutter. Which combination should the consultant recommend? (Choose 2)",
       "options": [
         {
-          "label": "A",
-          "text": "Removing all related lists from the case page entirely"
+          "text": "Removing all related lists from the case page entirely",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A single static page layout shared across every case record type"
+          "text": "A single static page layout shared across every case record type",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Dynamic Related Lists to surface only contextually relevant related records"
+          "text": "Dynamic Related Lists to surface only contextually relevant related records",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Disabling the Lightning App Builder"
+          "text": "Disabling the Lightning App Builder",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Dynamic Forms to show or hide fields based on record type and status"
+          "text": "Dynamic Forms to show or hide fields based on record type and status",
+          "letter": "E"
         }
       ],
       "correctIndices": [
@@ -51261,20 +51261,20 @@
       "question": "A support organization wants one console layout used by every agent tier rather than several role-specific layouts. What trade-off should the consultant highlight? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A universal layout eliminates the need for any permission sets"
+          "text": "A universal layout eliminates the need for any permission sets",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A universal layout automatically satisfies every reporting requirement"
+          "text": "A universal layout automatically satisfies every reporting requirement",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A universal layout is always faster to load than role-specific layouts"
+          "text": "A universal layout is always faster to load than role-specific layouts",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A universal layout reduces maintenance overhead but may show irrelevant fields or components to agents whose roles don't need them"
+          "text": "A universal layout reduces maintenance overhead but may show irrelevant fields or components to agents whose roles don't need them",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51288,20 +51288,20 @@
       "question": "A client needs a 360-degree customer view including case history and external billing data while working a case. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Recommend against showing external data due to platform limitations"
+          "text": "Recommend against showing external data due to platform limitations",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Ask agents to manually check a separate browser tab for billing data"
+          "text": "Ask agents to manually check a separate browser tab for billing data",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Export case data nightly into a spreadsheet"
+          "text": "Export case data nightly into a spreadsheet",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Configure Related Lists and activity timeline for native data, and integrate external billing data using Salesforce Connect or an Apex callout"
+          "text": "Configure Related Lists and activity timeline for native data, and integrate external billing data using Salesforce Connect or an Apex callout",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51315,20 +51315,20 @@
       "question": "A technical support team wants their case feed to surface actionable updates while suppressing routine system-generated field changes. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Remove the case feed entirely and rely only on Related Lists"
+          "text": "Remove the case feed entirely and rely only on Related Lists",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Case feed filters and feed layout configured to highlight targeted feed item types"
+          "text": "Case feed filters and feed layout configured to highlight targeted feed item types",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Create a manual report agents check instead of using the feed"
+          "text": "Create a manual report agents check instead of using the feed",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Disable all feed tracking on the Case object"
+          "text": "Disable all feed tracking on the Case object",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51342,20 +51342,20 @@
       "question": "A client asks the consultant to distinguish Quick Text, macros, and email templates. Which statement is accurate? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Email templates can execute multi-step automation like macros"
+          "text": "Email templates can execute multi-step automation like macros",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Macros can only be triggered from Flow, never run manually"
+          "text": "Macros can only be triggered from Flow, never run manually",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Quick Text, macros, and email templates are functionally identical"
+          "text": "Quick Text, macros, and email templates are functionally identical",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Quick Text inserts reusable text snippets, macros automate multi-step actions across the UI, and email templates provide structured outbound messages"
+          "text": "Quick Text inserts reusable text snippets, macros automate multi-step actions across the UI, and email templates provide structured outbound messages",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51369,20 +51369,20 @@
       "question": "Field agents need case details and Knowledge articles from mobile devices with limited connectivity. What must the consultant account for? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Offline access requires a separate additional license"
+          "text": "Offline access requires a separate additional license",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Mobile users cannot access Knowledge articles under any circumstance"
+          "text": "Mobile users cannot access Knowledge articles under any circumstance",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "The Mobile App has full parity with the desktop Console with zero limitations"
+          "text": "The Mobile App has full parity with the desktop Console with zero limitations",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "The Salesforce Mobile App supports offline briefcase caching, but some desktop console features and complex custom components may have reduced mobile support"
+          "text": "The Salesforce Mobile App supports offline briefcase caching, but some desktop console features and complex custom components may have reduced mobile support",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51396,20 +51396,20 @@
       "question": "A company wants Email-to-Case and Web-to-Case to deliver consistent customer treatment regardless of channel. What should the consultant ensure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Web-to-Case cannot trigger auto-response rules"
+          "text": "Web-to-Case cannot trigger auto-response rules",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Email-to-Case and Web-to-Case must always use entirely separate assignment rules"
+          "text": "Email-to-Case and Web-to-Case must always use entirely separate assignment rules",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Both channels route through the same underlying assignment rule and auto-response logic so customers get consistent treatment regardless of origin"
+          "text": "Both channels route through the same underlying assignment rule and auto-response logic so customers get consistent treatment regardless of origin",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Email-to-Case cases cannot be routed through Omni-Channel"
+          "text": "Email-to-Case cases cannot be routed through Omni-Channel",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51423,20 +51423,20 @@
       "question": "A client wants a self-service portal that reduces case volume while letting customers who can't self-resolve easily reach a human. What should the design prioritize? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Hiding all Knowledge articles so customers go straight to case creation"
+          "text": "Hiding all Knowledge articles so customers go straight to case creation",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Removing the case creation form entirely"
+          "text": "Removing the case creation form entirely",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Making the case form the first thing customers see"
+          "text": "Making the case form the first thing customers see",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Surfacing relevant Knowledge articles before the case submission form, while keeping an easy escalation path"
+          "text": "Surfacing relevant Knowledge articles before the case submission form, while keeping an easy escalation path",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51450,20 +51450,20 @@
       "question": "A customer starts in a chatbot but the request is too complex; the client wants a live-agent handoff without repeating information. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Route escalations to a generic queue with no context attached"
+          "text": "Route escalations to a generic queue with no context attached",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Configure the bot-to-agent handoff to pass conversation context and collected data to the receiving agent, noting this depends on proper handoff configuration"
+          "text": "Configure the bot-to-agent handoff to pass conversation context and collected data to the receiving agent, noting this depends on proper handoff configuration",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Require the customer to restate their issue to the live agent"
+          "text": "Require the customer to restate their issue to the live agent",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "End the chat with no handoff option, forcing a new case"
+          "text": "End the chat with no handoff option, forcing a new case",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51477,20 +51477,20 @@
       "question": "A client wants automated case status notifications without notification fatigue. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Send duplicate notifications through every channel for every update"
+          "text": "Send duplicate notifications through every channel for every update",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Send a notification for every field change, including internal-only fields"
+          "text": "Send a notification for every field change, including internal-only fields",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Disable all customer notifications entirely"
+          "text": "Disable all customer notifications entirely",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Configure notifications only for meaningful status transitions rather than every field update"
+          "text": "Configure notifications only for meaningful status transitions rather than every field update",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51504,20 +51504,20 @@
       "question": "A client wants an automated post-case CSAT survey. What must the consultant configure to trigger the send? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A dashboard component displaying closure counts"
+          "text": "A dashboard component displaying closure counts",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A manual process where agents individually email each customer"
+          "text": "A manual process where agents individually email each customer",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "An automation (such as a Flow) triggered on case closure that sends the survey through the appropriate channel"
+          "text": "An automation (such as a Flow) triggered on case closure that sends the survey through the appropriate channel",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A monthly report summarizing closed cases with no survey sent"
+          "text": "A monthly report summarizing closed cases with no survey sent",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51531,20 +51531,20 @@
       "question": "A client is deciding between a fully branded Experience Cloud portal and a third-party site integrated via API. What trade-off should the consultant present? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Experience Cloud cannot display Knowledge articles to external users"
+          "text": "Experience Cloud cannot display Knowledge articles to external users",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Experience Cloud offers tighter native integration with Salesforce data and automation, while a third-party site may offer specific UX features but adds integration complexity and sync maintenance"
+          "text": "Experience Cloud offers tighter native integration with Salesforce data and automation, while a third-party site may offer specific UX features but adds integration complexity and sync maintenance",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "There is no meaningful difference between the two approaches"
+          "text": "There is no meaningful difference between the two approaches",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A third-party website always requires zero integration effort"
+          "text": "A third-party website always requires zero integration effort",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51558,20 +51558,20 @@
       "question": "A company wants separate structures for internal procedures and external FAQs. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Separate Knowledge article record types for internal procedures and external FAQs, each with its own layout and visibility rules"
+          "text": "Separate Knowledge article record types for internal procedures and external FAQs, each with its own layout and visibility rules",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Store internal procedures outside Salesforce Knowledge entirely"
+          "text": "Store internal procedures outside Salesforce Knowledge entirely",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Merge both content types into one record type with no differentiation"
+          "text": "Merge both content types into one record type with no differentiation",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A single record type with internal/external tracked in the title"
+          "text": "A single record type with internal/external tracked in the title",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51585,20 +51585,20 @@
       "question": "A global client wants articles filtered by topic and business unit for search relevance and visibility. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Removing all categorization since search works independently of categories"
+          "text": "Removing all categorization since search works independently of categories",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Role hierarchy alone, with no data categories"
+          "text": "Role hierarchy alone, with no data categories",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A single flat list of categories with no hierarchy"
+          "text": "A single flat list of categories with no hierarchy",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A data category hierarchy structured by topic and business unit, applied to articles and referenced in visibility and search configuration"
+          "text": "A data category hierarchy structured by topic and business unit, applied to articles and referenced in visibility and search configuration",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51612,20 +51612,20 @@
       "question": "A client wants no article to go live without expert review. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A permission set giving every user Publisher rights"
+          "text": "A permission set giving every user Publisher rights",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A report showing article view counts as the review mechanism"
+          "text": "A report showing article view counts as the review mechanism",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "An approval process requiring designated reviewer sign-off before publishing"
+          "text": "An approval process requiring designated reviewer sign-off before publishing",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A validation rule blocking all edits to any article"
+          "text": "A validation rule blocking all edits to any article",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51639,20 +51639,20 @@
       "question": "A client wants stale articles automatically flagged based on negative feedback ratings. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Delete every article that receives even a single negative rating"
+          "text": "Delete every article that receives even a single negative rating",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Manually review every article every day regardless of ratings"
+          "text": "Manually review every article every day regardless of ratings",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Ignore article ratings since they don't reflect content quality"
+          "text": "Ignore article ratings since they don't reflect content quality",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Use feedback and ratings data with an automation (e.g., Flow) to trigger a review task when ratings fall below a threshold"
+          "text": "Use feedback and ratings data with an automation (e.g., Flow) to trigger a review task when ratings fall below a threshold",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51666,20 +51666,20 @@
       "question": "What happens to a case referencing a Knowledge article when that article is archived and replaced? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "The case's article link auto-updates to the newer version with no verification needed"
+          "text": "The case's article link auto-updates to the newer version with no verification needed",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Archiving an article prevents the case from ever being closed"
+          "text": "Archiving an article prevents the case from ever being closed",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "The historical link on the case typically persists, but agents should verify whether the archived content is still accurate for ongoing use"
+          "text": "The historical link on the case typically persists, but agents should verify whether the archived content is still accurate for ongoing use",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "The case is automatically deleted"
+          "text": "The case is automatically deleted",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51693,20 +51693,20 @@
       "question": "A client wants to bulk-import hundreds of legacy articles into Salesforce Knowledge. What should the consultant flag? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "CSV import guarantees perfect formatting fidelity for all rich text"
+          "text": "CSV import guarantees perfect formatting fidelity for all rich text",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Salesforce Knowledge has no supported import mechanism"
+          "text": "Salesforce Knowledge has no supported import mechanism",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "The Knowledge Article CSV import process can bring in content and metadata, but has limitations (formatting fidelity, attachments) that should be validated with a test batch"
+          "text": "The Knowledge Article CSV import process can bring in content and metadata, but has limitations (formatting fidelity, attachments) that should be validated with a test batch",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Only ten articles can ever be imported at a time"
+          "text": "Only ten articles can ever be imported at a time",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51720,20 +51720,20 @@
       "question": "Agents need to search and attach Knowledge articles without leaving the case record. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Require agents to open a separate tab and copy article links manually"
+          "text": "Require agents to open a separate tab and copy article links manually",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Disable Knowledge entirely and rely on agent memory"
+          "text": "Disable Knowledge entirely and rely on agent memory",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Add the Lightning Knowledge component to the case page layout, enabling search and one-click attachment"
+          "text": "Add the Lightning Knowledge component to the case page layout, enabling search and one-click attachment",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Configure Knowledge only for the Experience Cloud portal, not the console"
+          "text": "Configure Knowledge only for the Experience Cloud portal, not the console",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51747,20 +51747,20 @@
       "question": "A company wants some articles visible to all customers and others only to a premium tier. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Data category visibility settings mapped to the profiles or permission sets representing each customer segment"
+          "text": "Data category visibility settings mapped to the profiles or permission sets representing each customer segment",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A single publicly visible category with no segmentation"
+          "text": "A single publicly visible category with no segmentation",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Manually emailing premium-tier articles instead of publishing them"
+          "text": "Manually emailing premium-tier articles instead of publishing them",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Object-level security on the Knowledge object alone, with no data categories"
+          "text": "Object-level security on the Knowledge object alone, with no data categories",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51774,20 +51774,20 @@
       "question": "A client wants AI-suggested articles surfaced automatically during a live chat. What must be configured? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A permission set giving broad Publisher rights to all agents"
+          "text": "A permission set giving broad Publisher rights to all agents",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "An approval process routing draft articles to a designated technical reviewer before publish"
+          "text": "An approval process routing draft articles to a designated technical reviewer before publish",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A validation rule that blocks any edits to existing articles"
+          "text": "A validation rule that blocks any edits to existing articles",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A dashboard showing article view counts with no review gate"
+          "text": "A dashboard showing article view counts with no review gate",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51801,24 +51801,24 @@
       "question": "Leadership wants to demonstrate Knowledge ROI using measurable usage data. Which metrics should the consultant recommend? (Choose 2)",
       "options": [
         {
-          "label": "A",
-          "text": "The number of Knowledge Managers on staff"
+          "text": "The number of Knowledge Managers on staff",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "The color scheme used in the article template"
+          "text": "The color scheme used in the article template",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Article view counts and case-attach rates"
+          "text": "Article view counts and case-attach rates",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "The total number of case record types in the org"
+          "text": "The total number of case record types in the org",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Thumbs up/down feedback ratings"
+          "text": "Thumbs up/down feedback ratings",
+          "letter": "E"
         }
       ],
       "correctIndices": [
@@ -51833,20 +51833,20 @@
       "question": "A company wants internal-only articles never visible on their external portal, while internal agents can still find them. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Remove Knowledge entirely from the Experience Cloud site"
+          "text": "Remove Knowledge entirely from the Experience Cloud site",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Restrict the internal article's data category visibility to exclude the guest/customer profile used by the portal, while internal agent profiles retain access"
+          "text": "Restrict the internal article's data category visibility to exclude the guest/customer profile used by the portal, while internal agent profiles retain access",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Publish all articles identically with no differentiation"
+          "text": "Publish all articles identically with no differentiation",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Rely on customers not knowing the article exists"
+          "text": "Rely on customers not knowing the article exists",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51860,20 +51860,20 @@
       "question": "A client receives requests via email at moderate volume and wants automated case creation with routing based on subject-line keywords. Which intake option fits? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Standard Email-to-Case configured with assignment rules keyed on subject or body content"
+          "text": "Standard Email-to-Case configured with assignment rules keyed on subject or body content",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "On-Demand Email-to-Case with no routing configuration since routing isn't supported"
+          "text": "On-Demand Email-to-Case with no routing configuration since routing isn't supported",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Web-to-Case, since email intake requires a public-facing form"
+          "text": "Web-to-Case, since email intake requires a public-facing form",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A fully custom Apex email service replacing native Email-to-Case"
+          "text": "A fully custom Apex email service replacing native Email-to-Case",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51887,20 +51887,20 @@
       "question": "A client needs high email volume handled but firewall restrictions block an on-premise mail agent. Which option fits, and why? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Neither option supports firewall-restricted environments"
+          "text": "Neither option supports firewall-restricted environments",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Standard Email-to-Case, since it requires no email server configuration"
+          "text": "Standard Email-to-Case, since it requires no email server configuration",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "On-Demand Email-to-Case, since it processes email through Salesforce's own service without an on-premise agent"
+          "text": "On-Demand Email-to-Case, since it processes email through Salesforce's own service without an on-premise agent",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "On-Demand Email-to-Case requires manual download and cannot scale"
+          "text": "On-Demand Email-to-Case requires manual download and cannot scale",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51914,20 +51914,20 @@
       "question": "A client's Web-to-Case form is receiving bot-driven spam submissions. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Disable Web-to-Case entirely since spam cannot be prevented"
+          "text": "Disable Web-to-Case entirely since spam cannot be prevented",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Remove all required fields so submissions always succeed"
+          "text": "Remove all required fields so submissions always succeed",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Add CAPTCHA or similar bot detection combined with validation rules on submitted data"
+          "text": "Add CAPTCHA or similar bot detection combined with validation rules on submitted data",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Route every submission to a single agent to manually filter spam"
+          "text": "Route every submission to a single agent to manually filter spam",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51941,20 +51941,20 @@
       "question": "A company receives requests via email, phone, chat, and social, wanting each routed to the right queue with appropriate priority. What should the consultant design? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A single shared queue for all channels with no differentiation"
+          "text": "A single shared queue for all channels with no differentiation",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Manual reassignment by a supervisor for every incoming case"
+          "text": "Manual reassignment by a supervisor for every incoming case",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "An Omni-Channel routing strategy with service channels and routing configurations per work type, mapped to the right queue and priority"
+          "text": "An Omni-Channel routing strategy with service channels and routing configurations per work type, mapped to the right queue and priority",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Routing based solely on case creation timestamp"
+          "text": "Routing based solely on case creation timestamp",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51968,20 +51968,20 @@
       "question": "During a peak spike, one queue is overwhelmed while other agents sit idle. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Permanently assign every agent to only one queue with no overflow"
+          "text": "Permanently assign every agent to only one queue with no overflow",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Turn off Omni-Channel routing during peaks and revert to manual assignment"
+          "text": "Turn off Omni-Channel routing during peaks and revert to manual assignment",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Increase priority uniformly on every case regardless of actual urgency"
+          "text": "Increase priority uniformly on every case regardless of actual urgency",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Configure Omni-Channel capacity models and routing rules allowing overflow to cross-trained agents or secondary queues"
+          "text": "Configure Omni-Channel capacity models and routing rules allowing overflow to cross-trained agents or secondary queues",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -51995,20 +51995,20 @@
       "question": "A client asks about telephony options for Service Cloud Voice. Which statement is accurate? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Service Cloud Voice supports Amazon Connect, select partner telephony, and Bring Your Own Telephony"
+          "text": "Service Cloud Voice supports Amazon Connect, select partner telephony, and Bring Your Own Telephony",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Service Cloud Voice requires replacing all existing telephony hardware regardless of provider"
+          "text": "Service Cloud Voice requires replacing all existing telephony hardware regardless of provider",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Service Cloud Voice only works with Amazon Connect"
+          "text": "Service Cloud Voice only works with Amazon Connect",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Bring Your Own Telephony is not supported"
+          "text": "Bring Your Own Telephony is not supported",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52022,20 +52022,20 @@
       "question": "A client has a long-term contract with a telephony provider not on the native/partner list. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Force a migration to Amazon Connect regardless of the existing contract"
+          "text": "Force a migration to Amazon Connect regardless of the existing contract",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Recommend against any Service Cloud Voice implementation"
+          "text": "Recommend against any Service Cloud Voice implementation",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Use Open CTI instead, since Voice cannot connect to any non-listed vendor"
+          "text": "Use Open CTI instead, since Voice cannot connect to any non-listed vendor",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Evaluate Bring Your Own Telephony to integrate the existing provider with Service Cloud Voice"
+          "text": "Evaluate Bring Your Own Telephony to integrate the existing provider with Service Cloud Voice",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52049,20 +52049,20 @@
       "question": "A client wants real-time chat for urgent issues and messaging for less urgent ones. How do these differ operationally? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Chat requires the customer to stay actively connected, while messaging supports asynchronous, session-persistent conversations"
+          "text": "Chat requires the customer to stay actively connected, while messaging supports asynchronous, session-persistent conversations",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Messaging requires the customer to stay on the same screen the entire time, like chat"
+          "text": "Messaging requires the customer to stay on the same screen the entire time, like chat",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Chat and messaging are functionally identical"
+          "text": "Chat and messaging are functionally identical",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Chat channels support multi-day persistence exactly like messaging"
+          "text": "Chat channels support multi-day persistence exactly like messaging",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52076,20 +52076,20 @@
       "question": "A client using classic Live Agent chat is evaluating MIAW. What is a key differentiator? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "MIAW supports asynchronous, persistent conversations and richer bot-to-agent handoff compared to classic chat's real-time-only model"
+          "text": "MIAW supports asynchronous, persistent conversations and richer bot-to-agent handoff compared to classic chat's real-time-only model",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Classic chat supports multi-day persistence by default"
+          "text": "Classic chat supports multi-day persistence by default",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Classic chat and MIAW are simply two names for the same feature"
+          "text": "Classic chat and MIAW are simply two names for the same feature",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "MIAW cannot hand off from a bot to a live agent under any configuration"
+          "text": "MIAW cannot hand off from a bot to a live agent under any configuration",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52103,20 +52103,20 @@
       "question": "A client wants to add SMS and WhatsApp channels. How does messaging setup differ from chat setup? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "SMS channels require no phone number or provider configuration"
+          "text": "SMS channels require no phone number or provider configuration",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Messaging channels use the exact same object as chat with no distinct setup"
+          "text": "Messaging channels use the exact same object as chat with no distinct setup",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Messaging requires configuring a channel type tied to a provider/number, whereas chat setup centers on an embedded deployment and chat button"
+          "text": "Messaging requires configuring a channel type tied to a provider/number, whereas chat setup centers on an embedded deployment and chat button",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "WhatsApp cannot be configured as a Salesforce messaging channel"
+          "text": "WhatsApp cannot be configured as a Salesforce messaging channel",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52130,20 +52130,20 @@
       "question": "A retail brand wants social media mentions connected to case creation. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Ignoring social mentions since Salesforce has no native social integration"
+          "text": "Ignoring social mentions since Salesforce has no native social integration",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Routing all social mentions to the Knowledge object instead of Case"
+          "text": "Routing all social mentions to the Knowledge object instead of Case",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Social Customer Service, which connects monitored social channels to case creation and standard agent workflows"
+          "text": "Social Customer Service, which connects monitored social channels to case creation and standard agent workflows",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Manually screenshotting posts into case descriptions"
+          "text": "Manually screenshotting posts into case descriptions",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52157,20 +52157,20 @@
       "question": "A client wants peer-to-peer support to reduce inbound case volume. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Disabling Knowledge articles within the community"
+          "text": "Disabling Knowledge articles within the community",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "An Experience Cloud community enabling peer discussion as a deflection channel alongside Knowledge and case submission"
+          "text": "An Experience Cloud community enabling peer discussion as a deflection channel alongside Knowledge and case submission",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "An unmoderated community with no structure"
+          "text": "An unmoderated community with no structure",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Removing the case submission option entirely to force community usage"
+          "text": "Removing the case submission option entirely to force community usage",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52184,20 +52184,20 @@
       "question": "What distinguishes an Einstein Bot/Flow bot from an Agentforce AI Agent? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Bots typically follow structured dialog-tree paths, while Agentforce AI Agents use a reasoning engine to dynamically plan actions"
+          "text": "Bots typically follow structured dialog-tree paths, while Agentforce AI Agents use a reasoning engine to dynamically plan actions",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Agentforce AI Agents cannot take any action beyond replying with text"
+          "text": "Agentforce AI Agents cannot take any action beyond replying with text",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Both use identical configuration approaches with no meaningful difference"
+          "text": "Both use identical configuration approaches with no meaningful difference",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Einstein Bots use a reasoning engine while Agentforce Agents follow rigid dialog trees"
+          "text": "Einstein Bots use a reasoning engine while Agentforce Agents follow rigid dialog trees",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52211,20 +52211,20 @@
       "question": "Before enabling a work type for automated routing, what must be configured in Omni-Channel? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A Service Channel and Routing Configuration must be defined for that work type"
+          "text": "A Service Channel and Routing Configuration must be defined for that work type",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Routing Configurations only apply to the Case object"
+          "text": "Routing Configurations only apply to the Case object",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Only a case queue is required, with no service channel"
+          "text": "Only a case queue is required, with no service channel",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Nothing; Omni-Channel routes any object automatically"
+          "text": "Nothing; Omni-Channel routes any object automatically",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52238,20 +52238,20 @@
       "question": "A client on Classic Omni-Channel is considering Enhanced Omni-Channel. What should the consultant flag? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Enhanced Omni-Channel introduces expanded capability and different architecture, so migration should be planned and tested"
+          "text": "Enhanced Omni-Channel introduces expanded capability and different architecture, so migration should be planned and tested",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Enhanced Omni-Channel removes queues entirely"
+          "text": "Enhanced Omni-Channel removes queues entirely",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "There is no functional difference between the two"
+          "text": "There is no functional difference between the two",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Migration requires no testing since it's fully backward compatible"
+          "text": "Migration requires no testing since it's fully backward compatible",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52265,20 +52265,20 @@
       "question": "A manager wants agent workload balanced fairly across a shift. What should the consultant evaluate? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Removing all capacity limits for unlimited concurrent assignment"
+          "text": "Removing all capacity limits for unlimited concurrent assignment",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Capacity models weighting different work item types so no agent is overloaded relative to peers"
+          "text": "Capacity models weighting different work item types so no agent is overloaded relative to peers",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A fixed capacity number for every agent regardless of complexity"
+          "text": "A fixed capacity number for every agent regardless of complexity",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Manual spreadsheet-based capacity tracking outside Salesforce"
+          "text": "Manual spreadsheet-based capacity tracking outside Salesforce",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52292,20 +52292,20 @@
       "question": "A client's routing sends all cases to generic queues regardless of required expertise. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Queue-Based Routing exclusively, since it's always superior"
+          "text": "Queue-Based Routing exclusively, since it's always superior",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Random routing with no skill or queue logic"
+          "text": "Random routing with no skill or queue logic",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Routing based only on case creation date"
+          "text": "Routing based only on case creation date",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Skills-Based Routing, matching cases to agents with relevant expertise"
+          "text": "Skills-Based Routing, matching cases to agents with relevant expertise",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52319,20 +52319,20 @@
       "question": "A supervisor wants real-time visibility into agent status, queue backlog, and wait times. What should the consultant point them to? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "The Omni-Channel Supervisor panel"
+          "text": "The Omni-Channel Supervisor panel",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Manually asking each agent hourly"
+          "text": "Manually asking each agent hourly",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "The Knowledge Manager dashboard"
+          "text": "The Knowledge Manager dashboard",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A static weekly report emailed to the supervisor"
+          "text": "A static weekly report emailed to the supervisor",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52346,20 +52346,20 @@
       "question": "A client wants Email-to-Case auto-acknowledgment without causing duplicate cases from customer replies. What should the consultant design? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Auto-response replying from a different address than the monitored one"
+          "text": "Auto-response replying from a different address than the monitored one",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Auto-response with no threading configuration, accepting duplicates"
+          "text": "Auto-response with no threading configuration, accepting duplicates",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "An auto-response rule paired with proper email threading so replies append to the original case"
+          "text": "An auto-response rule paired with proper email threading so replies append to the original case",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Disabling auto-response entirely"
+          "text": "Disabling auto-response entirely",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52373,20 +52373,20 @@
       "question": "A client wants an embedded chat widget with pre-chat form, offline fallback, and brand styling. How does this differ from a simple Chat Button? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A Chat Button alone provides identical capabilities"
+          "text": "A Chat Button alone provides identical capabilities",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Embedded Service Deployments cannot support offline fallback"
+          "text": "Embedded Service Deployments cannot support offline fallback",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Pre-chat forms are only available through Experience Cloud"
+          "text": "Pre-chat forms are only available through Experience Cloud",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "An Embedded Service Deployment supports pre-chat forms, offline states, and branding beyond a standalone Chat Button"
+          "text": "An Embedded Service Deployment supports pre-chat forms, offline states, and branding beyond a standalone Chat Button",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52400,24 +52400,24 @@
       "question": "A client needs agents to see only their team's cases while regional managers see all cases in their region. Which combination should the consultant configure? (Choose 2)",
       "options": [
         {
-          "label": "A",
-          "text": "Removing all case queues from the org"
+          "text": "Removing all case queues from the org",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Sharing rules or manual sharing for cross-team visibility beyond the default"
+          "text": "Sharing rules or manual sharing for cross-team visibility beyond the default",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A restrictive Case OWD combined with a role hierarchy granting managers regional visibility"
+          "text": "A restrictive Case OWD combined with a role hierarchy granting managers regional visibility",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Field-level security set to hidden on the entire Case object"
+          "text": "Field-level security set to hidden on the entire Case object",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "A public OWD with no role hierarchy"
+          "text": "A public OWD with no role hierarchy",
+          "letter": "E"
         }
       ],
       "correctIndices": [
@@ -52432,20 +52432,20 @@
       "question": "A healthcare client must hide certain PII fields from agents while they still work the case normally. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Restrict access to the entire Case object for all agents"
+          "text": "Restrict access to the entire Case object for all agents",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Remove the PII fields from the database entirely"
+          "text": "Remove the PII fields from the database entirely",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Field-level security restricting the specific PII fields for the agent profile or permission set"
+          "text": "Field-level security restricting the specific PII fields for the agent profile or permission set",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Set the Case OWD to Private with no exceptions"
+          "text": "Set the Case OWD to Private with no exceptions",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52459,20 +52459,20 @@
       "question": "A client operating across the EU and US needs both PII field security and regional record segregation. What should the consultant explain about combining these controls? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Field-level security can restrict which records a user can see"
+          "text": "Field-level security can restrict which records a user can see",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Record-level security alone can restrict which fields on a visible record are shown"
+          "text": "Record-level security alone can restrict which fields on a visible record are shown",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Configuring one security layer automatically satisfies all others"
+          "text": "Configuring one security layer automatically satisfies all others",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Object-level, record-level, and field-level security operate independently and often must be layered together, since satisfying one doesn't address a different requirement"
+          "text": "Object-level, record-level, and field-level security operate independently and often must be layered together, since satisfying one doesn't address a different requirement",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52486,20 +52486,20 @@
       "question": "A new Knowledge Manager asks about the article lifecycle stages before configuring approvals. What is the correct sequence? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Articles have no lifecycle stages; they are simply visible or invisible"
+          "text": "Articles have no lifecycle stages; they are simply visible or invisible",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Archived, then Draft, then Published, with no way to return to Draft"
+          "text": "Archived, then Draft, then Published, with no way to return to Draft",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Draft, then Published, then optionally Archived once outdated or superseded"
+          "text": "Draft, then Published, then optionally Archived once outdated or superseded",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Published, then Draft, then permanently deleted"
+          "text": "Published, then Draft, then permanently deleted",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52513,20 +52513,20 @@
       "question": "A team wants to update a published article without disrupting what customers currently see. What feature should the consultant point to? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Data categories, which control versioning behavior"
+          "text": "Data categories, which control versioning behavior",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Editing the published article directly with no draft step"
+          "text": "Editing the published article directly with no draft step",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Deleting the current article and creating a brand-new one"
+          "text": "Deleting the current article and creating a brand-new one",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Article versioning, letting a new draft version be edited and reviewed before replacing the currently published version"
+          "text": "Article versioning, letting a new draft version be edited and reviewed before replacing the currently published version",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52540,20 +52540,20 @@
       "question": "A client wants their Knowledge program to align with KCS methodology. Which principle should guide governance? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Capturing and improving knowledge as a byproduct of the agent's normal case-resolution workflow"
+          "text": "Capturing and improving knowledge as a byproduct of the agent's normal case-resolution workflow",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Restricting article creation exclusively to a small dedicated writing team"
+          "text": "Restricting article creation exclusively to a small dedicated writing team",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Publishing every article permanently with no review or feedback loop"
+          "text": "Publishing every article permanently with no review or feedback loop",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Preventing agents from ever suggesting new articles"
+          "text": "Preventing agents from ever suggesting new articles",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52567,20 +52567,20 @@
       "question": "A client wants only trained users to move an article from Draft to Published, while broader staff can view it. Which roles fit? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Give every user Knowledge Manager by default"
+          "text": "Give every user Knowledge Manager by default",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Assign Publisher to trained reviewers, while general staff retain Viewer-level access"
+          "text": "Assign Publisher to trained reviewers, while general staff retain Viewer-level access",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Assign Author to control publishing, since Authors have full publish rights"
+          "text": "Assign Author to control publishing, since Authors have full publish rights",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Remove the Viewer role entirely"
+          "text": "Remove the Viewer role entirely",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52594,20 +52594,20 @@
       "question": "A client wants MIAW to collect an account number before reaching an agent, to pre-populate the case. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Wait for the agent to manually ask after the conversation starts"
+          "text": "Wait for the agent to manually ask after the conversation starts",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Pre-chat data collection is not supported in MIAW"
+          "text": "Pre-chat data collection is not supported in MIAW",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Fill the field in only after case closure"
+          "text": "Fill the field in only after case closure",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A pre-conversation data collection form mapping the account number to case fields"
+          "text": "A pre-conversation data collection form mapping the account number to case fields",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52621,20 +52621,20 @@
       "question": "A client wants sentiment captured right after a MIAW conversation ends. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A manual phone call after every conversation"
+          "text": "A manual phone call after every conversation",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A quarterly NPS survey to the whole customer base"
+          "text": "A quarterly NPS survey to the whole customer base",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "No survey capability exists within MIAW"
+          "text": "No survey capability exists within MIAW",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A post-conversation survey within MIAW triggered automatically at session end"
+          "text": "A post-conversation survey within MIAW triggered automatically at session end",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52648,24 +52648,24 @@
       "question": "A client wants an Agentforce Service Agent to resolve password resets autonomously, with safe handling of anything out of scope. What should the consultant evaluate first? (Choose 2)",
       "options": [
         {
-          "label": "A",
-          "text": "The color palette of the chat window"
+          "text": "The color palette of the chat window",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Whether the org has ever used Salesforce Classic"
+          "text": "Whether the org has ever used Salesforce Classic",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "What actions the agent can take out of the box versus what requires custom configuration"
+          "text": "What actions the agent can take out of the box versus what requires custom configuration",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "The number of Knowledge article record types configured, regardless of relevance"
+          "text": "The number of Knowledge article record types configured, regardless of relevance",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "The escalation and handoff path for requests it cannot confidently resolve"
+          "text": "The escalation and handoff path for requests it cannot confidently resolve",
+          "letter": "E"
         }
       ],
       "correctIndices": [
@@ -52680,24 +52680,24 @@
       "question": "A client wants a case status picklist that supports clean KPI reporting without confusing agents. Which characteristics should the consultant recommend for the picklist? (Choose 2)",
       "options": [
         {
-          "label": "A",
-          "text": "A status picklist with 40 highly granular values"
+          "text": "A status picklist with 40 highly granular values",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A single status value used for all cases"
+          "text": "A single status value used for all cases",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Removing the Status field entirely and tracking stage in free-text comments"
+          "text": "Removing the Status field entirely and tracking stage in free-text comments",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A concise set of statuses mapped to distinct lifecycle stages"
+          "text": "A concise set of statuses mapped to distinct lifecycle stages",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Status values with no overlapping or ambiguous meaning between them"
+          "text": "Status values with no overlapping or ambiguous meaning between them",
+          "letter": "E"
         }
       ],
       "correctIndices": [
@@ -52712,24 +52712,24 @@
       "question": "A client wants cases routed to the correct queue based on product, origin, and customer tier. Which configuration elements should the consultant include? (Choose 2)",
       "options": [
         {
-          "label": "A",
-          "text": "A single default queue with manual reassignment based on tier"
+          "text": "A single default queue with manual reassignment based on tier",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Assignment rules evaluating only the Subject field"
+          "text": "Assignment rules evaluating only the Subject field",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Removing queues and assigning every case directly to a named agent"
+          "text": "Removing queues and assigning every case directly to a named agent",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Case assignment rules with criteria on product, origin, and tier fields"
+          "text": "Case assignment rules with criteria on product, origin, and tier fields",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Queues aligned to the routing outcomes the assignment rules produce"
+          "text": "Queues aligned to the routing outcomes the assignment rules produce",
+          "letter": "E"
         }
       ],
       "correctIndices": [
@@ -52744,28 +52744,28 @@
       "question": "How should queues, assignment rules, and Omni-Channel work together for end-to-end routing? (Choose 3)",
       "options": [
         {
-          "label": "A",
-          "text": "Omni-Channel replaces the need for queues or assignment rules entirely"
+          "text": "Omni-Channel replaces the need for queues or assignment rules entirely",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Assignment rules and Omni-Channel cannot be used together"
+          "text": "Assignment rules and Omni-Channel cannot be used together",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Queues alone are sufficient with no need for Omni-Channel"
+          "text": "Queues alone are sufficient with no need for Omni-Channel",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Assignment rules and queues establish the initial bucket for a case"
+          "text": "Assignment rules and queues establish the initial bucket for a case",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Omni-Channel then delivers work from that queue to the right available agent"
+          "text": "Omni-Channel then delivers work from that queue to the right available agent",
+          "letter": "E"
         },
         {
-          "label": "F",
-          "text": "Agent skill and capacity determine which queued item Omni-Channel pushes next"
+          "text": "Agent skill and capacity determine which queued item Omni-Channel pushes next",
+          "letter": "F"
         }
       ],
       "correctIndices": [
@@ -52781,24 +52781,24 @@
       "question": "A customer's email reply unexpectedly creates a new case instead of appending to the original. Which factors are the likely cause? (Choose 2)",
       "options": [
         {
-          "label": "A",
-          "text": "Email-to-Case is fundamentally incapable of threading replies"
+          "text": "Email-to-Case is fundamentally incapable of threading replies",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A Priority field change always breaks threading"
+          "text": "A Priority field change always breaks threading",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "The customer's reply was sent from a different device"
+          "text": "The customer's reply was sent from a different device",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Email threading configuration is broken, so the system can't match the reply to the original case"
+          "text": "Email threading configuration is broken, so the system can't match the reply to the original case",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "The email subject line's thread identifier was stripped or altered before reaching Salesforce"
+          "text": "The email subject line's thread identifier was stripped or altered before reaching Salesforce",
+          "letter": "E"
         }
       ],
       "correctIndices": [
@@ -52813,28 +52813,28 @@
       "question": "A client wants automatic escalation aligned with existing entitlement-based SLA reporting. Which elements should the consultant recommend? (Choose 3)",
       "options": [
         {
-          "label": "A",
-          "text": "A separate workflow-based escalation with no connection to entitlements"
+          "text": "A separate workflow-based escalation with no connection to entitlements",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Manually tracking SLA hours in a parallel spreadsheet"
+          "text": "Manually tracking SLA hours in a parallel spreadsheet",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Disabling entitlements and relying solely on Priority for escalation timing"
+          "text": "Disabling entitlements and relying solely on Priority for escalation timing",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Configure escalation through entitlement milestones"
+          "text": "Configure escalation through entitlement milestones",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Ensure the milestone trigger aligns with the same SLA framework used for reporting"
+          "text": "Ensure the milestone trigger aligns with the same SLA framework used for reporting",
+          "letter": "E"
         },
         {
-          "label": "F",
-          "text": "Set milestone actions to notify or reassign before a breach occurs"
+          "text": "Set milestone actions to notify or reassign before a breach occurs",
+          "letter": "F"
         }
       ],
       "correctIndices": [
@@ -52850,28 +52850,28 @@
       "question": "A complex case needs input from three departments without shuffling ownership. Which elements should the consultant configure? (Choose 3)",
       "options": [
         {
-          "label": "A",
-          "text": "Reassigning the case owner repeatedly to whoever is currently working it"
+          "text": "Reassigning the case owner repeatedly to whoever is currently working it",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Creating three duplicate cases, one per department"
+          "text": "Creating three duplicate cases, one per department",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Case Teams are not supported in Salesforce"
+          "text": "Case Teams are not supported in Salesforce",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A Case Team with defined roles for each contributing department"
+          "text": "A Case Team with defined roles for each contributing department",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Team member access levels scoped to what each role needs on the case"
+          "text": "Team member access levels scoped to what each role needs on the case",
+          "letter": "E"
         },
         {
-          "label": "F",
-          "text": "Collaboration happening on the single case record so ownership stays unchanged"
+          "text": "Collaboration happening on the single case record so ownership stays unchanged",
+          "letter": "F"
         }
       ],
       "correctIndices": [
@@ -52887,20 +52887,20 @@
       "question": "A multi-part issue includes billing and technical problems needing different specialist teams. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Create entirely unrelated, unlinked cases"
+          "text": "Create entirely unrelated, unlinked cases",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Split into parent and child cases so each team manages their portion while linked to the overall issue"
+          "text": "Split into parent and child cases so each team manages their portion while linked to the overall issue",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Force both teams onto a single undifferentiated case"
+          "text": "Force both teams onto a single undifferentiated case",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Refuse to log the technical issue since only one case can exist per customer"
+          "text": "Refuse to log the technical issue since only one case can exist per customer",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52914,20 +52914,20 @@
       "question": "A client wants multiple contacts associated with a single case beyond the primary Contact lookup. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Listing additional contacts' names in the Description field only"
+          "text": "Listing additional contacts' names in the Description field only",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Creating a separate case for every additional contact"
+          "text": "Creating a separate case for every additional contact",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "The standard Contact lookup field already supports unlimited multiple contacts"
+          "text": "The standard Contact lookup field already supports unlimited multiple contacts",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A custom case-contact relationship (junction object) to represent multiple associated contacts"
+          "text": "A custom case-contact relationship (junction object) to represent multiple associated contacts",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52941,20 +52941,20 @@
       "question": "A client wants agents to document resolution type and root cause before closing a case. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Allow closure with all fields optional, cleaning up data later"
+          "text": "Allow closure with all fields optional, cleaning up data later",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A case close screen with required fields for resolution type and root cause before closure"
+          "text": "A case close screen with required fields for resolution type and root cause before closure",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Track resolution type and root cause in a separate spreadsheet outside Salesforce"
+          "text": "Track resolution type and root cause in a separate spreadsheet outside Salesforce",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Require these fields only at case creation, not at closure"
+          "text": "Require these fields only at case creation, not at closure",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52968,20 +52968,20 @@
       "question": "Two agents create duplicate cases for the same issue via different channels. What should the consultant recommend once discovered? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Use the case merge feature to consolidate the duplicates, provided they're eligible and merge is the appropriate resolution"
+          "text": "Use the case merge feature to consolidate the duplicates, provided they're eligible and merge is the appropriate resolution",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Always link duplicate cases rather than merge, in every scenario without exception"
+          "text": "Always link duplicate cases rather than merge, in every scenario without exception",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Delete one of the duplicate cases outright with no review"
+          "text": "Delete one of the duplicate cases outright with no review",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Leave both cases open indefinitely"
+          "text": "Leave both cases open indefinitely",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -52995,20 +52995,20 @@
       "question": "A client wants some case comments visible to customers on a portal, while other agent notes stay strictly internal. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Use public and private case comments appropriately, marking internal-only notes private"
+          "text": "Use public and private case comments appropriately, marking internal-only notes private",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Store internal notes only in the case Description field, which is always visible externally"
+          "text": "Store internal notes only in the case Description field, which is always visible externally",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Disable case comments entirely"
+          "text": "Disable case comments entirely",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Make all case comments public by default"
+          "text": "Make all case comments public by default",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53022,20 +53022,20 @@
       "question": "A self-service site should show help content before offering a case form, to reduce case volume. What is the correct approach? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Make the case form the default landing experience with no Knowledge search"
+          "text": "Make the case form the default landing experience with no Knowledge search",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Configure search/navigation to surface Knowledge articles first, with the case form as a secondary fallback"
+          "text": "Configure search/navigation to surface Knowledge articles first, with the case form as a secondary fallback",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Remove the case submission form entirely"
+          "text": "Remove the case submission form entirely",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Hide all Knowledge content so customers go straight to case creation"
+          "text": "Hide all Knowledge content so customers go straight to case creation",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53049,20 +53049,20 @@
       "question": "A client wants to measure Agentforce's contribution to case deflection as a standalone KPI. What should the consultant recommend tracking? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Average handle time for human agents only, excluding AI-resolved interactions"
+          "text": "Average handle time for human agents only, excluding AI-resolved interactions",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "The rate of interactions the AI agent resolves autonomously without escalating, relative to total inbound volume"
+          "text": "The rate of interactions the AI agent resolves autonomously without escalating, relative to total inbound volume",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "The total number of Knowledge articles published, regardless of AI involvement"
+          "text": "The total number of Knowledge articles published, regardless of AI involvement",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "The number of Agentforce agents configured"
+          "text": "The number of Agentforce agents configured",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53076,20 +53076,20 @@
       "question": "A client wants a 20% case volume reduction using Knowledge, Experience Cloud, and Agentforce together. What is the right design approach? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Rely solely on a portal with no Knowledge content and no AI agent"
+          "text": "Rely solely on a portal with no Knowledge content and no AI agent",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Implement only Agentforce and skip Knowledge and Experience Cloud investment"
+          "text": "Implement only Agentforce and skip Knowledge and Experience Cloud investment",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Layer well-maintained Knowledge content, a portal surfacing that content, and an AI agent resolving common requests, each reinforcing the others"
+          "text": "Layer well-maintained Knowledge content, a portal surfacing that content, and an AI agent resolving common requests, each reinforcing the others",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Achieve the reduction only by making the case form harder to find"
+          "text": "Achieve the reduction only by making the case form harder to find",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53103,20 +53103,20 @@
       "question": "A client wants to prove ROI on their deflection investment to leadership. What should the consultant recommend tracking? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Only total cases created, with no baseline comparison"
+          "text": "Only total cases created, with no baseline comparison",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Deflection events tracked and reported against a baseline case volume period"
+          "text": "Deflection events tracked and reported against a baseline case volume period",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A dashboard showing agent headcount with no connection to deflection"
+          "text": "A dashboard showing agent headcount with no connection to deflection",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Deflection cannot be measured or reported in Salesforce"
+          "text": "Deflection cannot be measured or reported in Salesforce",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53130,20 +53130,20 @@
       "question": "What is the correct distinction between a Service Contract, Entitlement, and Entitlement Process? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "All three describe the exact same object"
+          "text": "All three describe the exact same object",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "An Entitlement Process is a type of Service Contract unrelated to milestones"
+          "text": "An Entitlement Process is a type of Service Contract unrelated to milestones",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A Service Contract enforces SLA milestones directly with no need for Entitlements"
+          "text": "A Service Contract enforces SLA milestones directly with no need for Entitlements",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A Service Contract represents the overall agreement, an Entitlement defines what support is granted, and an Entitlement Process enforces time-based milestones"
+          "text": "A Service Contract represents the overall agreement, an Entitlement defines what support is granted, and an Entitlement Process enforces time-based milestones",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53157,20 +53157,20 @@
       "question": "A client wants milestone timers to pause overnight and over weekends. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Business Hours linked to the relevant entitlement process/milestones"
+          "text": "Business Hours linked to the relevant entitlement process/milestones",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Set Priority to Low, which automatically pauses timers"
+          "text": "Set Priority to Low, which automatically pauses timers",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A custom Apex trigger to manually pause every timer"
+          "text": "A custom Apex trigger to manually pause every timer",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Milestones cannot account for business hours"
+          "text": "Milestones cannot account for business hours",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53184,20 +53184,20 @@
       "question": "A client has different SLA tiers for Standard and Premium contracts needing different timeframes. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "One case Priority value shared across both tiers with no separate milestone logic"
+          "text": "One case Priority value shared across both tiers with no separate milestone logic",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A single entitlement process with the same timeline for every customer"
+          "text": "A single entitlement process with the same timeline for every customer",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Separate entitlement processes with distinct milestone timelines per tier"
+          "text": "Separate entitlement processes with distinct milestone timelines per tier",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Manually tracked SLA deadlines outside Salesforce for premium customers only"
+          "text": "Manually tracked SLA deadlines outside Salesforce for premium customers only",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53211,20 +53211,20 @@
       "question": "A client wants product-specific support history visible for equipment a customer owns. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Track product history only in free-text case comments"
+          "text": "Track product history only in free-text case comments",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Assets are unrelated to cases and cannot be linked"
+          "text": "Assets are unrelated to cases and cannot be linked",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Create a new case record type for every unique asset"
+          "text": "Create a new case record type for every unique asset",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Use the Asset object linked to the customer and case, showing the product's support history and related entitlement"
+          "text": "Use the Asset object linked to the customer and case, showing the product's support history and related entitlement",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53238,20 +53238,20 @@
       "question": "A client wants both automated time-based escalation and ad hoc manual escalation by agent judgment. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Rely only on manual escalation"
+          "text": "Rely only on manual escalation",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Configure automated escalation rules or milestones plus a manual escalation action agents can invoke at their discretion"
+          "text": "Configure automated escalation rules or milestones plus a manual escalation action agents can invoke at their discretion",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Disable escalation since both paths cannot coexist"
+          "text": "Disable escalation since both paths cannot coexist",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Rely only on automated escalation rules"
+          "text": "Rely only on automated escalation rules",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53265,20 +53265,20 @@
       "question": "A client wants public case comments to mirror email communication style without agents drafting separate messages. What fits best? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Public case comments configured to mirror customer-facing email format, avoiding duplicate drafting"
+          "text": "Public case comments configured to mirror customer-facing email format, avoiding duplicate drafting",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Manually copying every comment into a separate email client"
+          "text": "Manually copying every comment into a separate email client",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Only private case comments, since public comments can't be customer-facing"
+          "text": "Only private case comments, since public comments can't be customer-facing",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A workflow rule unrelated to case comments"
+          "text": "A workflow rule unrelated to case comments",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53292,20 +53292,20 @@
       "question": "A contact field update should automatically update related open cases. Which automation tool fits? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A macro agents must remember to run themselves"
+          "text": "A macro agents must remember to run themselves",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A Record-Triggered Flow on Contact updating related open Cases when the field changes"
+          "text": "A Record-Triggered Flow on Contact updating related open Cases when the field changes",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A Screen Flow that only runs when manually opened from a case"
+          "text": "A Screen Flow that only runs when manually opened from a case",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A Quick Text snippet inserted manually by agents"
+          "text": "A Quick Text snippet inserted manually by agents",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53319,20 +53319,20 @@
       "question": "Internal stakeholders need email alerts for high-priority case creation, separate from customer-facing comments. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Use case comment notifications for both internal stakeholders and the customer"
+          "text": "Use case comment notifications for both internal stakeholders and the customer",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Send internal notifications through the same public comment mechanism used for customers"
+          "text": "Send internal notifications through the same public comment mechanism used for customers",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Rely on internal stakeholders manually checking a report"
+          "text": "Rely on internal stakeholders manually checking a report",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "An email alert scoped to internal stakeholders, kept separate from the customer-facing comment channel"
+          "text": "An email alert scoped to internal stakeholders, kept separate from the customer-facing comment channel",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53346,20 +53346,20 @@
       "question": "A manager wants a report combining Case, AgentWork, and Entitlement data in one view for SLA compliance alongside agent workload. What report type should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A summary report, since it can natively span three unrelated objects"
+          "text": "A summary report, since it can natively span three unrelated objects",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A matrix report, since matrix reports cannot group by more than one dimension"
+          "text": "A matrix report, since matrix reports cannot group by more than one dimension",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A joined report, since it can combine multiple report types from otherwise unrelated objects into a single view"
+          "text": "A joined report, since it can combine multiple report types from otherwise unrelated objects into a single view",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A dashboard component with no underlying report"
+          "text": "A dashboard component with no underlying report",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53373,20 +53373,20 @@
       "question": "An executive wants a single high-level view of contact center health without digging into case details. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Direct access to the raw Case list view with every field exposed"
+          "text": "Direct access to the raw Case list view with every field exposed",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A detailed matrix report broken out by individual agent for daily review"
+          "text": "A detailed matrix report broken out by individual agent for daily review",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "No reporting solution, relying on verbal updates only"
+          "text": "No reporting solution, relying on verbal updates only",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A dashboard with summary-level components sourced from underlying reports"
+          "text": "A dashboard with summary-level components sourced from underlying reports",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53400,20 +53400,20 @@
       "question": "A manager wants a dashboard showing open case volume, SLA compliance, and AHT broken out by queue. What should the consultant design? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A report with no grouping at all, listing every case in a flat list"
+          "text": "A report with no grouping at all, listing every case in a flat list",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A dashboard showing only the highest-volume queue"
+          "text": "A dashboard showing only the highest-volume queue",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A dashboard sourced from reports grouped by Queue, with components for case count, SLA compliance, and AHT"
+          "text": "A dashboard sourced from reports grouped by Queue, with components for case count, SLA compliance, and AHT",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A single pie chart showing total case count with no queue breakdown"
+          "text": "A single pie chart showing total case count with no queue breakdown",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53427,20 +53427,20 @@
       "question": "A client wants regional managers to see only their region's reports, excluding general agents. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Rely on record-level case sharing alone, since folder sharing doesn't exist"
+          "text": "Rely on record-level case sharing alone, since folder sharing doesn't exist",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Share one folder individually with every user by name, with no groups"
+          "text": "Share one folder individually with every user by name, with no groups",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Folder-level sharing with public groups scoped to each region"
+          "text": "Folder-level sharing with public groups scoped to each region",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Make all report folders public to every user"
+          "text": "Make all report folders public to every user",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53454,20 +53454,20 @@
       "question": "A client wants each agent to see their own performance metrics from one shared dashboard, without seeing others' data. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A separate static dashboard manually cloned for every agent"
+          "text": "A separate static dashboard manually cloned for every agent",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A single static dashboard running as one fixed user, shown identically to everyone"
+          "text": "A single static dashboard running as one fixed user, shown identically to everyone",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Dashboards cannot filter data per viewer under any configuration"
+          "text": "Dashboards cannot filter data per viewer under any configuration",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "A dynamic dashboard configured to run as the viewing user"
+          "text": "A dynamic dashboard configured to run as the viewing user",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53481,20 +53481,20 @@
       "question": "A client wants to report on agent availability, AHT, and routing efficiency using Omni-Channel-specific data. Which objects should the consultant use? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "AgentWork and UserServicePresence"
+          "text": "AgentWork and UserServicePresence",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "The Knowledge Article object"
+          "text": "The Knowledge Article object",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "The Entitlement object exclusively"
+          "text": "The Entitlement object exclusively",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Only the Case object, since it contains all Omni-Channel data natively"
+          "text": "Only the Case object, since it contains all Omni-Channel data natively",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53508,20 +53508,20 @@
       "question": "A client wants to report SLA compliance using entitlement milestones. What should the consultant confirm first? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "That milestone data is reportable, and that any custom report type needed to expose milestone fields has been created"
+          "text": "That milestone data is reportable, and that any custom report type needed to expose milestone fields has been created",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "That milestone data can only be viewed on the case record page, never in a report"
+          "text": "That milestone data can only be viewed on the case record page, never in a report",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "That entitlements have no reportable data and this requirement cannot be met"
+          "text": "That entitlements have no reportable data and this requirement cannot be met",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "That Knowledge article ratings are required to report on milestone compliance"
+          "text": "That Knowledge article ratings are required to report on milestone compliance",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53535,20 +53535,20 @@
       "question": "A client wants to correlate Knowledge article usage with case deflection outcomes in one report. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A report combining case data with article view/attach metrics via the relevant relationship or custom report type"
+          "text": "A report combining case data with article view/attach metrics via the relevant relationship or custom report type",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A report on Knowledge articles alone with no connection to case data"
+          "text": "A report on Knowledge articles alone with no connection to case data",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Manual cross-referencing of two entirely separate exported spreadsheets"
+          "text": "Manual cross-referencing of two entirely separate exported spreadsheets",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Ignoring article metrics since they cannot be tied to case outcomes"
+          "text": "Ignoring article metrics since they cannot be tied to case outcomes",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53562,20 +53562,20 @@
       "question": "A client wants to track First Contact Resolution (FCR) rate by case type and agent. What is required? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A custom field or process capturing first-contact resolution status, populated consistently, then grouped by case type and agent"
+          "text": "A custom field or process capturing first-contact resolution status, populated consistently, then grouped by case type and agent",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "FCR cannot be reported on by agent, only in aggregate"
+          "text": "FCR cannot be reported on by agent, only in aggregate",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "No configuration required, since FCR is a standard auto-populated field"
+          "text": "No configuration required, since FCR is a standard auto-populated field",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "FCR can only be measured through NPS survey responses"
+          "text": "FCR can only be measured through NPS survey responses",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53589,20 +53589,20 @@
       "question": "A client wants to segment case volume by resolution type without new custom fields. What technique fits? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Bucketing existing field values directly within the report"
+          "text": "Bucketing existing field values directly within the report",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Manually exporting all cases to a spreadsheet every time"
+          "text": "Manually exporting all cases to a spreadsheet every time",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Cross-filters, which cannot group or bucket field values at all"
+          "text": "Cross-filters, which cannot group or bucket field values at all",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Creating five new custom picklist fields on the Case object"
+          "text": "Creating five new custom picklist fields on the Case object",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53616,20 +53616,20 @@
       "question": "A client wants a report metric for days between case creation and closure, without a new formula field on the object. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A row-level formula field within the report, calculating the difference using CreatedDate and ClosedDate"
+          "text": "A row-level formula field within the report, calculating the difference using CreatedDate and ClosedDate",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A new custom formula field added permanently to the Case object"
+          "text": "A new custom formula field added permanently to the Case object",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "This metric cannot be calculated without modifying the Case object schema"
+          "text": "This metric cannot be calculated without modifying the Case object schema",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Manually calculating the day count in a spreadsheet after export"
+          "text": "Manually calculating the day count in a spreadsheet after export",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53643,20 +53643,20 @@
       "question": "A VP wants an automated weekly KPI summary delivered with no manual effort. What should the consultant configure? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A manual email sent by an analyst each week compiling data by hand"
+          "text": "A manual email sent by an analyst each week compiling data by hand",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A one-time report run and sent only once"
+          "text": "A one-time report run and sent only once",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A report or dashboard subscription with a scheduled delivery cadence"
+          "text": "A report or dashboard subscription with a scheduled delivery cadence",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Reports and dashboards cannot be scheduled for automated delivery"
+          "text": "Reports and dashboards cannot be scheduled for automated delivery",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53670,20 +53670,20 @@
       "question": "A client needs predictive modeling and cross-channel data blending beyond standard reports. What should the consultant recommend? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "CRM Analytics (formerly Tableau CRM/Einstein Analytics) as a supplement to standard reporting"
+          "text": "CRM Analytics (formerly Tableau CRM/Einstein Analytics) as a supplement to standard reporting",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Standard Salesforce reports alone, since they support unlimited predictive modeling"
+          "text": "Standard Salesforce reports alone, since they support unlimited predictive modeling",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Manually building predictive models in exported spreadsheet formulas"
+          "text": "Manually building predictive models in exported spreadsheet formulas",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Deleting all existing case data and switching to an unrelated system"
+          "text": "Deleting all existing case data and switching to an unrelated system",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53697,20 +53697,20 @@
       "question": "A client asks why standard reports struggle with a rolling 13-month trend blending case, chat, and social data with predictive scoring. What should the consultant explain? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "This kind of analysis is impossible in any Salesforce-connected tool"
+          "text": "This kind of analysis is impossible in any Salesforce-connected tool",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Standard reports suit structured, moderate-complexity needs, but advanced blending and predictive scoring are better handled by a purpose-built analytics platform"
+          "text": "Standard reports suit structured, moderate-complexity needs, but advanced blending and predictive scoring are better handled by a purpose-built analytics platform",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "The client should stop tracking chat and social data entirely to fit standard reporting"
+          "text": "The client should stop tracking chat and social data entirely to fit standard reporting",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Standard Salesforce reports have no limitations for any analytics scenario"
+          "text": "Standard Salesforce reports have no limitations for any analytics scenario",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53724,20 +53724,20 @@
       "question": "A company has account data in an external ERP, and agents need real-time balance information while working a case, without duplicating that data into Salesforce. What integration pattern fits? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Manually re-entering the account balance into a case comment before each call"
+          "text": "Manually re-entering the account balance into a case comment before each call",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Salesforce Connect using external objects, showing real-time ERP data in the console without storing a duplicate copy"
+          "text": "Salesforce Connect using external objects, showing real-time ERP data in the console without storing a duplicate copy",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "A nightly batch export of the entire ERP database into custom Salesforce objects"
+          "text": "A nightly batch export of the entire ERP database into custom Salesforce objects",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Asking agents to log into the ERP system in a separate browser tab during every case"
+          "text": "Asking agents to log into the ERP system in a separate browser tab during every case",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53751,20 +53751,20 @@
       "question": "A client's Salesforce org needs to trigger a shipment update in an external logistics platform the moment a case is marked Resolved, without polling. Which integration approach fits best? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "A scheduled Apex job that runs every 24 hours to check for resolved cases"
+          "text": "A scheduled Apex job that runs every 24 hours to check for resolved cases",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "A Platform Event published on case resolution, consumed by the external system via a subscribed listener"
+          "text": "A Platform Event published on case resolution, consumed by the external system via a subscribed listener",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Manually exporting a CSV of resolved cases each week for the logistics team"
+          "text": "Manually exporting a CSV of resolved cases each week for the logistics team",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Asking agents to email the logistics team when they resolve a case"
+          "text": "Asking agents to email the logistics team when they resolve a case",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53778,24 +53778,24 @@
       "question": "An integration user account authenticating into Salesforce from a middleware platform keeps hitting API request limits during peak hours. Which factors should the consultant investigate first? (Choose 2)",
       "options": [
         {
-          "label": "A",
-          "text": "Whether the middleware is making unnecessarily granular, high-frequency API calls instead of bulk operations"
+          "text": "Whether the middleware is making unnecessarily granular, high-frequency API calls instead of bulk operations",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Whether the case page layout has too many fields"
+          "text": "Whether the case page layout has too many fields",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Whether the integration user's daily API request allocation is being consumed by inefficient call patterns"
+          "text": "Whether the integration user's daily API request allocation is being consumed by inefficient call patterns",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Whether agents are using Lightning Experience instead of Salesforce Classic"
+          "text": "Whether agents are using Lightning Experience instead of Salesforce Classic",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Whether Knowledge articles are set to Draft status"
+          "text": "Whether Knowledge articles are set to Draft status",
+          "letter": "E"
         }
       ],
       "correctIndices": [
@@ -53810,20 +53810,20 @@
       "question": "A client wants Agentforce to look up order status from an external commerce platform in real time during a chat conversation, without building a custom integration from scratch. Which approach best fits the requirement? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "Have the agent manually search the commerce platform's admin site and paste the answer into chat"
+          "text": "Have the agent manually search the commerce platform's admin site and paste the answer into chat",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "An Agentforce Action backed by a pre-built or flow-based integration that calls the commerce platform's API"
+          "text": "An Agentforce Action backed by a pre-built or flow-based integration that calls the commerce platform's API",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Wait for the nightly sync job to bring the order data into Salesforce before answering"
+          "text": "Wait for the nightly sync job to bring the order data into Salesforce before answering",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Ask the customer to check their own order status on the commerce site instead"
+          "text": "Ask the customer to check their own order status on the commerce site instead",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53837,20 +53837,20 @@
       "question": "An integration between Salesforce and an external billing system uses Named Credentials for authentication. What is the primary benefit of this approach over hardcoding credentials in Apex? (Choose 1)",
       "options": [
         {
-          "label": "A",
-          "text": "It makes the callout run faster"
+          "text": "It makes the callout run faster",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "It centralizes and secures endpoint and authentication details, so they aren't exposed or duplicated in code"
+          "text": "It centralizes and secures endpoint and authentication details, so they aren't exposed or duplicated in code",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "It removes the need for any authentication at all"
+          "text": "It removes the need for any authentication at all",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "It allows the callout to bypass Apex governor limits"
+          "text": "It allows the callout to bypass Apex governor limits",
+          "letter": "D"
         }
       ],
       "correctIndices": [
@@ -53864,24 +53864,24 @@
       "question": "A client's middleware pushes case updates into Salesforce via REST API, but intermittent network issues sometimes cause updates to be dropped silently. Which design changes should the consultant recommend? (Choose 2)",
       "options": [
         {
-          "label": "A",
-          "text": "Ignore the issue since REST callouts are always guaranteed to succeed"
+          "text": "Ignore the issue since REST callouts are always guaranteed to succeed",
+          "letter": "A"
         },
         {
-          "label": "B",
-          "text": "Have the middleware retry failed calls with an idempotent request design so retries don't create duplicates"
+          "text": "Have the middleware retry failed calls with an idempotent request design so retries don't create duplicates",
+          "letter": "B"
         },
         {
-          "label": "C",
-          "text": "Switch entirely to manual data entry by agents to avoid using integrations"
+          "text": "Switch entirely to manual data entry by agents to avoid using integrations",
+          "letter": "C"
         },
         {
-          "label": "D",
-          "text": "Implement logging and alerting on failed callouts so issues are caught quickly"
+          "text": "Implement logging and alerting on failed callouts so issues are caught quickly",
+          "letter": "D"
         },
         {
-          "label": "E",
-          "text": "Reduce the case page layout to fewer fields"
+          "text": "Reduce the case page layout to fewer fields",
+          "letter": "E"
         }
       ],
       "correctIndices": [
