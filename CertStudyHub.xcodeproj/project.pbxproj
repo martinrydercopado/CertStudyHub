@@ -127,6 +127,8 @@
 		C10000000000000000000078 /* Admin2QuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000041 /* Admin2QuestionBank.swift */; };
 		C10000000000000000000079 /* AgentforceServiceQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000042 /* AgentforceServiceQuestionBank.swift */; };
 		C1000000000000000000007A /* AgentforceServiceQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000042 /* AgentforceServiceQuestionBank.swift */; };
+		C1000000000000000000007B /* SharingVisibilityQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000043 /* SharingVisibilityQuestionBank.swift */; };
+		C1000000000000000000007C /* SharingVisibilityQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000043 /* SharingVisibilityQuestionBank.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -190,6 +192,7 @@
 		C1F000000000000000000040 /* DataArchitectQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataArchitectQuestionBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000041 /* Admin2QuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Admin2QuestionBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000042 /* AgentforceServiceQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentforceServiceQuestionBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000043 /* SharingVisibilityQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingVisibilityQuestionBank.swift; sourceTree = "<group>"; };
 		C1P000000000000000000001 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1P000000000000000000002 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -283,6 +286,7 @@
 				C1F000000000000000000040 /* DataArchitectQuestionBank.swift */,
 				C1F000000000000000000041 /* Admin2QuestionBank.swift */,
 				C1F000000000000000000042 /* AgentforceServiceQuestionBank.swift */,
+				C1F000000000000000000043 /* SharingVisibilityQuestionBank.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -517,6 +521,7 @@
 				C10000000000000000000075 /* DataArchitectQuestionBank.swift in Sources */,
 				C10000000000000000000077 /* Admin2QuestionBank.swift in Sources */,
 				C10000000000000000000079 /* AgentforceServiceQuestionBank.swift in Sources */,
+				C1000000000000000000007B /* SharingVisibilityQuestionBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -583,6 +588,7 @@
 				C10000000000000000000076 /* DataArchitectQuestionBank.swift in Sources */,
 				C10000000000000000000078 /* Admin2QuestionBank.swift in Sources */,
 				C1000000000000000000007A /* AgentforceServiceQuestionBank.swift in Sources */,
+				C1000000000000000000007C /* SharingVisibilityQuestionBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -622,6 +628,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -644,7 +651,9 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				DEVELOPMENT_TEAM = QZSN2569D9;
 			};
 			name = Debug;
 		};
@@ -681,6 +690,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -696,6 +706,8 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				DEVELOPMENT_TEAM = QZSN2569D9;
 			};
 			name = Release;
 		};
@@ -706,7 +718,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = QZSN2569D9;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -737,7 +748,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = QZSN2569D9;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -771,6 +781,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -796,6 +807,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -750,12 +750,45 @@
       "#9F2E2E"
     ],
     "passingScore": 62,
-    "questionBank": null,
+    "questionBank": "sharingvisibility",
     "studyBank": "sharingvisibility",
     "storageKeyPrefix": "sharingvisibility",
     "isBonusTopic": false,
     "subtitle": null,
-    "quizLengths": []
+    "quizLengths": [
+      {
+        "id": 15,
+        "label": "15 Questions",
+        "icon": "⚡",
+        "subtitle": "Quick Review",
+        "duration": "~8 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 30,
+        "label": "30 Questions",
+        "icon": "🔥",
+        "subtitle": "Standard Practice",
+        "duration": "~15 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 60,
+        "label": "60 Questions",
+        "icon": "🏆",
+        "subtitle": "Exam Simulation",
+        "duration": "~30 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 120,
+        "label": "All 120 Questions",
+        "icon": "⭐",
+        "subtitle": "Full Question Bank",
+        "duration": "~60 min",
+        "questionIDRange": null
+      }
+    ]
   },
   {
     "id": "uxdesigner",
