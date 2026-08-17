@@ -1082,12 +1082,13 @@ This is why knowing the four layers — and checking them in order — is a diag
 
 The Einstein Agent User must hold a Data Cloud permission set or permission set license.
 
-| Assignment | Type | Priority |
-|---|---|---|
-| `GenieDataPlatformStarterPsl` | PSL | First choice |
-| `GenieUserEnhancedSecurity` | PS | Second choice |
-| `DataCloudUser` | PS | Third choice |
-| `DataCloudArchitect` | PS | Last resort (over-privileged) |
+| Label | API Name | Type | Priority |
+|---|---|---|---|
+| Data Cloud | `GenieDataPlatformStarterPsl` | PSL | First choice |
+| Data Cloud User | `GenieUserEnhancedSecurity` | PS | Second choice |
+| Data Cloud Architect | `GenieAdmin` | PS | Last resort (over-privileged) |
+
+> **UI vs. API name:** In Setup, search by label ("Data Cloud" for the PSL, "Data Cloud User" for the PS). Use the API names in CLI commands and SOQL queries.
 
 **What happens when missing:** `AnswerQuestionsWithKnowledge` returns an empty `knowledgeSummary` for every query. The anti-hallucination guard fires. The user gets a polite decline for every question, including simple ones.
 
