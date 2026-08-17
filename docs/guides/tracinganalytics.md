@@ -614,23 +614,38 @@ ORDER BY ssot__StartDateTime__c ASC
 
 **STDM custom dashboard query: Deflection quality analysis**
 
-Rather than counting all non-escalated sessions as "deflected," filter for sessions where the agent returned substantive data from an action:
+Rather than counting all non-escalated sessions as "deflected," filter for sessions where the agent returned substantive data from an action.
+
+Because SOQL does not support `JOIN`, `CASE WHEN` aggregates, or `DATEADD()`, this analysis requires two separate queries. Run them sequentially and combine the results client-side (e.g., in a Data Cloud custom dashboard, a Python script, or a Tableau calculated field).
+
+**Step 1 — Pull session-level data for the last 14 days:**
 
 ```soql
-SELECT
-    DATE(s.StartTime__c) AS session_date,
-    COUNT(s.Id) AS total_sessions,
-    COUNT(CASE WHEN steps.ErrorCount__c = 0
-               AND s.EscalatedToHuman__c = FALSE THEN 1 END) AS genuine_deflections,
-    COUNT(CASE WHEN steps.ErrorCount__c = 0
-               AND s.EscalatedToHuman__c = FALSE THEN 1 END) * 100.0
-               / COUNT(s.Id) AS quality_deflection_rate
-FROM ssot__AiAgentSession__dlm s
-LEFT JOIN ssot__AiAgentInteractionStep__dlm steps ON s.SessionId__c = steps.SessionId__c
-WHERE s.StartTime__c >= DATEADD(DAY, -14, CURRENT_DATE)
-GROUP BY DATE(s.StartTime__c)
-ORDER BY session_date DESC
+SELECT Id, StartTime__c, EscalatedToHuman__c
+FROM ssot__AiAgentSession__dlm
+WHERE StartTime__c = LAST_N_DAYS:14
 ```
+
+**Step 2 — Pull step-level error counts for the same window:**
+
+```soql
+SELECT SessionId__c, COUNT(Id) ErrorStepCount
+FROM ssot__AiAgentInteractionStep__dlm
+WHERE ErrorCount__c > 0
+AND CreatedDate = LAST_N_DAYS:14
+GROUP BY SessionId__c
+```
+
+**Client-side join logic (pseudocode):**
+```
+genuine_deflections = sessions where:
+    - EscalatedToHuman__c == false
+    - SessionId NOT present in error step results (or ErrorStepCount == 0)
+
+quality_deflection_rate = COUNT(genuine_deflections) / COUNT(all_sessions) * 100
+```
+
+> **Why two queries?** SOQL is a single-object query language. It does not support cross-object `JOIN` syntax, `CASE WHEN` conditional aggregates, or SQL date functions like `DATEADD()` and `CURRENT_DATE`. Use `LAST_N_DAYS:14` for relative date filtering. For a fully automated deflection quality dashboard, implement this logic as a Data Cloud Data Transform or a scheduled Apex batch that materializes the combined result into a custom object or reporting snapshot.
 
 ---
 
@@ -1024,7 +1039,7 @@ If the correlation is strong, each 100ms reduction in average interaction durati
 | `if`/`else` control flow | FREE | Deterministic resolution, no LLM call |
 | `before_reasoning` / `after_reasoning` | FREE | Deterministic pre/post-processing |
 | LLM reasoning turn | FREE | The reasoning step itself is not billed |
-| Prompt Templates | 2-16 credits | Per invocation; varies by complexity |
+| Prompt Templates | Billed separately via Prompt Usage | Not Flex Credits per call. Billed by LLM gateway calls and token consumption (per 2,000 tokens, rounded up). Rate varies by model tier. See Flex Credits Billable Usage Types documentation for current model-tier pricing. |
 | Flow actions | 20 credits | Per action execution |
 | Apex actions | 20 credits | Per action execution |
 | Any other action | 20 credits | Per action execution |
