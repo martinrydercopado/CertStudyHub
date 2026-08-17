@@ -7,6 +7,8 @@ enum CertCatalog {
         dataCloud360,
         reasoningEngine,
         rag,
+        multiagent,
+        tracinganalytics,
         agentforceSales,
         agentforceService,
         businessAnalyst,
@@ -66,7 +68,7 @@ enum CertCatalog {
         studySections: AgentOpsStudyBank.sections,
         storageKeyPrefix: "agentops",
         isBonusTopic: true,
-        subtitle: "Bonus Topic — Not an official Salesforce certification",
+        subtitle: "Deep Dive — Not an official Salesforce certification",
         guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentops")
     )
 
@@ -116,7 +118,7 @@ enum CertCatalog {
         studySections: ReasoningEngineStudyBank.sections,
         storageKeyPrefix: "reasoningengine",
         isBonusTopic: true,
-        subtitle: "Bonus Topic — Not an official Salesforce certification",
+        subtitle: "Deep Dive — Not an official Salesforce certification",
         guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=reasoningengine")
     )
 
@@ -143,7 +145,7 @@ enum CertCatalog {
         studySections: RAGStudyBank.sections,
         storageKeyPrefix: "rag",
         isBonusTopic: true,
-        subtitle: "Bonus Topic — Not an official Salesforce certification",
+        subtitle: "Deep Dive — Not an official Salesforce certification",
         guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=rag")
     )
 
@@ -387,6 +389,56 @@ enum CertCatalog {
         questions: SharingVisibilityQuestionBank.all,
         studySections: SharingVisibilityStudyBank.sections,
         storageKeyPrefix: "sharingvisibility"
+    )
+
+    static let multiagent = CertConfig(
+        id: "multiagent",
+        name: "Multi-Agent Architecture in Agentforce",
+        shortName: "Multi-Agent",
+        icon: "square.3.layers.3d.top.filled",
+        primaryColor: Color(red: 0.20, green: 0.40, blue: 0.70),
+        secondaryColor: .blue,
+        headerGradient: [
+            Color(red: 0.12, green: 0.28, blue: 0.52),
+            Color(red: 0.15, green: 0.32, blue: 0.56),
+            Color(red: 0.18, green: 0.36, blue: 0.60)
+        ],
+        passingScore: 70,
+        quizLengths: [
+            QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
+            QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
+            QuizLength(id: 65, label: "All 65 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~33 min")
+        ],
+        questions: MultiAgentQuestionBank.all,
+        studySections: MultiAgentStudyBank.sections,
+        storageKeyPrefix: "multiagent",
+        isBonusTopic: true,
+        subtitle: "Deep Dive — Not an official Salesforce certification"
+    )
+
+    static let tracinganalytics = CertConfig(
+        id: "tracinganalytics",
+        name: "Agentforce Tracing and Analytics",
+        shortName: "Tracing & Analytics",
+        icon: "chart.bar.doc.horizontal.fill",
+        primaryColor: Color(red: 0.10, green: 0.50, blue: 0.55),
+        secondaryColor: .teal,
+        headerGradient: [
+            Color(red: 0.06, green: 0.34, blue: 0.38),
+            Color(red: 0.08, green: 0.38, blue: 0.42),
+            Color(red: 0.10, green: 0.42, blue: 0.46)
+        ],
+        passingScore: 70,
+        quizLengths: [
+            QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
+            QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
+            QuizLength(id: 72, label: "All 72 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~36 min")
+        ],
+        questions: TracingAnalyticsQuestionBank.all,
+        studySections: TracingAnalyticsStudyBank.sections,
+        storageKeyPrefix: "tracinganalytics",
+        isBonusTopic: true,
+        subtitle: "Deep Dive — Not an official Salesforce certification"
     )
 
     static let uxDesigner = CertConfig(

@@ -436,7 +436,7 @@
       var topicCount = getTotalTopics(studySections);
 
       var bonusBadge = cert.isBonusTopic
-        ? '<span class="bonus-badge">BONUS</span>'
+        ? '<span class="bonus-badge">DEEP DIVE</span>'
         : '';
 
       var subtitleHtml = cert.subtitle

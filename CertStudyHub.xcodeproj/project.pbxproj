@@ -127,6 +127,14 @@
 		C1000000000000000000007C /* SharingVisibilityQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000043 /* SharingVisibilityQuestionBank.swift */; };
 		C1000000000000000000007D /* AgentforceSalesQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000044 /* AgentforceSalesQuestionBank.swift */; };
 		C1000000000000000000007E /* AgentforceSalesQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000044 /* AgentforceSalesQuestionBank.swift */; };
+		C1000000000000000000007F /* MultiAgentQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000045 /* MultiAgentQuestionBank.swift */; };
+		C10000000000000000000080 /* MultiAgentQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000045 /* MultiAgentQuestionBank.swift */; };
+		C10000000000000000000081 /* TracingAnalyticsQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000046 /* TracingAnalyticsQuestionBank.swift */; };
+		C10000000000000000000082 /* TracingAnalyticsQuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000046 /* TracingAnalyticsQuestionBank.swift */; };
+		C10000000000000000000083 /* MultiAgentStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000047 /* MultiAgentStudyBank.swift */; };
+		C10000000000000000000084 /* MultiAgentStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000047 /* MultiAgentStudyBank.swift */; };
+		C10000000000000000000085 /* TracingAnalyticsStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000048 /* TracingAnalyticsStudyBank.swift */; };
+		C10000000000000000000086 /* TracingAnalyticsStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000048 /* TracingAnalyticsStudyBank.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -190,6 +198,10 @@
 		C1F000000000000000000042 /* AgentforceServiceQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentforceServiceQuestionBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000043 /* SharingVisibilityQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingVisibilityQuestionBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000044 /* AgentforceSalesQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentforceSalesQuestionBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000045 /* MultiAgentQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiAgentQuestionBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000046 /* TracingAnalyticsQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TracingAnalyticsQuestionBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000047 /* MultiAgentStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiAgentStudyBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000048 /* TracingAnalyticsStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TracingAnalyticsStudyBank.swift; sourceTree = "<group>"; };
 		C1P000000000000000000001 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1P000000000000000000002 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -283,6 +295,10 @@
 				C1F000000000000000000042 /* AgentforceServiceQuestionBank.swift */,
 				C1F000000000000000000043 /* SharingVisibilityQuestionBank.swift */,
 				C1F000000000000000000044 /* AgentforceSalesQuestionBank.swift */,
+				C1F000000000000000000045 /* MultiAgentQuestionBank.swift */,
+				C1F000000000000000000046 /* TracingAnalyticsQuestionBank.swift */,
+				C1F000000000000000000047 /* MultiAgentStudyBank.swift */,
+				C1F000000000000000000048 /* TracingAnalyticsStudyBank.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -517,6 +533,10 @@
 				C10000000000000000000079 /* AgentforceServiceQuestionBank.swift in Sources */,
 				C1000000000000000000007B /* SharingVisibilityQuestionBank.swift in Sources */,
 				C1000000000000000000007D /* AgentforceSalesQuestionBank.swift in Sources */,
+				C1000000000000000000007F /* MultiAgentQuestionBank.swift in Sources */,
+				C10000000000000000000081 /* TracingAnalyticsQuestionBank.swift in Sources */,
+				C10000000000000000000083 /* MultiAgentStudyBank.swift in Sources */,
+				C10000000000000000000085 /* TracingAnalyticsStudyBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -583,6 +603,10 @@
 				C1000000000000000000007A /* AgentforceServiceQuestionBank.swift in Sources */,
 				C1000000000000000000007C /* SharingVisibilityQuestionBank.swift in Sources */,
 				C1000000000000000000007E /* AgentforceSalesQuestionBank.swift in Sources */,
+				C10000000000000000000080 /* MultiAgentQuestionBank.swift in Sources */,
+				C10000000000000000000082 /* TracingAnalyticsQuestionBank.swift in Sources */,
+				C10000000000000000000084 /* MultiAgentStudyBank.swift in Sources */,
+				C10000000000000000000086 /* TracingAnalyticsStudyBank.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -72,7 +72,7 @@
     "studyBank": "agentops",
     "storageKeyPrefix": "agentops",
     "isBonusTopic": true,
-    "subtitle": "Bonus Topic — Not an official Salesforce certification",
+    "subtitle": "Deep Dive — Not an official Salesforce certification",
     "guideFile": "agentops",
     "quizLengths": [
       {
@@ -171,7 +171,7 @@
     "studyBank": "reasoningengine",
     "storageKeyPrefix": "reasoningengine",
     "isBonusTopic": true,
-    "subtitle": "Bonus Topic — Not an official Salesforce certification",
+    "subtitle": "Deep Dive — Not an official Salesforce certification",
     "guideFile": "reasoningengine",
     "quizLengths": [
       {
@@ -217,7 +217,7 @@
     "studyBank": "rag",
     "storageKeyPrefix": "rag",
     "isBonusTopic": true,
-    "subtitle": "Bonus Topic — Not an official Salesforce certification",
+    "subtitle": "Deep Dive — Not an official Salesforce certification",
     "guideFile": "rag",
     "quizLengths": [
       {
@@ -250,6 +250,96 @@
         "icon": "⭐",
         "subtitle": "Full Question Bank",
         "duration": "~39 min",
+        "questionIDRange": null
+      }
+    ]
+  },
+  {
+    "id": "multiagent",
+    "name": "Multi-Agent Architecture in Agentforce",
+    "shortName": "Multi-Agent",
+    "icon": "🔀",
+    "primaryColor": "#3366B3",
+    "secondaryColor": "#007AFF",
+    "headerGradient": [
+      "#1F4785",
+      "#26528F",
+      "#2E5C99"
+    ],
+    "passingScore": 70,
+    "questionBank": "multiagent",
+    "studyBank": "multiagent",
+    "storageKeyPrefix": "multiagent",
+    "isBonusTopic": true,
+    "subtitle": "Deep Dive — Not an official Salesforce certification",
+    "quizLengths": [
+      {
+        "id": 15,
+        "label": "15 Questions",
+        "icon": "⚡",
+        "subtitle": "Quick Review",
+        "duration": "~8 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 30,
+        "label": "30 Questions",
+        "icon": "🔥",
+        "subtitle": "Standard Practice",
+        "duration": "~15 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 65,
+        "label": "All 65 Questions",
+        "icon": "⭐",
+        "subtitle": "Full Question Bank",
+        "duration": "~33 min",
+        "questionIDRange": null
+      }
+    ]
+  },
+  {
+    "id": "tracinganalytics",
+    "name": "Agentforce Tracing and Analytics",
+    "shortName": "Tracing & Analytics",
+    "icon": "📈",
+    "primaryColor": "#1A808C",
+    "secondaryColor": "#30B0C7",
+    "headerGradient": [
+      "#0F5761",
+      "#14616B",
+      "#1A6B75"
+    ],
+    "passingScore": 70,
+    "questionBank": "tracinganalytics",
+    "studyBank": "tracinganalytics",
+    "storageKeyPrefix": "tracinganalytics",
+    "isBonusTopic": true,
+    "subtitle": "Deep Dive — Not an official Salesforce certification",
+    "quizLengths": [
+      {
+        "id": 15,
+        "label": "15 Questions",
+        "icon": "⚡",
+        "subtitle": "Quick Review",
+        "duration": "~8 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 30,
+        "label": "30 Questions",
+        "icon": "🔥",
+        "subtitle": "Standard Practice",
+        "duration": "~15 min",
+        "questionIDRange": null
+      },
+      {
+        "id": 72,
+        "label": "All 72 Questions",
+        "icon": "⭐",
+        "subtitle": "Full Question Bank",
+        "duration": "~36 min",
         "questionIDRange": null
       }
     ]
