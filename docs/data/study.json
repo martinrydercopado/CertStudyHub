@@ -12150,7 +12150,7 @@
               "id": "pm_1_1",
               "number": 1,
               "question": "What is Layer 1 of the RAG permission model and what happens when it is missing?",
-              "answer": "Layer 1: Data Cloud Permission Set on the Agent User. The Einstein Agent User must hold a Data Cloud permission set or permission set license. Assignment priority: (1) GenieDataPlatformStarterPsl (PSL) if found; (2) GenieUserEnhancedSecurity (PS); (3) DataCloudUser (PS); (4) DataCloudArchitect (PS) \u2014 last resort, over-privileged but functional. What happens when missing: AnswerQuestionsWithKnowledge returns an empty knowledgeSummary for every query. The agent refuses every question with no error message indicating the root cause."
+              "answer": "Layer 1: Data Cloud Permission Set on the Agent User. The Einstein Agent User must hold a Data Cloud permission set or permission set license. Assignment priority: (1) Data Cloud (api name = GenieDataPlatformStarterPsl) (PSL) if found; (2) Data Cloud User (api name = GenieUserEnhancedSecurity) (PS); (3) Data Cloud Architect (api name = GenieAdmin) (PS) \u2014 last resort, over-privileged but functional. What happens when missing: AnswerQuestionsWithKnowledge returns an empty knowledgeSummary for every query. The agent refuses every question with no error message indicating the root cause."
             },
             {
               "id": "pm_1_2",
