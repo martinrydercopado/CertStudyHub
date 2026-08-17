@@ -413,7 +413,8 @@ enum CertCatalog {
         studySections: MultiAgentStudyBank.sections,
         storageKeyPrefix: "multiagent",
         isBonusTopic: true,
-        subtitle: "Deep Dive — Not an official Salesforce certification"
+        subtitle: "Deep Dive — Not an official Salesforce certification",
+        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=multiagent")
     )
 
     static let tracinganalytics = CertConfig(
@@ -438,7 +439,8 @@ enum CertCatalog {
         studySections: TracingAnalyticsStudyBank.sections,
         storageKeyPrefix: "tracinganalytics",
         isBonusTopic: true,
-        subtitle: "Deep Dive — Not an official Salesforce certification"
+        subtitle: "Deep Dive — Not an official Salesforce certification",
+        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=tracinganalytics")
     )
 
     static let uxDesigner = CertConfig(

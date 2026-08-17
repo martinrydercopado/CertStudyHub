@@ -272,6 +272,7 @@
     "storageKeyPrefix": "multiagent",
     "isBonusTopic": true,
     "subtitle": "Deep Dive — Not an official Salesforce certification",
+    "guideFile": "multiagent",
     "quizLengths": [
       {
         "id": 15,
@@ -317,6 +318,7 @@
     "storageKeyPrefix": "tracinganalytics",
     "isBonusTopic": true,
     "subtitle": "Deep Dive — Not an official Salesforce certification",
+    "guideFile": "tracinganalytics",
     "quizLengths": [
       {
         "id": 15,
