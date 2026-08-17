@@ -429,7 +429,7 @@
   // ── Cert Picker Screen ────────────────────────────────────
 
   function renderCertPicker() {
-    var cards = state.certs.map(function (cert) {
+    var cards = state.certs.filter(function (cert) { return !cert.isBonusTopic; }).map(function (cert) {
       var qBank = getQuestionsForCert(cert);
       var questionCount = qBank.length;
       var studySections = state.studyData[cert.studyBank] || [];
