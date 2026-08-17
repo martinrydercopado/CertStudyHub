@@ -59809,6 +59809,156 @@
       ],
       "explanation": "STDM supports bidirectional trace lookup, and the `PreviousSessionId` field specifically enables tracing backward from a subagent session to the Primary Agent's session ID. B is incorrect: STDM explicitly supports backward lookup via `PreviousSessionId`, not just forward lookup, making manual timestamp searching unnecessary. C is incorrect: `@outputs.X` is a reasoning-scope reference for action outputs within a turn, not a documented STDM field used for cross-session trace lookup. D is incorrect: The Agent Card's `endpoint` field supports A2A discovery, not STDM's internal session trace linkage, which uses `PreviousSessionId` instead.",
       "type": "single-select"
+    },
+    {
+      "id": 66,
+      "question": "An organization is rolling out its first Agentforce initiative and wants to map its rollout activities to the documented agent governance lifecycle. A team is currently integrating a third-party agent using sf agent mcp create and defining organizational policies for how agents may be used. Which two lifecycle stages are they currently working in?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "Register, since integrating third-party agents and MCP servers via sf agent mcp create falls under this stage."
+        },
+        {
+          "letter": "B",
+          "text": "Discover, since browsing and evaluating available agents in Agentforce Studio or the Asset Library defines this stage."
+        },
+        {
+          "letter": "C",
+          "text": "Govern, since defining and enforcing organizational policies is the responsibility of the Agentforce Gateway at this stage."
+        },
+        {
+          "letter": "D",
+          "text": "Publish, since distributing agents to internal or external marketplaces via Agent Exchange defines this stage."
+        },
+        {
+          "letter": "E",
+          "text": "Observe and Test, since monitoring performance and validating functionality through the Testing Center and STDM defines this stage."
+        }
+      ],
+      "correctAnswers": [
+        "A",
+        "C"
+      ],
+      "explanation": "Registering third-party agents and MCP servers via sf agent mcp create is explicitly the Register stage, while defining and enforcing organizational policies is the Govern stage, handled through the Agentforce Gateway. B is incorrect: Discover is about browsing and evaluating available agents in Agentforce Studio or the Asset Library, not integrating or registering them. D is incorrect: Publish concerns distributing agents to marketplaces via Agent Exchange, which is not described in this scenario. E is incorrect: Observe and Test concerns monitoring and tracing via the Testing Center and STDM, not registration or policy definition.",
+      "type": "multi-select"
+    },
+    {
+      "id": 67,
+      "question": "An architect is documenting the platform's retry policy for failed agent actions and needs to identify which failure conditions are eligible for automatic retry. Which two failure conditions are retry-eligible?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "Transient model or platform failures, since these are typically temporary and likely to succeed on a subsequent attempt."
+        },
+        {
+          "letter": "B",
+          "text": "No topic matched by the router, since a retry may produce a different routing outcome on the next attempt."
+        },
+        {
+          "letter": "C",
+          "text": "Integration failures against external systems, since transient network or service issues are likely to resolve on retry."
+        },
+        {
+          "letter": "D",
+          "text": "Input exceeding the maximum allowed length, since the platform may truncate and retry automatically."
+        },
+        {
+          "letter": "E",
+          "text": "Authorization or permission failures, since a retry may grant the caller the required access on the next attempt."
+        }
+      ],
+      "correctAnswers": [
+        "A",
+        "C"
+      ],
+      "explanation": "Transient model/platform failures and integration failures against external systems are both documented as retry-eligible conditions, since these are typically temporary and likely to succeed on a subsequent attempt. B is incorrect: When no topic is matched, the router lacks a valid destination entirely, so retrying the same unmatched request will not produce a different routing outcome. D is incorrect: Input exceeding the maximum allowed length is a validation failure that will fail identically on retry unless the input itself is shortened. E is incorrect: An authorization or permission failure indicates the caller lacks the required access, which a retry does not grant \u2014 it requires resolving the underlying permission issue instead.",
+      "type": "multi-select"
+    },
+    {
+      "id": 68,
+      "question": "Continuing the retry policy documentation, the architect also needs to identify when a transfer limit is reached during subagent delegation. Should the system retry the transfer, and why?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "Yes, transfer limit failures should always be retried immediately, since delegation depth limits are transient and typically resolve themselves on a second attempt."
+        },
+        {
+          "letter": "B",
+          "text": "No, transfer limit failures should not be retried, since the limit (such as SOMA's 2-level or MOMA's 1-level delegation depth cap) is a hard architectural constraint that a retry cannot change."
+        },
+        {
+          "letter": "C",
+          "text": "Yes, but only if the retry is routed through a different subagent than the one that originally hit the limit, which resolves the depth constraint."
+        },
+        {
+          "letter": "D",
+          "text": "No, but only because transfer limit failures are automatically converted into after_reasoning cleanup tasks instead of being retried."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Transfer/delegation depth limits (like SOMA's 2-level or MOMA's 1-level caps) are hard architectural constraints; retrying the same transfer does not change the underlying limit, so retry is not appropriate here. A is incorrect: The limit is a structural constraint, not a transient condition, so immediate retry will hit the exact same limit again. C is incorrect: Routing through a different subagent does not change the delegation depth already consumed by the chain; the limit is about depth, not which subagent is used. D is incorrect: There is no documented mechanism that automatically converts transfer limit failures into after_reasoning cleanup tasks.",
+      "type": "single-select"
+    },
+    {
+      "id": 69,
+      "question": "An organization has mastered Agent Script syntax and is now introducing subagent segmentation with mutually exclusive descriptions, but has not yet begun stratifying models or building SOMA orchestration. According to the documented six-level agentic maturity roadmap, which level are they currently operating at, and what should they focus on next?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "They are at Level 2 (Subagent Segmentation) and should focus next on Level 3, Model Stratification, before attempting SOMA orchestration."
+        },
+        {
+          "letter": "B",
+          "text": "They are at Level 4 (SOMA Orchestration) already, since introducing any subagent segmentation automatically implies Superagent-level orchestration is in place."
+        },
+        {
+          "letter": "C",
+          "text": "They are at Level 1 (Agent Script Mastery) still, since subagent segmentation is considered part of core syntax mastery rather than its own level."
+        },
+        {
+          "letter": "D",
+          "text": "They are at Level 6 (Full Ecosystem Integration), since mutually exclusive descriptions are a prerequisite for MCP and A2A protocol adoption."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Level 2 of the roadmap is defined by subagent segmentation practices including the three triggers and mutually exclusive descriptions; the documented next step is Level 3, Model Stratification, before progressing to Level 4, SOMA Orchestration. B is incorrect: SOMA Orchestration (Level 4) requires deliberate Superagent design and bidirectional variable sync configuration; it is not automatically implied merely by having segmented subagents. C is incorrect: Subagent segmentation with mutually exclusive descriptions is explicitly Level 2 in the roadmap, distinct from Level 1's syntax-focused skills. D is incorrect: Level 6, Full Ecosystem Integration, involves multi-protocol architectures and Custom Evals; it is far beyond the described state and is not a prerequisite relationship stated in the roadmap.",
+      "type": "single-select"
+    },
+    {
+      "id": 70,
+      "question": "A subagent renders a structured JSON payload that a downstream UI component parses and displays as a formatted table, and separately, a compliance-regulated subagent's response must be reviewed by a human before the customer sees it. In which two scenarios should token streaming be disabled?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "When the response is structured output that a downstream system will parse programmatically, since partial or malformed fragments could break the parser if streamed token by token."
+        },
+        {
+          "letter": "B",
+          "text": "When the response must pass a compliance-gated review before being shown to the user, since streaming would expose unreviewed partial content before the review can occur."
+        },
+        {
+          "letter": "C",
+          "text": "When the response is a short, simple conversational acknowledgment with no downstream parsing or review requirement."
+        },
+        {
+          "letter": "D",
+          "text": "When the subagent is using Claude Haiku 4.5 instead of a heavier reasoning model, since lightweight models are documented as incompatible with streaming."
+        },
+        {
+          "letter": "E",
+          "text": "When the response is being delivered in Handoff Mode instead of Supervised Mode, since Handoff Mode is documented as always disabling streaming by default."
+        }
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": "Streaming should be disabled for structured output rendering, since a downstream parser needs the complete, well-formed payload rather than incremental fragments (A), and for compliance-gated response review, since streaming would let unreviewed partial content reach the user before review completes (B). C is incorrect: A short, simple acknowledgment with no parsing or review requirement is exactly the case where streaming is safe and typically preferred for responsiveness, not a reason to disable it. D is incorrect: Model choice (e.g., Claude Haiku 4.5) is unrelated to streaming compatibility; there is no documented restriction tying streaming support to a specific model. E is incorrect: Handoff Mode's latency advantage comes from removing the synthesis hop, not from disabling streaming by default; streaming and response mode are independent, documented separately.",
+      "type": "multi-select"
     }
   ],
   "tracinganalytics": [
@@ -61789,6 +61939,141 @@
       ],
       "explanation": "Each of these three permissions maps to a clearly distinct purpose \u2014 Data Cloud administration, agent authoring, and runtime service execution \u2014 and none of them substitute for each other. C is incorrect: This permission grants Data Cloud query access for knowledge-grounded runtime queries, not administrative setup access to data streams. D is incorrect: Data Cloud Data Access grants read access to DMOs for querying, not authoring or publishing capability in Studio.",
       "type": "multi-select"
+    },
+    {
+      "id": 73,
+      "question": "According to Salesforce best-practice guidance on credit consumption, which statement accurately reflects how actions are billed when an Agentforce agent executes a session?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "Flow actions, Apex actions, and Prompt Templates are all billed at a flat rate of 20 credits per invocation, with no variation by action type."
+        },
+        {
+          "letter": "B",
+          "text": "Framework operations such as @utils.transition and @utils.setVariables cost 20 credits each because they still require an LLM reasoning turn to execute."
+        },
+        {
+          "letter": "C",
+          "text": "Flow, Apex, and other actions cost 20 credits per execution, while Prompt Templates cost 2-16 credits per invocation depending on complexity."
+        },
+        {
+          "letter": "D",
+          "text": "Prompt Templates always cost more credits than Flow or Apex actions because they invoke a full LLM reasoning turn on every call."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Flow, Apex, and other actions cost 20 credits per execution, while Prompt Templates cost 2-16 credits per invocation depending on complexity \u2014 a distinct billing tier. A is incorrect: Prompt Templates are billed on a 2-16 credit range, not a flat 20-credit rate. B is incorrect: Framework navigation and state-management operations are free; they don't invoke the LLM at all. D is incorrect: Prompt Templates cost 2-16 credits, which is typically less than the flat 20-credit cost of Flow or Apex actions.",
+      "type": "single-select"
+    },
+    {
+      "id": 74,
+      "question": "A developer wants to manually inspect the trace file for a specific failed turn during local preview testing. Per Salesforce documentation on the Agent Script CLI preview workflow, where would that trace file be located?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "In the org's Data Cloud data model objects, queryable directly via SOQL against ssot__TelemetryTraceSpan__dlm."
+        },
+        {
+          "letter": "B",
+          "text": "Embedded inside the metadata.json file at the root of the local project directory."
+        },
+        {
+          "letter": "C",
+          "text": "In a single consolidated transcript.jsonl file containing every turn's full execution trace inline."
+        },
+        {
+          "letter": "D",
+          "text": "At .sfdx/agents/AGENT_NAME/sessions/<SESSION_ID>/traces/<PLAN_ID>.json, with the plan ID pulled from that turn's transcript entry."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Local CLI preview traces are written to .sfdx/agents/AGENT_NAME/sessions/<SESSION_ID>/traces/<PLAN_ID>.json, with the plan ID pulled from the corresponding transcript entry. A is incorrect: Session Tracing DMOs hold production/sandbox org-level data; local CLI preview traces are written to disk, not Data Cloud. B is incorrect: metadata.json holds session-level info like sessionId and startTime, not individual turn traces. C is incorrect: transcript.jsonl is the conversation log; detailed per-turn traces live in separate files under traces/, named by plan ID.",
+      "type": "single-select"
+    },
+    {
+      "id": 75,
+      "question": "Per Salesforce's recommended proactive monitoring thresholds, an alert configured for \"Error Volume\" should be set to trigger under which condition?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "More than 25 errors within a 5-minute window, typically signaling a platform-level or integration issue."
+        },
+        {
+          "letter": "B",
+          "text": "More than 10 errors within a 5-minute window, mirroring the same threshold used for Agent Escalation Rate."
+        },
+        {
+          "letter": "C",
+          "text": "More than 25 errors within a 30-minute window, since error volume is expected to fluctuate more slowly than escalation rate."
+        },
+        {
+          "letter": "D",
+          "text": "Any single error occurrence, since even one error should immediately page the on-call team regardless of volume."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The recommended Error Volume threshold is more than 25 errors within a 5-minute window, typically signaling a platform-level or integration issue. B is incorrect: The Escalation Rate threshold (>10 fallbacks per 5 minutes) is a separate, distinct metric from Error Volume. C is incorrect: The recommended Error Volume window is 5 minutes, matching the same cadence as other proactive alerts, not 30 minutes. D is incorrect: A single-error trigger would create excessive noise; the documented threshold is a volume-based rate, not any occurrence.",
+      "type": "single-select"
+    },
+    {
+      "id": 76,
+      "question": "A Success Architect is setting stakeholder expectations about current versus future observability capabilities. Which of the following is accurately described as a roadmap item rather than something available today?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "Viewing individual execution traces for a session, including the full LLM prompt sent at each reasoning step."
+        },
+        {
+          "letter": "B",
+          "text": "Native RAG Quality Metrics \u2014 hit rate, relevance, and citation accuracy \u2014 for knowledge-grounded agents."
+        },
+        {
+          "letter": "C",
+          "text": "Profiling back-end performance down to individual Apex and Flow invocations using Agent Platform Tracing."
+        },
+        {
+          "letter": "D",
+          "text": "Monitoring escalation rates and session volume in near real-time using built-in dashboards."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Native RAG Quality Metrics \u2014 hit rate, relevance, and citation accuracy \u2014 are a roadmap item, not yet available natively today. A is incorrect: Session-level trace inspection, including full LLM prompts, is already available today via the Plan Tracer. C is incorrect: Agent Platform Tracing already profiles back-end Apex/Flow performance today; it isn't a future capability. D is incorrect: Near real-time escalation rate and session volume monitoring is already available via built-in dashboards.",
+      "type": "single-select"
+    },
+    {
+      "id": 77,
+      "question": "Which out-of-the-box panel on the Agentforce Analytics Dashboard is used specifically as the overall effectiveness benchmark for an agent, distinct from Deflection Rate or Escalation Rate?",
+      "options": [
+        {
+          "letter": "A",
+          "text": "Sub-agent Invocations, which shows which subagents fire and how often to assess routing health."
+        },
+        {
+          "letter": "B",
+          "text": "Session Duration, which tracks average conversation length as a proxy for resolution complexity."
+        },
+        {
+          "letter": "C",
+          "text": "End-to-End Workflow Resolution, which tracks full session success rate over rolling periods as the overall effectiveness benchmark."
+        },
+        {
+          "letter": "D",
+          "text": "Token usage per session, which tracks AI cost-per-transaction for finance and budget owners."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "End-to-End Workflow Resolution tracks full session success rate over rolling periods and serves as the overall effectiveness benchmark, distinct from Deflection Rate or Escalation Rate. A is incorrect: Sub-agent Invocations measures routing health and usage distribution, not overall session success. B is incorrect: Session Duration is a proxy for resolution complexity, not the documented overall effectiveness benchmark. D is incorrect: Token usage per session is a cost-attribution metric, not an effectiveness benchmark.",
+      "type": "single-select"
     }
   ]
 }

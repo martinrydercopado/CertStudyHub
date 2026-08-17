@@ -407,7 +407,7 @@ enum CertCatalog {
         quizLengths: [
             QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
             QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
-            QuizLength(id: 65, label: "All 65 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~33 min")
+            QuizLength(id: 70, label: "All 70 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~35 min")
         ],
         questions: MultiAgentQuestionBank.all,
         studySections: MultiAgentStudyBank.sections,
@@ -432,7 +432,7 @@ enum CertCatalog {
         quizLengths: [
             QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
             QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
-            QuizLength(id: 72, label: "All 72 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~36 min")
+            QuizLength(id: 77, label: "All 77 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~39 min")
         ],
         questions: TracingAnalyticsQuestionBank.all,
         studySections: TracingAnalyticsStudyBank.sections,
