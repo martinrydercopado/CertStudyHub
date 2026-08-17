@@ -64,7 +64,7 @@
    - [2.23 Einstein Search Retriever ID substitution across orgs](#223-einstein-search-retriever-id-substitution-across-orgs)
    - [2.24 Distinguishing deployment success from behavioral change confirmation](#224-distinguishing-deployment-success-from-behavioral-change-confirmation)
    - [2.25 Pre-flight verification checklist](#225-pre-flight-verification-checklist)
-   - [2.26 The five-step CI pipeline sequence](#226-the-five-step-ci-pipeline-sequence)
+   - [2.26 The seven-step CI pipeline sequence](#226-the-seven-step-ci-pipeline-sequence)
    - [2.27 Manual steps that cannot be automated](#227-manual-steps-that-cannot-be-automated)
    - [2.28 Common deployment error patterns](#228-common-deployment-error-patterns)
 
@@ -161,11 +161,24 @@ The reason this matters is drift. An agent's behavior can change without any met
 
 Traditional Salesforce rollback is conceptually simple: redeploy the previous version of the metadata from source control. Restore what was there before. Done.
 
-Agentforce adds a faster option that has no traditional equivalent. Because each published agent compiles into a `BotVersion` with its own runtime graph, you can reactivate a prior BotVersion in seconds using `sf agent activate --version {prior}` — without redeploying any metadata at all. The prior version's compiled runtime graph is already present in the org. Users switch to the prior behavior immediately.
+Agentforce adds a faster option that has no traditional equivalent. Because each published agent compiles into a `BotVersion` with its own runtime graph, you can reactivate a prior BotVersion in seconds — without redeploying any metadata at all. The prior version's compiled runtime graph is already present in the org. Users switch to the prior behavior immediately.
+
+Rollback requires a three-step process: deactivate the current version, query `BotVersion` to identify the prior version number, then activate using `--version-number`. There is no shorthand `--version` flag on `sf agent activate`.
+
+```bash
+# Step 1: Deactivate the current version
+sf agent deactivate --json --api-name MyAgent
+
+# Step 2: Query for the prior version number
+sf data query --json -q "SELECT Id, VersionNumber, Status FROM BotVersion WHERE BotDefinition.DeveloperName = 'MyAgent' ORDER BY VersionNumber DESC LIMIT 2"
+
+# Step 3: Activate the prior version by its version number
+sf agent activate --json --api-name MyAgent --version-number <prior_version_number>
+```
 
 This is only possible if the prior BotVersion has not been deleted. Retaining at least the two most recent BotVersions in production at all times is not optional. It is the safety net that makes fast rollback possible.
 
-> **Scenario:** A new BotVersion activates on Monday morning. By 9:15 AM, the operations team sees a spike in escalation rate in the STDM dashboard. The on-call engineer runs `sf agent activate --version 1` against production. By 9:17 AM, the prior behavior is restored. Total user-facing downtime: two minutes. That is only possible because the prior BotVersion was not deleted after the new one activated, and the rollback command was already documented in the deployment runbook.
+> **Scenario:** A new BotVersion activates on Monday morning. By 9:15 AM, the operations team sees a spike in escalation rate in the STDM dashboard. The on-call engineer deactivates the current version, queries `BotVersion` for the prior version number, and activates it with `sf agent activate --json --api-name MyAgent --version-number <prior>`. By 9:17 AM, the prior behavior is restored. Total user-facing downtime: two minutes. That is only possible because the prior BotVersion was not deleted after the new one activated, and the rollback procedure was already documented in the deployment runbook.
 
 ---
 
@@ -670,11 +683,11 @@ sf agent publish authoring-bundle --json \
 
 # Run behavioral evaluation gate
 sf agent test run --json \
-  --spec specs/My_Agent_Regression_Suite.yaml --target-org target-env
+  --api-name My_Agent_Regression_Suite --wait 5
 
 # Activate the new version
 sf agent activate --json \
-  --api-name My_Agent --version 2 --target-org target-env
+  --api-name My_Agent --version-number 2 --target-org target-env
 ```
 
 After publishing, run the behavioral evaluation gate. Only after it passes should you activate the new BotVersion — the step that actually exposes users to the new behavior.
@@ -734,7 +747,7 @@ Missing any of these prerequisites produces errors that appear to be deployment 
 
 ---
 
-### 2.26 The five-step CI pipeline sequence
+### 2.26 The seven-step CI pipeline sequence
 
 ```
 1. [Pre-flight]  Verify Einstein Setup, licensing, agent user
@@ -891,11 +904,13 @@ sf agent test create --json \
   --agent-api-name My_Agent \
   --target-org DevSandbox
 
-# Run the evaluation
+# Run the evaluation (uses the AiEvaluationDefinition created by test create, not the YAML spec)
 sf agent test run --json \
-  --spec specs/My_Agent_testSpec.yaml \
+  --api-name "My Agent Regression Suite" --wait 5 \
   --target-org DevSandbox
 ```
+
+> `sf agent test run` takes `--api-name` (the name of the `AiEvaluationDefinition` created by `test create`), not `--spec`. The YAML spec file is only consumed by `sf agent test create`. Always run `test create` before `test run`.
 
 The agent must be published before `sf agent generate test-spec` can reference it. Attempting to run this against an unpublished agent produces `Error: Agent does not exist`.
 
@@ -919,7 +934,7 @@ On every `release/*` branch, run `sf agent test run --json` and store the comple
 
 ```bash
 sf agent test run --json \
-  --spec specs/My_Agent_Regression_Suite.yaml \
+  --api-name My_Agent_Regression_Suite --wait 5 \
   --target-org uat-env \
   > artifacts/regression-baseline-$(date +%Y%m%d-%H%M%S).json
 ```
@@ -1097,7 +1112,22 @@ Salesforce's three annual releases can also affect agent behavior invisibly: API
 
 ### 4.8 Option 1: Reactivating a prior BotVersion
 
-Reactivating a prior BotVersion using `sf agent activate --version {prior}` is the fastest rollback path, completing in seconds. It switches users to the prior agent version without redeploying any metadata. This is the preferred path for behavioral or routing regressions where the underlying action implementations have not changed.
+Reactivating a prior BotVersion is the fastest rollback path, completing in seconds. It switches users to the prior agent version without redeploying any metadata. This is the preferred path for behavioral or routing regressions where the underlying action implementations have not changed.
+
+Rollback requires a three-step process:
+
+```bash
+# Step 1: Deactivate the current version
+sf agent deactivate --json --api-name MyAgent
+
+# Step 2: Query for the prior version number
+sf data query --json -q "SELECT Id, VersionNumber, Status FROM BotVersion WHERE BotDefinition.DeveloperName = 'MyAgent' ORDER BY VersionNumber DESC LIMIT 2"
+
+# Step 3: Activate the prior version by its version number
+sf agent activate --json --api-name MyAgent --version-number <prior_version_number>
+```
+
+> Rollback requires a three-step process: deactivate the current version, query `BotVersion` to identify the prior version number, then activate using `--version-number`. There is no shorthand `--version` flag on `sf agent activate`.
 
 The only precondition is that the prior BotVersion has not been deleted. Retaining at least the two most recent BotVersions in production is a hard requirement.
 
@@ -1130,7 +1160,7 @@ Verify via STDM telemetry that the action failure rate drops to baseline levels 
 Fast rollback depends on decisions made before the production deployment, not during a live incident.
 
 - The prior BotVersion must not have been deleted
-- The rollback command (`sf agent activate --version {prior}`) must be documented in the runbook with the exact version number pre-filled
+- The rollback procedure (deactivate → query `BotVersion` → `sf agent activate --version-number <prior>`) must be documented in the runbook with the exact version number pre-filled
 - The rollback procedure must have been tested during the Staging dry run
 - The on-call team must have read the runbook and must have the permissions required to execute without waiting for the original deployer
 
