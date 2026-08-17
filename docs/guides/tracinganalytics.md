@@ -92,13 +92,17 @@ Agent Platform Tracing is off by default and must be explicitly enabled:
 
 Users querying trace DMOs need explicit access grants. Missing permissions produce empty query results, not error messages, which makes them easy to misdiagnose as "no data exists."
 
-| Permission | Purpose | Required For |
+| API Name (use this in SOQL/CLI) | UI Label | Purpose |
 |---|---|---|
-| `Data Cloud Data Access` | Grants read access to DMOs | Querying `ssot__TelemetryTraceSpan__dlm` and all STDM tables |
-| `CopilotSalesforceAdmin` | Access to Agentforce Studio and agent APIs | `sf agent preview`, `sf agent publish`, agent authoring |
-| `GenieAdmin` | Data Cloud admin access | Managing data streams, retrievers, and Data Cloud setup |
-| `AgentforceServiceAgentUser` | Runtime execution | Einstein Agent User for service agents |
-| `GenieUserEnhancedSecurity` or `DataCloudUser` | Data Cloud query access for agent user | Knowledge-grounded agents using ADL |
+| `CopilotSalesforceAdmin` | "Agentforce Default Admin" | The primary admin permset. Covers building and managing agents, org-wide access to all agents, activating and deactivating agents, customizing subagents and actions, and monitoring agent activity. Required for authoring, CLI operations (`sf agent preview`, `sf agent publish`), and all observability surfaces. |
+| `GenieAdmin` | "Data Cloud Architect" | Access to Data Cloud Setup (requires Salesforce admin) and management of all standard Data Cloud functionality and data. Assign to any admin who needs to work with Data Cloud configuration or query DMO tables. Note: DMO query access via this permset should be verified in your org — the description does not explicitly grant it. |
+| `GenieUserEnhancedSecurity` | "Data Cloud User" | Gives view access to Data Cloud. Assign to Einstein Agent Users that need runtime Data Cloud access, such as for knowledge-grounded agents. |
+| `AgentforceServiceAgentUser` | "Agentforce Service Agent User" | Analyze topics and perform actions as an autonomous AI service agent. Assign to the Einstein Agent User identity for service agents. |
+| `AgentforceServiceAgentBuilder` | "Agentforce Service Agent Configuration" | Build and manage autonomous AI service agents. Also grants org-wide access to all agents, including managing, activating, deactivating, and monitoring agent activity. Use this for admins whose primary role is service agent configuration, as distinct from the broader `CopilotSalesforceAdmin`. |
+| `AgentforceDeveloperAndAdminTools` | "Agentforce Developer and Admin Tools" | Grants access to developer and admin tooling for Agentforce. No official description available at time of writing — verify in your org before assigning. |
+| `CDPAdmin` | "Data Cloud Admin" | Older CDP-era equivalent of `GenieAdmin`. Same access scope. If both exist in your org, `GenieAdmin` is the current standard. Do not assign both. |
+
+> **Do not query by UI label.** `GenieAdmin`'s UI label is "Data Cloud Architect" but querying `Name = 'DataCloudArchitect'` returns nothing in SOQL — the correct API name is `GenieAdmin`. The same trap applies to `CopilotSalesforceAdmin`, whose UI label is "Agentforce Default Admin."
 
 **Verification query (confirm both core admin permsets are assigned):**
 
@@ -929,7 +933,7 @@ Deploy this in the same pipeline stage as your agent metadata. This ensures that
 When a customer promotes an agent from sandbox to production:
 
 1. **Verify Platform Tracing is enabled in production** — confirm the metadata deployment succeeded or the toggle is on in Setup.
-2. **Confirm Data Cloud DMOs are accessible** — run the `DataKnowledgeSpace` query and verify permissions.
+2. **Confirm Data Cloud DMOs are accessible** — run the `DataKnowledgeSpace` query and verify that `GenieAdmin` is assigned to admins who need to work with Data Cloud configuration. If DMO query access is not functioning with `GenieAdmin` alone, also verify `CopilotSalesforceAdmin` is assigned, as monitoring access flows through that permset.
 3. **Seed baseline metrics in the first 48 hours** — dashboards need traffic to establish a baseline before alerts can be calibrated.
 4. **Configure alert thresholds before launch** — escalation rate alerts should be set relative to your expected volume, not the default absolute thresholds designed for high-volume orgs.
 5. **Switch from CLI trace review to SOQL** — the sandbox workflow of opening individual `.sfdx/` trace files does not scale to production volumes. Teach the customer team the STDM query patterns in Section 6 before go-live.
@@ -1114,7 +1118,9 @@ Is it affecting many users simultaneously?
 - [ ] Data Cloud provisioned and active (`DataKnowledgeSpace` query succeeds).
 - [ ] `CopilotSalesforceAdmin` permission set assigned to admin user.
 - [ ] `GenieAdmin` permission set assigned to admin user.
-- [ ] `Data Cloud Data Access` permission set assigned to any user who will query DMOs.
+- [ ] `GenieAdmin` assigned to any admin who will work with Data Cloud configuration or query DMO tables.
+- [ ] `AgentforceServiceAgentBuilder` assigned to admins whose primary role is service agent configuration (if distinct from the `CopilotSalesforceAdmin` holder).
+- [ ] `AgentforceDeveloperAndAdminTools` assigned to developers — verify purpose in your org before go-live.
 - [ ] Agent Platform Tracing toggled on in Setup > Agent Platform Tracing.
 - [ ] Einstein Trust Layer Audit Trail data streams enabled (if compliance logging required).
 - [ ] Alert thresholds configured before production go-live.
