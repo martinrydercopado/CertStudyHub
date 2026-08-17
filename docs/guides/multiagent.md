@@ -1,785 +1,1022 @@
 # Multi-Agent Architecture in Agentforce
-## Study Guide
+### Strategic Patterns, Interoperability Protocols, and Architectural Boundaries
 
 ---
 
-## Section 1: The Agentic Mindset and Mental Model
+## Table of Contents
 
-**Exam Weight: Foundational — tested throughout all sections**
-
-### Objective 1.1: Understand the shift from monolithic bot architecture to distributed agentic systems
-
-#### Topics
-
----
-
-**Topic: What distinguishes a distributed agentic system from a legacy decision-tree bot**
-
-A legacy monolithic bot operates on a rigid, linear series of pre-scripted if-then statements. Every possible path must be explicitly authored, and any deviation from the scripted flow results in failure. A distributed agentic system replaces this with a reasoning model that classifies intent probabilistically from conversational context, manages dynamic state across turns and agent boundaries, and enforces safety at the architecture level rather than through authored guardrails. The agent is inherently multi-purpose — it orchestrates intent dynamically rather than following a lookup table.
-
----
-
-**Topic: The three foundational assumptions of the Agentforce agentic mindset**
-
-Salesforce best practices define three assumptions that underpin every agentic design decision:
-
-1. **Intent classification is probabilistic, not programmatic.** The reasoning model selects the correct domain based on conversational context. There is no deterministic lookup table mapping input to outcome.
-2. **State is dynamic, not pre-scripted.** Variables evolve across turns, across subagents, and across agent boundaries throughout the session.
-3. **Safety is enforced at the architecture level.** Security gates, authorization checks, and trust boundaries are implemented as runtime-enforced deterministic constructs — not as natural language instructions that rely on the model to comply.
+1. [The Mental Model](#1-the-mental-model)
+2. [Syntax and Structure: The Deterministic-Reasoning Divide](#2-syntax-and-structure-the-deterministic-reasoning-divide)
+3. [Subagent Boundaries: Deterministic Triggers for Logic Segmentation](#3-subagent-boundaries-deterministic-triggers-for-logic-segmentation)
+4. [Agent Boundaries: Orchestration Thresholds and System Autonomy](#4-agent-boundaries-orchestration-thresholds-and-system-autonomy)
+5. [Multi-Agent Design Patterns: A Comparative Technical Study](#5-multi-agent-design-patterns-a-comparative-technical-study)
+6. [The Three Deployment Patterns: SOMA, MOMA, and 3P](#6-the-three-deployment-patterns-soma-moma-and-3p)
+7. [Routing Architecture and Priority](#7-routing-architecture-and-priority)
+8. [Model Selection and the `model_config` Override](#8-model-selection-and-the-model_config-override)
+9. [State, Memory, and Context Sharing](#9-state-memory-and-context-sharing)
+10. [Interoperability Protocols: MCP and A2A](#10-interoperability-protocols-mcp-and-a2a)
+11. [Common Failure Modes](#11-common-failure-modes)
+12. [Trust, Security, and Identity](#12-trust-security-and-identity)
+13. [Governance, Observability, and Quality Assurance](#13-governance-observability-and-quality-assurance)
+14. [Production Heuristics and Design Principles](#14-production-heuristics-and-design-principles)
+- [Appendix A: Key Term Glossary](#appendix-a-key-term-glossary)
+- [Appendix B: Protocol and Model Reference](#appendix-b-protocol-and-model-reference)
 
 ---
 
-**Topic: The finite state machine model — how a subagent works at runtime**
+## 1. The Mental Model
 
-Each subagent in Agentforce functions as an independent finite state machine. System intelligence emerges from the interaction of three elements working together:
+### 1.1 From Decision Trees to Distributed Reasoning
 
-- **Variables:** The agent's working memory. Values persist across turns and across subagent transitions.
-- **Instructions:** The rules that govern reasoning within a single turn. Instructions are re-evaluated after every action execution, not just at the start of the turn.
-- **Topics (Subagents):** Bounded domains of expertise. Each subagent owns a specific set of behaviors and has defined scope for what it handles.
+The enterprise landscape is undergoing a fundamental strategic shift from legacy monolithic bot architectures — rigid, linear decision trees — toward a distributed "Agentic" mindset. Architects must now view Agentforce not as a collection of static scripts, but as a **distributed reasoning system** capable of dynamic task handling.
 
-The practical consequence of this model is that you can predict and reason about agent behavior by examining state transitions across these three elements rather than trying to follow a single linear execution path.
+This paradigm shift requires abandoning hard-coded paths in favor of an architecture where a single agent is inherently multi-purpose, operating as a sophisticated orchestration of intent rather than a brittle series of if-then statements. The Agentforce Mindset assumes three things:
 
----
+- **Intent classification is probabilistic,** not programmatic. The LLM selects the right domain based on conversational context, not a lookup table.
+- **State is dynamic,** not pre-scripted. Variables evolve across turns, across subagents, and across agent boundaries.
+- **Safety is enforced at the architecture level,** not by trusting the LLM to comply with natural language instructions.
 
-### Objective 1.2: Understand the variable system taxonomy and its implications for multi-agent design
+### 1.2 The Finite State Machine Model
 
-#### Topics
+Each **subagent functions as an independent finite state machine**. The system's intelligence emerges from the interaction between three elements.
 
----
+| Element | Role |
+|---|---|
+| **Variables** | The agent's working memory. State that persists across turns and subagents. |
+| **Instructions** | The rules that govern reasoning within a turn. Re-evaluated after every action. |
+| **Topics (Subagents)** | The bounded domains of expertise. Each subagent owns a specific set of behaviors. |
 
-**Topic: The four variable types and their mutability rules**
+### 1.3 Variable System Taxonomy
 
-Salesforce documentation defines four distinct variable types, each with different scope, mutability, and failure characteristics:
+Understanding the four variable types is a prerequisite for any multi-agent design work. They have fundamentally different scopes, mutability rules, and failure modes.
 
-| Type | Mutability | How Populated | Failure Risk |
+| Type | Mutability | How Populated | Example |
 |---|---|---|---|
-| **Linked** | Read-only | External context injected at session start | Cannot be set by the agent; silent failure if treated as mutable |
-| **Mutable** | Read-write | Set by the agent during the session | Must be initialized with a default value or guards fail silently |
-| **Slot-fill** | Write-once per turn | LLM extracts value from natural speech via `...` token | Value only available within the current turn's slot-fill context |
-| **System** | Read-only | Predefined runtime context (e.g., user input) | Cannot be overridden |
+| **Linked** | Read-only | External context at session start | `customer_name` linked from contact record |
+| **Mutable** | Read-write | Set by the agent during the session | `@variables.order_id`, `@variables.verified` |
+| **Slot-fill** | Write-once per turn | LLM extracts value from conversation via `...` token | Collecting an order number from natural speech |
+| **System** | Read-only | Predefined runtime context | `@system_variables.user_input` |
 
-Understanding the distinction between these types is a prerequisite for multi-agent design because cross-subagent state passing depends on correct variable type selection.
+> **Best practice:** Always initialize mutable variables with explicit default values in the `variables:` block. An uninitialized variable returns a null-like default that can cause `available when` guards to fail silently.
 
----
-
-**Topic: Why uninitialized mutable variables are a production risk**
-
-Best practices require that every mutable variable be initialized with an explicit default value in the `variables:` block. An uninitialized mutable variable returns a null-like default at runtime. This causes `available when` guards that evaluate that variable to silently fail — the condition evaluates incorrectly, and actions that should be hidden are exposed, or actions that should be available are hidden. This class of failure produces no compile-time error, making it particularly dangerous in production.
-
-Correct pattern:
-```
+```agentscript
 variables:
     is_verified: mutable boolean = False
     order_id:    mutable string  = ""
+    # NOT: is_verified: mutable boolean  <-- uninitialized, dangerous
 ```
 
-Incorrect and dangerous pattern:
-```
-variables:
-    is_verified: mutable boolean   # no default — dangerous
-```
+### 1.4 The Core Architectural Axiom
+
+The single most important principle in Agent Script is the **execution order guarantee:**
+
+> **Deterministic logic (`->`) executes before the LLM reasoning layer engages. Always.**
+
+This is not a convention. It is a runtime contract. Actions run, variables are set, and conditionals branch exactly as written before the LLM processes any text.
+
+The practical implication: **authorization gates, trust checks, and irreversible action guards must be written as `->` logic, not as `|` natural language instructions.** Writing a guard in natural language is asking the LLM to comply. Writing it in `->` is enforcing compliance at the runtime level.
 
 ---
 
-### Objective 1.3: Understand the core execution order guarantee
+## 2. Syntax and Structure: The Deterministic-Reasoning Divide
 
-#### Topics
-
----
-
-**Topic: The deterministic-before-LLM execution contract**
-
-The single most architecturally significant principle in Agentforce agent design is the execution order guarantee: deterministic logic executes before the LLM reasoning layer engages. Always. This is a runtime contract, not a convention or suggestion.
-
-The practical consequence is that any security gate, trust check, or guard against irreversible action must be written in deterministic syntax (`->`), not as natural language instructions (`|`). Writing a guard in natural language asks the LLM to comply. Writing it in deterministic syntax enforces compliance at the runtime level, regardless of what the user says.
-
----
-
-## Section 2: Agent Script Syntax and the Deterministic-Reasoning Divide
-
-**Exam Weight: High — syntax errors and misuse are a primary source of production failures**
-
-### Objective 2.1: Distinguish between the two instruction operators and their processing contexts
-
-#### Topics
-
----
-
-**Topic: The `->` (logic) operator vs. the `|` (reasoning) operator**
-
-Agent Script uses two operators in the `reasoning.instructions` block that are processed by entirely different systems:
+### 2.1 The Two Instruction Operators
 
 | Operator | Name | What It Does | Who Processes It |
 |---|---|---|---|
-| `->` | Logic / Procedural | Executes if/else branches, `run` actions, `set` assignments, `transition` calls | The Agent Script runtime — deterministically |
-| `\|` | Reasoning / Declarative | Assembles text that forms the prompt sent to the LLM | The LLM model |
+| `->` | Logic / Procedural | Executes if/else, run, set, transition | The Agent Script runtime |
+| `\|` | Reasoning / Declarative | Assembles prompt text for the LLM | The LLM |
 
-The LLM never sees raw `->` instructions. By the time the LLM receives its prompt, all conditionals have already been resolved and all variable values have already been injected by the runtime. The LLM sees only the final assembled prompt text from the `|` lines that matched the current state.
+The LLM never sees raw `->` instructions. It receives only the assembled prompt text from `|` lines, with all conditionals already resolved and all variable values already injected.
 
----
-
-**Topic: How variable values are injected into LLM-facing prompt text**
-
-Within `|` pipe text (LLM-facing instructions), variable values are referenced using the `{!@variables.X}` syntax. This syntax signals the runtime to inject the current value of the variable before passing the text to the LLM. Using `@variables.X` directly in pipe text without the `{!...}` wrapper is a syntax error that causes silent failure — the variable name is passed as a literal string rather than its value.
-
-Correct:
-```
-| Your order {!@variables.order_id} has been updated.
-```
-
-Incorrect (silent failure):
-```
-| Your order @variables.order_id has been updated.
-```
-
----
-
-**Topic: The `instructions: ->` block structure and conditional branching**
-
-When `reasoning.instructions:` is followed by `->`, the entire block is treated as deterministic logic that the runtime processes before constructing the LLM prompt. Conditional branches using `if` determine which `|` text lines are included in the assembled prompt. Only the lines from matching branches reach the LLM — branches that do not match are discarded entirely before the prompt is assembled.
-
-```
+```agentscript
 reasoning:
     instructions: ->
         if @variables.is_verified == True:
             | Your account balance is {!@variables.account_balance}.
+              How else can I help you today?
 
         if @variables.is_verified == False:
             | I need to verify your identity before sharing account details.
+              Could you provide your registered email address?
 ```
 
----
+### 2.2 `after_reasoning` Transition Syntax
 
-### Objective 2.2: Master the instruction surface lifecycle — five distinct surfaces with distinct behaviors
+> **Critical Rule:** When placing a transition inside an `after_reasoning` block, you **must** use the deterministic bare syntax `transition to @subagent.X`. You must **never** use `@utils.transition to` here. Using `@utils.transition` in `after_reasoning` causes a compilation error.
 
-#### Topics
-
----
-
-**Topic: The five instruction surfaces and when each fires**
-
-Salesforce documentation defines five distinct instruction surfaces, each with a specific runtime moment and scope behavior:
-
-| Surface | Fires When | Who Can Use It | Scope Behavior |
-|---|---|---|---|
-| `system.instructions` (global) | Before every LLM call, across all subagents | LLM-facing | Durable persona, safety rules, global scope definitions |
-| `system.instructions` (subagent-level) | Only within the owning subagent | LLM-facing | Completely **replaces** the global block — does not merge with it |
-| `before_reasoning` | Once per turn, before any LLM processing | Runtime only — pure `->` logic | Pre-condition checks, mandatory data loads, auth gates |
-| `reasoning.instructions` | Rebuilt from scratch after every action call in the reasoning loop | Both `->` and `\|` | Current turn's objective, state injection, action guidance |
-| `after_reasoning` | Once, after the reasoning loop produces a user-facing response | Runtime only — pure `->` logic | State cleanup, post-response transitions |
-
-Understanding when each surface fires is critical for placing logic in the correct location. Logic placed on the wrong surface either does not fire at the expected time or fires in the wrong context.
-
----
-
-**Topic: The `before_reasoning` block — mandatory data loads and auth gates**
-
-The `before_reasoning` block executes outside the LLM reasoning loop. The LLM has no awareness of it. It fires once per turn before any LLM processing begins, making it the correct location for:
-
-- Mandatory data pre-loads that must be available before the LLM reasons
-- Authorization gate checks that must run before any domain logic executes
-- Routing decisions based on current variable state
-
-Because `before_reasoning` is pure `->` logic, it cannot contain `|` pipe text. It also cannot use `@utils.transition` — only the bare `transition to @subagent.X` syntax is valid here.
-
----
-
-**Topic: The `after_reasoning` block and the mid-turn transition trap**
-
-The `after_reasoning` block fires once after the reasoning loop produces a response. It is a common location for state cleanup and post-response routing. However, a critical failure mode exists: if the LLM calls a `@utils.transition` action mid-reasoning (before the loop completes), the `after_reasoning` block is completely aborted for that turn. Any logic placed exclusively in `after_reasoning` will silently fail in sessions where this occurs.
-
-Best practice: critical state cleanup and logging should be placed as deterministic `run` statements inside `reasoning.instructions`, not exclusively in `after_reasoning`. Only use `after_reasoning` for logic that is acceptable to lose if a mid-turn transition occurs.
-
-Additionally, transitions within `after_reasoning` must use bare `transition to @subagent.X` syntax. Using `@utils.transition to` in an `after_reasoning` block causes a compile error.
-
----
-
-**Topic: `reasoning.instructions` re-resolution after every action**
-
-A key runtime behavior: `reasoning.instructions` is rebuilt from scratch after every action execution within the reasoning loop. This means post-action checks that are placed at the **top** of the `reasoning.instructions` block will fire immediately when action outputs update variable values. Checks placed at the bottom of the block may not be evaluated against the freshest state in time.
-
-Best practice: always place post-action conditional checks at the top of the `reasoning.instructions` block so they fire immediately on re-resolution when the relevant variable changes.
-
----
-
-### Objective 2.3: Correctly apply action invocation patterns
-
-#### Topics
-
----
-
-**Topic: Deterministic action invocation vs. LLM-driven action invocation**
-
-Two action invocation patterns exist and are not interchangeable:
-
-| Pattern | Syntax | Who Decides to Execute | When to Use |
-|---|---|---|---|
-| **Deterministic** | `run @actions.X` inside a `->` block | The runtime — unconditionally when the `->` line is reached | Must-execute logic: mandatory data loads, authorization gates |
-| **LLM-Driven** | Listed in the `reasoning: actions:` block | The LLM selects from its available tool list contextually | Conversational, optional tool selection based on user intent |
-
-An action must be explicitly wired to one of these two patterns. Referencing an action name in `|` pipe text without listing it in the `actions:` block (for LLM-driven) or calling it with `run` (for deterministic) results in silent failure — the action is never invoked.
-
----
-
-**Topic: The `available when` guard — hiding actions from the LLM**
-
-The `available when` condition on an action definition is a first-class security primitive, not a soft hint. When the condition is not met, the action is completely absent from the LLM's tool list — not disabled or grayed out. The LLM cannot reference or call it because it does not exist in the LLM's available context for that turn.
-
-This distinction is architecturally important: it means an attacker cannot prompt-inject their way into calling a hidden action. The guard is enforced at the platform level, not by asking the LLM to comply with an instruction.
-
----
-
-**Topic: The `@utils.transition` syntax rules — where it is valid and where it is not**
-
-`@utils.transition to @subagent.X` is an LLM-facing tool. It is valid only in the `reasoning: actions:` block — places where the LLM selects it. It must never appear in `before_reasoning`, `after_reasoning`, or inside `->` logic blocks. In those contexts, the correct deterministic syntax is `transition to @subagent.X` (bare syntax, no `@utils.` prefix).
-
-| Syntax | Valid Locations | Executed By |
+| Syntax | Valid In | Executed By |
 |---|---|---|
 | `transition to @subagent.X` | `before_reasoning`, `after_reasoning`, `->` blocks | The Agent Script runtime |
 | `@utils.transition to @subagent.X` | `reasoning: actions:` block only | The LLM selects it as a tool |
 
-Using `@utils.transition` in `after_reasoning` is a compile error that blocks deployment.
+> **Lifecycle trap:** If a subagent transitions to a new subagent mid-reasoning, the original subagent's `after_reasoning` block is **completely aborted**. The new subagent's `before_reasoning` does not fire retroactively for that same turn. Never rely on `after_reasoning` for state that is critical to system correctness.
 
----
+### 2.3 Instruction Surfaces and Their Scope
 
-### Objective 2.4: Understand variable scope lifecycle rules
+Five distinct instruction surfaces exist. Each has a specific runtime moment and overwrite behavior.
 
-#### Topics
-
----
-
-**Topic: The three scope contexts — `@inputs`, `@outputs`, and `@variables`**
-
-Three reference contexts exist for action data, and each is only valid in a specific scope:
-
-| Reference | Valid Scope | Common Mistake |
+| Surface | Runs When | Scope Behavior |
 |---|---|---|
-| `@inputs.X` | Only during the `with` clause of a specific action invocation | Using it in a `set` statement after the action completes — returns null |
-| `@outputs.X` | Only in `set` or `if` statements immediately after the producing action | Referencing it two blocks later — returns null |
-| `@variables.X` | Anywhere after the variable has been set by a previous action | Referencing it before the producing action has run — returns the default value |
+| `system.instructions` (global) | Every LLM call, all subagents | Durable persona, safety, scope |
+| `system.instructions` (subagent-level) | Only in the owning subagent | **Replaces** the global block entirely; does not merge |
+| `before_reasoning` | Once per turn, before all LLM calls | Pure `->` deterministic logic only |
+| `reasoning.instructions` | Rebuilt after every tool call in the loop | Current objective, state injection, action guidance |
+| `after_reasoning` | Once, after reasoning loop produces a response | State cleanup, post-response transitions |
 
-The most common mistake is attempting to capture `@inputs.X` in a `set` statement, which silently returns null because `@inputs` is out of scope outside the `with` clause.
+### 2.4 The `before_reasoning` and `after_reasoning` Lifecycle
 
----
+These blocks execute **outside the LLM reasoning loop**. The LLM has no awareness of them.
 
-## Section 3: Subagent Boundaries and Segmentation
+```agentscript
+subagent account_inquiry:
+    before_reasoning:
+        # Fires EVERY turn, BEFORE the LLM sees anything
+        if @variables.is_verified == False:
+            transition to @subagent.identity_verification
+        run @actions.get_account_summary
+            with customer_id = @variables.customer_id
+            set @variables.account_balance = @outputs.balance
+            set @variables.account_status  = @outputs.status
+```
 
-**Exam Weight: High — architectural decision-making is a core competency**
+### 2.5 Action Invocation Patterns
 
-### Objective 3.1: Apply the minimalist default posture for subagent design
+Two invocation patterns exist and they are not interchangeable.
 
-#### Topics
-
----
-
-**Topic: Start minimal — the default single-domain agentic posture**
-
-Best practices establish a clear default: start with a single-domain agentic agent. Add subagent complexity only when justified by a concrete, named requirement. Every subagent boundary introduces routing overhead, variable passing complexity, and a new class of failure modes. Complexity added without a concrete justification creates cost without benefit.
-
-The correct design sequence is: single subagent first, then evaluate whether a specific trigger mandates segmentation. Not: assume segmentation is better and simplify later.
-
----
-
-**Topic: The three justified triggers for subagent segmentation**
-
-When a single subagent is no longer appropriate, best practices recognize exactly three triggers that justify introducing a subagent boundary:
-
-**Trigger 1 — Instruction Overload:** When instruction length has degraded reasoning fidelity to the point where the agent consistently misses rule conditions or conflates domain-specific details. The trigger is observed quality degradation, not instruction length alone.
-
-**Trigger 2 — Functional Divergence:** When two domains in the same subagent require different security guardrails, data sources, or permission levels. The LLM incurs context-switching overhead when asked to reason across domains with fundamentally different constraints in a single subagent.
-
-**Trigger 3 — Modularity and Regression Control:** When different teams own different functional areas, or when a given area changes frequently enough that co-location with other domains creates regression risk. Independent update cycles require isolated subagent boundaries.
-
----
-
-**Topic: Applying segmentation triggers to a real scenario — customer service agent example**
-
-Consider a customer service agent with three capabilities: identity verification, order status, and case management. Applying the three triggers:
-
-- `user_verification` is segmented by Trigger 2: it requires different security guardrails and a different data source than the order domain.
-- `order_status` is segmented by Trigger 3: a separate team owns it with an independent change cadence.
-- `case_management` is segmented by Trigger 1: its distinct instruction set (case taxonomy rules, escalation logic) would overload the context if mixed with order management.
-
-A key structural principle: every utterance returns to `start_agent`. Subagents do not route directly to each other — control always flows back through the router.
-
----
-
-### Objective 3.2: Determine when a subagent boundary becomes an agent boundary
-
-#### Topics
-
----
-
-**Topic: Three thresholds that require a full agent boundary, not just a subagent boundary**
-
-A shared `.agent` file means shared deployment fate. When the following conditions arise, a separate agent is required:
-
-**Boundary 1 — SDLC Independence:** When different development teams require independent release cadences, deployment pipelines, and rollback capabilities. A subagent in a shared `.agent` file is redeployed whenever any part of the agent is redeployed.
-
-**Boundary 2 — Independent External Invocability:** When a domain must be directly callable from external systems — other agents, external APIs, or orchestrators — it requires its own agent identity, its own A2A endpoint, and its own Agent Card.
-
-**Boundary 3 — Regulatory Isolation:** When different domains require different data sovereignty, tenant isolation, or compliance boundaries. These domains must reside in separate agents, and potentially in separate Salesforce orgs using MOMA.
-
----
-
-**Topic: State transfer mechanics across agent boundaries — handoff vs. round-trip**
-
-When state must cross an agent boundary, two transfer mechanisms exist with different behaviors:
-
-| Mechanism | Transfer Type | What Happens to Caller | When to Use |
+| Pattern | Syntax | Who Decides | Use Case |
 |---|---|---|---|
-| `@utils.transition` to a connected agent | One-way handoff | Caller context is discarded after the transfer | Terminal transfers where the receiving agent owns the session from that point forward |
-| `@subagent.<name>` (within same agent) | Round-trip delegation | Control returns to caller after the subagent completes | Non-terminal delegations where the calling subagent needs to act on the result |
+| **Deterministic** | `run @actions.X` inside `->` block | The runtime — unconditional | Must-execute logic: data loading, auth gates |
+| **LLM-Driven** | Listed in `reasoning: actions:` block | The LLM selects from available tools | Conversational, contextual tool selection |
 
-Using a terminal handoff when a round-trip is needed results in lost context and broken state continuity.
+```agentscript
+reasoning:
+    instructions: ->
+        # DETERMINISTIC: Always runs before LLM reasons
+        run @actions.load_customer_profile
+            with id = @variables.customer_id
+            set @variables.tier = @outputs.tier
+
+        | Customer tier is {!@variables.tier}. How can I help you today?
+
+    actions:
+        # LLM-DRIVEN: LLM decides whether and when to call this
+        upgrade_tier: @actions.upgrade_customer_tier
+            description: "Upgrades the customer to the next service tier"
+            available when @variables.tier == "Standard"
+            with customer_id = @variables.customer_id
+```
+
+> **Bug Pattern Alert:** Referencing `@actions.X` in `|` prose without also listing the action in the `actions:` block (for LLM-driven mode) or calling it with `run` (for deterministic mode) results in **silent failure**.
+
+### 2.6 Post-Action Re-Resolution and Check Placement
+
+`reasoning.instructions` is **rebuilt from scratch after every action executes**. Post-action checks placed at the **top** of the block fire immediately when variables update.
+
+```agentscript
+reasoning:
+    instructions: ->
+        # CORRECT: Post-action check at TOP — fires on re-resolution
+        if @variables.order_cancelled == True:
+            | Your order has been cancelled. Reference: {!@variables.cancellation_ref}.
+            transition to @subagent.confirmation_agent
+
+        | I can help you cancel your order. Please provide your order number.
+
+    actions:
+        cancel_order: @actions.cancel_order_action
+            description: "Cancels the specified order"
+            available when @variables.order_id != ""
+            with order_id = @variables.order_id
+            set @variables.order_cancelled  = @outputs.success
+            set @variables.cancellation_ref = @outputs.reference_number
+```
 
 ---
 
-## Section 4: Multi-Agent Design Patterns
-
-**Exam Weight: High — pattern selection is a common scenario-based question type**
-
-### Objective 4.1: Compare and select from the four multi-agent design patterns
-
-#### Topics
+> **Scenario Pause — Lifecycle Trap**
+>
+> A developer builds a checkout agent. The `payment_subagent` is supposed to log every transaction in `after_reasoning` before transitioning to `confirmation_subagent`. In production, 12% of sessions show no transaction log.
+>
+> **Root cause:** The LLM occasionally calls a `@utils.transition` action mid-reasoning. This aborts `after_reasoning`. The log action never fires for those sessions.
+>
+> **Fix:** Move the logging `run` statement into `reasoning.instructions` as a deterministic step before the transition. Confirm any `after_reasoning` transitions use bare `transition to @subagent.X` syntax.
 
 ---
 
-**Topic: Pattern 1 — Monolithic Subagent**
+## 3. Subagent Boundaries: Deterministic Triggers for Logic Segmentation
 
-All capabilities are handled in a single subagent with no routing between specialized domains.
+### 3.1 The Default Posture: Start Minimal
+
+> **Start with a single-domain agentic agent. Add complexity only when justified by a concrete, named requirement.**
+
+Every subagent boundary adds routing overhead, context-passing complexity, and a new class of failure modes.
+
+### 3.2 The Three Triggers for Subagent Segmentation
+
+**Trigger 1: Instruction Overload**
+
+Excessive instruction length degrades reasoning fidelity. Instruction length alone is not the trigger; *quality degradation* is.
+
+*Diagnostic signal:* The agent consistently misses rule conditions or conflates domain-specific details.
+
+**Trigger 2: Functional Divergence**
+
+Different processing logic, data sources, or security guardrails mixed in one subagent cause the LLM to incur context-switching overhead.
+
+*Diagnostic signal:* The agent handles two domains requiring different permissions, data sources, or trust levels.
+
+**Trigger 3: Modularity and Regression Control**
+
+Isolating distinct responsibilities enables independent update cycles.
+
+*Diagnostic signal:* Different teams own different functional areas, or the same area changes frequently enough that co-location creates regression risk.
+
+### 3.3 Case Study: Customer Service Agent Segmentation
+
+```
+start_agent (router)
+    |
+    ├── user_verification
+    |       Trigger 2: different security guardrails, different data
+    |       - Collects email address
+    |       - Verifies identity against company records
+    |       - Sets @variables.is_verified = True/False
+    |
+    ├── order_status
+    |       Trigger 3: separate team, independent change cadence
+    |       - Collects order number (slot-fill via ...)
+    |       - Retrieves order details
+    |       - Handles follow-up: expedite, cancel, reship
+    |
+    └── case_management
+            Trigger 1: distinct instruction set — mixing with order_status
+                        would overload context with case taxonomy rules
+            - Creates support cases for verified users
+            - Handles verification failures, order escalations
+            - Routes to human queue via @utils.escalate
+```
+
+**Flow of control:** Every utterance returns to `start_agent`. No subagent routes directly to another.
+
+### 3.4 The `available when` Guard as a Security Primitive
+
+When an `available when` condition is not met, the action is **completely hidden from the LLM's tool list** — not disabled, not grayed out. The LLM cannot be prompted into calling it.
+
+```agentscript
+subagent order_status:
+    reasoning:
+        instructions: ->
+            | I can help you with your order.
+        actions:
+            cancel_order: @actions.cancel_order
+                description: "Cancels the specified order"
+                available when @variables.order_id  != ""
+                    and @variables.is_verified == True
+
+            get_order_status: @actions.get_order_status
+                description: "Retrieves the current status of an order"
+                available when @variables.order_id != ""
+```
+
+---
+
+> **Scenario Pause — Trigger Evaluation**
+>
+> An architect designs an HR agent with three capabilities: leave balance inquiry, payroll inquiry, and disciplinary record inquiry.
+>
+> - Trigger 2: Disciplinary records require elevated permissions and stricter audit logging.
+> - Trigger 3: Leave and payroll share the same HR systems team. Disciplinary records are owned by Employee Relations with a different SDLC.
+>
+> **Decision:** Two subagents. `hr_inquiry` handles leave and payroll. `disciplinary_inquiry` is separate.
+
+---
+
+## 4. Agent Boundaries: Orchestration Thresholds and System Autonomy
+
+### 4.1 When a Subagent Boundary Becomes an Agent Boundary
+
+**Boundary 1: Lifecycle and SDLC Independence**
+
+A shared `.agent` file represents **shared fate**. If different development teams require independent release cadences, deployment pipelines, and rollback capabilities, those functions must reside in **separate agents**.
+
+**Boundary 2: Independent Invocation**
+
+If a domain must be directly callable from external systems — other agents, external APIs, orchestrators — it requires its own agent identity with its own A2A endpoint and Agent Card.
+
+**Boundary 3: Regulatory Isolation**
+
+When different domains require different data sovereignty, tenant isolation, or compliance boundaries, they must reside in separate agents (potentially in separate orgs via MOMA).
+
+### 4.2 State Management Across Agent Boundaries
+
+| Mechanism | Transfer Type | Caller Context | When to Use |
+|---|---|---|---|
+| `@utils.transition` to a connected agent | One-way handoff | Caller context is discarded after transfer | Terminal transfers: the subagent owns the session from this point |
+| `@subagent.<name>` (within same agent) | Round-trip delegation | Control returns to caller after subagent completes | Non-terminal delegations: caller needs to act on the result |
+
+---
+
+## 5. Multi-Agent Design Patterns: A Comparative Technical Study
+
+### Pattern 1: Monolithic Subagent
 
 | Dimension | Assessment |
 |---|---|
-| Reasoning fidelity | Low — context dilution across mixed domains |
-| State management | Simple — no cross-subagent variable passing required |
-| SDLC risk | High — any change touches all capabilities simultaneously |
-| Appropriate use | Prototypes only. Never in production for complex or mixed-domain logic. |
+| **Reasoning fidelity** | Low. Context dilution across mixed domains. |
+| **State management** | Simple. No cross-subagent variable passing. |
+| **SDLC** | High risk. Any change touches all capabilities. |
+| **Use when** | Prototype only. Never in production for complex logic. |
 
----
-
-**Topic: Pattern 2 — Single Agent with Intent Classifier (SOMA Light)**
-
-A single Salesforce org hosts one agent with multiple specialized subagents. A router (typically using the EinsteinHyperClassifier) classifies intent and transitions to the appropriate subagent.
+### Pattern 2: Single Agent with Intent Classifier (SOMA Light)
 
 | Dimension | Assessment |
 |---|---|
-| Reasoning fidelity | High — scoped, focused instructions per subagent |
-| State management | Medium — variables are shared within the same agent lifecycle |
-| SDLC risk | Medium — the entire agent is redeployed when any single subagent changes |
-| Appropriate use | One team owns all domains; infrequent updates; a shared org boundary is appropriate |
+| **Reasoning fidelity** | High. Scoped, focused instructions per subagent. |
+| **State management** | Medium. Variables shared within the same agent lifecycle. |
+| **SDLC** | Medium risk. Entire agent redeployed for any single subagent update. |
+| **Use when** | One team owns all domains; infrequent updates; shared org boundary appropriate. |
 
----
-
-**Topic: Pattern 3 — Orchestrator to Separate Agents (SOMA/MOMA)**
-
-Multiple separate agents with independent identities. An orchestrator agent delegates to specialist agents via agent-to-agent calls. Agents may reside in the same org (SOMA) or separate orgs (MOMA).
+### Pattern 3: Orchestrator to Separate Agents (SOMA/MOMA)
 
 | Dimension | Assessment |
 |---|---|
-| Reasoning fidelity | Maximum — full contextual isolation per agent |
-| State management | Complex — explicit variable mapping required across agent boundaries; MOMA caps at 10 messages of context |
-| SDLC independence | Maximum — each agent has its own deployment lifecycle |
-| Appropriate use | Different teams own each domain; regulatory isolation is required; independent external API exposure is needed |
+| **Reasoning fidelity** | Maximum. Full contextual isolation per agent. |
+| **State management** | Complex. Cross-agent state passing requires explicit variable mapping; MOMA caps at 10 messages. |
+| **SDLC** | Maximum independence. Each agent has its own deployment lifecycle. |
+| **Use when** | Different teams own each domain; regulatory isolation required; independent API exposure needed. |
 
----
-
-**Topic: Pattern 4 — Hybrid Orchestration**
-
-A combination of Patterns 2 and 3. Some domains are grouped together in the same agent (sharing genuine data affinity), while others are isolated as separate agents (requiring strict independence).
+### Pattern 4: Hybrid Orchestration
 
 | Dimension | Assessment |
 |---|---|
-| Reasoning fidelity | High for grouped domains; maximum for isolated specialists |
-| Appropriate use | When some domains share genuine data affinity and others require strict isolation or different SDLC governance |
+| **Reasoning fidelity** | High for grouped domains; maximum for isolated specialists. |
+| **Use when** | Some domains share genuine data affinity; others require strict isolation. |
+
+### Pattern Selection Decision Tree
+
+```
+Does any domain need independent API exposure or A2A invocability?
+    YES -> Pattern 3 or 4 (separate agents required)
+    NO  -> Continue
+
+Do different teams own different domains with independent release cadences?
+    YES -> Pattern 3 or 4
+    NO  -> Continue
+
+Do any domains require different permission boundaries?
+    YES -> Pattern 3 or 4
+    NO  -> Continue
+
+Would a single subagent exceed high-fidelity reasoning capacity?
+    YES -> Pattern 2 (single agent, multiple subagents)
+    NO  -> Pattern 1 (single subagent, simplest viable architecture)
+```
 
 ---
 
-**Topic: The pattern selection decision tree**
-
-When selecting a pattern, best practices recommend applying this decision sequence:
-
-1. Does any domain need independent external API exposure or A2A invocability? **Yes → Pattern 3 or 4.**
-2. Do different teams own different domains with independent release cadences? **Yes → Pattern 3 or 4.**
-3. Do any domains require different permission boundaries? **Yes → Pattern 3 or 4.**
-4. Would a single subagent exceed high-fidelity reasoning capacity? **Yes → Pattern 2.**
-5. None of the above: **Pattern 1 — single subagent, simplest viable architecture.**
+> **Scenario Pause — Pattern Selection Under Pressure**
+>
+> A fintech company wants a unified "Wealth Management Assistant." Credit analysis: Risk team, quarterly releases, strict audit. Portfolio rebalancing: Advisory team, daily updates. Client communication history: CRM, shared with 4 other agents, rarely changes.
+>
+> **Result:** Hybrid Pattern 3/4. Credit and Portfolio as separate agents (independent SDLC). Client history as a reusable subagent within a shared "Client Context Agent."
 
 ---
 
-## Section 5: Deployment Patterns — SOMA, MOMA, and 3P
+## 6. The Three Deployment Patterns: SOMA, MOMA, and 3P
 
-**Exam Weight: High — technical constraints and decision criteria are frequently tested**
+### 6.1 SOMA — Single-Org Multi-Agent
 
-### Objective 5.1: Apply SOMA architecture and understand its technical limits
+**GA technical limits:**
 
-#### Topics
-
----
-
-**Topic: SOMA technical limits and latency profile**
-
-Single-Org Multi-Agent (SOMA) operates within one Salesforce org. Key platform constraints:
-
-- Up to 7-8 subagents wide (a soft limit; the observability dashboard flags at 7)
-- Maximum 2 delegation levels deep (Agent A to Agent B; no tertiary Agent C)
+- Up to 7-8 subagents wide (soft limit; flagged in observability dashboard at 7)
+- 2 delegation levels deep (A to B; no tertiary)
 - Session duration: 24-48 hours maximum
-- Bidirectional variable sync between Superagent and subagents is supported at GA
-- Last 20 messages of conversation history are passed on each delegation
+- Bidirectional variable sync (GA)
+- Last 20 messages of conversation history passed on delegation
 
-SOMA latency profile (P95 estimates):
+**SOMA latency profile (P95):**
 
-| Mode | Typical P95 Total Latency |
-|---|---|
-| Supervised Mode (Superagent synthesizes response) | ~12-20 seconds |
-| Handoff Mode (subagent streams directly to user) | ~8-14 seconds |
-
-The synthesis hop in Supervised Mode adds approximately 2-3 seconds compared to Handoff Mode.
-
----
-
-**Topic: Handoff Mode vs. Supervised Mode — tradeoffs**
-
-| Dimension | Supervised Mode | Handoff Mode |
+| Hop | Component | Overhead |
 |---|---|---|
-| Who responds to the user | Superagent synthesizes the subagent's output | Subagent streams directly to the user |
-| Latency | Higher (synthesis hop adds ~2-3s) | Lower (synthesis hop removed) |
-| Multi-intent support | Yes — Superagent can coordinate across multiple subagents | No — single-intent only per turn |
-| Best for | Complex sessions requiring Superagent-level coherence | High-volume, latency-sensitive, single-intent interactions |
+| Hop 1 | Orchestrator routing (EinsteinHyperClassifier) | +3-5s |
+| Hop 2 | Agent-to-agent API call | +2-4s |
+| Hop 3 | Subagent topic selection (LLM) | +3-5s |
+| Hop 4 | Response synthesis — Supervised Mode only | +2-3s |
+| **P95 Total (Supervised)** | | **~12-20s** |
+| **P95 Total (Handoff Mode)** | Hop 4 removed | **~8-14s** |
 
----
+### 6.2 MOMA — Multi-Org Multi-Agent
 
-### Objective 5.2: Apply MOMA architecture and know when it is and is not the right choice
+**Before you choose MOMA: evaluate Data Cloud Zero-Copy Federation first.**
 
-#### Topics
+MOMA carries significant technical constraints: a 10-message context cap, JWT-based identity propagation complexity, pass-by-value memory (no shared state), and a hard one-level delegation limit.
 
----
+> **Can the external org's data be federated into the primary org using Data Cloud Zero-Copy?**
+>
+> If yes, you can maintain a SOMA pattern. The data boundary concern is solved at the data layer — not the orchestration layer.
 
-**Topic: The MOMA-first question — always evaluate Data Cloud Zero-Copy Federation before choosing MOMA**
+**When MOMA is still correct despite Data Cloud availability:**
 
-Multi-Org Multi-Agent (MOMA) is not the default choice for cross-org scenarios. Best practices require evaluating Data Cloud Zero-Copy Federation first. If the external org's data can be federated into the primary org using Data Cloud Zero-Copy, the data boundary concern is solved at the data layer — and a SOMA pattern with full bidirectional variable sync, no 10-message cap, and no JWT complexity can be maintained.
+- The secondary org requires write-backs that must execute within its own tenant boundary.
+- Regulatory requirements mandate that the agent logic itself executes within the secondary org's tenancy.
+- The secondary org is owned by a separate business entity where tenant-level isolation is non-negotiable.
+- The secondary org team requires independent agent deployment governance, not just independent data access.
 
-MOMA is the correct choice only when the concern is not just data access but agent execution isolation:
+**Decision rule:** If data access alone is the constraint, solve it at the data layer with Data Cloud. If agent execution boundaries or governance isolation are the constraint, MOMA is correct.
 
-- The secondary org requires write-backs that must execute within its own tenant boundary
-- Regulatory requirements mandate that agent logic itself executes within the secondary org's tenancy
-- The secondary org is owned by a separate business entity where tenant-level isolation is non-negotiable
-- The secondary org team requires independent agent deployment governance, not just independent data access
-
----
-
-**Topic: MOMA hard architectural constraints**
-
-MOMA carries constraints that do not exist in SOMA and cannot be configured away:
+**MOMA hard architectural constraints:**
 
 | Constraint | Rule | Reason |
 |---|---|---|
-| Delegation depth | Strictly one level — Primary to Secondary; no tertiary | Prevents failure cascade and undefined context ownership |
-| Context cap | Last 10 messages passed (hard limit, not configurable) | Cross-org payload management |
-| Memory model | Pass-by-value, not shared memory | No persistent shared state exists between orgs |
+| Delegation depth | Strictly one level (Primary to Secondary; no tertiary) | Prevents failure cascade and undefined context ownership |
+| Context cap | Last 10 messages passed (hard limit) | Cross-org payload management |
+| Memory model | Pass-by-value, not shared memory | No externally shared persistent state between orgs |
 | Trust boundary | All orgs must share the same DC1 boundary | Data sovereignty compliance |
-| Org membership | One org can belong to exactly ONE trust boundary | Prevents cross-boundary leakage |
-| Agent shareability | Agents are NOT auto-shared across orgs | Security-by-default; admin must explicitly mark as shareable |
+| Org membership | One org can belong to ONE trust boundary | Prevents cross-boundary leakage |
+| Agent shareability | Agents are NOT auto-shared; admin must explicitly mark as shareable | Security-by-default posture |
 
----
+**Identity propagation in MOMA:**
 
-**Topic: MOMA identity propagation and the Guest User fallback risk**
+- **Primary path:** Email-based identity resolver maps the logged-in user across orgs without re-authentication.
+- **Fallback:** If email resolution fails, the system defaults to Guest User — a significant permission downgrade that must be explicitly planned for.
+- **Step-up authentication:** If a secondary org requires additional auth, the login prompt fires in the **primary org's interface**, not the secondary org's.
 
-In MOMA, identity is propagated across orgs via an email-based identity resolver. The logged-in user is mapped to the corresponding user in the secondary org without requiring re-authentication. However, if email resolution fails, the system silently defaults to Guest User — a significant permission downgrade that must be explicitly planned for in agent design.
+### 6.3 3P — Third-Party Agent Interoperability
 
-If a secondary org requires step-up authentication, the login prompt fires in the primary org's interface, not the secondary org's. Architects must account for this when designing user flows that cross org boundaries.
-
----
-
-### Objective 5.3: Understand third-party (3P) agent interoperability
-
-#### Topics
-
----
-
-**Topic: 3P interoperability directions, auth mechanisms, and hard limits**
-
-Third-party agent interoperability allows Agentforce to communicate with agents from other vendors via the A2A protocol.
-
-| Direction | Auth Mechanism | Current Status |
+| Direction | Auth Mechanism | Status |
 |---|---|---|
-| Outbound (Agentforce to third-party) | Named Credentials + OAuth; Guest User context only | Pilot |
-| Inbound (third-party to Agentforce) | AEA: Web-Server Flow; ASA: Client Credentials Flow | Pilot |
+| **Outbound** (AF to 3P) | Named Credentials + OAuth; Guest User only | Pilot |
+| **Inbound** (3P to AF) | AEA: Web-Server Flow; ASA: Client Credentials Flow | Pilot |
 
-Hard platform limits for 3P interactions:
-- A2A payload must conform to the A2A protocol schema
-- No parallel tasks per request
-- Plain text responses only (rich modalities planned post-Pilot)
-- 15-second hard round-trip limit — any delegation with unpredictable latency must implement SSE streaming to avoid timeout failures
+**Hard limits:** A2A payload must conform to A2A protocol schema; no parallel tasks per request; plain text responses only (rich modalities post-Pilot); 15-second round-trip limit.
 
 ---
 
-## Section 6: Routing Architecture and the EinsteinHyperClassifier
-
-**Exam Weight: High — HyperClassifier constraints are a common source of deployment failures**
-
-### Objective 6.1: Understand the routing stack and trust layer
-
-#### Topics
-
----
-
-**Topic: The four-layer routing stack — execution order**
-
-Every user message passes through four processing layers in sequence:
-
-1. **Einstein Trust Layer** — Three built-in platform guardrails run before any custom logic: `Prompt_Injection`, `Inappropriate_Content`, and `Reverse_Engineering`. A BLOCK at this layer means custom agent logic never executes.
-2. **EinsteinHyperClassifier** (when assigned as the router model) — Salesforce-owned routing model optimized for intent classification. Significantly faster and more accurate than general LLMs for this specific task. Routes to subagents via `@utils.transition` only.
-3. **Subagent Topic Selection** (standard LLM) — Full `before_reasoning` and `after_reasoning` lifecycle support exists at this level.
-4. **Subagent Action Selection** — LLM selects from the available tool list based on the assembled prompt and current context.
+> **Scenario Pause — SOMA vs. MOMA vs. Data Cloud**
+>
+> A financial services firm has credit, legal, and valuation teams. Credit uses a separate Salesforce org for regulatory isolation of bureau data.
+>
+> First question: Can the credit org's data be federated via Data Cloud Zero-Copy?
+> - If **yes, and the credit agent only needs read access:** federate and keep SOMA. No JWT complexity, no 10-message cap, full bidirectional variable sync.
+> - If **no — because the credit agent must write back to bureau systems:** MOMA is correct.
 
 ---
 
-**Topic: EinsteinHyperClassifier capabilities and hard limitations**
+## 7. Routing Architecture and Priority
 
-The EinsteinHyperClassifier is the default router model in Service Agent templates. Its advantages are speed and classification accuracy — particularly for specialized classification constraints and negative routing instructions. Its limitations are platform-enforced and cannot be configured away:
+### 7.1 The Routing Stack
 
-- **Cannot** use `before_reasoning` or `after_reasoning` blocks at the `start_agent` level
-- **Can only** use `@utils.transition` as a tool — no other action types are supported
-- Attempting to deploy a `start_agent` with `before_reasoning` logic while the HyperClassifier is assigned will cause a deployment failure
+```
+User Message
+    |
+    v
+[1] Einstein Trust Layer
+    Prompt_Injection check
+    Inappropriate_Content check
+    Reverse_Engineering check
+    BLOCK here = custom agents never execute
+    |
+    v
+[2] EinsteinHyperClassifier (when used as router model)
+    Salesforce-owned, optimized for routing (not a generic LLM)
+    Significantly faster and more accurate for classification
+    ONLY supports @utils.transition
+    PROHIBITS before_reasoning and after_reasoning blocks
+    |
+    v
+[3] Subagent Topic Selection (standard LLM)
+    Full before_reasoning / after_reasoning support here
+    |
+    v
+[4] Subagent Action Selection
+```
 
----
+### 7.2 CRITICAL: The EinsteinHyperClassifier Constraint and Model Override
 
-**Topic: The model override trade-off — gaining lifecycle hooks at the cost of routing speed**
+**EinsteinHyperClassifier advantages:**
+- Significantly faster subagent classification compared to other LLMs.
+- Increased classification accuracy, particularly for specialized classification constraints and negative instructions.
 
-When deterministic `before_reasoning` logic is needed at the router level, the solution is to override the HyperClassifier with a standard LLM via `model_config:`. This is done by adding a `model_config:` block inside `start_agent` specifying a standard model such as `sfdc_ai__DefaultGPT41`.
+**EinsteinHyperClassifier hard limitations (platform-enforced, not configurable):**
+- **Cannot** use `before_reasoning` or `after_reasoning`.
+- **Can only** use the tool `@utils.transition` — no other tool types.
 
-The trade-off is real and explicit:
+If you attempt to deploy an agent definition that includes `before_reasoning` logic at the router level while the HyperClassifier is the assigned model, **the deployment will fail**.
 
-| Requirement | Recommended Router Model |
+**Correct HyperClassifier-compatible router:**
+
+```agentscript
+# CORRECT -- HyperClassifier-compatible router
+start_agent agent_router:
+    description: "Route user requests to the appropriate specialist"
+    model_config:
+        model: "model://EinsteinHyperClassifier"
+    reasoning:
+        instructions: |
+            You are a router only. Do NOT answer questions directly.
+            Always use a transition action to route immediately.
+        actions:
+            go_to_identity: @utils.transition to @subagent.identity_verification
+                description: "Verifies user identity before sensitive operations"
+                available when @variables.verified == False
+
+            go_to_orders: @utils.transition to @subagent.order_management
+                description: "Handles order inquiries, modifications, and cancellations"
+                available when @variables.verified == True
+
+            go_to_billing: @utils.transition to @subagent.billing_support
+                description: "Processes payment questions, refunds, and invoice disputes"
+                available when @variables.verified == True
+```
+
+**What you cannot do with HyperClassifier:**
+
+```agentscript
+# WRONG -- deployment will fail if HyperClassifier is the router model
+start_agent agent_router:
+    before_reasoning:                    # PROHIBITED with HyperClassifier
+        if @variables.verified == False:
+            transition to @subagent.identity_verification
+    reasoning:
+        instructions: ->
+            | How can I help you today?
+        actions:
+            go_to_orders: @utils.transition to @subagent.order_management
+                description: "Order inquiries"
+```
+
+**How to use deterministic `before_reasoning` logic at the router level:**
+
+```agentscript
+# Router with model override -- enables before_reasoning and after_reasoning
+start_agent agent_router:
+    description: "Welcome the user and determine the appropriate subagent"
+    model_config:
+        model: "model://sfdc_ai__DefaultGPT41"    # Standard LLM replaces HyperClassifier
+    before_reasoning:
+        if @variables.verified == False:
+            transition to @subagent.identity_verification
+    reasoning:
+        instructions: ->
+            | How can I help you today?
+        actions:
+            go_to_orders: @utils.transition to @subagent.order_management
+                description: "Order inquiries"
+```
+
+**The trade-off is real.** Overriding to a standard LLM gains lifecycle hook support but adds latency and reduces routing precision.
+
+| Requirement | Model Choice |
 |---|---|
-| Maximum routing speed and classification accuracy | EinsteinHyperClassifier — no lifecycle hooks available |
-| Deterministic `before_reasoning` gate at router level | Standard LLM via `model_config:` — latency and accuracy trade-off accepted |
-| Both speed and lifecycle hooks | Use an auth gate subagent pattern: keep HyperClassifier as router; push preconditions into the first-destination subagent's `before_reasoning` |
+| Maximum routing speed and classification accuracy | EinsteinHyperClassifier — no lifecycle hooks |
+| Deterministic `before_reasoning` gate at router level | Standard LLM via `model_config:` — accepts latency trade-off |
+| Both speed and lifecycle hooks | Auth gate subagent pattern — keep HyperClassifier as router; push preconditions into the first-destination subagent |
+
+### 7.3 Routing Determinism Within Subagents
+
+Within subagents, the model is always a standard LLM (unless you override it), so `before_reasoning`, `after_reasoning`, and all lifecycle hooks are fully supported.
+
+```agentscript
+subagent order_management:
+    before_reasoning:
+        if @variables.order_id == "":
+            run @actions.get_recent_orders
+                with customer_id = @variables.customer_id
+                set @variables.recent_orders = @outputs.orders
+    reasoning:
+        instructions: ->
+            if @variables.order_id != "":
+                | I found your order. Here are the details.
+            else:
+                | Which order can I help you with?
+        actions:
+            cancel_order: @actions.cancel_order
+                description: "Cancel a specific order"
+                available when @variables.order_id  != ""
+                    and @variables.is_verified == True
+```
+
+### 7.4 Handoff Mode vs. Supervised Mode
+
+| Mode | Who Responds to User | Latency | Multi-intent Support |
+|---|---|---|---|
+| **Supervised** | Superagent synthesizes subagent output | Higher (+2-3s synthesis hop) | Yes — Superagent coordinates multiple subagents |
+| **Handoff** | Subagent streams directly to user | Lower (synthesis hop removed) | No — single-intent only |
+
+> **Session termination discrepancy:** In Preview, subagent session termination appears clean. In live channels (LEX, Slack, MIAW), session termination behavior may differ. Always validate in the **target deployment channel**.
+
+### 7.5 Description Hygiene and the `go_to_` Convention
+
+Routing accuracy depends on sharp, mutually exclusive descriptions. The EinsteinHyperClassifier treats descriptions as classification boundaries. Overlapping descriptions produce non-deterministic routing.
+
+```agentscript
+# BAD -- overlapping descriptions cause inconsistent routing
+subagent billing_support:
+    description: "Handles customer payment and account questions"
+subagent account_management:
+    description: "Handles customer account and payment issues"
+
+# GOOD -- mutually exclusive, precise descriptions
+subagent billing_support:
+    description: "Processes payments, refunds, and invoice disputes"
+subagent account_management:
+    description: "Manages profile updates, password resets, and access permissions"
+```
+
+Use the `go_to_` prefix on all transition actions. This groups transitions visually, signals routing intent to the HyperClassifier, and makes the action list scannable in complex agents.
 
 ---
 
-**Topic: Subagent description hygiene — mutually exclusive descriptions prevent non-deterministic routing**
-
-The EinsteinHyperClassifier treats subagent and transition action descriptions as classification boundaries. Overlapping or ambiguous descriptions produce non-deterministic routing — the same user utterance may route to different subagents across sessions. Best practices require that every subagent description be semantically mutually exclusive.
-
-Bad (overlapping descriptions cause routing failures):
-```
-subagent billing_support: "Handles customer payment and account questions"
-subagent account_management: "Handles customer account and payment issues"
-```
-
-Good (mutually exclusive):
-```
-subagent billing_support: "Processes payments, refunds, and invoice disputes"
-subagent account_management: "Manages profile updates, password resets, and access permissions"
-```
-
-Additionally, using the `go_to_` prefix convention on all transition actions groups transitions visually, signals routing intent to the HyperClassifier, and makes the action list scannable in complex agents.
+> **Scenario Pause — Routing Architecture Decision**
+>
+> A fraud detection team requires every conversation to be checked against a real-time fraud score before any subagent executes. The architect wants to implement this as `before_reasoning` logic in the router.
+>
+> **Problem:** The router uses the EinsteinHyperClassifier. `before_reasoning` is prohibited. A `model_config:` override would add latency and reduce routing accuracy.
+>
+> **Better solution:** Keep the HyperClassifier router. Add a dedicated `fraud_gate` subagent as the **first routing destination**. `fraud_gate` uses `before_reasoning` to run the fraud check deterministically, sets `@variables.fraud_score`, then routes to the appropriate domain subagent or terminates the session.
 
 ---
 
-## Section 7: Model Selection and the `model_config` Override
+## 8. Model Selection and the `model_config` Override
 
-**Exam Weight: Medium — model selection strategy and API name accuracy are testable**
+### 8.1 The Default Model Inheritance Chain
 
-### Objective 7.1: Apply model inheritance and override rules
+By default, Agentforce uses the **org-level model selected in Setup** for all agents and all subagents. The `model_config:` block overrides this default at any level of the hierarchy.
 
-#### Topics
-
----
-
-**Topic: The model configuration precedence chain**
-
-The model used for any subagent is determined by a precedence hierarchy — most specific wins:
+**Precedence (most specific wins):**
 
 ```
-Org-level model (configured in Salesforce Setup)
+Org-level model (Setup default)
     overridden by
-Agent-level model_config (applies to all subagents in the agent)
+Agent-level model_config (applies to all subagents in this agent)
     overridden by
-Subagent-level model_config (applies only to this specific subagent)
+Subagent-level model_config (applies only to this subagent)
 ```
 
-A `model_config:` block can be placed at three levels: inside `start_agent`, between the `system:` block and the subagent definitions (agent-level), or inside a specific `subagent` definition. Agent-level configuration is the recommended baseline; subagent-level overrides should be applied only where the reasoning complexity of a specific subagent genuinely justifies a different model.
+**Concrete example from the official docs:**
 
----
+- `MyTestAgent` sets Claude Haiku 4.5 at the agent level.
+- `HandleReservation` subagent overrides to Gemini 3.1 Pro at the subagent level.
+- Result: `HandleReservation` uses Gemini 3.1 Pro; all other subagents in `MyTestAgent` use Claude Haiku 4.5; all other agents in the org use the Salesforce default.
 
-**Topic: Salesforce-internal model API names — use `sfdc_ai__` identifiers in `model://` URIs**
+### 8.2 Syntax and Placement
 
-Model names used in `model_config:` blocks must use Salesforce-internal `sfdc_ai__` API identifiers, not the public vendor release names used by Anthropic, Google, or OpenAI. Substituting public model names causes compile errors.
+**Agent-level (between `system:` and subagents):**
 
-| Model (Common Name) | Salesforce API Name (use in `model://`) | Best For |
+```agentscript
+system:
+    instructions: "You are an AI service assistant."
+    messages:
+        welcome: "Hi, I'm an AI service assistant. How can I help?"
+        error: "Sorry, it looks like something has gone wrong."
+
+model_config:
+    model: "model://sfdc_ai__DefaultBedrockAnthropicClaude45Haiku"
+```
+
+**Subagent-level:**
+
+```agentscript
+subagent ReservationManagement:
+    description: "Handles requests to create new reservations for customers."
+    model_config:
+        model: "model://sfdc_ai__DefaultBedrockAnthropicClaude45Haiku"
+    reasoning:
+        instructions: ->
+            | When would you like your reservation?
+```
+
+**Router-level (inside `start_agent`):**
+
+```agentscript
+start_agent agent_router:
+    description: "Welcome the user and determine the appropriate subagent"
+    model_config:
+        model: "model://sfdc_ai__DefaultGPT41"
+    reasoning:
+        instructions: |
+            Route the user to the correct subagent.
+        actions:
+            go_to_reservations: @utils.transition to @subagent.ReservationManagement
+                description: "Handles reservation requests"
+```
+
+### 8.3 Officially Supported and Recommended Models
+
+> **Note on model API names:** The identifiers below are Salesforce-internal `sfdc_ai__` API names. They are distinct from the public release names used by Anthropic, Google, and OpenAI. These exact strings must be used in `model://` URIs — substituting public model names will cause compilation errors.
+
+| Model (Salesforce Name) | API Name (use in `model://`) | Best For |
 |---|---|---|
-| EinsteinHyperClassifier | `EinsteinHyperClassifier` | Router classification only |
-| GPT 4.1 | `sfdc_ai__DefaultGPT41` | Router override, general-purpose reasoning |
-| Claude Haiku 4.5 | `sfdc_ai__DefaultBedrockAnthropicClaude45Haiku` | Slot-fill, lightweight subagents, latency-sensitive tasks |
-| Gemini 3.5 Flash | `sfdc_ai__DefaultVertexAIGemini35Flash` | Fast conversational handling |
+| **GPT 4.1** | `sfdc_ai__DefaultGPT41` | Router override, general-purpose reasoning |
+| **Claude Haiku 4.5** | `sfdc_ai__DefaultBedrockAnthropicClaude45Haiku` | Slot-fill, lightweight subagents, latency-sensitive tasks |
+| **Gemini 3.5 Flash** | `sfdc_ai__DefaultVertexAIGemini35Flash` | Fast conversational handling |
 
----
+> **Important:** Other supported models may not be suitable for every agent or tool. Thoroughly test your agent with your chosen model before deploying.
 
-**Topic: Model assignment strategy by subagent type**
+### 8.4 The Model Assignment Strategy
 
-Best practices map model selection to subagent responsibility:
+| Subagent Type | Characteristics | Recommended Model |
+|---|---|---|
+| **Router / Classifier** | Routing only; no conversational reasoning | EinsteinHyperClassifier (default in Service templates) |
+| **Slot-fill Collector** | Extracts one value; no complex reasoning | Claude Haiku 4.5 (fast, low latency) |
+| **Lightweight Conversational** | Standard transactional dialogue | Agent-level default; no subagent override needed |
+| **Complex Reasoning** | Multi-step analysis, ambiguous input, regulatory compliance | Heavyweight model; subagent-level override |
+| **Escalation / Handoff** | Brief summary and route to human | Claude Haiku 4.5 |
 
-| Subagent Type | Recommended Model |
-|---|---|
-| Router / Classifier | EinsteinHyperClassifier (default in Service templates) |
-| Slot-fill Collector | Claude Haiku 4.5 (fast, low latency) |
-| Lightweight Conversational | Agent-level default; no subagent override needed |
-| Complex Reasoning (multi-step analysis, regulatory compliance) | Heavyweight model via subagent-level `model_config:` override |
-| Escalation / Handoff | Claude Haiku 4.5 (brief summary only; speed matters) |
+### 8.5 Practical Example: Model-Stratified Agent Architecture
 
-Stratifying models by subagent type reduces P95 latency materially. Using a uniform heavyweight model at every hop adds significant overhead compared to reserving expensive models only for subagents that genuinely require complex reasoning.
+```agentscript
+system:
+    instructions: "You are a customer service assistant."
+    messages:
+        welcome: "Hi, how can I help you today?"
+        error:   "Something went wrong. Please try again."
 
----
+# Agent-level default: GPT 4.1 for most subagents
+model_config:
+    model: "model://sfdc_ai__DefaultGPT41"
 
-**Topic: Testing model selections before promoting to production**
+start_agent agent_router:
+    description: "Route user requests to the correct specialist"
+    model_config:
+        model: "model://EinsteinHyperClassifier"
+    reasoning:
+        instructions: |
+            Route immediately. Do not answer questions directly.
+        actions:
+            go_to_collect:     @utils.transition to @subagent.collect_order_id
+                description: "Collect the customer's order number"
+            go_to_compliance:  @utils.transition to @subagent.compliance_analysis
+                description: "Perform regulatory compliance analysis on a request"
+            go_to_confirm:     @utils.transition to @subagent.order_confirmed
+                description: "Confirm an order has been placed"
 
-Best practice is to test model selections in separate agent versions before promoting to production:
+subagent collect_order_id:
+    description: "Collects the customer's order number"
+    model_config:
+        model: "model://sfdc_ai__DefaultBedrockAnthropicClaude45Haiku"
+    reasoning:
+        instructions: ->
+            | What is your order number?
+        actions:
+            set_order_id: @utils.setVariables
+                with order_id = ...
+
+# Complex reasoning: inherits GPT 4.1 from agent-level default
+subagent compliance_analysis:
+    description: "Performs regulatory compliance analysis"
+    reasoning:
+        instructions: ->
+            run @actions.load_regulatory_context
+                with jurisdiction = @variables.customer_region
+                set @variables.regulatory_rules = @outputs.rules
+            | Analyze the customer's request against: {!@variables.regulatory_rules}
+              Provide a compliant recommendation only.
+
+subagent order_confirmed:
+    description: "Confirms order placement to the customer"
+    model_config:
+        model: "model://sfdc_ai__DefaultBedrockAnthropicClaude45Haiku"
+    reasoning:
+        instructions: ->
+            | Your order {!@variables.order_id} has been confirmed.
+              Is there anything else I can help you with?
+```
+
+### 8.6 Latency Budgeting With `model_config`
+
+```
+SOMA Latency Budget -- Model Stratification Impact (indicative P95):
+
+EinsteinHyperClassifier (router)           ~1-2s  (vs. ~3-5s with standard LLM)
+collect_order_id (Haiku)                   ~1-2s  (vs. ~3-5s with standard LLM)
+compliance_analysis (GPT 4.1, inherited)   ~3-5s  (task justifies cost)
+order_confirmed (Haiku)                    ~1-2s  (vs. ~3-5s with standard LLM)
+
+P95 Total (Handoff Mode, stratified):      ~7-12s
+P95 Total (Supervised, stratified):        ~10-15s
+
+vs. uniform standard model at every hop:
+P95 Total (Supervised):                    ~12-20s
+```
+
+### 8.7 Testing Model Selections
+
+Test model selections using **different models in different versions of your agent:**
 
 - Version A: Claude Haiku 4.5 at agent level (lightweight baseline)
 - Version B: GPT 4.1 at agent level (higher capability baseline)
 
-Session traces across versions are compared to identify where model choice materially affects output quality or latency. The version that best balances quality and latency for the production traffic profile is promoted.
+Compare session traces across versions to identify where model choice materially affects output quality or latency. Promote the version that best balances both for your production traffic profile.
 
 ---
 
-## Section 8: State, Memory, and Context Sharing Across Boundaries
+## 9. State, Memory, and Context Sharing
 
-**Exam Weight: Medium-High — cross-boundary state management is a critical production concern**
+### 9.1 Variable Types and Cross-Boundary Sync
 
-### Objective 8.1: Understand variable sync rules across SOMA, MOMA, and 3P boundaries
-
-#### Topics
-
----
-
-**Topic: State sharing capabilities by deployment pattern**
-
-Variable and context sharing behavior differs significantly across deployment patterns:
-
-| Scope | SOMA | MOMA | 3P |
+| Scope | SOMA (GA) | MOMA | 3P |
 |---|---|---|---|
-| Mutable variable sync | Bidirectional (changes in subagent reflect in Superagent when control returns) | Pass-by-value at delegation time only | Session ID + last 10 messages only |
-| Conversation history passed | Last 20 messages | Last 10 messages (hard cap) | Last 10 messages |
-| Shared persistent memory | Not supported — variables only | Not supported | Not supported |
+| Mutable variable sync | Bidirectional | Pass-by-value at delegation time | Session ID + last 10 messages only |
+| Context history passed | Last 20 messages | Last 10 messages (hard cap) | Last 10 messages |
+| Shared persistent memory | No — variables only | No | No |
 
-In SOMA, bidirectional sync means changes a subagent makes during its turn are reflected in the Superagent's state when control returns — even in Handoff Mode. This is a significant advantage over MOMA's pass-by-value model.
+**Bidirectional sync in SOMA (GA):** Changes a subagent makes during its turn are reflected in the Superagent's state when control returns — even in Handoff Mode.
+
+**Variable mapping validation:** If a mapped variable is renamed or deleted, the platform **blocks the save operation**. Silent breakage in variable mappings is catastrophic at runtime, so the platform surfaces it at design time.
+
+### 9.2 Variable Scope Lifecycle Rules
+
+| Reference | Valid Scope | Common Mistake |
+|---|---|---|
+| `@inputs.X` | Only during `with` clause of action invocation | Using in a `set` statement after the action completes — always null |
+| `@outputs.X` | Only in `set`/`if` immediately after the producing action | Referencing two blocks later — null |
+| `@variables.X` | Anywhere after the variable is set | Referencing before the producing action runs — returns default |
+
+```agentscript
+# WRONG -- @inputs out of scope in set
+run @actions.get_station_status
+    with station_name = @variables.input_station
+    set @variables.result = @inputs.station_name   # SILENT FAILURE
+
+# CORRECT
+run @actions.get_station_status
+    with station_name = @variables.input_station
+    set @variables.result = @outputs.station_name
+```
 
 ---
 
-**Topic: Variable mapping validation — the platform blocks broken mappings at design time**
+## 10. Interoperability Protocols: MCP and A2A
 
-When a mutable variable that is mapped across subagents is renamed or deleted, the platform blocks the save operation at design time. This prevents silent runtime breakage in variable mappings. It is a design-time safety gate, not a runtime recovery mechanism — which means the correct practice is to maintain consistent variable names throughout the agent lifecycle and treat renames as a formal change operation.
+### 10.1 MCP — "The USB-C for AI"
 
----
+The Model Context Protocol is a **standardized interface for AI agents to discover and invoke capabilities** across the broader AI tooling ecosystem.
 
-## Section 9: Interoperability Protocols — MCP and A2A
+| Role | Description |
+|---|---|
+| **MCP Client** | The agent or system consuming tools, prompts, and resources |
+| **MCP Server** | The host exposing tools, prompts, and resources to clients |
 
-**Exam Weight: Medium — protocol selection and command syntax are testable**
-
-### Objective 9.1: Understand the Model Context Protocol (MCP)
-
-#### Topics
-
----
-
-**Topic: MCP — what it is and the three asset categories**
-
-The Model Context Protocol is a standardized interface for AI agents to discover and invoke capabilities across the broader AI tooling ecosystem. It defines a client-server model:
-
-- **MCP Client:** The agent or system consuming tools, prompts, and resources.
-- **MCP Server:** The host exposing tools, prompts, and resources to clients.
-
-Three asset categories can be advertised by an MCP server:
+**MCP Asset Categories:**
 
 | Asset Type | Definition |
 |---|---|
-| Tools | Executable functions; allowlisted tools become available to the agent's LLM as callable actions |
-| Prompts | Pre-defined templates for LLM interaction |
-| Resources | Static or dynamic data sources (databases, APIs, knowledge bases) |
+| **Tools** | Executable functions; allowlisted tools become available to the agent's LLM |
+| **Prompts** | Pre-defined templates for LLM interaction |
+| **Resources** | Static or dynamic data sources (databases, APIs, knowledge bases) |
 
----
+#### MCP CLI Workflow
 
-**Topic: The MCP CLI workflow — four steps with critical caveats**
+> **Preview Status:** `sf agent mcp` commands are in developer preview. Known bugs affect `--label` and `--server-url` persistence. Verify output carefully after every `create`.
 
-Registering and configuring an MCP server follows four steps:
+**Step 1: Register**
 
-**Step 1 — Register:** `sf agent mcp create` registers the server. Due to a known preview bug, `--server-url` may not persist after registration. Always verify the returned JSON immediately and re-register if the URL is absent.
+```bash
+sf agent mcp create \
+    --name "my_internal_tools_server" \
+    --server-url "https://mcp.internal.company.com/sse" \
+    --auth-type oauth \
+    --json
+# Immediately verify -- --server-url may not persist in some environments
+```
 
-**Step 2 — Fetch:** `sf agent mcp fetch` reads the live external MCP server to discover what assets it advertises. This is a read-only operation — it does not grant access to anything.
+**Step 2: Fetch advertised assets (from live server)**
 
-**Step 3 — Allowlist:** `sf agent mcp asset replace` writes the allowlist. This operation is a full replacement, not an additive update. Assets omitted from the payload are silently removed from the allowlist. Always fetch the current allowlist first and include all desired assets in the replacement payload.
+```bash
+sf agent mcp fetch \
+    --mcp-server-name "my_internal_tools_server" \
+    --json
+# Read-only -- does not grant access to anything
+```
 
-**Step 4 — Verify:** `sf agent mcp asset list --mcp-server-id <ID>` reads the Salesforce catalog — what is currently allowlisted and accessible to agents. This is different from `mcp fetch`, which reads the live server.
+**Step 3: Allowlist assets (full replacement — not additive)**
 
----
+```bash
+sf agent mcp asset replace \
+    --mcp-server-name "my_internal_tools_server" \
+    --json
+# Always include ALL desired assets -- partial payload silently removes the rest
+```
 
-**Topic: MCP security practices**
+**Step 4: Verify saved catalog**
 
-Treating MCP asset allowlisting with the same scrutiny as permission set assignment is a stated best practice. Specific security guidance includes:
+```bash
+sf agent mcp list --json
 
-- Store MCP server OAuth secrets in Named Credentials — never in environment variables
-- Review `fetch` output as a security artifact before running `asset replace`
-- Audit active agent access regularly using `sf agent mcp asset list --mcp-server-id <ID>`
+# View assets saved in the Salesforce catalog
+sf agent mcp asset list --mcp-server-id <SERVER_ID> --json
+```
 
----
+**Mental model for fetch vs. asset list:**
 
-### Objective 9.2: Understand the Agent-to-Agent (A2A) Protocol
+| Command | What It Reads | When to Use |
+|---|---|---|
+| `sf agent mcp fetch` | The **live external MCP server** | Discovering what is available before allowlisting |
+| `sf agent mcp asset list` | The **Salesforce catalog** — what is currently allowlisted | Verifying what your agents can actually access |
 
-#### Topics
+#### Known MCP Preview Issues
 
----
+| Issue | Impact | Workaround |
+|---|---|---|
+| `--label` flag does not persist | Server registered without a display label | Add the label manually via UI after CLI registration |
+| `--server-url` flag does not persist in some environments | Server endpoint missing after creation | Verify returned JSON immediately; re-register if URL is absent |
+| `asset replace` is not additive | Previous allowlist wiped on each call | Always fetch current list first; include all desired assets in the payload |
 
-**Topic: A2A — the four-step interaction lifecycle**
+#### Security Guidance for MCP
 
-The Agent-to-Agent protocol is an open interoperability standard enabling Agentforce agents to communicate with agents from any vendor that implements the protocol. The interaction lifecycle has four steps:
+- Treat `sf agent mcp asset replace` with the same scrutiny as a permission set assignment.
+- Store MCP server OAuth secrets in Named Credentials, not environment variables.
+- Review `fetch` output as a security artifact before running `asset replace`.
+- Use `sf agent mcp asset list --mcp-server-id <ID>` regularly to audit active agent access.
 
-**Step 1 — Discovery:** Each A2A-capable agent publishes an Agent Card — a JSON document advertising its capabilities, authentication requirements, and A2A endpoint.
+### 10.2 A2A — Agent-to-Agent Protocol
 
-**Step 2 — Task Delegation:** Tasks are requested via HTTP/JSON-RPC 2.0. Each request is structured as a Message containing Parts — typed parameters carrying the task's input.
+A2A is an open interoperability standard enabling Agentforce agents to communicate with agents from any vendor that implements the protocol.
 
-**Step 3 — Execution and Response:** The receiving agent processes the task and returns Artifacts — structured outputs representing the result of the work.
+**Step 1: Discovery — Agent Cards**
 
-**Step 4 — Streaming Updates:** Real-time status and progress stream back via Server-Sent Events (SSE) or Push Notifications. SSE configuration is required for any A2A delegation with unpredictable latency to prevent silent timeout failures at the 15-second hard limit.
+Each A2A-capable agent publishes an Agent Card: a JSON document advertising its capabilities, authentication requirements, and A2A endpoint.
 
----
+**Step 2: Task Delegation — Messages and Parts**
 
-**Topic: MCP vs. A2A — choosing the right protocol**
+Tasks are requested via HTTP/JSON-RPC 2.0. Each request is structured as a Message containing Parts — typed parameters carrying the task's input.
 
-The practical decision rule: if the remote system is a **function** (takes inputs, returns outputs, no independent reasoning), use MCP. If the remote system is an **agent** (interprets intent, plans its own execution, manages its own state), use A2A.
+**Step 3: Execution and Response — Artifacts**
+
+The receiving agent processes the task and returns Artifacts: structured outputs representing the result of the work.
+
+**Step 4: Updates — Streaming via SSE**
+
+Real-time status and progress stream back via Server-Sent Events (SSE) or Push Notifications. Critical for long-running tasks.
+
+```
+[Orchestrator receives]
+event: task_update
+data: {"status": "in_progress", "progress": 0.6, "message": "Bureau pull in progress"}
+
+event: task_complete
+data: {"status": "completed", "artifact": {"credit_score": 742, "risk_tier": "A"}}
+```
+
+#### MCP vs. A2A: Knowing Which Protocol to Use
 
 | Dimension | MCP | A2A |
 |---|---|---|
-| What it connects | Agent to Tool / Resource / Prompt | Agent to Agent |
-| State management | Stateless tool calls | Stateful task sessions with SSE updates |
-| Autonomy of receiver | Function execution only | Agent reasons, plans, and executes independently |
-| Discovery mechanism | `sf agent mcp fetch` | Agent Card (JSON) |
-| Auth model | Named Credentials + OAuth | JWT, OAuth, Client Credentials |
-| Best for | Tools, APIs, knowledge sources | Full domain delegation to an independently reasoning agent |
+| **What it connects** | Agent to Tool/Resource/Prompt | Agent to Agent |
+| **State management** | Stateless tool calls | Stateful task sessions with SSE updates |
+| **Autonomy of receiver** | Function execution only | Agent reasons, plans, and executes independently |
+| **When to use** | Agent needs a specific capability | Agent needs another agent to handle a full domain |
+
+The practical test: if the remote system is a **function** (takes inputs, returns outputs, no independent reasoning), use MCP. If the remote system is an **agent** (interprets intent, plans execution, manages its own state), use A2A.
+
+#### MuleSoft Agent Fabric: The 3P Broker Registry
+
+For third-party integrations, MuleSoft Agent Fabric acts as the broker registry — the discovery and routing layer for external agents (AWS Q, Bedrock, Azure AI Foundry, etc.) without custom point-to-point integrations.
 
 ---
 
-**Topic: MuleSoft Agent Fabric — the 3P broker registry**
+## 11. Common Failure Modes
 
-For third-party integrations, MuleSoft Agent Fabric acts as the broker registry — the discovery and routing layer for external agents (AWS Q, Bedrock, Azure AI Foundry, etc.) without requiring custom point-to-point integrations. It provides a centralized registry for discovering, routing to, and enforcing policy on external agents.
+### 11.1 Platform and Compiler Failures
+
+| Failure | Cause | Fix |
+|---|---|---|
+| **Empty reasoning block** | Subagent has no instructions | Every subagent requires non-empty reasoning instructions. Commit blocker. |
+| **Schema validation error** | `system.instructions` names a capability with no corresponding subagent | Every named capability must map to an actual subagent. |
+| **Unresolvable action source** | Managed package namespace not installed in target org | Run `sf agent discover` against the deployment org before committing. |
+| **`@utils.transition` rule violation** | Properties like `label:`, `require_user_confirmation:`, or `inputs:` on a utility action | Only `description:` and `available` are valid on utility actions. |
+| **`developer_name` mismatch** | Config name does not match `aiAuthoringBundles/` directory name | Exact case-sensitive match required. |
+| **`before_reasoning` in HyperClassifier router** | `before_reasoning` deployed at `start_agent` level while HyperClassifier is the assigned model | Remove the lifecycle hook or add `model_config: model: "model://sfdc_ai__DefaultGPT41"` to override. |
+| **`@utils.transition` in `after_reasoning`** | Using LLM tool syntax in a directive block | Replace with bare `transition to @subagent.X` syntax. |
+| **MCP `asset replace` wipes allowlist** | Replacement payload omits previously allowlisted assets | Always run `sf agent mcp asset list` before replacing; include all desired assets. |
+| **MCP server URL not persisted** | Known preview bug with the `--server-url` flag | Verify returned JSON immediately; re-register if URL is absent. |
+
+### 11.2 Runtime and State Failures
+
+**Aborted Lifecycle (`after_reasoning`):**
+Mid-turn transitions abort `after_reasoning`. State cleanup placed there will silently fail. Move critical cleanup to deterministic `run` statements inside `reasoning.instructions` before the transition.
+
+**Mesh Orchestration Loops:**
+Non-hierarchical agent graphs where Agent A calls Agent B and Agent B calls Agent A create circular delegation loops. Audit every agent for guaranteed terminal paths.
+
+**Overlapping Subagent Descriptions:**
+Non-deterministic routing from the EinsteinHyperClassifier. Fix: write mutually exclusive descriptions.
+
+**Action Loop (Repeated Execution):**
+An action with no `available when` gate and no post-action stop condition will be called repeatedly on every reasoning re-resolution. Gate every write action.
+
+**A2A Timeout Failures:**
+Cross-system A2A responses must arrive within 15 seconds. Long-running 3P tasks without SSE streaming configured will fail silently. Always implement SSE update handling for A2A delegations with unpredictable latency.
 
 ---
 
-## Section 10: Trust, Security, and Identity
+## 12. Trust, Security, and Identity
 
-**Exam Weight: High — security architecture questions are a consistent focus**
+### 12.1 The Einstein Trust Layer
 
-### Objective 10.1: Understand platform-level trust guardrails
-
-#### Topics
-
----
-
-**Topic: The three built-in platform guardrails in the Einstein Trust Layer**
-
-Three built-in subagents run at the platform level before any custom agent logic executes. They cannot be disabled or bypassed:
+Three built-in system subagents run as platform-level guardrails **before** any custom logic:
 
 | Built-in Subagent | Purpose |
 |---|---|
@@ -787,244 +1024,367 @@ Three built-in subagents run at the platform level before any custom agent logic
 | `Inappropriate_Content` | Screens for content policy violations |
 | `Reverse_Engineering` | Detects attempts to expose internal agent logic |
 
-A BLOCK-level finding from any of these three subagents prevents the custom agent from executing for that session. Safety review findings are also classified at three severity levels: BLOCK (stops the deployment pipeline and must be resolved before production), WARN (flags for human review but does not stop deployment), and INFO (best-practice recommendations).
+**Safety review severity levels:**
 
----
+- **BLOCK:** Stops the deployment pipeline. Must be resolved before production.
+- **WARN:** Flags for human review. Does not stop deployment.
+- **INFO:** Best-practice recommendations.
 
-**Topic: Deterministic enforcement of authorization gates — why natural language guards are insufficient**
+### 12.2 Identity Propagation
 
-Authorization gates, trust checks, and guards against irreversible actions must be implemented as deterministic `->` logic — not as `|` natural language instructions. Writing a security guard in natural language is asking the LLM to comply with it voluntarily. Writing it in deterministic `->` syntax enforces compliance at the runtime level, where the LLM has no ability to override it regardless of what the user says or what the conversation context implies.
-
-This is the practical application of the core architectural axiom: safety enforced at the architecture level, not by trusting the LLM.
-
----
-
-### Objective 10.2: Understand identity propagation across deployment patterns
-
-#### Topics
-
----
-
-**Topic: Identity model by deployment pattern**
-
-| Pattern | Identity Model | Primary Failure Mode |
+| Scope | Identity Model | Failure Mode |
 |---|---|---|
-| SOMA | Uniform session user across all agents in the same org | None — single identity context |
-| MOMA | Email-based resolver maps user across orgs; no re-authentication required | Fallback to Guest User if email resolution fails — explicit planning required |
-| 3P | Session ID + JWT; user identity is not automatically propagated | Third-party agent executes in its own auth context |
+| SOMA | Uniform session user across all agents in same org | None — single identity context |
+| MOMA | Email-based resolver maps user across orgs; no re-authentication | Fallback to Guest User if email resolution fails |
+| 3P | Session ID + JWT; user identity not automatically propagated | 3P agent executes in its own auth context |
+
+> **No agent may act outside its trust boundary or elevate privileges beyond those of the initiating user.** This is an architectural guarantee, not a configurable rule.
 
 ---
 
-**Topic: The architectural identity guarantee**
+## 13. Governance, Observability, and Quality Assurance
 
-No agent may act outside its trust boundary or elevate privileges beyond those of the initiating user. This is an architectural guarantee enforced by the platform — it is not a configurable rule and cannot be overridden by agent instructions.
+### 13.1 The Seven-Stage Agent Lifecycle
 
----
-
-## Section 11: Governance, Observability, and Quality Assurance
-
-**Exam Weight: Medium — QA patterns and failure disambiguation are increasingly tested**
-
-### Objective 11.1: Understand the seven-stage agent lifecycle
-
-#### Topics
-
----
-
-**Topic: The seven stages of the Agentforce agent lifecycle**
-
-Salesforce documentation defines a seven-stage lifecycle for agent governance:
-
-| Stage | Primary Tool / Capability | Key Action |
+| Stage | Capability | Key Action |
 |---|---|---|
-| Discover | Agentforce Studio / Asset Library | Browse and evaluate available agents |
-| Register | Agentforce Registry + `sf agent mcp create` | Integrate 3P agents and MCP servers |
-| Build and Orchestrate | Agentforce Builder | Connect agents, configure routing, map variables |
-| Govern | Agentforce Gateway | Define and enforce organizational policies |
-| Observe and Test | Testing Center + STDM | Monitor performance, validate functionality, trace failures |
-| Publish | Agent Exchange | Distribute agents to internal or external marketplaces |
-| Use | All Channels | Deliver unified end-user experience |
+| **Discover** | AF Studio / Asset Library | Browse and evaluate available agents |
+| **Register** | AF Registry + `sf agent mcp create` | Integrate 3P agents (A2A) and MCP servers |
+| **Build and Orchestrate** | Agentforce Builder | Connect agents, configure routing, map variables |
+| **Govern** | AF Gateway | Define and enforce organizational policies |
+| **Observe and Test** | Test Center + STDM | Monitor performance, validate functionality, trace failures |
+| **Publish** | Agent Exchange | Distribute agents to internal or external marketplaces |
+| **Use** | All Channels | Deliver unified end-user experience |
 
----
+### 13.2 Observability Architecture
 
-### Objective 11.2: Apply observability practices — tracing and session diagnostics
+The goal is a **single pane of glass** — a unified trace of the entire multi-agent interaction, not just the Superagent's perspective.
 
-#### Topics
+- Every subagent trace is persisted as an independent session trace in STDM.
+- Discrete handoff entries are recorded in the Primary Agent's trace at every delegation.
+- Bidirectional trace lookup: Primary Agent Step to Subagent ID (forward); Subagent Session to Primary Agent ID via `PreviousSessionId` (backward).
 
----
+```bash
+# Read resolved LLM inputs per turn
+jq -r '.planTrace.steps[] | select(.type == "LLM_STEP") | .input' \
+  .sfdx/agents/MyAgent/sessions/*/traces/*.json
 
-**Topic: The Session Trace Data Model (STDM) and bidirectional trace lookup**
+# Check variable state before and after each action
+jq -r '.planTrace.steps[] | select(.type == "ACTION_STEP") | \
+  {name:.name, pre:.preVars, post:.postVars}' \
+  .sfdx/agents/MyAgent/sessions/*/traces/*.json
+```
 
-Every subagent trace is persisted as an independent session trace in STDM. Discrete handoff entries are recorded in the Primary Agent's trace at every delegation. Bidirectional trace lookup is supported:
+### 13.3 Automated Testing with Custom Evaluations (LLM-as-Judge)
 
-- Forward: Primary Agent step to Subagent session ID
-- Backward: Subagent session to Primary Agent ID via `PreviousSessionId`
+For multi-agent architectures, manual CLI tracing is necessary but not sufficient. **Custom Evaluations using the LLM-as-Judge pattern** are the production-grade solution.
 
-This bidirectional capability is essential for diagnosing failures in multi-agent sessions where the root cause may be in a subagent trace, not the primary agent trace.
+Custom Evals configure a secondary LLM to automatically review conversation logs and score them against defined quality criteria — without a human reading every trace.
 
----
+#### Semantic Conflict Detection
 
-**Topic: Diagnosing failures using session traces — the three key step types**
+The most critical Custom Eval use case for multi-agent architectures. It automatically scans conversation logs for two specific failure patterns:
 
-Session traces stored locally (`.sfdx/agents/`) contain three step types that map to different diagnostic scenarios:
+**Pattern 1: Contradiction Across Agent Boundaries**
 
-- **LLMStep:** Read the resolved LLM input to see exactly what prompt the model received. Useful for diagnosing incorrect routing, wrong variable injection, or missing context.
-- **FunctionStep / ACTION_STEP:** Check `preVars` and `postVars` on action steps to see variable state before and after action execution. Useful for diagnosing action failures, incorrect outputs, or missing variable updates.
-- **ReasoningStep:** Trace the reasoning loop to see which tools the LLM selected and in what order. Useful for diagnosing unexpected action calls or missed transitions.
+In a SOMA or MOMA deployment, different agents may reach logically contradictory conclusions within the same session. Example:
 
----
+- Agent A (Promotions Agent) grants a 20% loyalty discount.
+- Agent B (Billing Agent) — operating later in the same session — processes the invoice without the discount.
 
-### Objective 11.3: Configure and apply Custom Evaluations (LLM-as-Judge) for multi-agent QA
+The user receives contradictory information. Neither agent made a technical error. Both made correct decisions within their own context. The conflict is **semantic** — it only becomes visible when the two agents' assertions are read together.
 
-#### Topics
+**Pattern 2: Endless Reasoning Loops**
 
----
+Semantic loop detection identifies sessions where agents are cycling — where the conversation shows the same intent being processed repeatedly without forward progress. Diagnostic signals the judge LLM looks for:
 
-**Topic: Custom Evaluations — automated quality assessment using a secondary LLM**
+- The same slot-fill question asked more than twice without a new value being captured.
+- The same action attempted multiple times with the same inputs without a different outcome.
+- A user expressing the same intent in progressively more direct language without receiving a resolution.
 
-For multi-agent architectures, manual CLI tracing is necessary but not sufficient for production quality assurance. Custom Evaluations use a secondary LLM (configured in the Testing Center) to automatically review conversation logs and score sessions against defined quality criteria without human review of every trace.
+#### Configuring Custom Evals for SOMA
 
-Custom Evals are configured with:
-- A judge model (typically a capable reasoning model)
-- A scope (session-level, covering the full conversation log across all subagents)
-- Specific criteria expressed as natural language questions the judge LLM answers about each session
+```
+Testing Center > Evaluations > New Evaluation
 
-Custom Evals can be configured to trigger post-session on all production sessions (with a configurable sample rate) and route flagged sessions to a QA queue.
+Evaluation Type: LLM-as-Judge (Custom)
+Judge Model:     sfdc_ai__DefaultGPT41
+Scope:           Session-level (full conversation log across all subagents)
 
----
+Criteria examples:
+  - "Did the agent resolve the user's stated intent within 4 turns?"
+  - "Did any agent make a factual assertion that contradicts an assertion
+     made by another agent in the same session?"
+  - "Did the agent ask for the same piece of information more than twice?"
+  - "Was the user offered a discount or exception? If yes, was it honored
+     consistently throughout the rest of the session?"
 
-**Topic: Semantic Conflict Detection — the most critical Custom Eval use case for multi-agent systems**
+Trigger: Post-session, on all production sessions (sample rate configurable)
+Alert:   STDM record flagged; routed to QA queue for human review
+```
 
-In SOMA and MOMA deployments, different agents may reach logically contradictory conclusions within the same session. Neither agent makes a technical error — both make correct decisions within their own context. The conflict only becomes visible when the two agents' assertions are read together in the session log.
+> For MOMA deployments specifically — where agents operate across org boundaries with capped context (10 messages) — the risk of semantic conflicts is higher because agents have less context to reason against. **Custom Evals are not optional in MOMA production deployments; they are a foundational quality gate.**
 
-Example: Agent A (Promotions) grants a 20% loyalty discount. Agent B (Billing) processes the invoice later in the same session without applying the discount. The user receives contradictory information.
+### 13.4 Streaming Controls
 
-Semantic Conflict Detection is a Custom Eval pattern that scans full session logs for this class of failure. For MOMA deployments specifically — where the 10-message context cap increases the risk that agents lack full session context — Custom Evals including semantic conflict detection are not optional; they are a foundational quality gate.
+**Default behavior:** Token streaming is **enabled by default** in Agentforce. The agent begins streaming response tokens to the client as soon as the LLM starts generating them.
 
----
+**Disabling streaming:**
 
-**Topic: Endless reasoning loop detection — the second critical Custom Eval pattern**
+```agentscript
+system:
+    instructions: "You are an AI service assistant."
+    messages:
+        welcome: "Hi, how can I help you today?"
+        error:   "Something went wrong."
+    additional_parameter__disable_streaming: True
+```
 
-A session is in an endless reasoning loop when agents cycle without making forward progress. A judge LLM scanning for the following diagnostic signals can identify these sessions automatically:
+**When to disable streaming:**
 
-- The same slot-fill question is asked more than twice without a new value being captured
-- The same action is attempted multiple times with the same inputs without a different outcome
-- The user expresses the same intent in progressively more direct language without receiving resolution
+| Scenario | Rationale |
+|---|---|
+| **Structured output rendering** | Some UI components cannot render correctly if markdown or JSON is streamed incrementally. |
+| **Compliance-gated response review** | Some workflows require a compliance check on the full response before it is displayed. |
+| **Latency-insensitive batch workflows** | Background processing agents where perceived latency is irrelevant. |
 
-Endless loop detection should be configured as a Custom Eval criterion in any production multi-agent deployment.
+> **Bottom line:** Only disable streaming when a specific, named rendering or compliance requirement demands it. Never disable it for general simplicity or as a debugging convenience in production.
 
----
+### 13.5 Retry Policy
 
-### Objective 11.4: Implement the "No Results vs. Failure" disambiguation pattern
-
-#### Topics
-
----
-
-**Topic: Why conflating system failure with empty results is a UX and trust failure**
-
-Two fundamentally different runtime outcomes require two fundamentally different user messages. Returning a generic error message when the agent simply found no matching records is incorrect — and so is returning a "no results found" message when the system actually failed to execute.
-
-Best practices require that every subagent that calls an external data source implement explicit three-way branching:
-
-| Outcome | What Happened | Required User Message |
+| Failure Type | Retry? | Rationale |
 |---|---|---|
-| System Failure | Timeout, platform error, or action threw an exception | Acknowledge the system problem explicitly. Provide a concrete recovery path (retry, contact support, alternative channel). Never claim "no results" when the system failed. |
-| Success — No Results | Action executed successfully but returned an empty result set | Acknowledge that the search completed successfully. Confirm the parameters searched. Offer next steps. Never say "something went wrong" when nothing did. |
-| Success — Results Found | Action executed and returned data | Present the data and offer relevant follow-up actions. |
+| Transient model/platform failure | Yes (2 retries) | Service may recover |
+| Integration failure | Yes (2 retries) | External service may recover |
+| No topic matched | No | Same input produces same routing failure |
+| Auth/permission failure | No | Retrying won't grant access |
+| Input too long | No | Same input will fail the size limit again |
+| Transfer limit reached | No | Retrying hits the same limit |
 
-This three-way branch is a required pattern, not optional, in any subagent that sources data from an external system.
+### 13.6 "No Results" vs. "Failure" Disambiguation
 
----
+Users must never receive a generic error message when the agent simply could not find a matching record. Two fundamentally different outcomes require two fundamentally different user messages.
 
-## Section 12: Common Failure Modes and the Pre-Deployment Checklist
-
-**Exam Weight: Medium — pattern recognition for failure scenarios is testable**
-
-### Objective 12.1: Identify and remediate common platform and compiler failures
-
-#### Topics
-
----
-
-**Topic: Compiler failures — causes and fixes**
-
-| Failure | Cause | Fix |
+| Outcome | What Happened | Required Message |
 |---|---|---|
-| Empty reasoning block | A subagent has no instructions | Every subagent requires non-empty `reasoning.instructions`. This is a commit blocker. |
-| Schema validation error | `system.instructions` names a capability with no corresponding subagent | Every named capability must map to an actual subagent definition. |
-| Unresolvable action source | Managed package namespace not installed in the target org | Run `sf agent discover` against the deployment org before committing. |
-| `@utils.transition` rule violation | Properties like `label:`, `require_user_confirmation:`, or `inputs:` placed on a utility action | Only `description:` and `available when` are valid on utility actions. |
-| `developer_name` mismatch | Config name does not match the `aiAuthoringBundles/` directory name | Exact case-sensitive match is required. |
-| `before_reasoning` in HyperClassifier router | `before_reasoning` deployed at `start_agent` level while HyperClassifier is the assigned model | Remove the lifecycle hook or override with `model_config: model: "model://sfdc_ai__DefaultGPT41"`. |
-| `@utils.transition` in `after_reasoning` | Using LLM tool syntax in a directive block | Replace with bare `transition to @subagent.X` syntax. |
+| **System Failure** | Timeout, platform error, action threw an exception | Acknowledge the system problem. Give the user a concrete recovery path. Never claim "no results" when the system actually failed to run. |
+| **No Results** | The action executed successfully but returned an empty result set | Acknowledge that the search completed successfully. Confirm the parameters searched. Offer next steps. Never say "something went wrong" when nothing went wrong. |
+
+**Implementation pattern — explicit disambiguation:**
+
+```agentscript
+reasoning:
+    instructions: ->
+        if @variables.action_status == "error":
+            | I'm sorry, I encountered a technical issue retrieving that information.
+              Please try again in a moment, or contact our support team at
+              support@company.com if the problem continues.
+
+        if @variables.action_status == "success"
+                and @variables.result_count == 0:
+            | I searched our records but couldn't find an order matching
+              "{!@variables.order_id}". Please double-check the order number
+              and try again, or I can help you search by a different method.
+
+        if @variables.action_status == "success"
+                and @variables.result_count > 0:
+            | I found your order. Here are the details: {!@variables.order_summary}.
+```
+
+This three-way branch — error, success-no-results, success-with-results — should be present in every subagent that calls an external data source.
 
 ---
 
-### Objective 12.2: Identify and remediate common runtime and state failures
+## 14. Production Heuristics and Design Principles
 
-#### Topics
+### 14.1 The Agentic Maturity Roadmap
+
+```
+Level 1: Agent Script Mastery
+    Deterministic logic (->) for trust gates and irreversible actions
+    LLM reasoning (|) for conversational handling
+    apex://, flow://, prompt:// action targets
+    Variable scope discipline
+
+Level 2: Subagent Segmentation
+    Apply three triggers: overload, divergence, modularity
+    Mutually exclusive descriptions
+    available when as security primitive
+    Understand HyperClassifier constraints at start_agent level
+
+Level 3: Model Stratification
+    Set agent-level model_config as a sensible baseline
+    Override at subagent level only where reasoning complexity justifies it
+    Use sfdc_ai__ API names; test selections in separate agent versions
+
+Level 4: SOMA Orchestration
+    Superagent as single entry point
+    Bidirectional variable sync
+    Handoff vs. Supervised mode selection
+    Evaluate Data Cloud Zero-Copy before MOMA
+    Streaming enabled by default; disable only with explicit justification
+
+Level 5: MOMA and 3P
+    Cross-org trust boundaries and identity propagation
+    A2A protocol for agent delegation
+    MCP for tool ecosystem integration
+    MuleSoft Agent Fabric for 3P broker registry
+
+Level 6: Full Ecosystem Integration
+    Multi-protocol architectures (MCP + A2A + SOMA/MOMA)
+    Custom Evals (LLM-as-Judge) for semantic conflict detection
+    No Results vs. Failure disambiguation in every data-sourcing subagent
+    Observability at scale (STDM)
+    Independent SDLC per agent domain
+    Governance and compliance automation
+```
+
+### 14.2 Pre-Deployment Checklist
+
+**Syntax and Compiler:**
+
+- [ ] Every subagent has non-empty `reasoning.instructions`
+- [ ] No `@utils.transition` carries properties beyond `description:` and `available when`
+- [ ] All `apex://` and `flow://` targets resolve in the deployment org
+- [ ] Boolean literals are `True`/`False` (capitalized)
+- [ ] `{!@variables.X}` syntax used in all `|` pipe text
+- [ ] `developer_name` matches `aiAuthoringBundles/` directory name exactly
+
+**HyperClassifier and Model:**
+
+- [ ] No `before_reasoning` or `after_reasoning` at `start_agent` level unless `model_config:` overrides the HyperClassifier
+- [ ] Router uses only `@utils.transition` actions while HyperClassifier is assigned
+- [ ] `model_config:` overrides use valid `sfdc_ai__` API names
+- [ ] Model selections tested in a separate agent version before promoting to production
+- [ ] Agent-level `model_config` set as baseline; subagent overrides applied only where justified
+
+**Streaming:**
+
+- [ ] `additional_parameter__disable_streaming` is `False` or absent unless a specific rendering or compliance requirement mandates batch mode
+- [ ] If streaming is disabled, perceived latency impact documented and accepted by stakeholders
+
+**State and Routing:**
+
+- [ ] All mutable variables have explicit default values
+- [ ] All post-action checks are at the TOP of `reasoning.instructions`
+- [ ] Subagent descriptions are semantically mutually exclusive
+- [ ] No circular transitions in the agent graph (A to B to A)
+- [ ] Every reasoning branch has a terminal path (user response or `@utils.escalate`)
+- [ ] `after_reasoning` transitions use bare `transition to @subagent.X` — never `@utils.transition to`
+- [ ] Critical state cleanup is NOT exclusively in `after_reasoning`
+
+**UX and Disambiguation:**
+
+- [ ] Every subagent that calls an external data source has explicit three-way branching: error, success-no-results, success-with-results
+- [ ] Error messages include a concrete user recovery path (retry, contact support, alternative channel)
+- [ ] "No results" messages confirm what was searched and offer next steps
+- [ ] No subagent conflates a system failure with an empty result set
+
+**Data Boundary:**
+
+- [ ] Data Cloud Zero-Copy Federation evaluated before choosing MOMA
+- [ ] MOMA chosen only when agent execution boundary (not just data access) requires org separation
+
+**Testing and Quality:**
+
+- [ ] Custom Evals (LLM-as-Judge) configured in Testing Center for production sessions
+- [ ] Semantic Conflict Detection eval active for any SOMA/MOMA deployment with multiple data-sourcing agents
+- [ ] Disambiguation accuracy included as a Custom Eval criterion
+- [ ] Endless reasoning loop detection included as a Custom Eval criterion
+
+**MCP and A2A:**
+
+- [ ] MCP server registration verified via `sf agent mcp list` after `create`
+- [ ] Asset allowlist verified via `sf agent mcp asset list --mcp-server-id <ID>`
+- [ ] `asset replace` payload includes all desired assets (non-additive operation)
+- [ ] OAuth secrets stored in Named Credentials, not environment variables
+- [ ] A2A delegations with unpredictable latency have SSE update handling configured
+- [ ] 3P agent round-trip latency tested against the 15-second hard limit
+
+**Security and Identity:**
+
+- [ ] Authorization gates use `->` deterministic logic, not `|` natural language instructions
+- [ ] `available when` guards on all sensitive actions
+- [ ] MOMA identity fallback (Guest User) is explicitly planned for
 
 ---
 
-**Topic: Aborted lifecycle — the `after_reasoning` silent failure**
-
-When the LLM calls a `@utils.transition` action mid-reasoning, `after_reasoning` is aborted for that turn. State cleanup, logging, or transitions placed exclusively in `after_reasoning` will silently fail in those sessions. The fix is to move critical cleanup into deterministic `run` statements inside `reasoning.instructions` before the transition, so it executes regardless of whether `after_reasoning` fires Mesh orchestration loops — circular delegation**
-
-In non-hierarchical agent graphs where Agent A delegates to Agent B and Agent B can delegate back to Agent A, circular delegation loops can form. These loops have no terminal state and will consume session resources until platform limits terminate the session. Every agent graph must be audited to confirm that all delegation paths have guaranteed terminal paths — either a user response or an `@utils.escalate`.
-
----
-
-**Topic: Action loop — repeated execution without a terminal condition**
-
-An action listed in the `reasoning: actions:` block with no `available when` guard and no post-action stop condition will be called repeatedly on every reasoning re-resolution. The LLM continues to see it as an available tool and continues to call it because the instructions do not signal that the work is done. Every write action must have an `available when` guard that removes it from the tool list after its intended execution.
-
----
-
-### Objective 12.3: Apply the production agentic maturity roadmap
-
-#### Topics
-
----
-
-**Topic: The six levels of agentic maturity — building from core skills to full ecosystem integration**
-
-Best practices define an incremental maturity model for building production-grade multi-agent systems:
-
-| Level | Focus | Key Skills |
-|---|---|---|
-| Level 1 | Agent Script Mastery | Deterministic `->` vs. reasoning `\|`; action targets; variable scope discipline |
-| Level 2 | Subagent Segmentation | Three triggers; mutually exclusive descriptions; `available when` as security primitive; HyperClassifier constraints |
-| Level 3 | Model Stratification | Agent-level `model_config` as baseline; subagent overrides where justified; `sfdc_ai__` API names; version testing |
-| Level 4 | SOMA Orchestration | Superagent as single entry point; bidirectional variable sync; Handoff vs. Supervised mode; Data Cloud Zero-Copy evaluation |
-| Level 5 | MOMA and 3P | Cross-org trust boundaries; A2A protocol; MCP tool ecosystem; MuleSoft Agent Fabric |
-| Level 6 | Full Ecosystem Integration | Multi-protocol architectures; Custom Evals (LLM-as-Judge); disambiguation patterns at scale; STDM observability; independent SDLC per domain |
-
----
-
-## Appendix: Key Terms Reference
+## Appendix A: Key Term Glossary
 
 | Term | Definition |
 |---|---|
 | **Superagent** | The customer-facing orchestrator agent. Users interact only with this agent. |
-| **Subagent** | A specialist domain agent operating behind the scenes with scoped instructions, data access, and actions. |
+| **Subagent** | A specialist domain agent operating behind the scenes with scoped skills, data access, and actions. |
 | **SOMA** | Single-Org Multi-Agent. All agents in one Salesforce org. |
 | **MOMA** | Multi-Org Multi-Agent. Primary Agent in one org delegates to Secondary Agents in separate trusted orgs. |
 | **A2A** | Agent-to-Agent protocol. Open interoperability standard for cross-system agent communication. |
 | **MCP** | Model Context Protocol. Standardized interface for agents to discover and invoke tools, prompts, and resources. |
-| **Agent Card** | JSON document advertising an agent's capabilities, authentication requirements, and A2A endpoint. |
-| **EinsteinHyperClassifier** | Salesforce-owned routing model optimized for intent classification. Only supports `@utils.transition`. Prohibits `before_reasoning`/`after_reasoning`. |
-| **`model_config:`** | Block that overrides the default model at org, agent, or subagent level. Uses `sfdc_ai__` API names in `model://` URI format. |
-| **`available when`** | Guard condition that hides an action entirely from the LLM's tool list when the condition is not met. A first-class security primitive. |
-| **Slot-fill** | Using the `...` token to signal the runtime to extract a value from user conversation via `@utils.setVariables`. |
+| **MCP Client** | The agent or system consuming MCP-advertised capabilities. |
+| **MCP Server** | The host exposing tools, prompts, and resources to MCP clients. |
+| **Agent Card** | JSON document advertising an agent's capabilities, authentication, and A2A endpoint. |
+| **Artifact (A2A)** | Structured output returned by a receiving agent after completing a delegated task. |
+| **SSE** | Server-Sent Events. Streaming mechanism for real-time A2A task status updates. |
+| **MuleSoft Agent Fabric** | Broker registry for 3P agent discovery, routing, and policy enforcement. |
+| **EinsteinHyperClassifier** | Salesforce-owned routing model. Only supports `@utils.transition`. Prohibits `before_reasoning`/`after_reasoning`. Faster and more accurate for classification than general LLMs. |
+| **`model_config:`** | Block that overrides the default model at org, agent, or subagent level. Uses Salesforce-internal `sfdc_ai__` API names in `"model://..."` URI format. Subagent-level wins over agent-level; agent-level wins over org-level. |
+| **`additional_parameter__disable_streaming`** | Boolean flag in the `system:` block that controls whether token streaming is active. Default is streaming-on. |
 | **Custom Evals (LLM-as-Judge)** | Automated QA mechanism using a secondary LLM to score conversation logs against defined quality criteria. Configured in the Testing Center. |
-| **Semantic Conflict Detection** | Custom Eval pattern that scans full session logs for contradictory assertions made by different agents in the same session. |
-| **Data Cloud Zero-Copy** | Federation mechanism allowing cross-org data access without data movement. Must be evaluated before choosing MOMA. |
-| **Handoff Mode** | Subagent streams response directly to user; Superagent reclaims control after the turn ends. Lower latency, single-intent only. |
-| **Supervised Mode** | Superagent mediates and synthesizes all responses. Higher latency, multi-intent capable. |
-| **STDM** | Session Trace Data Model. Data Cloud schema for persisting and querying agent session traces. |
-| **Trust Layer** | Platform-level safety guardrails (Prompt_Injection, Inappropriate_Content, Reverse_Engineering) that execute before any custom agent logic. |
-| **MuleSoft Agent Fabric** | Broker registry for third-party agent discovery, routing, and policy enforcement. |
-| **DC1** | Salesforce data center trust boundary governing which orgs can share agents in MOMA. |
+| **Semantic Conflict Detection** | Custom Eval pattern that scans full session logs for contradictory assertions made by different agents in the same conversation. |
+| **Data Cloud Zero-Copy** | Federation mechanism allowing cross-org data access without data movement. Evaluate before MOMA. |
+| **Allowlist** | The set of MCP assets (tools, prompts, resources) explicitly permitted for agent use. Managed via `sf agent mcp asset replace`. |
 | **AEA** | Agentforce Employee Agent. Internal, logged-in user context. |
 | **ASA** | Agentforce Service Agent. Customer-facing, deployed via messaging channels. |
+| **GDoT** | Global Directory of Tenants. Stores org trust boundary mappings for MOMA. |
+| **DC1** | Salesforce data center trust boundary governing which orgs can share agents in MOMA. |
+| **STDM** | Session Trace Data Model. Data Cloud schema for persisting and querying agent session traces. |
+| **Trust Layer** | Platform-level safety guardrails (prompt injection, inappropriate content, reverse engineering) that run before any custom agent logic. |
+| **Handoff Mode** | Subagent streams response directly to user; Superagent reclaims control after the turn. |
+| **Supervised Mode** | Superagent mediates all responses; subagent output feeds Superagent's synthesis step. |
+| **`available when`** | Guard condition that hides an action entirely from the LLM's tool list. First-class security primitive. |
+| **Slot-fill** | Using `...` token to signal the reasoning engine to extract a value from conversation via `@utils.setVariables`. |
+
+---
+
+## Appendix B: Protocol and Model Reference
+
+**Protocol Comparison:**
+
+| Dimension | MCP | A2A | Direct Subagent (`@subagent`) |
+|---|---|---|---|
+| **Cross-org** | Yes | Yes | No |
+| **Cross-vendor** | Yes | Yes | No |
+| **State management** | Stateless tool calls | Stateful task sessions | Shared variable scope |
+| **Autonomy of target** | Function execution only | Agent reasons independently | Shared lifecycle |
+| **Discovery** | `sf agent mcp fetch` | Agent Card (JSON) | Static subagent name |
+| **Auth model** | Named Credentials + OAuth | JWT, OAuth, Client Credentials | Inherited from Superagent |
+| **Streaming** | No | SSE / Push Notifications | Not applicable |
+| **Best for** | Tools, APIs, knowledge sources | Full domain delegation | Internal task segmentation |
+
+**Model Assignment Reference:**
+
+> All model names below are Salesforce-internal identifiers. They do not correspond 1:1 to public vendor release names.
+
+| Subagent Type | Recommended Model (Salesforce Name) | `sfdc_ai__` API Name |
+|---|---|---|
+| Router (HyperClassifier default) | EinsteinHyperClassifier | `EinsteinHyperClassifier` |
+| Router (standard LLM override) | GPT 4.1 | `sfdc_ai__DefaultGPT41` |
+| Slot-fill / Confirmation | Claude Haiku 4.5 | `sfdc_ai__DefaultBedrockAnthropicClaude45Haiku` |
+| Fast conversational handling | Gemini 3.5 Flash | `sfdc_ai__DefaultVertexAIGemini35Flash` |
+| Complex reasoning (agent baseline) | GPT 4.1 | `sfdc_ai__DefaultGPT41` |
+
+**`model_config` Precedence:**
+
+```
+Org-level (Setup)
+    overridden by
+Agent-level model_config
+    overridden by
+Subagent-level model_config  <-- most specific; always wins
+```
+
+**Streaming Reference:**
+
+| Flag | Default | Effect |
+|---|---|---|
+| `additional_parameter__disable_streaming: False` (or absent) | Default | Token streaming active; lowest perceived latency |
+| `additional_parameter__disable_streaming: True` | Must be set explicitly | Batch mode; complete response assembled before display |
