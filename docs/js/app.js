@@ -428,55 +428,73 @@
 
   // ── Cert Picker Screen ────────────────────────────────────
 
+  function renderCertCard(cert) {
+    var qBank = getQuestionsForCert(cert);
+    var questionCount = qBank.length;
+    var studySections = state.studyData[cert.studyBank] || [];
+    var topicCount = getTotalTopics(studySections);
+
+    var subtitleHtml = cert.subtitle
+      ? '<p class="cert-card-subtitle">' + escapeHtml(cert.subtitle) + '</p>'
+      : '';
+
+    return (
+      '<div class="cert-card" data-action="select-cert" data-cert-id="' + cert.id + '" ' +
+      'style="--cert-primary: ' + cert.primaryColor + '; --cert-secondary: ' + cert.secondaryColor + '">' +
+      '<div class="cert-card-header">' +
+        '<span class="cert-card-icon">' + cert.icon + '</span>' +
+      '</div>' +
+      '<h3 class="cert-card-name">' + escapeHtml(cert.name) + '</h3>' +
+      subtitleHtml +
+      '<div class="cert-card-stats">' +
+        (questionCount > 0
+          ? '<span class="cert-stat"><span class="cert-stat-icon">&#x1F4DD;</span> ' + questionCount + ' questions</span>'
+          : '') +
+        (topicCount > 0
+          ? '<span class="cert-stat"><span class="cert-stat-icon">&#x1F4D6;</span> ' + topicCount + ' topics</span>'
+          : '') +
+        (!cert.isBonusTopic
+          ? '<span class="cert-stat"><span class="cert-stat-icon">&#x2705;</span> ' + cert.passingScore + '% to pass</span>'
+          : '') +
+        (cert.guideFile
+          ? '<span class="cert-stat cert-stat-guide"><span class="cert-stat-icon">&#x1F4D6;</span> Reference Guide</span>'
+          : '') +
+      '</div>' +
+      '</div>'
+    );
+  }
+
   function renderCertPicker() {
-    var cards = state.certs.filter(function (cert) { return !cert.isBonusTopic; }).map(function (cert) {
-      var qBank = getQuestionsForCert(cert);
-      var questionCount = qBank.length;
-      var studySections = state.studyData[cert.studyBank] || [];
-      var topicCount = getTotalTopics(studySections);
+    var deepDives = state.certs.filter(function (c) { return c.isBonusTopic; });
+    var certifications = state.certs.filter(function (c) { return !c.isBonusTopic; });
 
-      var bonusBadge = cert.isBonusTopic
-        ? '<span class="bonus-badge">DEEP DIVE</span>'
-        : '';
+    var ddCards = deepDives.map(renderCertCard).join('');
+    var certCards = certifications.map(renderCertCard).join('');
 
-      var subtitleHtml = cert.subtitle
-        ? '<p class="cert-card-subtitle">' + escapeHtml(cert.subtitle) + '</p>'
-        : '';
-
-      return (
-        '<div class="cert-card" data-action="select-cert" data-cert-id="' + cert.id + '" ' +
-        'style="--cert-primary: ' + cert.primaryColor + '; --cert-secondary: ' + cert.secondaryColor + '">' +
-        '<div class="cert-card-header">' +
-          '<span class="cert-card-icon">' + cert.icon + '</span>' +
-          bonusBadge +
-        '</div>' +
-        '<h3 class="cert-card-name">' + escapeHtml(cert.name) + '</h3>' +
-        subtitleHtml +
-        '<div class="cert-card-stats">' +
-          (questionCount > 0
-            ? '<span class="cert-stat"><span class="cert-stat-icon">&#x1F4DD;</span> ' + questionCount + ' questions</span>'
-            : '') +
-          (topicCount > 0
-            ? '<span class="cert-stat"><span class="cert-stat-icon">&#x1F4D6;</span> ' + topicCount + ' topics</span>'
-            : '') +
-          (!cert.isBonusTopic
-            ? '<span class="cert-stat"><span class="cert-stat-icon">&#x2705;</span> ' + cert.passingScore + '% to pass</span>'
-            : '') +
-          (cert.guideFile
-            ? '<span class="cert-stat cert-stat-guide"><span class="cert-stat-icon">&#x1F4D6;</span> Reference Guide</span>'
-            : '') +
-        '</div>' +
+    var ddSection = deepDives.length > 0
+      ? '<div class="picker-section">' +
+          '<h2 class="picker-section-title">Deep Dives</h2>' +
+          '<p class="picker-section-subtitle">In-depth guides for Agentforce architects and consultants</p>' +
+          '<div class="cert-grid">' + ddCards + '</div>' +
         '</div>'
-      );
-    }).join('');
+      : '';
+
+    var certSection = certifications.length > 0
+      ? '<div class="picker-section">' +
+          '<h2 class="picker-section-title">Certifications</h2>' +
+          '<p class="picker-section-subtitle">Official Salesforce certification study guides</p>' +
+          '<div class="cert-grid">' + certCards + '</div>' +
+        '</div>'
+      : '';
 
     return (
       '<div class="screen cert-picker-screen">' +
         '<div class="picker-header">' +
           '<h1 class="picker-title">CertStudyHub</h1>' +
-          '<p class="picker-subtitle">Choose a certification to study</p>' +
+          '<p class="picker-subtitle">Choose a topic to study</p>' +
         '</div>' +
-        '<div class="cert-grid">' + cards + '</div>' +
+        ddSection +
+        certSection +
       '</div>'
     );
   }
@@ -1412,6 +1430,9 @@
       '.picker-header { text-align: center; padding: 32px 0 24px; }' +
       '.picker-title { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; }' +
       '.picker-subtitle { font-size: 17px; color: var(--text2); margin-top: 6px; }' +
+      '.picker-section { margin-top: 28px; }' +
+      '.picker-section-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }' +
+      '.picker-section-subtitle { font-size: 14px; color: var(--text2); margin-bottom: 16px; }' +
       '.cert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }' +
       '.cert-card { background: var(--card-bg); border-radius: var(--radius); padding: 20px; cursor: pointer; ' +
         'box-shadow: var(--card-shadow); transition: transform 0.2s, box-shadow 0.2s; border: 1px solid var(--separator); position: relative; overflow: hidden; }' +

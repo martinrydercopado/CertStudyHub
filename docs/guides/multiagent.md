@@ -1,1390 +1,574 @@
 # Multi-Agent Architecture in Agentforce
-### Strategic Patterns, Interoperability Protocols, and Architectural Boundaries
 
 ---
 
 ## Table of Contents
 
-1. [The Mental Model](#1-the-mental-model)
-2. [Syntax and Structure: The Deterministic-Reasoning Divide](#2-syntax-and-structure-the-deterministic-reasoning-divide)
-3. [Subagent Boundaries: Deterministic Triggers for Logic Segmentation](#3-subagent-boundaries-deterministic-triggers-for-logic-segmentation)
-4. [Agent Boundaries: Orchestration Thresholds and System Autonomy](#4-agent-boundaries-orchestration-thresholds-and-system-autonomy)
-5. [Multi-Agent Design Patterns: A Comparative Technical Study](#5-multi-agent-design-patterns-a-comparative-technical-study)
-6. [The Three Deployment Patterns: SOMA, MOMA, and 3P](#6-the-three-deployment-patterns-soma-moma-and-3p)
-7. [Routing Architecture and Priority](#7-routing-architecture-and-priority)
-8. [Model Selection and the `model_config` Override](#8-model-selection-and-the-model_config-override)
-9. [State, Memory, and Context Sharing](#9-state-memory-and-context-sharing)
-10. [Interoperability Protocols: MCP and A2A](#10-interoperability-protocols-mcp-and-a2a)
-11. [Common Failure Modes](#11-common-failure-modes)
-12. [Trust, Security, and Identity](#12-trust-security-and-identity)
-13. [Governance, Observability, and Quality Assurance](#13-governance-observability-and-quality-assurance)
-14. [Production Heuristics and Design Principles](#14-production-heuristics-and-design-principles)
-- [Appendix A: Key Term Glossary](#appendix-a-key-term-glossary)
-- [Appendix B: Protocol and Model Reference](#appendix-b-protocol-and-model-reference)
+1. [Why Multi-Agent Architecture?](#1-why-multi-agent-architecture)
+2. [The Three Deployment Streams](#2-the-three-deployment-streams)
+   - 2.1 [SOMA: Single-Org Multi-Agent](#21-soma-single-org-multi-agent)
+   - 2.2 [MOMA: Multi-Org Multi-Agent](#22-moma-multi-org-multi-agent)
+   - 2.3 [3P: Third-Party Agent Interoperability](#23-3p-third-party-agent-interoperability)
+3. [Choosing the Right Stream](#3-choosing-the-right-stream)
+4. [The Supervisor Pattern](#4-the-supervisor-pattern)
+5. [Building a Superagent Network](#5-building-a-superagent-network)
+   - 5.1 [The `connected_subagent` Block](#51-the-connected_subagent-block)
+   - 5.2 [Variable Mapping and State Sync](#52-variable-mapping-and-state-sync)
+   - 5.3 [Deterministic Routing with Agent Script](#53-deterministic-routing-with-agent-script)
+6. [Orchestration Patterns](#6-orchestration-patterns)
+   - 6.1 [Supervised Mode (GA)](#61-supervised-mode-ga)
+   - 6.2 [Handoff Mode (Post-GA)](#62-handoff-mode-post-ga)
+   - 6.3 [Parallel Execution (Post-GA)](#63-parallel-execution-post-ga)
+   - 6.4 [Plan and Present (Post-GA)](#64-plan-and-present-post-ga)
+7. [Platform Limits and Structural Constraints](#7-platform-limits-and-structural-constraints)
+   - 7.1 [Two Different Scopes, Two Different Numbers](#71-two-different-scopes-two-different-numbers)
+   - 7.2 [Constraints Reference Table](#72-constraints-reference-table)
+   - 7.3 [Supported Agent Type Combinations](#73-supported-agent-type-combinations)
+8. [Identity, Security, and Authentication](#8-identity-security-and-authentication)
+9. [Performance and Latency](#9-performance-and-latency)
+10. [Observability and Testing](#10-observability-and-testing)
+    - 10.1 [Unified Trace and Session Logging](#101-unified-trace-and-session-logging)
+    - 10.2 [Testing Center for Multi-Agent Workflows](#102-testing-center-for-multi-agent-workflows)
+11. [Admin Experience Reference](#11-admin-experience-reference)
+    - 11.1 [Agentforce Builder Views](#111-agentforce-builder-views)
+    - 11.2 [Connecting Agents](#112-connecting-agents)
+    - 11.3 [Validation and Network Health](#113-validation-and-network-health)
+    - 11.4 [Composability and Updates](#114-composability-and-updates)
+    - 11.5 [Admin Controls Summary](#115-admin-controls-summary)
+12. [End-User Experience](#12-end-user-experience)
+13. [Cross-Platform A2A: Third-Party and MCP Patterns](#13-cross-platform-a2a-third-party-and-mcp-patterns)
+14. [Industry Use Cases](#14-industry-use-cases)
+15. [Pre-Deployment Checklist](#15-pre-deployment-checklist)
+16. [Change Log](#change-log)
 
 ---
 
-## 1. The Mental Model
+## 1. Why Multi-Agent Architecture?
 
-### 1.1 From Decision Trees to Distributed Reasoning
+Single agents hit walls. When one agent tries to handle every task in a complex enterprise workflow, it makes poor decisions, loses context across long conversations, and cannot scale beyond narrow pilots. Three problems drive customers to multi-agent architecture:
 
-The enterprise landscape is undergoing a fundamental strategic shift from legacy monolithic bot architectures — rigid, linear decision trees — toward a distributed "Agentic" mindset. Architects must now view Agentforce not as a collection of static scripts, but as a **distributed reasoning system** capable of dynamic task handling.
+**Single agents get overwhelmed.** Context overload degrades reasoning quality. Adding more tools to a single agent makes it worse, not better — each new tool is another surface for misrouting and context burnout.
 
-This paradigm shift requires abandoning hard-coded paths in favor of an architecture where a single agent is inherently multi-purpose, operating as a sophisticated orchestration of intent rather than a brittle series of if-then statements. The Agentforce Mindset assumes three things:
+**Real work requires specialists.** A financial portfolio review needs a risk analyst, a market data reader, a compliance checker, and a client communicator. These are distinct skill sets with different data sources, permissions, and regulatory requirements. One generalist agent cannot perform all four well.
 
-- **Intent classification is probabilistic,** not programmatic. The LLM selects the right domain based on conversational context, not a lookup table.
-- **State is dynamic,** not pre-scripted. Variables evolve across turns, across subagents, and across agent boundaries.
-- **Safety is enforced at the architecture level,** not by trusting the LLM to comply with natural language instructions.
+**There is no infrastructure for coordination.** Even teams that build multiple agents have no standard way to make them work together, share context, or hand off tasks reliably. Orchestration logic gets rebuilt from scratch on every project.
 
-### 1.2 The Finite State Machine Model
+Multi-agent architecture solves all three. The Supervisor pattern gives each domain a specialist, keeps context appropriately scoped per agent, and provides a single front door for the end user — one brand voice, one conversation thread, one consolidated response, regardless of how many agents worked behind the scenes.
 
-Each **subagent functions as an independent finite state machine**. The system's intelligence emerges from the interaction between three elements.
+---
 
-| Element | Role |
-|---|---|
-| **Variables** | The agent's working memory. State that persists across turns and subagents. |
-| **Instructions** | The rules that govern reasoning within a turn. Re-evaluated after every action. |
-| **Topics (Subagents)** | The bounded domains of expertise. Each subagent owns a specific set of behaviors. |
+## 2. The Three Deployment Streams
 
-### 1.3 Variable System Taxonomy
+Multi-agent orchestration in Agentforce operates across three streams, each suited to a different organizational scope.
 
-Understanding the four variable types is a prerequisite for any multi-agent design work. They have fundamentally different scopes, mutability rules, and failure modes.
-
-| Type | Mutability | How Populated | Example |
+| Stream | Scope | Mechanism | GA Status |
 |---|---|---|---|
-| **Linked** | Read-only | External context at session start | `customer_name` linked from contact record |
-| **Mutable** | Read-write | Set by the agent during the session | `@variables.order_id`, `@variables.verified` |
-| **Slot-fill** | Write-once per turn | LLM extracts value from conversation via `...` token | Collecting an order number from natural speech |
-| **System** | Read-only | Predefined runtime context | `@system_variables.user_input` |
+| **SOMA** | Intra-org, multi-domain | `connected_subagent` block, graph-based reasoner | **GA — staged rollout in progress (see §2.1)** |
+| **MOMA** | Cross-org (Salesforce) | DC1 trust boundaries, MBus metadata sync, org-to-org agent sharing | GA (MuleSoft/DC1-dependent) |
+| **3P Outbound (A2A)** | Salesforce to external agent platforms | A2A protocol via Named Credentials | Pilot |
+| **3P Inbound (A2A)** | External platform into Salesforce | A2A protocol, ECA-scoped auth | Pilot |
+| **Cross-platform A2A** | Agentforce to Google Vertex, Azure Agent Mesh, etc. | A2A protocol, cross-vendor | **Beta** |
+| **MCP Client** | Salesforce to external tools | Model Context Protocol | Beta |
+| **Agentforce as MCP Server** | External platforms invoking Salesforce | Salesforce-hosted MCP Server | Beta |
 
-> **Best practice:** Always initialize mutable variables with explicit default values in the `variables:` block. An uninitialized variable returns a null-like default that can cause `available when` guards to fail silently.
+All patterns can coexist in the same enterprise architecture. An orchestrator can delegate to SOMA connected subagents for internal specialization, route to MOMA agents for cross-org Salesforce capabilities, and invoke or be invoked by external platforms via A2A or MCP.
 
-```agentscript
-variables:
-    is_verified: mutable boolean = False
-    order_id:    mutable string  = ""
-    # NOT: is_verified: mutable boolean  <-- uninitialized, dangerous
-```
+### 2.1 SOMA: Single-Org Multi-Agent
 
-### 1.4 The Core Architectural Axiom
+SOMA enables a Superagent to coordinate multiple specialized agents within a **single Salesforce org**. The orchestrator receives all user requests, selects the appropriate connected subagent based on descriptions and routing rules, delegates the task, and synthesizes the result.
 
-The single most important principle in Agent Script is the **execution order guarantee:**
+**GA rollout status (as of August 19, 2026):** SOMA within-org multi-agent orchestration entered general availability in August 2026 via a staged, pod-by-pod rollout. The rollout schedule is:
 
-> **Deterministic logic (`->`) executes before the LLM reasoning layer engages. Always.**
+| Phase | Status |
+|---|---|
+| Pilot orgs | Complete |
+| Sandbox canary | Complete (8/17) |
+| GUS + optional sandboxes | Complete (8/18) |
+| Production canary | In progress — expected to complete 8/19 evening |
+| Sandbox production canary | Starts 8/20 |
+| Datacenter canary | Starts 8/21 |
+| All remaining orgs | Starts 8/24 |
+| **Full rollout completion** | **~August 25–26, 2026** |
 
-This is not a convention. It is a runtime contract. Actions run, variables are set, and conditionals branch exactly as written before the LLM processes any text.
+> **If you do not yet see SOMA enabled in your org:** Check your pod's rollout status. Full org-wide availability is expected by approximately August 25–26, 2026. This is expected behavior during staged rollout, not a configuration problem.
 
-The practical implication: **authorization gates, trust checks, and irreversible action guards must be written as `->` logic, not as `|` natural language instructions.** Writing a guard in natural language is asking the LLM to comply. Writing it in `->` is enforcing compliance at the runtime level.
+**When to use SOMA.** Specialized agents already exist or should be built within the same org. The workflow involves multiple distinct domains (Billing, Returns, HR, Compliance) that benefit from separate permissions, owners, and topic scopes.
+
+**When NOT to use SOMA** (consider a single agent instead). The workflow is straightforward and all data is shared across the same domain. As a rule of thumb: when a single agent's subagent/topic count is well below 10, multi-agent architecture adds overhead without meaningful benefit. SOMA makes the most sense when distinct domains, distinct data permissions, or distinct team ownership make a single monolithic agent impractical to build and maintain.
+
+> **Note on the "approaches 10" heuristic:** This refers to the complexity threshold for a *single agent's* topic and subagent count — the design signal that suggests it is time to consider distributing across agents. This is a different number from the SOMA connected-subagent limit described in Section 7. See §7.1 for a clear explanation of both.
+
+### 2.2 MOMA: Multi-Org Multi-Agent
+
+MOMA connects agents across separate Salesforce orgs within a shared trust boundary. Trust is established through DC1 (data center) relationships stored in GDoT (Global Directory of Tenants). Each org can belong to only one agent trust boundary at a time. Agent sharing follows least-privilege principles: admins must explicitly mark agents as shareable in Agentforce Builder. Shared agents are organized into Agent Groups that control visibility.
+
+**When to use MOMA.** Your enterprise has multiple Salesforce orgs — due to business division separation, acquisitions, or data residency requirements — and needs agents from different orgs to collaborate on shared workflows. Example: a retail banking agent in one org delegating to a compliance agent in another org, both within the same DC1 trust boundary.
+
+**Authentication in MOMA.** The system uses Multi-Org JWTs for cross-org auth. The primary identity resolver maps users across orgs by email. If email mapping fails, the system defaults to Guest User authorization. Step-up authentication (unauthenticated-to-authenticated mid-conversation) is not supported in the current release.
+
+### 2.3 3P: Third-Party Agent Interoperability
+
+3P orchestration enables Agentforce agents to communicate with external, vendor-built agents using the A2A (Agent-to-Agent) protocol. Two flows are supported:
+
+**Outbound (AF to 3P).** An Agentforce agent acts as the Superagent and delegates tasks to a registered third-party agent. Registration requires OAuth credentials and an A2A Server URL, stored via Named Credentials. 3P agent calls time out after **120 seconds**; the system displays a retry prompt if no response is received within that window. This timeout applies specifically to outbound 3P agent calls — it is not an orchestrator-wide constraint.
+
+**Inbound (3P to AF).** A third-party platform invokes an Agentforce agent. Authentication is handled via External Client Apps (ECA) scoped with the `a2a_api` custom scope. The 3P system is responsible for routing logic; Agentforce is the execution layer.
+
+Both flows support one level of delegation only (A to B; not A to B to C). Human escalation is not supported in either direction for the current Pilot. Governance, allowlists, and monitoring UI are out of scope for Pilot.
+
+> **Cross-platform A2A (Agentforce to Google Vertex, Azure Agent Mesh, etc.) remains in Beta as of Summer '26.** Do not present cross-platform A2A as GA. Only within-org SOMA and DC1-scoped MOMA have reached general availability.
 
 ---
 
-## 2. Syntax and Structure: The Deterministic-Reasoning Divide
+## 3. Choosing the Right Stream
 
-### 2.1 The Two Instruction Operators
+| Decision point | Recommended stream |
+|---|---|
+| All agents in the same org, different domains | SOMA |
+| Agents owned by different Salesforce orgs in the same enterprise | MOMA |
+| Third-party SaaS vendor provides a production-ready agent | 3P Outbound |
+| External portal or bot needs to invoke Agentforce execution | 3P Inbound |
+| Need to access external APIs or SaaS tools as tools (not agents) | MCP Client (Beta) |
+| External LLM host needs to invoke Agentforce capabilities as tools | Agentforce as MCP Server (Beta) |
 
-| Operator | Name | What It Does | Who Processes It |
+When in doubt, start with SOMA. It has the lowest integration overhead, the tightest governance model, and the most mature tooling as of August 2026.
+
+---
+
+## 4. The Supervisor Pattern
+
+All three streams — SOMA, MOMA, and 3P — use the **Supervisor pattern** as their orchestration model. It is the only pattern supported in the current GA release.
+
+```
+         User
+          |
+          v
+  ┌───────────────┐
+  │  Superagent   │  <-- Single customer-facing entry point
+  │ (Orchestrator)│       Reasons, routes, synthesizes
+  └──┬──────┬──┬──┘
+     |      |  |
+     v      v  v
+  ┌────┐ ┌────┐ ┌────┐
+  │ A  │ │ B  │ │ C  │  <-- Specialized agents (Billing, HR, Compliance...)
+  └────┘ └────┘ └────┘
+```
+
+**How it works:**
+1. The Superagent receives all user requests.
+2. The Atlas Reasoning Engine reads each connected subagent's description and decides which specialist should handle the request.
+3. The selected specialist executes the task and returns results to the Superagent.
+4. The Superagent synthesizes the response and delivers it to the user.
+
+**Why the Supervisor pattern and not the alternatives:**
+- **Tool Calling** (treating other agents as tools) leads to context burnout — every tool's state lives in the same reasoning loop.
+- **Handoffs** (agents passing control directly to each other) reduce central oversight and make governance harder in regulated or high-stakes environments.
+- **Supervisor** keeps context scoped per agent, gives the orchestrator full visibility, and enforces a single governance point. It is the only pattern that supports enterprise-grade auditing of all agent decisions from one place.
+
+**Key capabilities of the Supervisor:**
+- Orchestrate multiple specialized agents, each with their own topics, actions, and permissions
+- Synthesize outputs from multiple specialists into one coherent user response
+- Forward specialist messages unchanged to avoid unnecessary token usage
+- Apply pre- and post-processing hooks (summarize inputs, validate outputs, enforce safety checks)
+- Return structured, schema-driven outputs for downstream automation
+- Configure how much conversation history each specialist receives (`full_history` vs. `last_message`)
+
+---
+
+## 5. Building a Superagent Network
+
+### 5.1 The `connected_subagent` Block
+
+The `connected_subagent` block declares a connection to another Agentforce agent in the same org (SOMA). It is defined at the top level of the orchestrator's Agent Script, alongside standard subagent blocks.
+
+```agentscript
+connected_subagent Billing_Agent:
+    label: "Billing_Agent"
+    target: "agentforce://X00Dfi200000dpFZ_Billing_Agent"
+    loading_text: |
+        Reviewing your billing details...
+    description: "Use this agent for any request about invoices, payment history, charges, refunds, or subscription billing. Do not use for shipping or returns."
+    inputs:
+        EndUserLanguage: string = @variables.EndUserLanguage
+        CustomerTier: string = @variables.CustomerTier
+```
+
+**Description quality matters more than anything else.** The Atlas Reasoning Engine routes entirely based on the description field. Overlapping descriptions across connected subagents cause misrouting. Make descriptions specific, non-overlapping, and include explicit guidance on when *not* to use the agent.
+
+**The `loading_text` field** sets the progress message shown to users while the subagent is working. Customize this per subagent to communicate what is happening without exposing internal routing logic.
+
+### 5.2 Variable Mapping and State Sync
+
+Variables are the mechanism for passing context from the orchestrator to connected subagents. Two variable types exist:
+
+| Variable type | Mutability | Sync direction | Use for |
 |---|---|---|---|
-| `->` | Logic / Procedural | Executes if/else, run, set, transition | The Agent Script runtime |
-| `\|` | Reasoning / Declarative | Assembles prompt text for the LLM | The LLM |
+| Context (linked) variables | Read-only | Populated at session start; not synced bidirectionally | CRM data, session metadata, stable grounding |
+| Custom variables | Mutable | One-way: orchestrator to subagent (bidirectional sync is a post-GA fast-follow) | Conversation state, user choices, verified flags |
 
-The LLM never sees raw `->` instructions. It receives only the assembled prompt text from `|` lines, with all conditionals already resolved and all variable values already injected.
+**Current behavior (GA).** Variable mapping is one-way: the orchestrator pushes values down to the subagent at session start. If a subagent learns something important during its turn — the user is now verified, or has selected a product — that information does not automatically flow back to the orchestrator. Design workflows with this in mind: architect your orchestrator to re-collect needed state rather than assuming subagent updates propagate back.
 
-```agentscript
-reasoning:
-    instructions: ->
-        if @variables.is_verified == True:
-            | Your account balance is {!@variables.account_balance}.
-              How else can I help you today?
+**Post-GA fast-follow.** Bidirectional state sync (`<>` mapping in Agent Script) is planned as a fast-follow after GA. When available, the orchestrator will receive the full updated variable state after every subagent turn, including all variables the subagent was permitted to write back. This release will also include the last 20 messages of conversation history as the default context window (up from 10).
 
-        if @variables.is_verified == False:
-            | I need to verify your identity before sharing account details.
-              Could you provide your registered email address?
-```
+**Context history.** The last 10 messages of conversation history are passed to connected subagents at the time of delegation. This was confirmed as the constraint during the Pilot phase. Verify your pod's release notes for any changes to this limit post-GA rollout completion.
 
-### 2.2 `after_reasoning` Transition Syntax
+**Mapping validation.** If a mapped variable is renamed or deleted in either the orchestrator or the subagent, the system blocks the save and surfaces a validation error. This is intentional: a silent mapping break is nearly impossible to debug at runtime.
 
-> **Critical Rule:** When placing a transition inside an `after_reasoning` block, you **must** use the deterministic bare syntax `transition to @subagent.X`. You must **never** use `@utils.transition to` here. Using `@utils.transition` in `after_reasoning` causes a compilation error.
+### 5.3 Deterministic Routing with Agent Script
 
-| Syntax | Valid In | Executed By |
-|---|---|---|
-| `transition to @subagent.X` | `before_reasoning`, `after_reasoning`, `->` blocks | The Agent Script runtime |
-| `@utils.transition to @subagent.X` | `reasoning: actions:` block only | The LLM selects it as a tool |
-
-> **Lifecycle trap:** If a subagent transitions to a new subagent mid-reasoning, the original subagent's `after_reasoning` block is **completely aborted**. The new subagent's `before_reasoning` does not fire retroactively for that same turn. Never rely on `after_reasoning` for state that is critical to system correctness.
-
-### 2.3 Instruction Surfaces and Their Scope
-
-Five distinct instruction surfaces exist. Each has a specific runtime moment and overwrite behavior.
-
-| Surface | Runs When | Scope Behavior |
-|---|---|---|
-| `system.instructions` (global) | Every LLM call, all subagents | Durable persona, safety, scope |
-| `system.instructions` (subagent-level) | Only in the owning subagent | **Replaces** the global block entirely; does not merge |
-| `before_reasoning` | Once per turn, before all LLM calls | Pure `->` deterministic logic only |
-| `reasoning.instructions` | Rebuilt after every tool call in the loop | Current objective, state injection, action guidance |
-| `after_reasoning` | Once, after reasoning loop produces a response | State cleanup, post-response transitions |
-
-### 2.4 The `before_reasoning` and `after_reasoning` Lifecycle
-
-These blocks execute **outside the LLM reasoning loop**. The LLM has no awareness of them.
+For critical business logic, use `@when` expressions in Agent Script to define hard routing rules. These execute before the reasoning engine runs, so they are faster, more predictable, and easier to audit.
 
 ```agentscript
-subagent account_inquiry:
-    before_reasoning:
-        # Fires EVERY turn, BEFORE the LLM sees anything
-        if @variables.is_verified == False:
-            transition to @subagent.identity_verification
-        run @actions.get_account_summary
-            with customer_id = @variables.customer_id
-            set @variables.account_balance = @outputs.balance
-            set @variables.account_status  = @outputs.status
+# Route verified users directly to Order Management
+# before any LLM reasoning occurs
+if @variables.identity_verified == true:
+    -> transition to Order_Management_Agent
+
+# Route VIP customers to the premium support specialist
+if @variables.customer_tier == "Platinum":
+    -> transition to Premium_Support_Agent
 ```
 
-### 2.5 Action Invocation Patterns
+Deterministic transitions execute immediately. They do not consume an LLM call. Use them for:
+- Mandatory prerequisite gates (identity verification before order access)
+- Predictable high-volume routing (customer tier-based routing)
+- Required workflow steps that must not be bypassed
 
-Two invocation patterns exist and they are not interchangeable.
+Reserve LLM-driven routing (the reasoning engine's default behavior) for cases where the correct subagent depends on nuanced user intent that cannot be pre-coded.
 
-| Pattern | Syntax | Who Decides | Use Case |
+---
+
+## 6. Orchestration Patterns
+
+### 6.1 Supervised Mode (GA)
+
+The orchestrator receives every user request. It reads each connected subagent's description, selects the right specialist, delegates the task, buffers the specialist's output, and synthesizes a final response before it reaches the user.
+
+**Latency note.** In supervised mode, every user turn involves at minimum: an orchestrator routing call (LLM hop 1), an agent-to-agent API call, a subagent topic selection (LLM hop 2), and response synthesis back up the chain (LLM hop 3). At P95, this adds 12–20 seconds of orchestration overhead on top of the subagent's own execution time. Design SLAs accordingly.
+
+**Streaming.** Token streaming is enabled by default. Users see sub-agent output appearing in a collapsible reasoning panel word by word while synthesis runs — eliminating the blank waiting state. The final synthesized response then streams into the main chat area. Streaming can be disabled per agent in script with `additional_parameter__disable_streaming: True`; the Superagent's flag takes precedence over subagent flags for the end-user experience.
+
+**Progress messaging.** During delegation, users see a configurable progress message ("Collaborating with our team..."). Admins configure this per Superagent in the builder. Sub-agent outputs appear in a collapsible reasoning panel (visible on LEX, Slack, and Enhanced Chat; hidden on WhatsApp, SMS, and Mobile).
+
+### 6.2 Handoff Mode (Post-GA)
+
+The orchestrator routes once, then steps back for that turn. The specialist owns the conversation directly with the user and streams its response without an orchestrator synthesis step. After the turn completes, control returns to the orchestrator.
+
+**Why this matters for latency.** Removing the synthesis step cuts the P95 overhead from ~12–20s (3-LLM-hop supervision) to ~5–6s (2-LLM-hop handoff). For high-volume contact center deployments where routing decisions are predictable, this is the SLA pattern.
+
+**Trust model.** Only same-org, same-platform agents can receive handoffs. Third-party and cross-vendor agents are never handed off to directly — the orchestrator always mediates. Handoff is opt-out per subagent in script (`allow_direct_handoff: false`). The default for trusted subagents is on.
+
+> **Status:** Not yet available in GA rollout. Target: post-GA fast-follow.
+
+### 6.3 Parallel Execution (Post-GA)
+
+The orchestrator fans out to multiple specialists simultaneously. Each runs independently. The orchestrator collects all results and synthesizes them into one response. Total wait time equals the slowest single agent, not the sum.
+
+**When to use.** Tasks requiring multiple independent inputs: portfolio analysis, composite risk assessment, multi-system due diligence. Running several analyses in parallel — for example, risk scoring, market insights, regulatory grading, and tax harvesting — means none needs to wait for another to begin.
+
+**Watch out.** The orchestrator waits for *all* agents before synthesizing. A single timing out subagent blocks the whole response. Build explicit partial-result handling into synthesis logic before deploying parallel patterns in production.
+
+> **Status:** Not yet available in GA rollout. Target: post-GA.
+
+### 6.4 Plan and Present (Post-GA)
+
+The orchestrator shows the user a step-by-step execution plan before running anything. The user approves. Only then does execution begin.
+
+**Why this matters.** This is the pattern that opens regulated verticals — healthcare, financial advisory, legal, government — where automated action without human confirmation is a liability. It removes the human oversight objection while preserving automation benefits.
+
+> **Status:** Not yet available in GA rollout. Target: post-GA.
+
+---
+
+## 7. Platform Limits and Structural Constraints
+
+### 7.1 Two Different Scopes, Two Different Numbers
+
+There are two different limit concepts that apply to subagent counts in a SOMA architecture. They are frequently confused. They describe different things and are not contradictory.
+
+**Design heuristic (single-agent complexity threshold).** When a *single agent's* topic and subagent count approaches 10, that is a signal the agent is becoming too complex for one agent to handle well. This is a design guidance heuristic — the point at which distributing work across multiple agents in a SOMA network starts to make architectural sense. It is not a platform-enforced limit.
+
+**SOMA network width (connected subagents in an orchestrated network).** The platform warns (but does not block) when an orchestrator's connected-subagent count exceeds 7–8 agents. This is a SOMA-specific, separately bounded constraint on the *width* of the orchestrated network — distinct from how many topics or internal subagents any single agent within that network has.
+
+These two numbers operate at different levels of the architecture. A SOMA network can contain multiple agents each with up to 10 internal topics, connected via up to 7–8 connected-subagent links, and the two limits govern completely separate dimensions of the system.
+
+### 7.2 Constraints Reference Table
+
+| Dimension | Limit | Notes |
+|---|---|---|
+| Delegation depth | 1 level only (A to B) | Connected subagents cannot themselves delegate further. Not a soft warning — this is enforced. |
+| SOMA network width | 7–8 connected subagents (Salesforce recommendation) | Not a hard platform cap; the builder warns but does not block. PM guidance confirms up to 20 connected subagents is technically supported; 8 is cited as a well-performing configuration. |
+| Topics per agent | Up to 10 (Salesforce recommendation) | Not a hard cap. Part of official Agents Limits documentation. |
+| Actions per subagent | Up to 10 (Salesforce recommendation) | Not a hard cap. Part of official Agents Limits documentation. |
+| Session duration | 24–48 hours | Hard limit. |
+| Platform reasoning-engine timeout | **30 seconds** | Platform-wide limit inherited by all reasoning engine requests, including connected subagent calls. Not a SOMA-specific constraint. Confirmed in official Agents Limits documentation. Long multi-step journeys (e.g., 11+ step workflows) are better suited to Handoff Mode than connected subagent chains for exactly this reason — complex subagent reasoning can approach this ceiling. |
+| 3P agent call timeout | **120 seconds** | Scoped specifically to outbound calls to third-party (3P) agents via A2A. If a 3P agent does not respond within 120 seconds, the system prompts the user to retry. This is **not** an orchestrator-wide timeout. |
+| Variable mapping direction | One-way: orchestrator to subagent | Bidirectional is a post-GA fast-follow. |
+| Context history on delegation | Last 10 messages | Confirmed in Pilot PRD. Verify against your org's release notes post-GA rollout completion; this value may be updated. |
+
+> **Note on subagent counts:** The previously published "5 internal subagents per connected subagent (hard limit)" figure in v3.0 has been removed. That figure could not be sourced from any Salesforce primary documentation and is directly contradicted by official PM guidance. The verified limits are: up to 10 topics per agent and up to 10 actions per subagent (both soft recommendations), with no documented hard cap on internal subagent or topic count per connected subagent.
+
+### 7.3 Supported Agent Type Combinations
+
+| Orchestrator type | Connected subagent type | Supported? |
+|---|---|---|
+| ASA (Agentforce Service Agent) | ASA | Yes |
+| AEA (Agentforce Employee Agent) | AEA | Yes |
+| AEA | ASA | Yes |
+| ASA | AEA | No |
+| Any | File-based (SDR, Analytics) | Post-GA |
+
+---
+
+## 8. Identity, Security, and Authentication
+
+**Identity propagation.** User identity and permissions propagate automatically through the entire agent chain. No agent in the network can access data beyond the permissions of the original calling user. This is enforced by the trust model, not by individual agent configuration.
+
+**Primary identity resolution (MOMA).** The system resolves user identity across orgs using email address as the default resolver. If email mapping succeeds, the mapped identity is used. If it fails, the system defaults to Guest User authorization. Step-up authentication (triggering a login prompt mid-conversation for a previously unauthenticated user) is not supported in the current release.
+
+**Authentication mechanisms by agent type:**
+- Authenticated AEA-to-AEA: Supported
+- Unauthenticated ASA-to-ASA: Supported
+- Authenticated ASA-to-ASA: Not supported in current release
+- AEA-to-ASA: Supported
+- ASA-to-AEA: Not supported
+
+**3P authentication.** Outbound 3P calls use OAuth credentials stored in Named Credentials. Inbound 3P calls authenticate via ECA (External Client Apps) with the `a2a_api` custom scope. AEA access from 3P platforms requires the Web-Server Flow; ASA access uses the Client Credentials Flow.
+
+**Trust boundary rules (MOMA).** An org can belong to only one agent trust boundary at a time. Trust boundaries are stored in GDoT. Agent sharing is opt-in: admins explicitly mark agents as shareable. Shared agents are grouped into Agent Groups that control per-org visibility. An org cannot be in multiple agent trust boundaries simultaneously, though it can be in one DC1 trust boundary and one agent trust boundary at the same time.
+
+**Who can connect agents.** Org Admin only. Connecting agents in a SOMA or MOMA network is an elevated operation restricted to administrators.
+
+---
+
+## 9. Performance and Latency
+
+Multi-agent architectures carry higher latency than single-agent solutions by design. The orchestration layer, additional LLM calls, and agent-to-agent API hops all add overhead. Customers must account for this when setting SLAs.
+
+**P95 latency breakdown for a SOMA network (supervised mode):**
+
+| Layer | P95 Overhead |
+|---|---|
+| Orchestrator routing (LLM hop 1) | ~3–5 seconds |
+| Agent-to-agent API call | ~2–4 seconds |
+| Subagent topic selection (LLM hop 2) | ~3–5 seconds |
+| Topic-to-action handoff | ~1–2 seconds |
+| Response synthesis (LLM hop 3) | ~2–3 seconds |
+| **Total P95 SOMA overhead** | **~12–20 seconds** |
+
+**With handoff mode (post-GA, 2-LLM-hop path):** ~5–6 seconds of orchestration overhead.
+
+**Target end-to-end turn time:** Less than 15 seconds total (reasoning plus delegation). Streaming reduces *perceived* latency significantly — users see content appearing rather than waiting for a complete response.
+
+**Guidance for customers.** A Superagent architecture adds approximately 12–20 seconds of orchestration overhead at P95 in supervised mode. Design for end-to-end SLAs that account for both orchestration overhead and subagent execution time. If total latency is your primary constraint, evaluate whether Handoff Mode (post-GA) or a restructured single-agent solution better fits your SLA requirements.
+
+**The 30-second reasoning engine boundary.** Because the platform reasoning engine times out after 30 seconds, any connected subagent whose internal reasoning approaches this boundary will fail. If a subagent needs to run a complex, multi-step workflow that may take close to 30 seconds to reason through, route it to Handoff Mode (post-GA) rather than a connected subagent chain.
+
+---
+
+## 10. Observability and Testing
+
+### 10.1 Unified Trace and Session Logging
+
+Every multi-agent session generates independent trace logs for both the Superagent and all connected subagents, stored in STDM (Salesforce Trace Data Model). The architecture supports bidirectional lookup:
+
+- **Forward:** Primary Agent trace step to Sub-Agent session ID (via Attributes field)
+- **Backward:** Sub-Agent session to Primary Agent session (via PreviousSessionId)
+
+**Unified trace view.** Agentforce Builder's preview mode includes a single timeline showing the reasoning steps of both the Superagent and all subagents, including the rationale for each routing decision. The State Inspector shows how context variables change as they move between agents.
+
+**Analytics metrics available for multi-agent workflows:**
+- Sub-agent invocation count (rolling time period)
+- End-to-end task resolution success rate
+- Error rate across the full agent chain (broken down by orchestration, handoff, authentication, and timeout errors)
+- Per-hop latency (orchestration time, agent invocation time, and execution time at each delegation point)
+- Handoff failure alerts
+- Sub-agent downtime alerts
+
+### 10.2 Testing Center for Multi-Agent Workflows
+
+The Agentforce Testing Center (GA: July 18, 2026) provides dedicated evaluations for multi-agent orchestration:
+
+**Sub-Agent Assertion.** A new standard eval that checks whether the orchestrator invoked the correct connected subagent for a given utterance — analogous to the existing Topic Assertion eval for single-agent flows.
+
+**Task Completion Success.** Verifies end-to-end task completion across the entire multi-agent workflow, not just within a single agent.
+
+**Multi-Hop Latency Breakdown.** Extends the existing latency evaluation to attribute time across the delegation chain, identifying which hop is the bottleneck.
+
+**Semantic Conflict Detection (post-GA).** An LLM-as-judge evaluation that scans conversation logs for contradictory assertions across agents or signs of looping behavior.
+
+**LLM-as-judge evaluation.** Testing Center uses an LLM evaluator for grading test runs. Available models as of the July 18 GA include Claude Sonnet and GPT-4o Mini. The exact model selection logic per org configuration is subject to change; verify current behavior in your org's release notes before relying on specific model behavior for evaluation reproducibility.
+
+**Limits.** 500 test cases per job. Recommended batch size: 20–30 cases. Testing Center is enabled automatically for all Agentforce customers in Sandbox orgs at no additional cost.
+
+---
+
+## 11. Admin Experience Reference
+
+### 11.1 Agentforce Builder Views
+
+Agentforce Builder provides three interchangeable views, all of which compile to the same underlying Agent Script:
+
+| View | Best for |
+|---|---|
+| Conversational | Describe the network in natural language ("I need a supervisor agent that coordinates my Billing Agent and Logistics Agent"). The system generates connections automatically. |
+| Canvas | Point-and-click configuration via the Resource tab. Select Connected Agents, then Add. Multiple agents can be added together. |
+| Script | Direct Agent Script editing. Supports `@when` expressions, conditionals, variable mappings, and explicit `connected_subagent` blocks. |
+
+Admins can switch between views at any time without losing work. All views reflect the same underlying configuration.
+
+### 11.2 Connecting Agents
+
+**Prerequisites.** Sub-agents must be activated individually before being added to a network. Draft agents can be added in preview mode for testing but will not be accessible to end users until activated.
+
+**Agent types that can be connected.** Any active agent available in the org's AiAgent BPO can be added as a connected subagent. A Superagent (that already has connected subagents) can itself be added as a connected subagent to another Superagent — but only one level deep. Circular connections (A to B to A) are detected and blocked.
+
+**Sub-agent visibility.** Once a Superagent is selected in the agent picker, individual sub-agents are hidden from the end user. The user sees and interacts only with the Superagent.
+
+### 11.3 Validation and Network Health
+
+Before publishing, run **Check Network Health** to validate the agent network. Validation can also be triggered manually at any time after changes. Issues appear inline in the builder.
+
+| Validation check | Behavior |
+|---|---|
+| Depth limit (more than 1 level deep) | Warn, not block |
+| Width limit (more than 7–8 agents wide) | Warn, not block |
+| Loop detection (A routes to B which routes back to A) | Block — not permitted |
+| Skill overlap | LLM-based warning with suggestions; does not hard-block |
+| Language compatibility | Error if no overlapping supported languages between Superagent and subagent |
+
+### 11.4 Composability and Updates
+
+Sub-agents can be added or removed from an active Superagent without deactivating it. Changes take effect without interrupting ongoing conversations.
+
+**Version management.** Sub-agent teams can deploy new versions independently without coordinating with the Superagent owner. Deploy the new version, then activate it. The Superagent uses whichever version is currently activated. Rolling back is as simple as activating an older version. Ongoing conversations continue with the previous version until they complete; new conversations use the newly activated version.
+
+**Draft testing in live context.** Admins can add a draft version of a sub-agent and test it within the live Superagent network before promoting it to active.
+
+**Permanent removal.** A sub-agent cannot be permanently deleted if it is connected to an active Superagent (unlink first) or has active long-running sessions. The UI shows active sessions and connected Superagents when removal is blocked.
+
+### 11.5 Admin Controls Summary
+
+| Setting | Location | Configurable by | Default |
 |---|---|---|---|
-| **Deterministic** | `run @actions.X` inside `->` block | The runtime — unconditional | Must-execute logic: data loading, auth gates |
-| **LLM-Driven** | Listed in `reasoning: actions:` block | The LLM selects from available tools | Conversational, contextual tool selection |
-
-```agentscript
-reasoning:
-    instructions: ->
-        # DETERMINISTIC: Always runs before LLM reasons
-        run @actions.load_customer_profile
-            with id = @variables.customer_id
-            set @variables.tier = @outputs.tier
-
-        | Customer tier is {!@variables.tier}. How can I help you today?
-
-    actions:
-        # LLM-DRIVEN: LLM decides whether and when to call this
-        upgrade_tier: @actions.upgrade_customer_tier
-            description: "Upgrades the customer to the next service tier"
-            available when @variables.tier == "Standard"
-            with customer_id = @variables.customer_id
-```
-
-> **Bug Pattern Alert:** Referencing `@actions.X` in `|` prose without also listing the action in the `actions:` block (for LLM-driven mode) or calling it with `run` (for deterministic mode) results in **silent failure**.
-
-### 2.6 Post-Action Re-Resolution and Check Placement
-
-`reasoning.instructions` is **rebuilt from scratch after every action executes**. Post-action checks placed at the **top** of the block fire immediately when variables update.
-
-```agentscript
-reasoning:
-    instructions: ->
-        # CORRECT: Post-action check at TOP — fires on re-resolution
-        if @variables.order_cancelled == True:
-            | Your order has been cancelled. Reference: {!@variables.cancellation_ref}.
-            transition to @subagent.confirmation_agent
-
-        | I can help you cancel your order. Please provide your order number.
-
-    actions:
-        cancel_order: @actions.cancel_order_action
-            description: "Cancels the specified order"
-            available when @variables.order_id != ""
-            with order_id = @variables.order_id
-            set @variables.order_cancelled  = @outputs.success
-            set @variables.cancellation_ref = @outputs.reference_number
-```
+| Streaming on/off | Per agent, script | Admin | On |
+| Handoff on/off (post-GA) | Per subagent, script (`allow_direct_handoff`) | Admin | On for trusted agents |
+| Variable mapping direction | Script | Admin | Explicit — no default |
+| Global instructions (brand tone, policies) | Orchestrator script | Admin | Off; subagent opts in |
+| Progress message text | Superagent builder | Admin | "Getting answers..." |
+| Trust designation | Platform | Salesforce | — |
+| Reasoning panel visibility | Platform, per channel | Not configurable | Visible on rich UI channels only |
+| Who can connect agents | Platform | Org Admin only | — |
 
 ---
 
-> **Scenario Pause — Lifecycle Trap**
->
-> A developer builds a checkout agent. The `payment_subagent` is supposed to log every transaction in `after_reasoning` before transitioning to `confirmation_subagent`. In production, 12% of sessions show no transaction log.
->
-> **Root cause:** The LLM occasionally calls a `@utils.transition` action mid-reasoning. This aborts `after_reasoning`. The log action never fires for those sessions.
->
-> **Fix:** Move the logging `run` statement into `reasoning.instructions` as a deterministic step before the transition. Confirm any `after_reasoning` transitions use bare `transition to @subagent.X` syntax.
+## 12. End-User Experience
 
----
+From the user's perspective, multi-agent orchestration is invisible. They see one conversation, one brand voice, one response — regardless of how many agents worked behind the scenes.
 
-## 3. Subagent Boundaries: Deterministic Triggers for Logic Segmentation
+**Progress indication.** Users see a configurable "Getting answers..." message with animated progress markers while the Superagent coordinates sub-agents. Sub-agent outputs appear in a collapsible reasoning panel (open by default, collapsible by the user) on rich UI channels.
 
-### 3.1 The Default Posture: Start Minimal
+**Channel support for reasoning panel:**
 
-> **Start with a single-domain agentic agent. Add complexity only when justified by a concrete, named requirement.**
-
-Every subagent boundary adds routing overhead, context-passing complexity, and a new class of failure modes.
-
-### 3.2 The Three Triggers for Subagent Segmentation
-
-**Trigger 1: Instruction Overload**
-
-Excessive instruction length degrades reasoning fidelity. Instruction length alone is not the trigger; *quality degradation* is.
-
-*Diagnostic signal:* The agent consistently misses rule conditions or conflates domain-specific details.
-
-**Trigger 2: Functional Divergence**
-
-Different processing logic, data sources, or security guardrails mixed in one subagent cause the LLM to incur context-switching overhead.
-
-*Diagnostic signal:* The agent handles two domains requiring different permissions, data sources, or trust levels.
-
-**Trigger 3: Modularity and Regression Control**
-
-Isolating distinct responsibilities enables independent update cycles.
-
-*Diagnostic signal:* Different teams own different functional areas, or the same area changes frequently enough that co-location creates regression risk.
-
-### 3.3 Case Study: Customer Service Agent Segmentation
-
-```
-start_agent (router)
-    |
-    ├── user_verification
-    |       Trigger 2: different security guardrails, different data
-    |       - Collects email address
-    |       - Verifies identity against company records
-    |       - Sets @variables.is_verified = True/False
-    |
-    ├── order_status
-    |       Trigger 3: separate team, independent change cadence
-    |       - Collects order number (slot-fill via ...)
-    |       - Retrieves order details
-    |       - Handles follow-up: expedite, cancel, reship
-    |
-    └── case_management
-            Trigger 1: distinct instruction set — mixing with order_status
-                        would overload context with case taxonomy rules
-            - Creates support cases for verified users
-            - Handles verification failures, order escalations
-            - Routes to human queue via @utils.escalate
-```
-
-**Flow of control:** Every utterance returns to `start_agent`. No subagent routes directly to another.
-
-### 3.4 The `available when` Guard as a Security Primitive
-
-When an `available when` condition is not met, the action is **completely hidden from the LLM's tool list** — not disabled, not grayed out. The LLM cannot be prompted into calling it.
-
-```agentscript
-subagent order_status:
-    reasoning:
-        instructions: ->
-            | I can help you with your order.
-        actions:
-            cancel_order: @actions.cancel_order
-                description: "Cancels the specified order"
-                available when @variables.order_id  != ""
-                    and @variables.is_verified == True
-
-            get_order_status: @actions.get_order_status
-                description: "Retrieves the current status of an order"
-                available when @variables.order_id != ""
-```
-
----
-
-> **Scenario Pause — Trigger Evaluation**
->
-> An architect designs an HR agent with three capabilities: leave balance inquiry, payroll inquiry, and disciplinary record inquiry.
->
-> - Trigger 2: Disciplinary records require elevated permissions and stricter audit logging.
-> - Trigger 3: Leave and payroll share the same HR systems team. Disciplinary records are owned by Employee Relations with a different SDLC.
->
-> **Decision:** Two subagents. `hr_inquiry` handles leave and payroll. `disciplinary_inquiry` is separate.
-
----
-
-## 4. Agent Boundaries: Orchestration Thresholds and System Autonomy
-
-### 4.1 When a Subagent Boundary Becomes an Agent Boundary
-
-**Boundary 1: Lifecycle and SDLC Independence**
-
-A shared `.agent` file represents **shared fate**. If different development teams require independent release cadences, deployment pipelines, and rollback capabilities, those functions must reside in **separate agents**.
-
-**Boundary 2: Independent Invocation**
-
-If a domain must be directly callable from external systems — other agents, external APIs, orchestrators — it requires its own agent identity with its own A2A endpoint and Agent Card.
-
-**Boundary 3: Regulatory Isolation**
-
-When different domains require different data sovereignty, tenant isolation, or compliance boundaries, they must reside in separate agents (potentially in separate orgs via MOMA).
-
-### 4.2 State Management Across Agent Boundaries
-
-| Mechanism | Transfer Type | Caller Context | When to Use |
-|---|---|---|---|
-| `@utils.transition` to a connected agent | One-way handoff | Caller context is discarded after transfer | Terminal transfers: the subagent owns the session from this point |
-| `@subagent.<name>` (within same agent) | Round-trip delegation | Control returns to caller after subagent completes | Non-terminal delegations: caller needs to act on the result |
-
----
-
-## 5. Multi-Agent Design Patterns: A Comparative Technical Study
-
-### Pattern 1: Monolithic Subagent
-
-| Dimension | Assessment |
+| UI element | Channels |
 |---|---|
-| **Reasoning fidelity** | Low. Context dilution across mixed domains. |
-| **State management** | Simple. No cross-subagent variable passing. |
-| **SDLC** | High risk. Any change touches all capabilities. |
-| **Use when** | Prototype only. Never in production for complex logic. |
+| Reasoning panel (thinking stream) | LEX, Slack, Enhanced Chat |
+| Streaming final answer | All channels |
+| Progress indicator | All channels |
 
-### Pattern 2: Single Agent with Intent Classifier (SOMA Light)
+On WhatsApp, SMS, and Mobile, the reasoning panel is hidden. The user sees only the final answer, streamed.
 
-| Dimension | Assessment |
-|---|---|
-| **Reasoning fidelity** | High. Scoped, focused instructions per subagent. |
-| **State management** | Medium. Variables shared within the same agent lifecycle. |
-| **SDLC** | Medium risk. Entire agent redeployed for any single subagent update. |
-| **Use when** | One team owns all domains; infrequent updates; shared org boundary appropriate. |
+**Failure handling.** Every failure message is clean, user-facing, and actionable (rephrase, retry, start over, verify identity). Internal errors, sub-agent names, and tool failures are never surfaced to the user. "No results" and "failure" are always distinct messages. Default failure handling for GA: retry the same agent twice; if that fails, return to the Superagent with an error for it to communicate to the user.
 
-### Pattern 3: Orchestrator to Separate Agents (SOMA/MOMA)
-
-| Dimension | Assessment |
-|---|---|
-| **Reasoning fidelity** | Maximum. Full contextual isolation per agent. |
-| **State management** | Complex. Cross-agent state passing requires explicit variable mapping; MOMA caps at 10 messages. |
-| **SDLC** | Maximum independence. Each agent has its own deployment lifecycle. |
-| **Use when** | Different teams own each domain; regulatory isolation required; independent API exposure needed. |
-
-### Pattern 4: Hybrid Orchestration
-
-| Dimension | Assessment |
-|---|---|
-| **Reasoning fidelity** | High for grouped domains; maximum for isolated specialists. |
-| **Use when** | Some domains share genuine data affinity; others require strict isolation. |
-
-### Pattern Selection Decision Tree
-
-```
-Does any domain need independent API exposure or A2A invocability?
-    YES -> Pattern 3 or 4 (separate agents required)
-    NO  -> Continue
-
-Do different teams own different domains with independent release cadences?
-    YES -> Pattern 3 or 4
-    NO  -> Continue
-
-Do any domains require different permission boundaries?
-    YES -> Pattern 3 or 4
-    NO  -> Continue
-
-Would a single subagent exceed high-fidelity reasoning capacity?
-    YES -> Pattern 2 (single agent, multiple subagents)
-    NO  -> Pattern 1 (single subagent, simplest viable architecture)
-```
+**Session duration.** Multi-agent sessions support 24–48 hour durations as a hard limit.
 
 ---
 
-> **Scenario Pause — Pattern Selection Under Pressure**
->
-> A fintech company wants a unified "Wealth Management Assistant." Credit analysis: Risk team, quarterly releases, strict audit. Portfolio rebalancing: Advisory team, daily updates. Client communication history: CRM, shared with 4 other agents, rarely changes.
->
-> **Result:** Hybrid Pattern 3/4. Credit and Portfolio as separate agents (independent SDLC). Client history as a reusable subagent within a shared "Client Context Agent."
+## 13. Cross-Platform A2A: Third-Party and MCP Patterns
+
+> **Important:** Everything in this section describes **Beta** functionality as of August 2026. Do not use this section's content to represent GA capabilities.
+
+**3P Outbound (Salesforce to external vendor agents).** Once a 3P agent is registered via the AF Registry page with OAuth credentials and A2A Server URL, it can be connected to a primary AF agent. The Planner routes requests to the 3P agent when user intent matches the agent's declared skills on its A2A card. 3P agent calls must return a single synchronous TaskResult. Streaming and partial responses are not supported in Pilot. The 120-second timeout applies to each 3P call.
+
+**3P Inbound (external vendor to Salesforce agents).** A2A cards are auto-generated from each AF agent's existing metadata (name, description, topics, actions) and published at a `.well-known/agent-card.json` endpoint. Admins maintain an allowlist specifying which agents are accessible to external vendors. Authentication uses ECA with the `a2a_api` custom scope.
+
+**MCP Client.** Agentforce can invoke external tools — databases, SaaS APIs, search engines — via the Model Context Protocol. This is the appropriate pattern when the external system is a *tool* rather than an *agent* (it does not reason; it executes and returns data).
+
+**Agentforce as MCP Server.** External hosts (such as third-party AI assistants or enterprise LLM platforms) can invoke Agentforce capabilities as tools via a Salesforce-hosted MCP Server. This is the appropriate pattern when an external platform needs to use Agentforce as a specialized execution layer without building full A2A orchestration.
 
 ---
 
-## 6. The Three Deployment Patterns: SOMA, MOMA, and 3P
+## 14. Industry Use Cases
 
-### 6.1 SOMA — Single-Org Multi-Agent
+The following use cases illustrate the business scenarios that drove SOMA, MOMA, and 3P design decisions. These are drawn from Pilot program participants and internal customer zero deployments, anonymized by industry.
 
-**GA technical limits:**
+### SOMA Use Cases
 
-- Up to 7-8 subagents wide (soft limit; flagged in observability dashboard at 7)
-- 2 delegation levels deep (A to B; no tertiary)
-- Session duration: 24-48 hours maximum
-- Bidirectional variable sync (GA)
-- Last 20 messages of conversation history passed on delegation
+**Financial Services — Parallel Portfolio Analysis.**
+Analysts in a financial services firm needed to review client profiles, analyze market conditions, calculate risk scores, and generate client-ready recommendations — capabilities that require distinct data sources, regulatory constraints, and specialized logic that a single agent could not handle well simultaneously. A SOMA network with four specialist agents (market data, risk scoring, regulatory compliance, client communication) operating under a single orchestrator replaced a workflow that previously required analysts to context-switch across multiple systems. Parallel execution (post-GA) is planned to run all four analyses simultaneously, reducing end-to-end response time to the duration of the slowest single agent.
 
-**SOMA latency profile (P95):**
+**Professional Services — Internal Employee Agent Ecosystem.**
+A professional services firm needed to give delivery staff access to specialized knowledge and relationship data without requiring them to leave their primary workflow. Two domains — delivery management (project tracking, opportunity splits, resourcing) and relationship management (contact lifecycle, engagement goals) — had distinct business rules, data owners, and permission models that made a single monolithic agent impractical. A SOMA Superagent coordinates two specialist agents (a Delivery Agent and a Relationship Agent), eliminating context-switching across CRM workflows while maintaining strict data boundary separation between the two domains.
 
-| Hop | Component | Overhead |
-|---|---|---|
-| Hop 1 | Orchestrator routing (EinsteinHyperClassifier) | +3-5s |
-| Hop 2 | Agent-to-agent API call | +2-4s |
-| Hop 3 | Subagent topic selection (LLM) | +3-5s |
-| Hop 4 | Response synthesis — Supervised Mode only | +2-3s |
-| **P95 Total (Supervised)** | | **~12-20s** |
-| **P95 Total (Handoff Mode)** | Hop 4 removed | **~8-14s** |
+### MOMA Use Cases
 
-### 6.2 MOMA — Multi-Org Multi-Agent
+**Technology / Professional Services — Cross-Org Knowledge Delivery.**
+A large technology organization needed to make specialized internal knowledge available to field delivery staff across a separate Salesforce org, without requiring re-authentication or manual context-switching. A Delivery Agent in the primary delivery org delegates knowledge queries to a centralized Knowledge Agent in a separate services org, both within the same DC1 trust boundary. Single login, no step-up authentication, no context switching — the multi-org boundary is fully transparent to the end user.
 
-**Before you choose MOMA: evaluate Data Cloud Zero-Copy Federation first.**
+**Financial Services — Multi-System Loan Processing.**
+Loan officers in a financial services firm handling complex secured lending products needed fast, consolidated answers when processing delays occurred. A query such as "Why is this application delayed?" triggers an orchestrator that delegates simultaneously to three specialist agents — credit eligibility, legal verification, and property valuation — then returns a unified explanation with recommended next steps. Previously, officers had to query each system independently and manually correlate the results.
 
-MOMA carries significant technical constraints: a 10-message context cap, JWT-based identity propagation complexity, pass-by-value memory (no shared state), and a hard one-level delegation limit.
+### 3P Use Cases
 
-> **Can the external org's data be federated into the primary org using Data Cloud Zero-Copy?**
->
-> If yes, you can maintain a SOMA pattern. The data boundary concern is solved at the data layer — not the orchestration layer.
+**Technology / Document Management — RFP Response Automation (3P Outbound).**
+A technology firm's sales teams were spending 6–8 hours per RFP manually assembling responses that required both deep document analysis and CRM relationship data. Neither capability resided in a single platform. A 3P Outbound pattern connects a document intelligence agent (hosted externally) with an Agentforce agent (handling sales workflow execution) at runtime. Each platform contributes its native capability; neither needs to replicate the other's functionality.
 
-**When MOMA is still correct despite Data Cloud availability:**
-
-- The secondary org requires write-backs that must execute within its own tenant boundary.
-- Regulatory requirements mandate that the agent logic itself executes within the secondary org's tenancy.
-- The secondary org is owned by a separate business entity where tenant-level isolation is non-negotiable.
-- The secondary org team requires independent agent deployment governance, not just independent data access.
-
-**Decision rule:** If data access alone is the constraint, solve it at the data layer with Data Cloud. If agent execution boundaries or governance isolation are the constraint, MOMA is correct.
-
-**MOMA hard architectural constraints:**
-
-| Constraint | Rule | Reason |
-|---|---|---|
-| Delegation depth | Strictly one level (Primary to Secondary; no tertiary) | Prevents failure cascade and undefined context ownership |
-| Context cap | Last 10 messages passed (hard limit) | Cross-org payload management |
-| Memory model | Pass-by-value, not shared memory | No externally shared persistent state between orgs |
-| Trust boundary | All orgs must share the same DC1 boundary | Data sovereignty compliance |
-| Org membership | One org can belong to ONE trust boundary | Prevents cross-boundary leakage |
-| Agent shareability | Agents are NOT auto-shared; admin must explicitly mark as shareable | Security-by-default posture |
-
-**Identity propagation in MOMA:**
-
-- **Primary path:** Email-based identity resolver maps the logged-in user across orgs without re-authentication.
-- **Fallback:** If email resolution fails, the system defaults to Guest User — a significant permission downgrade that must be explicitly planned for.
-- **Step-up authentication:** If a secondary org requires additional auth, the login prompt fires in the **primary org's interface**, not the secondary org's.
-
-### 6.3 3P — Third-Party Agent Interoperability
-
-| Direction | Auth Mechanism | Status |
-|---|---|---|
-| **Outbound** (AF to 3P) | Named Credentials + OAuth; Guest User only | Pilot |
-| **Inbound** (3P to AF) | AEA: Web-Server Flow; ASA: Client Credentials Flow | Pilot |
-
-**Hard limits:** A2A payload must conform to A2A protocol schema; no parallel tasks per request; plain text responses only (rich modalities post-Pilot); 15-second round-trip limit.
+**Technology — Inbound Delegation from External AI Platform (3P Inbound).**
+An enterprise AI platform serving internal staff with HR, finance, and IT queries cannot handle Salesforce-specific execution (case creation, status lookups, record updates) natively. When a user query requires Salesforce-side action, the external platform delegates inbound to an Agentforce Service Agent via the A2A protocol. Agentforce handles Salesforce execution; the external platform handles everything else. The handoff is invisible to the end user.
 
 ---
 
-> **Scenario Pause — SOMA vs. MOMA vs. Data Cloud**
->
-> A financial services firm has credit, legal, and valuation teams. Credit uses a separate Salesforce org for regulatory isolation of bureau data.
->
-> First question: Can the credit org's data be federated via Data Cloud Zero-Copy?
-> - If **yes, and the credit agent only needs read access:** federate and keep SOMA. No JWT complexity, no 10-message cap, full bidirectional variable sync.
-> - If **no — because the credit agent must write back to bureau systems:** MOMA is correct.
+## 15. Pre-Deployment Checklist
+
+Use this checklist before activating a SOMA Superagent network for production traffic.
+
+### Org Readiness
+- [ ] Confirm SOMA is enabled in your org — check your pod's rollout status if not yet visible (full rollout expected by ~August 25–26, 2026)
+- [ ] Einstein and Agentforce features are enabled in org settings
+- [ ] Org Admin permissions are confirmed for the user connecting agents
+- [ ] All sub-agents are individually activated before being added to the network
+
+### Architecture Review
+- [ ] Each connected subagent has a distinct, non-overlapping description
+- [ ] Delegation depth is 1 level only (no A to B to C chains)
+- [ ] Network width is at or below 8 connected subagents; if wider, document the rationale and run extended performance testing
+- [ ] Complex multi-step subagent workflows that may approach 30 seconds of reasoning time are identified — plan to route these to Handoff Mode (post-GA) or restructure as single-agent flows
+- [ ] Circular routing (A to B back to A) has been checked and is absent
+- [ ] The supported agent-type combination is confirmed (AEA-to-AEA, ASA-to-ASA, or AEA-to-ASA only; ASA-to-AEA is not supported)
+
+### Variable and Context Design
+- [ ] Variable mapping is one-directional (orchestrator to subagent); no workflow logic assumes subagent writes propagate back automatically
+- [ ] Context history dependency is within the 10-message window per delegation call
+- [ ] All mapped variables exist in both the orchestrator and the target subagent; validation errors are resolved before publishing
+
+### Performance and SLA Planning
+- [ ] SLAs account for 12–20 seconds of P95 orchestration overhead (supervised mode) on top of subagent execution time
+- [ ] Streaming is confirmed on for all agents in the network (check per-agent script flags)
+- [ ] Progress messaging text is customized for your use case
+- [ ] Failure messages are reviewed: clean, user-facing, and actionable; no internal errors or sub-agent names exposed
+
+### Testing
+- [ ] Agent network validated with Check Network Health in builder
+- [ ] Conversation preview tested in Agentforce Builder for at least the core happy-path scenarios
+- [ ] Routing logic tested: does the orchestrator select the correct subagent for each intended query type?
+- [ ] Edge cases tested: ambiguous queries, out-of-scope queries, and failure paths
+- [ ] Testing Center sub-agent assertion evals configured and passing for critical workflows
+- [ ] Latency measured under realistic load; results within acceptable SLA range
+
+### For 3P / Cross-Platform (Beta only)
+- [ ] Named Credentials confirmed and connection status is active for all registered 3P agents
+- [ ] Allowlist is configured with only the intended AF agents exposed to external vendors
+- [ ] ECA is configured with `a2a_api` scope for inbound flows
+- [ ] 120-second timeout and retry UX confirmed with stakeholders
 
 ---
-
-## 7. Routing Architecture and Priority
-
-### 7.1 The Routing Stack
-
-```
-User Message
-    |
-    v
-[1] Einstein Trust Layer
-    Prompt_Injection check
-    Inappropriate_Content check
-    Reverse_Engineering check
-    BLOCK here = custom agents never execute
-    |
-    v
-[2] EinsteinHyperClassifier (when used as router model)
-    Salesforce-owned, optimized for routing (not a generic LLM)
-    Significantly faster and more accurate for classification
-    ONLY supports @utils.transition
-    PROHIBITS before_reasoning and after_reasoning blocks
-    |
-    v
-[3] Subagent Topic Selection (standard LLM)
-    Full before_reasoning / after_reasoning support here
-    |
-    v
-[4] Subagent Action Selection
-```
-
-### 7.2 CRITICAL: The EinsteinHyperClassifier Constraint and Model Override
-
-**EinsteinHyperClassifier advantages:**
-- Significantly faster subagent classification compared to other LLMs.
-- Increased classification accuracy, particularly for specialized classification constraints and negative instructions.
-
-**EinsteinHyperClassifier hard limitations (platform-enforced, not configurable):**
-- **Cannot** use `before_reasoning` or `after_reasoning`.
-- **Can only** use the tool `@utils.transition` — no other tool types.
-
-If you attempt to deploy an agent definition that includes `before_reasoning` logic at the router level while the HyperClassifier is the assigned model, **the deployment will fail**.
-
-**Correct HyperClassifier-compatible router:**
-
-```agentscript
-# CORRECT -- HyperClassifier-compatible router
-start_agent agent_router:
-    description: "Route user requests to the appropriate specialist"
-    model_config:
-        model: "model://EinsteinHyperClassifier"
-    reasoning:
-        instructions: |
-            You are a router only. Do NOT answer questions directly.
-            Always use a transition action to route immediately.
-        actions:
-            go_to_identity: @utils.transition to @subagent.identity_verification
-                description: "Verifies user identity before sensitive operations"
-                available when @variables.verified == False
-
-            go_to_orders: @utils.transition to @subagent.order_management
-                description: "Handles order inquiries, modifications, and cancellations"
-                available when @variables.verified == True
-
-            go_to_billing: @utils.transition to @subagent.billing_support
-                description: "Processes payment questions, refunds, and invoice disputes"
-                available when @variables.verified == True
-```
-
-**What you cannot do with HyperClassifier:**
-
-```agentscript
-# WRONG -- deployment will fail if HyperClassifier is the router model
-start_agent agent_router:
-    before_reasoning:                    # PROHIBITED with HyperClassifier
-        if @variables.verified == False:
-            transition to @subagent.identity_verification
-    reasoning:
-        instructions: ->
-            | How can I help you today?
-        actions:
-            go_to_orders: @utils.transition to @subagent.order_management
-                description: "Order inquiries"
-```
-
-**How to use deterministic `before_reasoning` logic at the router level:**
-
-```agentscript
-# Router with model override -- enables before_reasoning and after_reasoning
-start_agent agent_router:
-    description: "Welcome the user and determine the appropriate subagent"
-    model_config:
-        model: "model://sfdc_ai__DefaultGPT41"    # Standard LLM replaces HyperClassifier
-    before_reasoning:
-        if @variables.verified == False:
-            transition to @subagent.identity_verification
-    reasoning:
-        instructions: ->
-            | How can I help you today?
-        actions:
-            go_to_orders: @utils.transition to @subagent.order_management
-                description: "Order inquiries"
-```
-
-**The trade-off is real.** Overriding to a standard LLM gains lifecycle hook support but adds latency and reduces routing precision.
-
-| Requirement | Model Choice |
-|---|---|
-| Maximum routing speed and classification accuracy | EinsteinHyperClassifier — no lifecycle hooks |
-| Deterministic `before_reasoning` gate at router level | Standard LLM via `model_config:` — accepts latency trade-off |
-| Both speed and lifecycle hooks | Auth gate subagent pattern — keep HyperClassifier as router; push preconditions into the first-destination subagent |
-
-### 7.3 Routing Determinism Within Subagents
-
-Within subagents, the model is always a standard LLM (unless you override it), so `before_reasoning`, `after_reasoning`, and all lifecycle hooks are fully supported.
-
-```agentscript
-subagent order_management:
-    before_reasoning:
-        if @variables.order_id == "":
-            run @actions.get_recent_orders
-                with customer_id = @variables.customer_id
-                set @variables.recent_orders = @outputs.orders
-    reasoning:
-        instructions: ->
-            if @variables.order_id != "":
-                | I found your order. Here are the details.
-            else:
-                | Which order can I help you with?
-        actions:
-            cancel_order: @actions.cancel_order
-                description: "Cancel a specific order"
-                available when @variables.order_id  != ""
-                    and @variables.is_verified == True
-```
-
-### 7.4 Handoff Mode vs. Supervised Mode
-
-| Mode | Who Responds to User | Latency | Multi-intent Support |
-|---|---|---|---|
-| **Supervised** | Superagent synthesizes subagent output | Higher (+2-3s synthesis hop) | Yes — Superagent coordinates multiple subagents |
-| **Handoff** | Subagent streams directly to user | Lower (synthesis hop removed) | No — single-intent only |
-
-> **Session termination discrepancy:** In Preview, subagent session termination appears clean. In live channels (LEX, Slack, MIAW), session termination behavior may differ. Always validate in the **target deployment channel**.
-
-### 7.5 Description Hygiene and the `go_to_` Convention
-
-Routing accuracy depends on sharp, mutually exclusive descriptions. The EinsteinHyperClassifier treats descriptions as classification boundaries. Overlapping descriptions produce non-deterministic routing.
-
-```agentscript
-# BAD -- overlapping descriptions cause inconsistent routing
-subagent billing_support:
-    description: "Handles customer payment and account questions"
-subagent account_management:
-    description: "Handles customer account and payment issues"
-
-# GOOD -- mutually exclusive, precise descriptions
-subagent billing_support:
-    description: "Processes payments, refunds, and invoice disputes"
-subagent account_management:
-    description: "Manages profile updates, password resets, and access permissions"
-```
-
-Use the `go_to_` prefix on all transition actions. This groups transitions visually, signals routing intent to the HyperClassifier, and makes the action list scannable in complex agents.
-
----
-
-> **Scenario Pause — Routing Architecture Decision**
->
-> A fraud detection team requires every conversation to be checked against a real-time fraud score before any subagent executes. The architect wants to implement this as `before_reasoning` logic in the router.
->
-> **Problem:** The router uses the EinsteinHyperClassifier. `before_reasoning` is prohibited. A `model_config:` override would add latency and reduce routing accuracy.
->
-> **Better solution:** Keep the HyperClassifier router. Add a dedicated `fraud_gate` subagent as the **first routing destination**. `fraud_gate` uses `before_reasoning` to run the fraud check deterministically, sets `@variables.fraud_score`, then routes to the appropriate domain subagent or terminates the session.
-
----
-
-## 8. Model Selection and the `model_config` Override
-
-### 8.1 The Default Model Inheritance Chain
-
-By default, Agentforce uses the **org-level model selected in Setup** for all agents and all subagents. The `model_config:` block overrides this default at any level of the hierarchy.
-
-**Precedence (most specific wins):**
-
-```
-Org-level model (Setup default)
-    overridden by
-Agent-level model_config (applies to all subagents in this agent)
-    overridden by
-Subagent-level model_config (applies only to this subagent)
-```
-
-**Concrete example from the official docs:**
-
-- `MyTestAgent` sets Claude Haiku 4.5 at the agent level.
-- `HandleReservation` subagent overrides to Gemini 3.1 Pro at the subagent level.
-- Result: `HandleReservation` uses Gemini 3.1 Pro; all other subagents in `MyTestAgent` use Claude Haiku 4.5; all other agents in the org use the Salesforce default.
-
-### 8.2 Syntax and Placement
-
-**Agent-level (between `system:` and subagents):**
-
-```agentscript
-system:
-    instructions: "You are an AI service assistant."
-    messages:
-        welcome: "Hi, I'm an AI service assistant. How can I help?"
-        error: "Sorry, it looks like something has gone wrong."
-
-model_config:
-    model: "model://sfdc_ai__DefaultBedrockAnthropicClaude45Haiku"
-```
-
-**Subagent-level:**
-
-```agentscript
-subagent ReservationManagement:
-    description: "Handles requests to create new reservations for customers."
-    model_config:
-        model: "model://sfdc_ai__DefaultBedrockAnthropicClaude45Haiku"
-    reasoning:
-        instructions: ->
-            | When would you like your reservation?
-```
-
-**Router-level (inside `start_agent`):**
-
-```agentscript
-start_agent agent_router:
-    description: "Welcome the user and determine the appropriate subagent"
-    model_config:
-        model: "model://sfdc_ai__DefaultGPT41"
-    reasoning:
-        instructions: |
-            Route the user to the correct subagent.
-        actions:
-            go_to_reservations: @utils.transition to @subagent.ReservationManagement
-                description: "Handles reservation requests"
-```
-
-### 8.3 Officially Supported and Recommended Models
-
-> **Note on model API names:** The identifiers below are Salesforce-internal `sfdc_ai__` API names. They are distinct from the public release names used by Anthropic, Google, and OpenAI. These exact strings must be used in `model://` URIs — substituting public model names will cause compilation errors.
-
-| Model (Salesforce Name) | API Name (use in `model://`) | Best For |
-|---|---|---|
-| **GPT 4.1** | `sfdc_ai__DefaultGPT41` | Router override, general-purpose reasoning |
-| **Claude Haiku 4.5** | `sfdc_ai__DefaultBedrockAnthropicClaude45Haiku` | Slot-fill, lightweight subagents, latency-sensitive tasks |
-| **Gemini 3.5 Flash** | `sfdc_ai__DefaultVertexAIGemini35Flash` | Fast conversational handling |
-
-> **Important:** Other supported models may not be suitable for every agent or tool. Thoroughly test your agent with your chosen model before deploying.
-
-### 8.4 The Model Assignment Strategy
-
-| Subagent Type | Characteristics | Recommended Model |
-|---|---|---|
-| **Router / Classifier** | Routing only; no conversational reasoning | EinsteinHyperClassifier (default in Service templates) |
-| **Slot-fill Collector** | Extracts one value; no complex reasoning | Claude Haiku 4.5 (fast, low latency) |
-| **Lightweight Conversational** | Standard transactional dialogue | Agent-level default; no subagent override needed |
-| **Complex Reasoning** | Multi-step analysis, ambiguous input, regulatory compliance | Heavyweight model; subagent-level override |
-| **Escalation / Handoff** | Brief summary and route to human | Claude Haiku 4.5 |
-
-### 8.5 Practical Example: Model-Stratified Agent Architecture
-
-```agentscript
-system:
-    instructions: "You are a customer service assistant."
-    messages:
-        welcome: "Hi, how can I help you today?"
-        error:   "Something went wrong. Please try again."
-
-# Agent-level default: GPT 4.1 for most subagents
-model_config:
-    model: "model://sfdc_ai__DefaultGPT41"
-
-start_agent agent_router:
-    description: "Route user requests to the correct specialist"
-    model_config:
-        model: "model://EinsteinHyperClassifier"
-    reasoning:
-        instructions: |
-            Route immediately. Do not answer questions directly.
-        actions:
-            go_to_collect:     @utils.transition to @subagent.collect_order_id
-                description: "Collect the customer's order number"
-            go_to_compliance:  @utils.transition to @subagent.compliance_analysis
-                description: "Perform regulatory compliance analysis on a request"
-            go_to_confirm:     @utils.transition to @subagent.order_confirmed
-                description: "Confirm an order has been placed"
-
-subagent collect_order_id:
-    description: "Collects the customer's order number"
-    model_config:
-        model: "model://sfdc_ai__DefaultBedrockAnthropicClaude45Haiku"
-    reasoning:
-        instructions: ->
-            | What is your order number?
-        actions:
-            set_order_id: @utils.setVariables
-                with order_id = ...
-
-# Complex reasoning: inherits GPT 4.1 from agent-level default
-subagent compliance_analysis:
-    description: "Performs regulatory compliance analysis"
-    reasoning:
-        instructions: ->
-            run @actions.load_regulatory_context
-                with jurisdiction = @variables.customer_region
-                set @variables.regulatory_rules = @outputs.rules
-            | Analyze the customer's request against: {!@variables.regulatory_rules}
-              Provide a compliant recommendation only.
-
-subagent order_confirmed:
-    description: "Confirms order placement to the customer"
-    model_config:
-        model: "model://sfdc_ai__DefaultBedrockAnthropicClaude45Haiku"
-    reasoning:
-        instructions: ->
-            | Your order {!@variables.order_id} has been confirmed.
-              Is there anything else I can help you with?
-```
-
-### 8.6 Latency Budgeting With `model_config`
-
-```
-SOMA Latency Budget -- Model Stratification Impact (indicative P95):
-
-EinsteinHyperClassifier (router)           ~1-2s  (vs. ~3-5s with standard LLM)
-collect_order_id (Haiku)                   ~1-2s  (vs. ~3-5s with standard LLM)
-compliance_analysis (GPT 4.1, inherited)   ~3-5s  (task justifies cost)
-order_confirmed (Haiku)                    ~1-2s  (vs. ~3-5s with standard LLM)
-
-P95 Total (Handoff Mode, stratified):      ~7-12s
-P95 Total (Supervised, stratified):        ~10-15s
-
-vs. uniform standard model at every hop:
-P95 Total (Supervised):                    ~12-20s
-```
-
-### 8.7 Testing Model Selections
-
-Test model selections using **different models in different versions of your agent:**
-
-- Version A: Claude Haiku 4.5 at agent level (lightweight baseline)
-- Version B: GPT 4.1 at agent level (higher capability baseline)
-
-Compare session traces across versions to identify where model choice materially affects output quality or latency. Promote the version that best balances both for your production traffic profile.
-
----
-
-## 9. State, Memory, and Context Sharing
-
-### 9.1 Variable Types and Cross-Boundary Sync
-
-| Scope | SOMA (GA) | MOMA | 3P |
-|---|---|---|---|
-| Mutable variable sync | Bidirectional | Pass-by-value at delegation time | Session ID + last 10 messages only |
-| Context history passed | Last 20 messages | Last 10 messages (hard cap) | Last 10 messages |
-| Shared persistent memory | No — variables only | No | No |
-
-**Bidirectional sync in SOMA (GA):** Changes a subagent makes during its turn are reflected in the Superagent's state when control returns — even in Handoff Mode.
-
-**Variable mapping validation:** If a mapped variable is renamed or deleted, the platform **blocks the save operation**. Silent breakage in variable mappings is catastrophic at runtime, so the platform surfaces it at design time.
-
-### 9.2 Variable Scope Lifecycle Rules
-
-| Reference | Valid Scope | Common Mistake |
-|---|---|---|
-| `@inputs.X` | Only during `with` clause of action invocation | Using in a `set` statement after the action completes — always null |
-| `@outputs.X` | Only in `set`/`if` immediately after the producing action | Referencing two blocks later — null |
-| `@variables.X` | Anywhere after the variable is set | Referencing before the producing action runs — returns default |
-
-```agentscript
-# WRONG -- @inputs out of scope in set
-run @actions.get_station_status
-    with station_name = @variables.input_station
-    set @variables.result = @inputs.station_name   # SILENT FAILURE
-
-# CORRECT
-run @actions.get_station_status
-    with station_name = @variables.input_station
-    set @variables.result = @outputs.station_name
-```
-
----
-
-## 10. Interoperability Protocols: MCP and A2A
-
-### 10.1 MCP — "The USB-C for AI"
-
-The Model Context Protocol is a **standardized interface for AI agents to discover and invoke capabilities** across the broader AI tooling ecosystem.
-
-| Role | Description |
-|---|---|
-| **MCP Client** | The agent or system consuming tools, prompts, and resources |
-| **MCP Server** | The host exposing tools, prompts, and resources to clients |
-
-**MCP Asset Categories:**
-
-| Asset Type | Definition |
-|---|---|
-| **Tools** | Executable functions; allowlisted tools become available to the agent's LLM |
-| **Prompts** | Pre-defined templates for LLM interaction |
-| **Resources** | Static or dynamic data sources (databases, APIs, knowledge bases) |
-
-#### MCP CLI Workflow
-
-> **Preview Status:** `sf agent mcp` commands are in developer preview. Known bugs affect `--label` and `--server-url` persistence. Verify output carefully after every `create`.
-
-**Step 1: Register**
-
-```bash
-sf agent mcp create \
-    --name "my_internal_tools_server" \
-    --server-url "https://mcp.internal.company.com/sse" \
-    --auth-type oauth \
-    --json
-# Immediately verify -- --server-url may not persist in some environments
-```
-
-**Step 2: Fetch advertised assets (from live server)**
-
-```bash
-sf agent mcp fetch \
-    --mcp-server-name "my_internal_tools_server" \
-    --json
-# Read-only -- does not grant access to anything
-```
-
-**Step 3: Allowlist assets (full replacement — not additive)**
-
-```bash
-sf agent mcp asset replace \
-    --mcp-server-name "my_internal_tools_server" \
-    --json
-# Always include ALL desired assets -- partial payload silently removes the rest
-```
-
-**Step 4: Verify saved catalog**
-
-```bash
-sf agent mcp list --json
-
-# View assets saved in the Salesforce catalog
-sf agent mcp asset list --mcp-server-id <SERVER_ID> --json
-```
-
-**Mental model for fetch vs. asset list:**
-
-| Command | What It Reads | When to Use |
-|---|---|---|
-| `sf agent mcp fetch` | The **live external MCP server** | Discovering what is available before allowlisting |
-| `sf agent mcp asset list` | The **Salesforce catalog** — what is currently allowlisted | Verifying what your agents can actually access |
-
-#### Known MCP Preview Issues
-
-| Issue | Impact | Workaround |
-|---|---|---|
-| `--label` flag does not persist | Server registered without a display label | Add the label manually via UI after CLI registration |
-| `--server-url` flag does not persist in some environments | Server endpoint missing after creation | Verify returned JSON immediately; re-register if URL is absent |
-| `asset replace` is not additive | Previous allowlist wiped on each call | Always fetch current list first; include all desired assets in the payload |
-
-#### Security Guidance for MCP
-
-- Treat `sf agent mcp asset replace` with the same scrutiny as a permission set assignment.
-- Store MCP server OAuth secrets in Named Credentials, not environment variables.
-- Review `fetch` output as a security artifact before running `asset replace`.
-- Use `sf agent mcp asset list --mcp-server-id <ID>` regularly to audit active agent access.
-
-### 10.2 A2A — Agent-to-Agent Protocol
-
-A2A is an open interoperability standard enabling Agentforce agents to communicate with agents from any vendor that implements the protocol.
-
-**Step 1: Discovery — Agent Cards**
-
-Each A2A-capable agent publishes an Agent Card: a JSON document advertising its capabilities, authentication requirements, and A2A endpoint.
-
-**Step 2: Task Delegation — Messages and Parts**
-
-Tasks are requested via HTTP/JSON-RPC 2.0. Each request is structured as a Message containing Parts — typed parameters carrying the task's input.
-
-**Step 3: Execution and Response — Artifacts**
-
-The receiving agent processes the task and returns Artifacts: structured outputs representing the result of the work.
-
-**Step 4: Updates — Streaming via SSE**
-
-Real-time status and progress stream back via Server-Sent Events (SSE) or Push Notifications. Critical for long-running tasks.
-
-```
-[Orchestrator receives]
-event: task_update
-data: {"status": "in_progress", "progress": 0.6, "message": "Bureau pull in progress"}
-
-event: task_complete
-data: {"status": "completed", "artifact": {"credit_score": 742, "risk_tier": "A"}}
-```
-
-#### MCP vs. A2A: Knowing Which Protocol to Use
-
-| Dimension | MCP | A2A |
-|---|---|---|
-| **What it connects** | Agent to Tool/Resource/Prompt | Agent to Agent |
-| **State management** | Stateless tool calls | Stateful task sessions with SSE updates |
-| **Autonomy of receiver** | Function execution only | Agent reasons, plans, and executes independently |
-| **When to use** | Agent needs a specific capability | Agent needs another agent to handle a full domain |
-
-The practical test: if the remote system is a **function** (takes inputs, returns outputs, no independent reasoning), use MCP. If the remote system is an **agent** (interprets intent, plans execution, manages its own state), use A2A.
-
-#### MuleSoft Agent Fabric: The 3P Broker Registry
-
-For third-party integrations, MuleSoft Agent Fabric acts as the broker registry — the discovery and routing layer for external agents (AWS Q, Bedrock, Azure AI Foundry, etc.) without custom point-to-point integrations.
-
----
-
-## 11. Common Failure Modes
-
-### 11.1 Platform and Compiler Failures
-
-| Failure | Cause | Fix |
-|---|---|---|
-| **Empty reasoning block** | Subagent has no instructions | Every subagent requires non-empty reasoning instructions. Commit blocker. |
-| **Schema validation error** | `system.instructions` names a capability with no corresponding subagent | Every named capability must map to an actual subagent. |
-| **Unresolvable action source** | Managed package namespace not installed in target org | Run `sf agent discover` against the deployment org before committing. |
-| **`@utils.transition` rule violation** | Properties like `label:`, `require_user_confirmation:`, or `inputs:` on a utility action | Only `description:` and `available` are valid on utility actions. |
-| **`developer_name` mismatch** | Config name does not match `aiAuthoringBundles/` directory name | Exact case-sensitive match required. |
-| **`before_reasoning` in HyperClassifier router** | `before_reasoning` deployed at `start_agent` level while HyperClassifier is the assigned model | Remove the lifecycle hook or add `model_config: model: "model://sfdc_ai__DefaultGPT41"` to override. |
-| **`@utils.transition` in `after_reasoning`** | Using LLM tool syntax in a directive block | Replace with bare `transition to @subagent.X` syntax. |
-| **MCP `asset replace` wipes allowlist** | Replacement payload omits previously allowlisted assets | Always run `sf agent mcp asset list` before replacing; include all desired assets. |
-| **MCP server URL not persisted** | Known preview bug with the `--server-url` flag | Verify returned JSON immediately; re-register if URL is absent. |
-
-### 11.2 Runtime and State Failures
-
-**Aborted Lifecycle (`after_reasoning`):**
-Mid-turn transitions abort `after_reasoning`. State cleanup placed there will silently fail. Move critical cleanup to deterministic `run` statements inside `reasoning.instructions` before the transition.
-
-**Mesh Orchestration Loops:**
-Non-hierarchical agent graphs where Agent A calls Agent B and Agent B calls Agent A create circular delegation loops. Audit every agent for guaranteed terminal paths.
-
-**Overlapping Subagent Descriptions:**
-Non-deterministic routing from the EinsteinHyperClassifier. Fix: write mutually exclusive descriptions.
-
-**Action Loop (Repeated Execution):**
-An action with no `available when` gate and no post-action stop condition will be called repeatedly on every reasoning re-resolution. Gate every write action.
-
-**A2A Timeout Failures:**
-Cross-system A2A responses must arrive within 15 seconds. Long-running 3P tasks without SSE streaming configured will fail silently. Always implement SSE update handling for A2A delegations with unpredictable latency.
-
----
-
-## 12. Trust, Security, and Identity
-
-### 12.1 The Einstein Trust Layer
-
-Three built-in system subagents run as platform-level guardrails **before** any custom logic:
-
-| Built-in Subagent | Purpose |
-|---|---|
-| `Prompt_Injection` | Detects attempts to override agent instructions through user input |
-| `Inappropriate_Content` | Screens for content policy violations |
-| `Reverse_Engineering` | Detects attempts to expose internal agent logic |
-
-**Safety review severity levels:**
-
-- **BLOCK:** Stops the deployment pipeline. Must be resolved before production.
-- **WARN:** Flags for human review. Does not stop deployment.
-- **INFO:** Best-practice recommendations.
-
-### 12.2 Identity Propagation
-
-| Scope | Identity Model | Failure Mode |
-|---|---|---|
-| SOMA | Uniform session user across all agents in same org | None — single identity context |
-| MOMA | Email-based resolver maps user across orgs; no re-authentication | Fallback to Guest User if email resolution fails |
-| 3P | Session ID + JWT; user identity not automatically propagated | 3P agent executes in its own auth context |
-
-> **No agent may act outside its trust boundary or elevate privileges beyond those of the initiating user.** This is an architectural guarantee, not a configurable rule.
-
----
-
-## 13. Governance, Observability, and Quality Assurance
-
-### 13.1 The Seven-Stage Agent Lifecycle
-
-| Stage | Capability | Key Action |
-|---|---|---|
-| **Discover** | AF Studio / Asset Library | Browse and evaluate available agents |
-| **Register** | AF Registry + `sf agent mcp create` | Integrate 3P agents (A2A) and MCP servers |
-| **Build and Orchestrate** | Agentforce Builder | Connect agents, configure routing, map variables |
-| **Govern** | AF Gateway | Define and enforce organizational policies |
-| **Observe and Test** | Test Center + STDM | Monitor performance, validate functionality, trace failures |
-| **Publish** | Agent Exchange | Distribute agents to internal or external marketplaces |
-| **Use** | All Channels | Deliver unified end-user experience |
-
-### 13.2 Observability Architecture
-
-The goal is a **single pane of glass** — a unified trace of the entire multi-agent interaction, not just the Superagent's perspective.
-
-- Every subagent trace is persisted as an independent session trace in STDM.
-- Discrete handoff entries are recorded in the Primary Agent's trace at every delegation.
-- Bidirectional trace lookup: Primary Agent Step to Subagent ID (forward); Subagent Session to Primary Agent ID via `PreviousSessionId` (backward).
-
-```bash
-# Read resolved LLM inputs per turn
-jq -r '.planTrace.steps[] | select(.type == "LLM_STEP") | .input' \
-  .sfdx/agents/MyAgent/sessions/*/traces/*.json
-
-# Check variable state before and after each action
-jq -r '.planTrace.steps[] | select(.type == "ACTION_STEP") | \
-  {name:.name, pre:.preVars, post:.postVars}' \
-  .sfdx/agents/MyAgent/sessions/*/traces/*.json
-```
-
-### 13.3 Automated Testing with Custom Evaluations (LLM-as-Judge)
-
-For multi-agent architectures, manual CLI tracing is necessary but not sufficient. **Custom Evaluations using the LLM-as-Judge pattern** are the production-grade solution.
-
-Custom Evals configure a secondary LLM to automatically review conversation logs and score them against defined quality criteria — without a human reading every trace.
-
-#### Semantic Conflict Detection
-
-The most critical Custom Eval use case for multi-agent architectures. It automatically scans conversation logs for two specific failure patterns:
-
-**Pattern 1: Contradiction Across Agent Boundaries**
-
-In a SOMA or MOMA deployment, different agents may reach logically contradictory conclusions within the same session. Example:
-
-- Agent A (Promotions Agent) grants a 20% loyalty discount.
-- Agent B (Billing Agent) — operating later in the same session — processes the invoice without the discount.
-
-The user receives contradictory information. Neither agent made a technical error. Both made correct decisions within their own context. The conflict is **semantic** — it only becomes visible when the two agents' assertions are read together.
-
-**Pattern 2: Endless Reasoning Loops**
-
-Semantic loop detection identifies sessions where agents are cycling — where the conversation shows the same intent being processed repeatedly without forward progress. Diagnostic signals the judge LLM looks for:
-
-- The same slot-fill question asked more than twice without a new value being captured.
-- The same action attempted multiple times with the same inputs without a different outcome.
-- A user expressing the same intent in progressively more direct language without receiving a resolution.
-
-#### Configuring Custom Evals for SOMA
-
-```
-Testing Center > Evaluations > New Evaluation
-
-Evaluation Type: LLM-as-Judge (Custom)
-Judge Model:     sfdc_ai__DefaultGPT41
-Scope:           Session-level (full conversation log across all subagents)
-
-Criteria examples:
-  - "Did the agent resolve the user's stated intent within 4 turns?"
-  - "Did any agent make a factual assertion that contradicts an assertion
-     made by another agent in the same session?"
-  - "Did the agent ask for the same piece of information more than twice?"
-  - "Was the user offered a discount or exception? If yes, was it honored
-     consistently throughout the rest of the session?"
-
-Trigger: Post-session, on all production sessions (sample rate configurable)
-Alert:   STDM record flagged; routed to QA queue for human review
-```
-
-> For MOMA deployments specifically — where agents operate across org boundaries with capped context (10 messages) — the risk of semantic conflicts is higher because agents have less context to reason against. **Custom Evals are not optional in MOMA production deployments; they are a foundational quality gate.**
-
-### 13.4 Streaming Controls
-
-**Default behavior:** Token streaming is **enabled by default** in Agentforce. The agent begins streaming response tokens to the client as soon as the LLM starts generating them.
-
-**Disabling streaming:**
-
-```agentscript
-system:
-    instructions: "You are an AI service assistant."
-    messages:
-        welcome: "Hi, how can I help you today?"
-        error:   "Something went wrong."
-    additional_parameter__disable_streaming: True
-```
-
-**When to disable streaming:**
-
-| Scenario | Rationale |
-|---|---|
-| **Structured output rendering** | Some UI components cannot render correctly if markdown or JSON is streamed incrementally. |
-| **Compliance-gated response review** | Some workflows require a compliance check on the full response before it is displayed. |
-| **Latency-insensitive batch workflows** | Background processing agents where perceived latency is irrelevant. |
-
-> **Bottom line:** Only disable streaming when a specific, named rendering or compliance requirement demands it. Never disable it for general simplicity or as a debugging convenience in production.
-
-### 13.5 Retry Policy
-
-| Failure Type | Retry? | Rationale |
-|---|---|---|
-| Transient model/platform failure | Yes (2 retries) | Service may recover |
-| Integration failure | Yes (2 retries) | External service may recover |
-| No topic matched | No | Same input produces same routing failure |
-| Auth/permission failure | No | Retrying won't grant access |
-| Input too long | No | Same input will fail the size limit again |
-| Transfer limit reached | No | Retrying hits the same limit |
-
-### 13.6 "No Results" vs. "Failure" Disambiguation
-
-Users must never receive a generic error message when the agent simply could not find a matching record. Two fundamentally different outcomes require two fundamentally different user messages.
-
-| Outcome | What Happened | Required Message |
-|---|---|---|
-| **System Failure** | Timeout, platform error, action threw an exception | Acknowledge the system problem. Give the user a concrete recovery path. Never claim "no results" when the system actually failed to run. |
-| **No Results** | The action executed successfully but returned an empty result set | Acknowledge that the search completed successfully. Confirm the parameters searched. Offer next steps. Never say "something went wrong" when nothing went wrong. |
-
-**Implementation pattern — explicit disambiguation:**
-
-```agentscript
-reasoning:
-    instructions: ->
-        if @variables.action_status == "error":
-            | I'm sorry, I encountered a technical issue retrieving that information.
-              Please try again in a moment, or contact our support team at
-              support@company.com if the problem continues.
-
-        if @variables.action_status == "success"
-                and @variables.result_count == 0:
-            | I searched our records but couldn't find an order matching
-              "{!@variables.order_id}". Please double-check the order number
-              and try again, or I can help you search by a different method.
-
-        if @variables.action_status == "success"
-                and @variables.result_count > 0:
-            | I found your order. Here are the details: {!@variables.order_summary}.
-```
-
-This three-way branch — error, success-no-results, success-with-results — should be present in every subagent that calls an external data source.
-
----
-
-## 14. Production Heuristics and Design Principles
-
-### 14.1 The Agentic Maturity Roadmap
-
-```
-Level 1: Agent Script Mastery
-    Deterministic logic (->) for trust gates and irreversible actions
-    LLM reasoning (|) for conversational handling
-    apex://, flow://, prompt:// action targets
-    Variable scope discipline
-
-Level 2: Subagent Segmentation
-    Apply three triggers: overload, divergence, modularity
-    Mutually exclusive descriptions
-    available when as security primitive
-    Understand HyperClassifier constraints at start_agent level
-
-Level 3: Model Stratification
-    Set agent-level model_config as a sensible baseline
-    Override at subagent level only where reasoning complexity justifies it
-    Use sfdc_ai__ API names; test selections in separate agent versions
-
-Level 4: SOMA Orchestration
-    Superagent as single entry point
-    Bidirectional variable sync
-    Handoff vs. Supervised mode selection
-    Evaluate Data Cloud Zero-Copy before MOMA
-    Streaming enabled by default; disable only with explicit justification
-
-Level 5: MOMA and 3P
-    Cross-org trust boundaries and identity propagation
-    A2A protocol for agent delegation
-    MCP for tool ecosystem integration
-    MuleSoft Agent Fabric for 3P broker registry
-
-Level 6: Full Ecosystem Integration
-    Multi-protocol architectures (MCP + A2A + SOMA/MOMA)
-    Custom Evals (LLM-as-Judge) for semantic conflict detection
-    No Results vs. Failure disambiguation in every data-sourcing subagent
-    Observability at scale (STDM)
-    Independent SDLC per agent domain
-    Governance and compliance automation
-```
-
-### 14.2 Pre-Deployment Checklist
-
-**Syntax and Compiler:**
-
-- [ ] Every subagent has non-empty `reasoning.instructions`
-- [ ] No `@utils.transition` carries properties beyond `description:` and `available when`
-- [ ] All `apex://` and `flow://` targets resolve in the deployment org
-- [ ] Boolean literals are `True`/`False` (capitalized)
-- [ ] `{!@variables.X}` syntax used in all `|` pipe text
-- [ ] `developer_name` matches `aiAuthoringBundles/` directory name exactly
-
-**HyperClassifier and Model:**
-
-- [ ] No `before_reasoning` or `after_reasoning` at `start_agent` level unless `model_config:` overrides the HyperClassifier
-- [ ] Router uses only `@utils.transition` actions while HyperClassifier is assigned
-- [ ] `model_config:` overrides use valid `sfdc_ai__` API names
-- [ ] Model selections tested in a separate agent version before promoting to production
-- [ ] Agent-level `model_config` set as baseline; subagent overrides applied only where justified
-
-**Streaming:**
-
-- [ ] `additional_parameter__disable_streaming` is `False` or absent unless a specific rendering or compliance requirement mandates batch mode
-- [ ] If streaming is disabled, perceived latency impact documented and accepted by stakeholders
-
-**State and Routing:**
-
-- [ ] All mutable variables have explicit default values
-- [ ] All post-action checks are at the TOP of `reasoning.instructions`
-- [ ] Subagent descriptions are semantically mutually exclusive
-- [ ] No circular transitions in the agent graph (A to B to A)
-- [ ] Every reasoning branch has a terminal path (user response or `@utils.escalate`)
-- [ ] `after_reasoning` transitions use bare `transition to @subagent.X` — never `@utils.transition to`
-- [ ] Critical state cleanup is NOT exclusively in `after_reasoning`
-
-**UX and Disambiguation:**
-
-- [ ] Every subagent that calls an external data source has explicit three-way branching: error, success-no-results, success-with-results
-- [ ] Error messages include a concrete user recovery path (retry, contact support, alternative channel)
-- [ ] "No results" messages confirm what was searched and offer next steps
-- [ ] No subagent conflates a system failure with an empty result set
-
-**Data Boundary:**
-
-- [ ] Data Cloud Zero-Copy Federation evaluated before choosing MOMA
-- [ ] MOMA chosen only when agent execution boundary (not just data access) requires org separation
-
-**Testing and Quality:**
-
-- [ ] Custom Evals (LLM-as-Judge) configured in Testing Center for production sessions
-- [ ] Semantic Conflict Detection eval active for any SOMA/MOMA deployment with multiple data-sourcing agents
-- [ ] Disambiguation accuracy included as a Custom Eval criterion
-- [ ] Endless reasoning loop detection included as a Custom Eval criterion
-
-**MCP and A2A:**
-
-- [ ] MCP server registration verified via `sf agent mcp list` after `create`
-- [ ] Asset allowlist verified via `sf agent mcp asset list --mcp-server-id <ID>`
-- [ ] `asset replace` payload includes all desired assets (non-additive operation)
-- [ ] OAuth secrets stored in Named Credentials, not environment variables
-- [ ] A2A delegations with unpredictable latency have SSE update handling configured
-- [ ] 3P agent round-trip latency tested against the 15-second hard limit
-
-**Security and Identity:**
-
-- [ ] Authorization gates use `->` deterministic logic, not `|` natural language instructions
-- [ ] `available when` guards on all sensitive actions
-- [ ] MOMA identity fallback (Guest User) is explicitly planned for
-
----
-
-## Appendix A: Key Term Glossary
-
-| Term | Definition |
-|---|---|
-| **Superagent** | The customer-facing orchestrator agent. Users interact only with this agent. |
-| **Subagent** | A specialist domain agent operating behind the scenes with scoped skills, data access, and actions. |
-| **SOMA** | Single-Org Multi-Agent. All agents in one Salesforce org. |
-| **MOMA** | Multi-Org Multi-Agent. Primary Agent in one org delegates to Secondary Agents in separate trusted orgs. |
-| **A2A** | Agent-to-Agent protocol. Open interoperability standard for cross-system agent communication. |
-| **MCP** | Model Context Protocol. Standardized interface for agents to discover and invoke tools, prompts, and resources. |
-| **MCP Client** | The agent or system consuming MCP-advertised capabilities. |
-| **MCP Server** | The host exposing tools, prompts, and resources to MCP clients. |
-| **Agent Card** | JSON document advertising an agent's capabilities, authentication, and A2A endpoint. |
-| **Artifact (A2A)** | Structured output returned by a receiving agent after completing a delegated task. |
-| **SSE** | Server-Sent Events. Streaming mechanism for real-time A2A task status updates. |
-| **MuleSoft Agent Fabric** | Broker registry for 3P agent discovery, routing, and policy enforcement. |
-| **EinsteinHyperClassifier** | Salesforce-owned routing model. Only supports `@utils.transition`. Prohibits `before_reasoning`/`after_reasoning`. Faster and more accurate for classification than general LLMs. |
-| **`model_config:`** | Block that overrides the default model at org, agent, or subagent level. Uses Salesforce-internal `sfdc_ai__` API names in `"model://..."` URI format. Subagent-level wins over agent-level; agent-level wins over org-level. |
-| **`additional_parameter__disable_streaming`** | Boolean flag in the `system:` block that controls whether token streaming is active. Default is streaming-on. |
-| **Custom Evals (LLM-as-Judge)** | Automated QA mechanism using a secondary LLM to score conversation logs against defined quality criteria. Configured in the Testing Center. |
-| **Semantic Conflict Detection** | Custom Eval pattern that scans full session logs for contradictory assertions made by different agents in the same conversation. |
-| **Data Cloud Zero-Copy** | Federation mechanism allowing cross-org data access without data movement. Evaluate before MOMA. |
-| **Allowlist** | The set of MCP assets (tools, prompts, resources) explicitly permitted for agent use. Managed via `sf agent mcp asset replace`. |
-| **AEA** | Agentforce Employee Agent. Internal, logged-in user context. |
-| **ASA** | Agentforce Service Agent. Customer-facing, deployed via messaging channels. |
-| **GDoT** | Global Directory of Tenants. Stores org trust boundary mappings for MOMA. |
-| **DC1** | Salesforce data center trust boundary governing which orgs can share agents in MOMA. |
-| **STDM** | Session Trace Data Model. Data Cloud schema for persisting and querying agent session traces. |
-| **Trust Layer** | Platform-level safety guardrails (prompt injection, inappropriate content, reverse engineering) that run before any custom agent logic. |
-| **Handoff Mode** | Subagent streams response directly to user; Superagent reclaims control after the turn. |
-| **Supervised Mode** | Superagent mediates all responses; subagent output feeds Superagent's synthesis step. |
-| **`available when`** | Guard condition that hides an action entirely from the LLM's tool list. First-class security primitive. |
-| **Slot-fill** | Using `...` token to signal the reasoning engine to extract a value from conversation via `@utils.setVariables`. |
-
----
-
-## Appendix B: Protocol and Model Reference
-
-**Protocol Comparison:**
-
-| Dimension | MCP | A2A | Direct Subagent (`@subagent`) |
-|---|---|---|---|
-| **Cross-org** | Yes | Yes | No |
-| **Cross-vendor** | Yes | Yes | No |
-| **State management** | Stateless tool calls | Stateful task sessions | Shared variable scope |
-| **Autonomy of target** | Function execution only | Agent reasons independently | Shared lifecycle |
-| **Discovery** | `sf agent mcp fetch` | Agent Card (JSON) | Static subagent name |
-| **Auth model** | Named Credentials + OAuth | JWT, OAuth, Client Credentials | Inherited from Superagent |
-| **Streaming** | No | SSE / Push Notifications | Not applicable |
-| **Best for** | Tools, APIs, knowledge sources | Full domain delegation | Internal task segmentation |
-
-**Model Assignment Reference:**
-
-> All model names below are Salesforce-internal identifiers. They do not correspond 1:1 to public vendor release names.
-
-| Subagent Type | Recommended Model (Salesforce Name) | `sfdc_ai__` API Name |
-|---|---|---|
-| Router (HyperClassifier default) | EinsteinHyperClassifier | `EinsteinHyperClassifier` |
-| Router (standard LLM override) | GPT 4.1 | `sfdc_ai__DefaultGPT41` |
-| Slot-fill / Confirmation | Claude Haiku 4.5 | `sfdc_ai__DefaultBedrockAnthropicClaude45Haiku` |
-| Fast conversational handling | Gemini 3.5 Flash | `sfdc_ai__DefaultVertexAIGemini35Flash` |
-| Complex reasoning (agent baseline) | GPT 4.1 | `sfdc_ai__DefaultGPT41` |
-
-**`model_config` Precedence:**
-
-```
-Org-level (Setup)
-    overridden by
-Agent-level model_config
-    overridden by
-Subagent-level model_config  <-- most specific; always wins
-```
-
-**Streaming Reference:**
-
-| Flag | Default | Effect |
-|---|---|---|
-| `additional_parameter__disable_streaming: False` (or absent) | Default | Token streaming active; lowest perceived latency |
-| `additional_parameter__disable_streaming: True` | Must be set explicitly | Batch mode; complete response assembled before display |

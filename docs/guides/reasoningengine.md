@@ -1,56 +1,67 @@
-# Inside Daisy: The Complete Agentforce Reasoning Engine Guide
+# Inside the Atlas Reasoning Engine: The Complete Agentforce Guide
 
 **How Agentforce Thinks — Turn-by-Turn Mechanics, Determinism, and LLM Probabilism**
 
+*Audience: Success Architects | August 2026*
 ---
 
 ## Table of Contents
 
 1. [The Mental Model](#1-the-mental-model)
-   - [1.1 What "Daisy" Is](#11-what-daisy-is)
-   - [1.2 The Fundamental Split](#12-the-fundamental-split)
-   - [1.3 The Atlas Engine and the Agent Graph](#13-the-atlas-engine-and-the-agent-graph)
+   - 1.1 [What the Atlas Reasoning Engine Is](#11-what-the-atlas-reasoning-engine-is)
+   - 1.2 [Why Hybrid Reasoning Exists: The Previous Model's Limits](#12-why-hybrid-reasoning-exists-the-previous-models-limits)
+   - 1.3 [The Fundamental Split](#13-the-fundamental-split)
+   - 1.4 [Agentforce Builder: Where You Author](#14-agentforce-builder-where-you-author)
+   - 1.5 [The Atlas Engine and the Agent Graph](#15-the-atlas-engine-and-the-agent-graph)
 2. [The Two-Phase Execution Engine](#2-the-two-phase-execution-engine)
-   - [2.1 Phase 1: Deterministic Resolution](#21-phase-1-deterministic-resolution)
-   - [2.2 Phase 2: LLM Reasoning](#22-phase-2-llm-reasoning)
-   - [2.3 Why This Split Is the Primary Diagnostic Tool](#23-why-this-split-is-the-primary-diagnostic-tool)
+   - 2.1 [Phase 1: Deterministic Resolution](#21-phase-1-deterministic-resolution)
+   - 2.2 [Phase 2: LLM Reasoning](#22-phase-2-llm-reasoning)
+   - 2.3 [When the LLM Is Actually Triggered](#23-when-the-llm-is-actually-triggered)
+   - 2.4 [Why This Split Is the Primary Diagnostic Tool](#24-why-this-split-is-the-primary-diagnostic-tool)
 3. [The Complete Turn Anatomy](#3-the-complete-turn-anatomy)
-   - [3.1 The Re-Resolution Loop: The Inner Heartbeat](#31-the-re-resolution-loop-the-inner-heartbeat)
-   - [3.2 The Backward Arrow: FSM Retry Mechanics](#32-the-backward-arrow-fsm-retry-mechanics)
-   - [3.3 What the LLM Actually Does NOT See](#33-what-the-llm-actually-does-not-see)
+   - 3.1 [The Re-Resolution Loop: The Inner Heartbeat](#31-the-re-resolution-loop-the-inner-heartbeat)
+   - 3.2 [LLM Recovery After Failed Actions](#32-llm-recovery-after-failed-actions)
+   - 3.3 [What the LLM Does NOT See](#33-what-the-llm-does-not-see)
 4. [The Five Instruction Surfaces](#4-the-five-instruction-surfaces)
-   - [4.1 Global System Instructions: The Persona Layer](#41-global-system-instructions-the-persona-layer)
-   - [4.2 Subagent System Override: Full Replacement, Not Merge](#42-subagent-system-override-full-replacement-not-merge)
-   - [4.3 reasoning.instructions: Two Modes, One Critical Rule](#43-reasoninginstructions-two-modes-one-critical-rule)
-   - [4.4 before_reasoning: The Pre-Turn Gate](#44-before_reasoning-the-pre-turn-gate)
-   - [4.5 after_reasoning: The Post-Turn Gate](#45-after_reasoning-the-post-turn-gate)
+   - 4.1 [Global System Instructions: The Persona Layer](#41-global-system-instructions-the-persona-layer)
+   - 4.2 [Subagent System Override: Full Replacement, Not Merge](#42-subagent-system-override-full-replacement-not-merge)
+   - 4.3 [reasoning.instructions: Two Modes, One Critical Rule](#43-reasoninginstructions-two-modes-one-critical-rule)
+   - 4.4 [before_reasoning: The Pre-Parse, Pre-Classifier Gate](#44-before_reasoning-the-pre-parse-pre-classifier-gate)
+   - 4.5 [after_reasoning: The Post-Turn Gate](#45-after_reasoning-the-post-turn-gate)
 5. [Variables and State in the Reasoning Loop](#5-variables-and-state-in-the-reasoning-loop)
-   - [5.1 Mutable vs. Linked Variables](#51-mutable-vs-linked-variables)
-   - [5.2 The Three Scope Zones](#52-the-three-scope-zones)
-   - [5.3 The Silent Failure Zone](#53-the-silent-failure-zone)
-   - [5.4 Variable Persistence Across Subagents](#54-variable-persistence-across-subagents)
-   - [5.5 The setVariables Turn-End Trap](#55-the-setvariables-turn-end-trap)
-   - [5.6 The Three Input Binding Patterns](#56-the-three-input-binding-patterns)
+   - 5.1 [Mutable vs. Linked Variables](#51-mutable-vs-linked-variables)
+   - 5.2 [The Three Scope Zones](#52-the-three-scope-zones)
+   - 5.3 [The Silent Failure Zone](#53-the-silent-failure-zone)
+   - 5.4 [Variable Persistence Across Subagents](#54-variable-persistence-across-subagents)
+   - 5.5 [The setVariables Slot-Fill Utility](#55-the-setvariables-slot-fill-utility)
+   - 5.6 [The Three Input Binding Patterns](#56-the-three-input-binding-patterns)
 6. [Actions and the Reasoning Loop](#6-actions-and-the-reasoning-loop)
-   - [6.1 Deterministic vs. LLM-Driven Invocation](#61-deterministic-vs-llm-driven-invocation)
-   - [6.2 available when: Hard Filter, Not Soft Hint](#62-available-when-hard-filter-not-soft-hint)
-   - [6.3 The Three Transition Mechanisms](#63-the-three-transition-mechanisms)
-   - [6.4 Handoff vs. Delegation](#64-handoff-vs-delegation)
-   - [6.5 The Zero-Hallucination Routing Pattern](#65-the-zero-hallucination-routing-pattern)
-7. [The Posture Spectrum](#7-the-posture-spectrum)
-   - [7.1 Agentic, Mixed, and Scripted](#71-agentic-mixed-and-scripted)
-   - [7.2 The Five Justifications for Determinism](#72-the-five-justifications-for-determinism)
-   - [7.3 The Three Control Primitives](#73-the-three-control-primitives)
-   - [7.4 The Minimal Instructions Principle](#74-the-minimal-instructions-principle)
-8. [The Einstein Trust Layer](#8-the-einstein-trust-layer)
-   - [8.1 What It Is and When It Operates](#81-what-it-is-and-when-it-operates)
-   - [8.2 The Zero-Retention Policy](#82-the-zero-retention-policy)
-   - [8.3 Data Permissions and Content Screening](#83-data-permissions-and-content-screening)
-9. [Reasoning Constraints](#9-reasoning-constraints)
-   - [9.1 The 3–4 Loop Iteration Limit](#91-the-34-loop-iteration-limit)
-   - [9.2 The 10,000-Token Heuristic](#92-the-10000-token-heuristic)
-10. [Reasoning Anti-Patterns](#10-reasoning-anti-patterns)
-11. [Terminology Reference](#11-terminology-reference)
+   - 6.1 [Deterministic vs. LLM-Driven Invocation](#61-deterministic-vs-llm-driven-invocation)
+   - 6.2 [The Four Action Chaining Patterns](#62-the-four-action-chaining-patterns)
+   - 6.3 [available when: Hard Filter, Not Soft Hint](#63-available-when-hard-filter-not-soft-hint)
+   - 6.4 [The Three Transition Mechanisms](#64-the-three-transition-mechanisms)
+   - 6.5 [Handoff vs. Delegation](#65-handoff-vs-delegation)
+   - 6.6 [The Zero-Hallucination Routing Pattern](#66-the-zero-hallucination-routing-pattern)
+7. [The start_agent Subagent and Turn Restart Behavior](#7-the-start_agent-subagent-and-turn-restart-behavior)
+8. [The EinsteinHyperClassifier](#8-the-einsteinhyperclassifier)
+   - 8.1 [What HyperClassifier Is](#81-what-hyperclassifier-is)
+   - 8.2 [How It Works: Single-Token Prediction](#82-how-it-works-single-token-prediction)
+   - 8.3 [HyperClassifier Limitations](#83-hyperclassifier-limitations)
+   - 8.4 [The HyperClassifier and before_reasoning Paradox](#84-the-hyperclassifier-and-before_reasoning-paradox)
+9. [The Posture Spectrum](#9-the-posture-spectrum)
+   - 9.1 [Agentic, Mixed, and Scripted](#91-agentic-mixed-and-scripted)
+   - 9.2 [The Five Justifications for Determinism](#92-the-five-justifications-for-determinism)
+   - 9.3 [The Three Control Primitives](#93-the-three-control-primitives)
+   - 9.4 [The Minimal Instructions Principle](#94-the-minimal-instructions-principle)
+10. [The Einstein Trust Layer](#10-the-einstein-trust-layer)
+    - 10.1 [What It Is and When It Operates](#101-what-it-is-and-when-it-operates)
+    - 10.2 [The Zero-Retention Policy](#102-the-zero-retention-policy)
+    - 10.3 [Data Permissions and Content Screening](#103-data-permissions-and-content-screening)
+11. [Reasoning Constraints](#11-reasoning-constraints)
+    - 11.1 [The Bounded Loop Iteration Limit](#111-the-bounded-loop-iteration-limit)
+    - 11.2 [Flex Credits and Token Consumption](#112-flex-credits-and-token-consumption)
+12. [Reasoning Anti-Patterns](#12-reasoning-anti-patterns)
+13. [Terminology Reference](#13-terminology-reference)
 
 ---
 
@@ -60,62 +71,60 @@
 
 Before Agentforce, building an AI assistant on Salesforce meant writing a prompt, sending it to a model, and hoping the response was correct and safe. That approach has hard limits. The model can be asked to do things it should not do. It can invent information it does not have. It has no reliable mechanism for enforcing business rules, and there is no audit trail when it goes wrong.
 
-Agentforce represents a fundamentally different design philosophy. The move from simple prompting to hybrid reasoning is the central idea of this entire guide. Understanding it is not background context — it is the prerequisite for everything else.
+Agentforce represents a fundamentally different design philosophy. The move from simple prompting to **hybrid reasoning** is the central idea of this entire guide. Understanding it is not background context — it is the prerequisite for everything else.
 
 ---
 
-### 1.1 What "Daisy" Is
+### 1.1 What the Atlas Reasoning Engine Is
 
-"Daisy" is the informal name for the Agentforce runtime planner — the engine that receives a user message, interprets the AgentScript configuration file, and produces a response. When you publish an agent via the Salesforce CLI, Daisy formally compiles into the **GenAiPlannerBundle** metadata artifact.
+The **Atlas Reasoning Engine** is the runtime planner at the heart of Agentforce. It receives a user message, interprets the Agent Script configuration file, and produces a response. When you publish an agent via the Salesforce CLI, the Atlas engine formally compiles your authored Agent Script into the **GenAiPlannerBundle** metadata artifact.
 
-It is not a single large language model. It is a **hybrid execution environment** that combines three distinct layers:
+Atlas is not a single large language model. It is a **hybrid execution environment** that combines three distinct layers:
 
-- **A deterministic resolver** — a compiler-like pass that evaluates your authored logic before any LLM is ever involved
-- **An LLM reasoning loop** — where an underlying foundation model makes probabilistic decisions, but only within the constraints the resolver has already enforced
-- **The Einstein Trust Layer** — a runtime security boundary that wraps every LLM call, enforcing data privacy, permission checks, and content safety
+- **A deterministic resolver** — a compiler-like pass that evaluates your authored logic before any LLM is ever involved.
+- **An LLM reasoning loop** — where an underlying foundation model makes probabilistic decisions, but only within the constraints the resolver has already enforced.
+- **The Einstein Trust Layer** — a runtime security boundary that wraps every LLM call, enforcing data privacy, permission checks, and content safety.
 
-Think of it this way. A pure LLM approach is like asking a very smart person to run your company with no rulebook, no access controls, and no audit trail. The Daisy hybrid approach gives that person a strict operating manual, controlled access to tools, and a security checkpoint on everything they send or receive. Every reasoning behavior, every bug, and every optimization in Agentforce traces back to the interaction between these three layers.
-
-Learning to think in this three-layer model is the single most important skill in Agentforce development.
+> **Scenario: A Status Lookup**
+>
+> A user types "What is the status of my order?" Every turn begins at `start_agent`. `before_reasoning` fires and checks if `@variables.session_token` is empty — it is not, so no redirect. HyperClassifier (if active) routes to the Order Management subagent. The reasoning loop begins. Phase 1 resolves instructions and filters available actions. Phase 2 (the LLM) decides to call `get_order_status`. The action runs, populates `@variables.order_status`, and re-resolution fires from the top. The LLM now sees the success branch and produces: "Your order is out for delivery and will arrive today." `after_reasoning` fires and logs the completed lookup. Turn ends.
 
 ---
 
-### 1.2 The Fundamental Split
+### 1.2 Why Hybrid Reasoning Exists: The Previous Model's Limits
+
+**State did not survive the conversation.** Relying on single-turn processing meant the agent had no persistent memory of earlier steps. If the conversation deviated even slightly, the agent could drop previously captured context and force the user to restart. For multi-step transactional workflows, this created a reliability ceiling: the more steps in the process, the higher the probability of context loss before completion.
+
+**Completed steps were not remembered.** Without state management, agents had no record of which mandatory steps a user had already completed. This produced unpredictable looping, where an agent would return to a step the user had already finished.
+
+**Every interaction paid the full LLM cost.** Even a simple conversational scenario required a minimum of three LLM cycles — subagent selection, action selection, and response generation. Multi-step tasks extended to five or more cycles. There was no way to short-circuit the reasoning loop for steps that did not require judgment.
+
+**Execution paths could not be guaranteed.** Because every decision depended on the LLM's real-time reasoning, minor variations in input, system prompt, or model version produced different action selections on identical requests. A workflow that passed in staging could behave differently in production.
+
+The hybrid model addresses all four. Deterministic logic handles the steps that do not need the LLM. Variables persist state across turns. The Agent Graph defines an explicit execution plan that the Atlas engine follows reliably. And the audit trail reflects actual code execution, not probabilistic reasoning.
+
+> **The cost implication:** the shift from a minimum of three LLM cycles to targeted, justified LLM calls is also a direct cost reduction mechanism. Every step moved to deterministic `run` execution is a step that does not consume an LLM iteration. This is the architectural reason a bounded iteration limit exists as a design constraint rather than just a platform guardrail.
+
+---
+
+### 1.3 The Fundamental Split
 
 The most important concept in all of Agentforce is the clean division of responsibility between the deterministic layer and the LLM layer. Once you internalize this split, debugging becomes dramatically faster and authoring decisions become much clearer.
 
-**The deterministic layer handles everything that must always be controlled:**
+**The governing design rule:** if you can express a decision as code, write it as logic. Reserve LLM reasoning for what genuinely requires judgment, natural language understanding, or contextual interpretation.
 
 | Deterministic Layer (authored control) | LLM Layer (probabilistic judgment) |
 |---|---|
-| if / else evaluation | Which action to call |
+| `if` / `else` evaluation | Which action to call |
 | Variable injection | How to fill slot parameters |
-| run @actions.X execution | What to say to the user |
-| available when filtering | Whether to respond or call a tool |
-| transition to routing | How to phrase and sequence the response |
-| set variable capture | Which of multiple valid paths to take |
+| `run @actions.X` execution | What to say to the user |
+| `available when` filtering | Whether to respond or call a tool |
+| `transition to` routing | How to phrase and sequence the response |
+| `set` variable capture | Which of multiple valid paths to take |
 
-Here is the critical insight: **the LLM never sees raw AgentScript syntax.** It never sees `if` blocks, `run` statements, `@variables.X` references, or `available when` guards. It only ever sees the output of the deterministic pass — a clean, resolved prompt string plus a filtered set of tool schemas.
+Here is the critical insight: **the LLM never sees raw Agent Script syntax.** It never sees `if` blocks, `run` statements, `@variables.X` references, or `available when` guards. It only ever sees the output of the deterministic pass — a clean, resolved prompt string plus a filtered set of tool schemas.
 
 Deterministic logic controls **what the agent knows**. The LLM controls **whether and how to act** on that knowledge.
-
-> **Scenario: Why This Split Matters in Practice**
->
-> You are building a customer service agent for a bank. A customer asks to transfer $10,000 to an external account. In a pure LLM world, the model decides whether to execute this based on the prompt you wrote — a prompt the user might be able to argue or trick their way around. In Agentforce, the transfer action simply does not appear in the LLM's tool list until `@variables.is_verified == True`. The model cannot override this. It cannot be convinced otherwise. The deterministic layer made unauthorized invocation structurally impossible before the LLM was ever consulted.
-
----
-
-### 1.3 The Atlas Engine and the Agent Graph
-
-A natural assumption when first reading AgentScript is that the file is interpreted live, line-by-line, each time a user sends a message. This assumption leads to incorrect mental models about timing, ordering, and what "running" an action actually means.
-
-The Atlas engine employs a **compilation phase** when you publish an agent. The `.agent` file compiles into an **Agent Graph** — a compiled representation of your agent's behavior that the runtime executes. This graph encodes two mathematical structures, each optimized for its domain.
-
-**Directed Acyclic Graph (DAG):** Tool invocations, sequential dependencies, and deterministic actions are mapped as a DAG. This structure mathematically prevents infinite loops within automated workflows and guarantees that prerequisites are met before downstream actions can occur. The "acyclic" property means no node can point back to itself or any ancestor — infinite loops are impossible in the deterministic path by design.
-
-**Finite State Machine (FSM):** Transitions between subagents and internal states are managed via an FSM. Unlike the DAG, the FSM records "backward arrows" — edges representing what happens when the LLM tries an action, receives an error, and must reason into an alternative approach. This retry mechanic prevents catastrophic workflow degradation when actions fail.
-
-Why two structures? The DAG guarantees determinism and order in the parts of your agent you fully control. The FSM allows flexibility and recovery in the parts where the LLM is reasoning. Together they give Agentforce predictability where you need it, and adaptability where you need that instead.
 
 ---
 
@@ -131,7 +140,7 @@ The two-phase engine is the architectural answer to this tension. Phase 1 handle
 
 ### 2.1 Phase 1: Deterministic Resolution
 
-Every reasoning iteration — every single cycle of the engine — begins with Phase 1 before the LLM is ever involved. This phase is entirely deterministic: given the same input state, it always produces the same output. There is no probability here, no model involved, no variability.
+Every reasoning iteration begins with Phase 1 before the LLM is ever involved. This phase is entirely deterministic: given the same input state, it always produces the same output.
 
 Phase 1 reads `reasoning.instructions: ->` from top to bottom and performs these six operations in sequence:
 
@@ -139,7 +148,7 @@ Phase 1 reads `reasoning.instructions: ->` from top to bottom and performs these
 Evaluates `if / else if / else` conditions against current variable values. Only the matching branch's content proceeds. Non-matching branches are discarded entirely — they do not exist as far as the LLM is concerned.
 
 **2. Synchronous Action Execution**
-Executes `run @actions.X` calls synchronously. The Apex class or Flow runs immediately, and its outputs are available for the next steps within the same Phase 1 pass.
+Executes `run @actions.X` calls synchronously. The Apex class or Flow runs immediately, and its outputs are available for subsequent steps within the same Phase 1 pass.
 
 **3. Variable Capture**
 Executes `set @variables.X` statements, updating variable state immediately. These updated values are available to all subsequent steps in the same Phase 1 pass.
@@ -163,32 +172,56 @@ Phase 2 is where probability enters. After Phase 1 produces its resolved output,
 
 **The LLM receives exactly four things:**
 
-1. **One system prompt** — either the global `system.instructions` or the subagent-level system override. Never both merged. Never blended. Only one is active.
-2. **Full conversation history** — every prior turn in this session.
-3. **Resolved reasoning.instructions** — only the pipe text matching current variable state. No conditionals. No `run` blocks. No `set` statements. Just plain, resolved English.
-4. **Tool schemas** — JSON function schemas for only the actions that passed their `available when` guard during Phase 1.
+1. The system prompt (global or subagent-level, depending on whether a subagent override is active).
+2. The resolved `reasoning.instructions` prompt string produced by Phase 1.
+3. The filtered tool schema — only the actions whose `available when` conditions evaluated to True.
+4. The conversation history for the current session.
 
-**The LLM makes one of three decisions:**
-
-- **Call an action** — selects one tool, fills its slot parameters by extracting values from conversation, and submits the call
-- **Produce a terminal response** — writes a text reply to the user and ends the current reasoning loop
-- **Delegate to a subagent** — calls a subagent as a tool (if available), which runs its own reasoning loop and returns a result
-
-> **Scenario: A Refund Request**
->
-> A customer types "I need a refund for order 12345." Phase 1 has already evaluated that `@variables.is_verified == True` and included the `issue_refund` action in the tool schema. It has also injected the customer's account tier into the prompt text. The LLM now sees a resolved instruction like "Help the customer with their refund request. The customer is a Gold tier member." and a tool schema containing the `issue_refund` action. The LLM decides to call `issue_refund`, extracts "12345" from the conversation as the order ID, and submits the call. The customer's verification status was enforced in Phase 1 before the LLM ever had a chance to reason about it.
+The LLM uses these four inputs to make one decision: call a tool, produce a terminal response, or delegate to a subagent reference in the tool schema.
 
 ---
 
-### 2.3 Why This Split Is the Primary Diagnostic Tool
+### 2.3 When the LLM Is Actually Triggered
 
-One of the most practical benefits of the two-phase architecture is how cleanly it maps to debugging. When an agent misbehaves, most developers open a trace and start reading without a clear hypothesis. The Phase 1/Phase 2 split gives you a structured first question that immediately narrows the search.
+The LLM is invoked more often than most authors realize. Beyond the main reasoning loop, the platform triggers additional LLM calls in several specific circumstances:
+
+**1. Subagent classification**
+On every turn, the platform invokes a classification call to select the appropriate subagent. If EinsteinHyperClassifier is active, this is a single-token prediction. If a standard model is active, it is a full LLM call.
+
+**2. Slot-fill extraction**
+When an action parameter uses the `...` ellipsis operator and the value is not yet available, the LLM is invoked to extract the value from conversation.
+
+**3. `@utils.setVariables`**
+Each invocation of the slot-fill utility triggers an LLM call to identify and assign the requested variable value.
+
+**4. Groundedness validation**
+When a response is grounded in retrieved data (via RAG or data retrieval actions), the platform may trigger an additional LLM call to confirm the output is genuinely grounded in the retrieved content rather than hallucinated. This adds a validation cycle that does not appear in the main reasoning loop but does consume an LLM call.
+
+**5. Action simulation**
+In the Agentforce Builder Preview and Simulate environment, actions are not executed live. The platform triggers an LLM call to emulate the action's response. **Your Preview environment does not execute real actions.** Simulation results reflect what the LLM believes the action would return, which may differ from what the action actually returns in production. Always test against a real environment before promotion.
+
+**6. Structured output generation**
+When a response must conform to a defined output schema (for example, a JSON structure for downstream consumption), the platform triggers a specialized LLM call to produce output that matches the schema constraints rather than free-form text.
+
+**7. Localization generation**
+For formatting and transient messaging in non-English locales where no pre-authored default exists, the platform triggers an LLM call to generate appropriately localized content.
+
+**8. Progress indicator generation**
+During multi-step operations, the platform may trigger an LLM call to generate transient messaging that keeps the user informed while the agent is working.
+
+> **The cost modeling implication:** points 1-3 are the calls you think about when designing a turn. Points 4-8 are additional calls the platform may trigger independently of your authored logic. Groundedness validation (point 4) and action simulation (point 5) are easy to miss when estimating LLM call volume. A grounded response that also requires structured output could trigger three distinct LLM calls for what looks like a single agent response.
+
+---
+
+### 2.4 Why This Split Is the Primary Diagnostic Tool
+
+The Phase 1/Phase 2 split gives you a structured first question that immediately narrows any debugging search.
 
 **Ask: Did the correct instructions and tool list reach the LLM?**
 
-If **no** — wrong branch was active, a required action was missing from the tool schema, or an injected variable had the wrong value — you have a **Phase 1 problem**. The cause is in your authored logic: a wrong variable value, a wrong condition expression, or `|` mode used instead of `->` mode. Fix it by inspecting variable state and condition logic.
+**If no** — wrong branch was active, a required action was missing from the tool schema, or an injected variable had the wrong value — you have a **Phase 1 problem**. The cause is in your authored logic: a wrong variable value, a wrong condition expression, or `|` mode used instead of `->` mode. Fix it by inspecting variable state and condition logic.
 
-If **yes** — the right instructions and tools reached the LLM, but it still acted incorrectly — you have a **Phase 2 problem**. The cause is in how the LLM interpreted what it received: a vague action description, ambiguous instructions, a missing stop condition, or conflicting directives. Fix it by improving descriptions and instructions.
+**If yes** — the right instructions and tools reached the LLM, but it still acted incorrectly — you have a **Phase 2 problem**. The cause is in how the LLM interpreted what it received: a vague action description, ambiguous instructions, a missing stop condition, or conflicting directives. Fix it by improving descriptions and instructions.
 
 This binary framing eliminates a large class of guesswork before you ever read a full trace file.
 
@@ -198,32 +231,21 @@ This binary framing eliminates a large class of guesswork before you ever read a
 
 ### What a Turn Actually Contains
 
-A turn is one complete cycle: one user message in, one agent response out. Inside that cycle, a structured sequence of events occurs across three phases — a pre-turn gate, a reasoning loop, and a post-turn gate. Understanding this sequence precisely is the foundation for predicting how your agent will behave and diagnosing problems when it does not.
+A turn is one complete cycle: one user message in, one agent response out. Inside that cycle, a structured sequence of events occurs. Understanding this sequence precisely is the foundation for predicting how your agent will behave and diagnosing problems when it does not.
 
 **The complete turn sequence:**
 
-```
-User message arrives
-    ↓
-before_reasoning fires (deterministic only, once per turn)
-    → If a transition fires here: jump to new subagent, LLM never called
-    ↓
-Reasoning loop begins
-    → Phase 1: deterministic resolution
-    → Einstein Trust Layer
-    → Phase 2: LLM reasoning
-        → If LLM calls an action: execute, capture outputs, re-resolve from top, loop
-        → If LLM produces response: exit loop, deliver to user
-    → Loop repeats until terminal response or 3–4 iteration cap
-    ↓
-after_reasoning fires (deterministic only, once per turn)
-    ↓
-Turn ends. Agent waits for next message.
-```
-
-> **Scenario: A Status Lookup**
->
-> A user types "What is the status of my order?" `before_reasoning` fires and checks if `@variables.session_token` is empty — it is not, so no redirect. The reasoning loop begins. Phase 1 resolves instructions and filters available actions. Phase 2 (the LLM) decides to call `get_order_status`, extracting the user's intent. The action runs, populates `@variables.order_status`, and Phase 1 re-resolution fires immediately from the top. The re-resolution detects `@variables.order_status != ''` at the top of the block. The LLM produces: "Your order is out for delivery and will arrive today." `after_reasoning` fires and logs the completed lookup. Turn ends.
+1. User message received.
+2. Execution begins at `start_agent`.
+3. `before_reasoning` on `start_agent` fires (if present).
+4. HyperClassifier or standard LLM classifies the user message and selects a subagent.
+5. `before_reasoning` on the selected subagent fires (if present and model allows).
+6. Phase 1 resolution begins: conditions evaluated, `run` blocks execute, variables captured, tokens injected, tool schema filtered.
+7. Phase 2 (LLM) receives resolved prompt and filtered tool schema, makes a decision.
+8. If the LLM calls a tool: the action executes, outputs are available, Phase 1 re-resolution fires from the top (the re-resolution loop).
+9. If the LLM produces a terminal response: the response is passed through the Einstein Trust Layer (toxicity scoring), then delivered to the user.
+10. `after_reasoning` fires (if present, model allows, and no mid-reasoning handoff occurred).
+11. Turn ends.
 
 ---
 
@@ -233,56 +255,53 @@ The re-resolution loop is the single most misunderstood mechanic in Agentforce, 
 
 **What re-resolution means:** after every tool call, the entire `reasoning.instructions` block is rebuilt from scratch using the updated variable state. This is not "continue from where you left off." It is a full re-evaluation of the entire instruction block, top to bottom, every single time a tool call completes.
 
-**Why the platform works this way:** variable state has changed. The instruction text that was appropriate before the action ran may no longer be appropriate after. By rebuilding the entire block, the engine ensures the LLM always sees instructions that reflect the current state of the world — not a stale snapshot from the beginning of the iteration.
+**Why the platform works this way:** variable state has changed. The instruction text appropriate before the action ran may no longer be appropriate after. By rebuilding the entire block, the engine ensures the LLM always sees instructions that reflect the current state of the world, not a stale snapshot.
 
-**The critical authoring consequence:** post-action conditional checks **must be placed at the TOP of `instructions: ->` blocks.**
+**The critical authoring consequence:** post-action conditional checks must be placed at the **top** of `instructions: ->` blocks.
 
 Here is what goes wrong when they are at the bottom:
 
-```
+```yaml
 instructions: ->
     | Please provide your order number and I will look it up.
     run @actions.get_order_status
-        with order_id = ...
+        with order_id =...
         set @variables.status = @outputs.status
-    | ← re-resolution fires here, reads from TOP again
-    if @variables.status != '':   ← ← ← THIS IS TOO LATE
+    if @variables.status != '':   # <- THIS IS TOO LATE
         | Your order status is {!@variables.status}.
 ```
 
-After the action runs, re-resolution fires and reads from the top. The LLM sees "Please provide your order number" again and either repeats the ask or produces a confused response. The result check at the bottom never gets a clean shot at controlling behavior.
+After the action runs, re-resolution fires and reads from the top. The LLM sees "Please provide your order number" again and either repeats the ask or produces a confused response.
 
 **The correct pattern:**
 
-```
+```yaml
 instructions: ->
-    if @variables.status != '':   ← ← ← CHECK FIRST, ALWAYS
+    if @variables.status != '':   # <- CHECK FIRST, ALWAYS
         | Your order status is {!@variables.status}.
     | Please provide your order number and I will look it up.
     run @actions.get_order_status
-        with order_id = ...
+        with order_id =...
         set @variables.status = @outputs.status
 ```
 
-On first entry, `@variables.status` is empty, so the condition is False, it is skipped, and the LLM correctly sees the initial instruction. After the action completes and re-resolution fires, the status is now set, the condition is True, and the LLM sees the success instruction instead. This is one of those rules that, once you understand the reason behind it, becomes completely intuitive.
+On first entry, `@variables.status` is empty, so the condition is False, it is skipped, and the LLM correctly sees the initial instruction. After the action completes and re-resolution fires, the status is now set, the condition is True, and the LLM sees the success instruction instead.
 
 ---
 
-### 3.2 The Backward Arrow: FSM Retry Mechanics
+### 3.2 LLM Recovery After Failed Actions
 
-In a purely sequential execution model, a failed action crashes the workflow. The Atlas FSM takes a more resilient approach through a mechanism called the **backward arrow**.
+When the LLM attempts a tool call and receives an error payload instead of a successful result, the LLM reasons into an alternative approach rather than terminating the turn outright. It might try a different action, ask the user for corrected input, or produce an apologetic response explaining it could not complete the task. This recovery happens within the existing reasoning loop.
 
-When the LLM attempts a tool call and receives an error payload instead of a successful result, the FSM records this as a backward arrow — a retry edge in the Agent Graph. Rather than terminating the turn, the FSM records the failure and the LLM reasons into an alternative approach. It might try a different action, ask the user for corrected input, or produce an apologetic response explaining it could not complete the task.
+**The important design implication:** each recovery attempt consumes a reasoning iteration. Each failed call is one more step toward the platform's bounded iteration ceiling. A misconfigured action that consistently returns an error will cause the LLM to attempt recovery until it hits the limit, producing a confusing response to the user.
 
-In trace visualization tools, backward arrows appear as literal reverse edges in the chain-of-thought graph — you can see exactly where the LLM pivoted and which path it took instead.
-
-**The important design implication:** retry loops still consume reasoning iterations. Each retry is one more tick toward the 3–4 iteration hard cap. A misconfigured action that consistently returns an error will cause the LLM to retry until it hits the cap, producing a confusing "unexpected error" response to the user. Monitoring for backward arrows in production traces is an essential practice for catching misconfigured actions before they affect users at scale.
+In session traces, identify failed action recoveries by looking for `FunctionStep` entries with error payloads followed by a new `LLMStep` — the LLM re-entering reasoning after seeing the failure.
 
 ---
 
-### 3.3 What the LLM Actually Does NOT See
+### 3.3 What the LLM Does NOT See
 
-Understanding what the LLM cannot see is just as important as understanding what it can. Developers who try to "explain" AgentScript constructs to the LLM in their instructions are writing dead code — the model cannot access those constructs.
+Understanding what the LLM cannot see is just as important as understanding what it can. Developers who try to "explain" Agent Script constructs to the LLM in their instructions are writing dead code — the model cannot access those constructs.
 
 **The LLM never sees:**
 
@@ -294,10 +313,9 @@ Understanding what the LLM cannot see is just as important as understanding what
 - Subagent names or the concept of subagents as a structural entity
 - `@variables.X` syntax — it only sees the resolved value after `{!@variables.X}` injection
 - Any action invocations that fired deterministically during Phase 1
+- Graph nodes that were traversed deterministically — the LLM is only invoked at nodes with prompt instructions
 
-**The practical authoring rule:** never write a reasoning instruction that tells the model to "check `@variables.X`" or "look at which subagent is active." The model cannot do these things. Instructions must state the concrete operational task in plain English, based on what Phase 1 has already resolved and injected.
-
-A good test: read your `reasoning.instructions` pipe text as if you were the LLM receiving it. Does it make sense as a standalone English instruction? Does it give you enough context to act? Or does it reference AgentScript constructs? If it references constructs, it needs to be rewritten.
+**The practical authoring rule:** read your `reasoning.instructions` pipe text as if you were the LLM receiving it. Does it make sense as a standalone English instruction? Does it give you enough context to act? Or does it reference Agent Script constructs? If it references constructs, it needs to be rewritten.
 
 ---
 
@@ -305,7 +323,7 @@ A good test: read your `reasoning.instructions` pipe text as if you were the LLM
 
 ### Why Multiple Surfaces Exist
 
-In simple prompt-based systems, there is one instruction: the prompt. In Agentforce, instructions are organized across five distinct surfaces, each with a different lifecycle, a different processor, and different rules. This is not complexity for its own sake. Each surface solves a specific problem: some instructions should apply universally, some should vary by subagent context, some should be rebuilt on every action call, and some should fire only once per turn with no LLM involvement at all.
+In simple prompt-based systems, there is one instruction: the prompt. In Agentforce, instructions are organized across five distinct surfaces, each with a different lifecycle, a different processor, and different rules. Each surface solves a specific problem: some instructions should apply universally, some should vary by subagent context, some should be rebuilt on every action call, and some should fire with no LLM involvement at all.
 
 Conflating these surfaces — using the wrong one for the wrong job — is one of the most common sources of both bugs and compile errors.
 
@@ -315,9 +333,9 @@ Conflating these surfaces — using the wrong one for the wrong job — is one o
 |---|---|---|---|
 | Global system | Every iteration | LLM (system prompt) | Yes |
 | Subagent system | Every iteration (overrides global) | LLM (system prompt) | Yes |
-| reasoning.instructions | Every iteration, rebuilt each | Phase 1 resolver, then LLM | Yes (`\|` or `->` mode) |
-| before_reasoning | Once per turn, before loop | Phase 1 resolver only | **No — direct content only** |
-| after_reasoning | Once per turn, after loop | Phase 1 resolver only | **No — direct content only** |
+| `reasoning.instructions` | Every iteration, rebuilt each time | Phase 1 resolver, then LLM | Yes (`|` or `->` mode) |
+| `before_reasoning` | Every parse (including after each tool call) | Phase 1 resolver only | **No — direct content only** |
+| `after_reasoning` | Once per turn, after terminal response | Phase 1 resolver only | **No — direct content only** |
 
 ---
 
@@ -333,7 +351,7 @@ The global `system.instructions` block is the durable identity of the agent — 
 
 **The correct pattern:** write a global instruction that is neutral toward all subagent postures.
 
-```
+```yaml
 system:
     instructions: |
         You are a Salesforce customer service assistant.
@@ -364,30 +382,42 @@ Any invariant defined in the global system block — a safety disclosure, a data
 
 ### 4.3 reasoning.instructions: Two Modes, One Critical Rule
 
-The `reasoning.instructions` surface is the most powerful and most error-prone surface in AgentScript. It is rebuilt on every reasoning iteration (including after every tool call) and supports two modes. Choosing the wrong mode is the most common silent authoring failure in the entire language.
+The `reasoning.instructions` surface is the most powerful and most error-prone surface in Agent Script. It is rebuilt on every reasoning iteration (including after every tool call) and supports two modes. Choosing the wrong mode is the most common silent authoring failure in the entire language.
 
-**Literal mode (`|`):** content is sent to the LLM verbatim without any Phase 1 evaluation. Any `if` keyword written here appears in the LLM's prompt as the English word "if." The model reads it as prose and may or may not interpret it as a conditional. Use only for simple, unconditional instructions.
+**Pipe mode (`|`) — LLM prompt text:**
+Content is passed directly to the LLM as a prompt instruction. The LLM interprets it probabilistically. Use this for natural language direction that genuinely requires LLM judgment.
 
-**Procedural mode (`->`):** activates Phase 1 deterministic evaluation. The resolver reads top-to-bottom, evaluates conditions, executes `run` statements, captures `set` values, and only the matching `|` lines reach the LLM. Use whenever the block contains any conditional logic, variable injection, `run` statements, or `set` statements.
+```yaml
+instructions: |
+    Help the customer find the right product for their needs.
+    Ask clarifying questions if the request is ambiguous.
+```
 
-**The invisible bug:** using `|` mode when you need conditional behavior produces no compile error, no runtime warning, and no obvious symptom. The LLM simply receives your condition text as English and attempts to interpret it. Sometimes it follows the intent. Often it does not. The behavior is intermittent and difficult to reproduce.
+**Procedural mode (`->`) — deterministic logic:**
+Content is evaluated by the Phase 1 resolver. `if` blocks, `run` statements, `set` statements, and `available when` guards must be inside `->` mode. Use this whenever you need guaranteed execution or conditional branching.
 
-**The rule:** any time your instructions block contains an `if`, a `run`, a `set`, or a `{!@variables.X}` injection, use `->` mode. The cost of using `->` mode unnecessarily is zero. The cost of using `|` mode when `->` was needed is an invisible, intermittent behavior bug.
+```yaml
+instructions: ->
+    if @variables.is_verified == True:
+        | Help the customer with their account request.
+    else:
+        | Please verify your identity before we continue.
+```
+
+**The one critical rule:** you cannot mix modes in a single `instructions:` block. Choose `|` or `->`. If your block needs any `if`, `run`, or `set` statement, the entire block must use `->`.
 
 ---
 
-### 4.4 before_reasoning: The Pre-Turn Gate
+### 4.4 before_reasoning: The Pre-Parse, Pre-Classifier Gate
 
-`before_reasoning` runs once per turn, before the reasoning loop begins and before the LLM is ever involved. It is purely deterministic — it can set variables, run actions, evaluate conditions, and fire transitions, but it never produces LLM output.
-
-**Why this matters:** it lets you make hard decisions before any LLM cost is incurred. If a session has expired, you can detect it and redirect immediately. If you need to load account data that every part of the conversation will use, you can load it here once per turn rather than once per iteration.
+`before_reasoning` is the earliest execution point in every turn and every parse. It fires before the HyperClassifier makes any routing decision, before any LLM is involved, and before any reasoning begins.
 
 **Common valid uses:**
-- Authentication and authorization gates (fail fast before LLM cost)
-- Mandatory data pre-loading used across all reasoning iterations
+- Authentication and authorization gates (fail fast before any LLM cost or routing decision)
+- Mandatory data pre-loading that every subagent will need (EndUserId, EndUserName, session context)
 - Early exits for invalid or expired session states
 
-**The critical syntax constraint:** `before_reasoning` does **not** use an `instructions:` wrapper. Content goes directly under the block as direct children — `transition` statements, `run` statements, `set` statements, and `if` statements are all written directly, not nested under `instructions:`. Using `instructions: ->` inside `before_reasoning` is a **compilation error**.
+**The critical syntax constraint:** `before_reasoning` does **not** use an `instructions:` wrapper. Content goes directly under the block. Using `instructions: ->` inside `before_reasoning` is a **compile error**.
 
 ```yaml
 # WRONG — compile error
@@ -402,24 +432,72 @@ before_reasoning:
         transition to @subagent.auth
 ```
 
+**Three practical consequences of the per-parse firing behavior:**
+
+1. **Initialization actions re-execute** on every parse in multi-action turns. Guard once-per-session logic explicitly.
+2. **Counter variables** incremented here reflect parse count, not turn count.
+3. **Actions with side effects** (external API calls, record writes) must be guarded against re-execution.
+
+**The guard pattern for once-per-session logic:**
+
+```yaml
+before_reasoning:
+    if @variables.sessionInitialized == False:
+        run @actions.InitializeSession
+        set @variables.sessionInitialized = True
+```
+
+> **Critical anti-pattern — infinite loops:** never place a `transition to` instruction in `before_reasoning` without a condition guard. An unconditional `transition to` here fires on every parse and creates an infinite routing loop. This is one of the most severe authoring errors on the platform and produces no compile-time warning.
+
 ---
 
 ### 4.5 after_reasoning: The Post-Turn Gate
 
-`after_reasoning` runs once per turn, after the reasoning loop produces a terminal response. The LLM has already spoken by the time this executes.
+`after_reasoning` runs after the reasoning loop produces a terminal response. The LLM has already spoken by the time this executes.
 
 **Common valid uses:**
 - State cleanup (clearing temporary variables)
 - Logging (recording that a workflow step completed)
 - Conditional transitions based on what the turn accomplished
 
-**Two critical behavioral distinctions:**
+**Transition syntax in after_reasoning:** transitions inside `after_reasoning` must use the bare `transition to` syntax — not `@utils.transition to`. The `@utils.` prefix form is valid only inside `reasoning.actions` blocks.
 
-**First:** `after_reasoning` fires after the reasoning loop ends with a terminal response. It does **not** fire after each tool call within the loop. Three sequential tool calls in one turn trigger `after_reasoning` once — after the final response — not three times.
+```yaml
+# WRONG — @utils. prefix is not valid here
+after_reasoning:
+    if @variables.case_type != '':
+        @utils.transition to @subagent.case_creation
 
-**Second:** if a subagent transitions mid-reasoning via `@utils.transition to` (the LLM-driven handoff), the original subagent's `after_reasoning` does **not** run. A handoff means the original subagent gave up control before producing a terminal response. No terminal response means no `after_reasoning` trigger. If you have cleanup logic that must run regardless of how a turn ends, this constraint is a design risk that must be explicitly accounted for.
+# CORRECT
+after_reasoning:
+    if @variables.case_type != '':
+        transition to @subagent.case_creation
+```
+
+**The pipe command is platform-prohibited in after_reasoning.** You cannot place a `|` prompt instruction inside `after_reasoning`. This is a platform-enforced constraint. `after_reasoning` is fully deterministic because the language itself prevents prompt instructions from appearing there.
+
+**Two critical bypass cases — logic placed in after_reasoning will NOT execute when:**
+
+**Case 1:** a subagent transitions mid-reasoning via `@utils.transition to` (an LLM-driven handoff). The original subagent gave up control before producing a terminal response. No terminal response means no `after_reasoning` trigger.
+
+**Case 2:** an action in the flow has `is_displayable: True` set. When `is_displayable: True` is configured on an action, the platform exits the reasoning loop immediately as soon as the LLM decides to surface that output. That exit is immediate — `after_reasoning` never executes in this path.
+
+**The recommended mitigation for both bypass cases:** move logic that must execute reliably into the `before_reasoning` block of the subsequent subagent rather than relying on `after_reasoning` of the current one.
 
 Like `before_reasoning`, `after_reasoning` does not support an `instructions:` wrapper. Same constraint, same compile error.
+
+```yaml
+# WRONG — compile error
+after_reasoning:
+    instructions: ->
+        if @variables.commit_failed == True:
+            transition to @subagent.operation_recovery
+
+# CORRECT
+after_reasoning:
+    if @variables.commit_failed == True:
+        transition to @subagent.operation_recovery
+```
 
 ---
 
@@ -464,7 +542,7 @@ Linked variables are the primary mechanism for knowing who the user is without a
 Agentforce defines three distinct variable scope zones. Each holds a different kind of value, is valid in a different context, and behaves very differently when used outside its valid scope.
 
 **`@variables.X` — Session-persistent state**
-Valid anywhere in AgentScript logic and injectable into pipe text via `{!@variables.X}`. Persists for the life of the session unless explicitly overwritten.
+Valid anywhere in Agent Script logic and injectable into pipe text via `{!@variables.X}`. Persists for the life of the session unless explicitly overwritten.
 
 **`@outputs.X` — Action return values**
 Valid **only** in `set` and `if` statements immediately after the action's `run` block. The scope expires when those statements complete. Referencing `@outputs.X` anywhere else produces a silent failure.
@@ -478,13 +556,13 @@ Valid **only** in `with` clauses during action invocation. Not valid in subseque
 
 ### 5.3 The Silent Failure Zone
 
-`@inputs` and `@outputs` scope violations are the most dangerous bugs in AgentScript development — dangerous precisely because they produce no error and no obvious symptom.
+`@inputs` and `@outputs` scope violations are the most dangerous bugs in Agent Script development — dangerous precisely because they produce no error and no obvious symptom.
 
 When you use `@inputs` or `@outputs` outside their valid scope, the action executes successfully. The variable simply does not get set. No error is thrown. The agent continues operating as if everything worked — just without the value it should have.
 
 > **Scenario: The Invisible Empty Field**
 >
-> An agent retrieves a customer's home branch location to display in a response. The developer writes the fetch action, captures `@outputs.status` immediately, but then tries to inject `@outputs.customer_location` into a pipe line three statements later. The `@outputs` scope has already expired. The injection produces an empty string. The agent displays "Your nearest branch is ." — a clearly wrong response with no error in any log to explain why.
+> An agent retrieves a customer's home branch location to display in a response. The developer writes the fetch action, captures `@outputs.status` immediately, but then tries to inject `@outputs.customer_location` into a pipe line three statements later. The `@outputs` scope has already expired. The injection produces an empty string. The agent displays "Your nearest branch is." — a clearly wrong response with no error in any log to explain why.
 
 **How to catch this in traces:** a `FunctionStep` that completes with no difference in the `postVars` section (the before/after variable state comparison) is the diagnostic indicator of a scope violation. The action ran. The output was produced. Nothing was captured because the `set` statement referenced a scope that was already closed.
 
@@ -498,45 +576,41 @@ When you use `@inputs` or `@outputs` outside their valid scope, the action execu
 
 > **Scenario: Verify Once, Carry Forward**
 >
-> A customer service agent has three subagents — an authentication gate, an order management specialist, and a billing specialist. When the authentication gate verifies the customer, it sets `@variables.is_verified = True` and `@variables.customer_id` from the verification result. When the router transitions to order management, those variables are already there. The order management subagent's `before_reasoning` block checks `@variables.is_verified` — it is `True` — and immediately makes order-specific actions available. The customer never re-verifies. The verified customer ID flows through to every action that needs it without being re-extracted from conversation. This is the verify-once, carry-forward pattern.
+> A customer service agent has three subagents — an authentication gate, an order management specialist, and a billing specialist. When the authentication gate verifies the customer, it sets `@variables.is_verified = True` and `@variables.customer_id` from the verification result. When the router transitions to order management, those variables are already there. The order management subagent's `before_reasoning` block checks `@variables.is_verified` — it is `True` — and immediately makes order-specific actions available. The customer never re-verifies. The verified customer ID flows through to every action that needs it without being re-extracted from conversation.
 
 ---
 
-### 5.5 The setVariables Turn-End Trap
+### 5.5 The setVariables Slot-Fill Utility
 
-`@utils.setVariables` is the LLM-driven slot-filling utility that lets the model extract values from conversation and populate variables. It has a non-obvious and frequently misunderstood behavior: **it ends the turn after capturing values.**
-
-The reasoning loop does not continue after `setVariables` runs. Any action listed after `setVariables` in the same `reasoning.actions` block will not fire in that turn. The turn is over.
-
-**When to use `setVariables`:** only when collecting variables across multiple turns is the explicit and intentional design goal — a multi-step intake form where each turn collects one field.
-
-**The correct pattern for capture-then-act in one turn:** use LLM slot-fill directly on the target action using the ellipsis operator.
+`@utils.setVariables` is the LLM-driven slot-filling utility that tells the agent to define a variable based on a natural language description. The `...` token instructs the LLM to set the value of the variable from the conversation. The `description:` field instructs the LLM on how to interpret what to capture.
 
 ```yaml
-# WRONG — action never fires in same turn
 reasoning:
     actions:
-        - @utils.setVariables
-            set order_id = ...
-        - @actions.get_order_status   ← this never fires
-            with order_id = @variables.order_id
+        set_first_name_variable: @utils.setVariables
+            with first_name =...
+            description: "Get the user's first name"
+```
 
-# CORRECT — capture and act in one turn
+**When to use `setVariables`:** it is appropriate when the design goal is to collect a specific value through natural conversation before any downstream action runs. It is a free framework utility — it does not consume action credits.
+
+**The important design consideration:** `@utils.setVariables` asks the LLM to focus on capturing the variable. If you need to capture a value **and** immediately act on it in the same turn, use LLM slot-fill directly on the target action using the ellipsis operator instead. This lets the LLM extract the value and invoke the action in a single Phase 2 decision.
+
+```yaml
+# Capture-then-act in one turn: use direct slot-fill on the action
 reasoning:
     actions:
         - @actions.get_order_status
-            with order_id = ...   ← LLM extracts and calls in one step
+            with order_id =...   # LLM extracts and calls in one step
 ```
-
-The ellipsis causes the LLM to extract the order ID and call the action in a single Phase 2 decision — no intermediate variable collection, no turn-ending side effect.
 
 ---
 
 ### 5.6 The Three Input Binding Patterns
 
-Action parameters can be populated three ways. The choice between them has direct security and reliability implications, not just stylistic ones.
+Action parameters can be populated three ways. The choice between them has direct security and reliability implications.
 
-**LLM slot-fill (`with param = ...`):** the LLM extracts the value from conversation at Phase 2 time. Fully probabilistic — the LLM decides what to extract. If the value is absent, it prompts the user.
+**LLM slot-fill (`with param =...`):** the LLM extracts the value from conversation at Phase 2 time. Fully probabilistic — the LLM decides what to extract. If the value is absent, it prompts the user.
 
 **Variable binding (`with param = @variables.X`):** the runtime reads the variable at Phase 1 time, before the LLM is involved. Fully deterministic. If the variable is empty, the action receives an empty string with no user prompt.
 
@@ -544,7 +618,7 @@ Action parameters can be populated three ways. The choice between them has direc
 
 > **Scenario: The Account ID Injection Risk**
 >
-> An agent processes refunds. The `issue_refund` action requires a `customer_id` parameter. If you use `with customer_id = ...`, the LLM extracts a customer ID from the conversation — meaning a malicious user could type a different customer's ID and potentially trigger a refund against someone else's account. If you use `with customer_id = @variables.customer_id`, where that variable was set during verified authentication, the LLM has no ability to override the value from conversation. The verified ID flows through deterministically. This is the security-critical reason to choose variable binding over slot-fill for sensitive parameters.
+> An agent processes refunds. The `issue_refund` action requires a `customer_id` parameter. If you use `with customer_id =...`, the LLM extracts a customer ID from the conversation — meaning a malicious user could type a different customer's ID and potentially trigger a refund against someone else's account. If you use `with customer_id = @variables.customer_id`, where that variable was set during verified authentication, the LLM has no ability to override the value from conversation. The verified ID flows through deterministically. This is the security-critical reason to choose variable binding over slot-fill for sensitive parameters.
 
 **The rule:** use `@variables` binding for verified identities, confirmed record IDs, and any sensitive value that should not be extractable from arbitrary user input. Use the ellipsis only for parameters the LLM legitimately needs to extract from conversation.
 
@@ -556,69 +630,128 @@ Action parameters can be populated three ways. The choice between them has direc
 
 In a pure LLM system, the model can only produce text. It cannot look up a customer record, process a payment, or update a case. Actions are what transform Agentforce from a text generator into an agent that can actually do things — querying databases, calling APIs, running flows, and updating records. How and when those actions fire is controlled by the two-phase engine.
 
+Agentforce supports the following custom action types:
+
+| Action Type | When to Use | Skills Required |
+|---|---|---|
+| Flow | Low-code rules-based automation and record retrieval | Low-code |
+| Apex | Pro-code rules-based automation and complex custom logic | Pro-code |
+| Prompt Template | LLM-based tasks like summarization or content generation | Low-code |
+| External Service | Data from REST APIs with OpenAPI specs | Low-code |
+| MuleSoft API | Legacy systems and complex enterprise integrations | Pro-code |
+| Predictive Model | Predictive AI within an agent | Low-code |
+
+Always check whether a standard action can fulfill the need before creating a custom one.
+
 ---
 
 ### 6.1 Deterministic vs. LLM-Driven Invocation
 
-Every action can be invoked in one of two ways, and the choice fundamentally changes who controls whether and when it fires.
+Every action in Agent Script can be invoked in two fundamentally different ways, and the choice has major implications for behavior, cost, and safety.
 
-**Deterministic invocation (`run @actions.X`):** fires during Phase 1, before the LLM is called. The action always executes when the code path is reached — regardless of what the LLM would think or prefer. The LLM never sees the `run` statement. It only sees the resolved pipe text with injected values after the action has already completed.
+**LLM-driven invocation (`reasoning.actions` block):** the LLM decides whether and when to call the action, based on the description, the conversation, and the resolved instructions. The action appears in the LLM's tool schema. The LLM selects it when it judges the action appropriate.
 
-Use for: pre-loading data every iteration needs, security gates that must always run, mandatory logging, and guaranteed ordering of multiple actions.
+**Deterministic invocation (`run @actions.X`):** the action fires unconditionally when the code path is reached during Phase 1 resolution. The LLM is not involved in the decision. This is how you enforce that an action always fires — for pre-loading data, enforcing audit trails, or implementing mandatory compliance steps.
 
-**LLM-driven invocation (`reasoning.actions` block):** fires during Phase 2. The LLM decides whether and when to call the action based on the action's `description` field and conversation context. The LLM is in control of the invocation decision.
-
-Use for: actions the agent should call only when relevant to the user's specific request, and any case where the model's judgment about timing and relevance is appropriate.
-
-> **Scenario: Pre-Load vs. On-Demand**
->
-> Loading a customer's account tier on every turn is deterministic — it always needs to happen, and the cost of not having it is instructions that reference an empty variable. This belongs in `before_reasoning` as a `run` statement, firing once per turn. Looking up a specific order's status is LLM-driven — it only needs to happen if the user is asking about an order. This belongs in `reasoning.actions`, where the LLM calls it only when the conversation calls for it.
+The same action definition can be used both ways in different parts of the agent. The invocation mode is determined by context, not by the action definition itself.
 
 ---
 
-### 6.2 available when: Hard Filter, Not Soft Hint
+### 6.2 The Four Action Chaining Patterns
 
-`available when` is the mechanism that brings deterministic authorization to the LLM's tool list. It is one of the most important safety features in Agentforce.
+When a workflow requires actions to run in a guaranteed sequence, four distinct patterns are available. Choosing between them depends on whether LLM judgment should be involved in the sequencing decision.
 
-When an `available when` condition evaluates to `False` during Phase 1, the action is completely absent from the tool schema handed to the LLM. The model has zero awareness the action exists. This is not a soft restriction — the model cannot be persuaded, tricked, or prompted into calling an action that is not in its tool schema.
+**Pattern 1: Sequential `run` blocks (fully deterministic)**
+Actions execute in a fixed, top-to-bottom order during Phase 1. The LLM is not involved at any step. Each action's output is captured and passed as input to the next. Use when the sequence is unconditional and always the same. This is the most cost-efficient pattern — none of these steps consume an LLM iteration.
 
-This is fundamentally different from a prose instruction like "only call this action if the user is verified." A prose instruction is probabilistic. Under adversarial input or in a sufficiently complex conversation, the LLM may not follow it. `available when` makes unauthorized invocation **structurally impossible**, not just unlikely.
+```yaml
+instructions: ->
+    run @actions.fetch_account
+        with account_id = @variables.account_id
+        set @variables.account_data = @outputs.account
+    run @actions.calculate_risk
+        with account = @variables.account_data
+        set @variables.risk_score = @outputs.score
+    run @actions.generate_offer
+        with risk = @variables.risk_score
+        set @variables.offer = @outputs.offer_text
+```
 
-> **Scenario: The Layered Refund Guard**
->
-> A refund action has two guards: `available when @variables.is_verified == True` and `available when @variables.refund_amount > 0`. A user who has not completed verification cannot see the refund action in the LLM's tool list at all. A verified user with a zero refund amount also cannot. Only when both conditions are simultaneously True does the action become available. No prose instruction achieves this level of enforcement — and no amount of clever user phrasing can work around it.
+**Pattern 2: Chained reasoning actions (LLM-selected sequencing)**
+Actions are defined in `reasoning.actions` and the LLM selects them in sequence across multiple reasoning iterations. Each action's output is stored in a variable and referenced as input to the next action's description or `with` clause. Use when the LLM needs judgment about whether or how to proceed between steps. Each step in this pattern consumes one reasoning iteration.
 
-Multiple `available when` clauses on a single action are evaluated as a logical AND — all must be True for the action to appear.
+**Pattern 3: Transitions (subagent-to-subagent chaining)**
+A subagent completes its task, then transitions execution to a specialist subagent that handles the next stage. The handoff is one-way. Session variables carry state between subagents. Use when each stage of a workflow belongs in a distinct, independently testable subagent.
+
+**Pattern 4: Conditionals (branch-based sequencing)**
+The next action in a chain is selected based on the result of the previous action. An `if` block evaluates the captured output and either triggers a follow-up action or routes to a different path.
+
+```yaml
+instructions: ->
+    run @actions.validate_order
+        with order_id = @variables.order_id
+        set @variables.validation_result = @outputs.result
+    if @variables.validation_result == 'approved':
+        run @actions.process_payment
+            with order_id = @variables.order_id
+            set @variables.payment_status = @outputs.status
+    if @variables.validation_result == 'rejected':
+        | Inform the user their order could not be validated
+          and ask them to review the details.
+```
+
+**The critical distinction across all four patterns:** sequential `run` blocks (Pattern 1) and conditionals (Pattern 4) execute entirely within Phase 1 — no LLM calls, no iteration consumption. Chained reasoning actions (Pattern 2) consume one reasoning iteration per action call. This distinction directly affects how quickly a workflow approaches the platform's bounded iteration limit.
 
 ---
 
-### 6.3 The Three Transition Mechanisms
+### 6.3 available when: Hard Filter, Not Soft Hint
 
-Transitions are how agents move between subagents. Agentforce has three distinct mechanisms with strict rules about where each can be used. Using the wrong one in the wrong context produces a compile error — and the error message rarely tells you which pairing rule you violated.
+`available when` is an authorization-layer control, not a suggestion to the LLM. When an `available when` condition evaluates to False during Phase 1, the action is completely removed from the tool schema. The LLM receives no tool entry, no description, and no indication the action exists.
+
+This is categorically different from telling the LLM in an instruction "only call this action if the user is verified." An instruction is a probabilistic suggestion. `available when` is a compile-time enforced removal.
+
+```yaml
+actions:
+    issue_refund: @actions.process_refund
+        description: "Issues a refund for the specified order"
+        available when @variables.is_verified == True
+```
+
+When `is_verified` is False, `issue_refund` is invisible to the LLM. No amount of prompting, social engineering, or natural language instruction from the user can make the LLM call an action that does not appear in its tool list.
+
+**The action loop problem:** the platform does not automatically suppress an action after it has been called once. If `available when` remains True after the action runs and the reasoning instructions are ambiguous, the LLM will call the same action on every parse. Close the gate deterministically after execution — either by setting the gate variable to a closed state in post-execution logic, or by using a separate `has_run` boolean.
+
+---
+
+### 6.4 The Three Transition Mechanisms
+
+Transitions are how agents move between subagents. Agentforce has three distinct mechanisms with strict rules about where each can be used. Using the wrong one in the wrong context produces a compile error.
 
 | Mechanism | Valid Context | LLM Involved | Direction |
 |---|---|---|---|
-| Bare `transition to @subagent.X` | `before_reasoning`, `after_reasoning`, run post-conditions | No | One-way |
+| Bare `transition to @subagent.X` | `before_reasoning`, `after_reasoning`, `reasoning.instructions ->` | No | One-way |
 | `@utils.transition to @subagent.X` | `reasoning.actions` only | Yes (LLM decides when) | One-way |
-| `@subagent.X` as action reference | `reasoning.actions` only | Yes (LLM decides when) | Two-way (returns to caller) |
+| `@subagent.X` as action reference | `reasoning.actions` only | Yes (LLM decides when) | Returns to caller |
 
-The valid pairings must be memorized. Bare `transition to` belongs in lifecycle hooks and run blocks. `@utils.transition to` and delegation references belong in `reasoning.actions`. No exceptions.
+All transitions are one-way by default. There is no return of control to the calling subagent unless you explicitly create a return transition in the destination subagent. When transitioning back to a subagent, flow starts at the **beginning** of that subagent — not where it last left off. The `escalate` keyword is reserved and cannot be used as a subagent or action name.
+
+**Note on conditional transitions:** a conditional `transition to` at the top of a `reasoning.instructions ->` block executes before any prompt begins. This makes it more reliable for enforcing mandatory prerequisite flows than `available when` filtering — the transition fires before the LLM has seen any context at all.
 
 ---
 
-### 6.4 Handoff vs. Delegation
+### 6.5 Handoff vs. Delegation
 
 Handoff and delegation represent two fundamentally different control flow models. Choosing the right one has major architectural implications.
 
-**Handoff (`@utils.transition to`):** control transfers completely to the called subagent. The caller does not resume. The destination owns the full response. The original subagent's after_reasoning does not fire if the handoff occurs mid-reasoning. Use when the destination should completely own the user experience.
+**Handoff (`@utils.transition to`):** control transfers completely to the called subagent. The caller does not resume. The destination owns the full response. The original subagent's `after_reasoning` does not fire if the handoff occurs mid-reasoning. Use when the destination should completely own the user experience from that point forward.
 
 **Delegation (`@subagent.X` as action reference):** the parent orchestrates, the child runs its full reasoning loop and produces a result, and control returns to the parent, which synthesizes the final response. Use when the parent needs to coordinate across multiple children or incorporate results into a unified response.
 
-**The architectural implication:** building with delegation rather than pure handoff creates more composable, orchestratable agents. As Salesforce's multi-agent coordination capabilities evolve, agents built with the delegation pattern are much easier to incorporate into larger orchestration workflows without architectural rework.
+**The architectural implication:** building with delegation rather than pure handoff creates more composable, orchestratable agents. As multi-agent coordination capabilities evolve, agents built with the delegation pattern are much easier to incorporate into larger orchestration workflows without architectural rework.
 
 ---
 
-### 6.5 The Zero-Hallucination Routing Pattern
+### 6.6 The Zero-Hallucination Routing Pattern
 
 Two output flags on action definitions control an important aspect of LLM behavior.
 
@@ -628,21 +761,98 @@ Two output flags on action definitions control an important aspect of LLM behavi
 
 Combining both creates the **zero-hallucination routing pattern.** The LLM must actually call the classification action to obtain the routing value — it has no cached or hallucinated value to use. Once it has the real result, it can act on it for routing — but it cannot expose it to the user.
 
-Without this pattern, a router LLM might guess intent from the user's message without calling the classifier at all — producing routing decisions based on probabilistic interpretation rather than actual classifier output. With this pattern, every routing decision is grounded in the classifier's actual result.
+---
+
+## 7. The start_agent Subagent and Turn Restart Behavior
+
+Every Agentforce turn begins at `start_agent`, without exception. On every customer utterance, the engine begins execution at this block. Subagents do not resume between turns — each turn restarts at `start_agent` and routing classification runs again.
+
+This has several practical consequences:
+
+- **State must live in variables, not in subagent position.** Because execution always restarts at `start_agent`, the only way to carry information across turns is via `@variables`. Any context stored in LLM conversation history is available to the LLM but is not part of the deterministic resolution path.
+- **`before_reasoning` on `start_agent` fires on every turn.** This makes it the correct place for session-level initialization that must happen before any topic is selected.
+- **Subagent continuity is a design choice, not a platform default.** If you want a user to continue where they left off in a multi-turn workflow, that continuity must be encoded in variables and reflected in the routing logic of `start_agent`.
+
+> **Business implication:** this architecture makes Agentforce agents stateless at the platform level and stateful only through what you explicitly persist. This is a feature, not a limitation. It makes agents predictable, testable, and auditable in ways that session-memory-based systems are not.
 
 ---
 
-## 7. The Posture Spectrum
+## 8. The EinsteinHyperClassifier
+
+### 8.1 What HyperClassifier Is
+
+EinsteinHyperClassifier is a specialized model purpose-built for subagent classification. Rather than using a general-purpose LLM to route user requests to subagents, HyperClassifier recasts that routing decision as a single-token prediction problem — producing classification results dramatically faster than a standard LLM.
+
+HyperClassifier is an optional model configuration for the `agent_router` subagent. When enabled, it replaces the standard LLM call for subagent selection. It does not replace LLM reasoning within the selected subagent.
+
+---
+
+### 8.2 How It Works: Single-Token Prediction
+
+**The core innovation:** standard LLMs classify by generating free-form text — they produce the class label as a sequence of output tokens, one at a time. This means a longer topic name produces a longer response time. For real-time applications like Agentforce Voice, this latency is unacceptable and unpredictable.
+
+HyperClassifier instead recasts classification as predicting a **single special token** that represents the selected class, regardless of how long the class name is. This produces **constant-time O(1) inference**: the model outputs its classification decision in a fixed number of steps, regardless of how many subagents exist or how long their names are.
+
+**The documented results:**
+
+- **30x faster** subagent classification compared to general-purpose LLMs
+- **1 second reduction** in Time to First Token (TTFT) for agent responses
+- **Zero reasoning overhead**: the model is fine-tuned exclusively for classification and does not generate explanatory text
+- **Increased classification accuracy**, particularly for specialized classification constraints and negative instructions (qualitative improvement confirmed in official Agent Script model documentation; specific benchmark figures are not publicly documented by Salesforce)
+
+> **Note:** earlier versions of this guide cited a "KV caching / Cached Augmented Generation" second innovation, a specific 1-2% accuracy improvement figure, and a 1,000+ token prompt handling threshold. Those claims could not be verified against official Salesforce engineering documentation and have been removed. The single-token prediction architecture is the confirmed core speedup mechanism.
+
+---
+
+### 8.3 HyperClassifier Limitations
+
+HyperClassifier's specialization comes with hard constraints. These are not configuration options — they are architectural limitations of the model.
+
+**When EinsteinHyperClassifier is the active model on a subagent:**
+
+- **Cannot use `before_reasoning`** — the block is not executed. *(Confirmed: Salesforce Agent Script developer documentation)*
+- **Cannot use `after_reasoning`** — the block is not executed. *(Confirmed: Salesforce Agent Script developer documentation)*
+- **Can only use `@utils.transition` as a tool** — no other tools or actions are available in the `reasoning.actions` block. *(Confirmed: Salesforce Agent Script model documentation — `ascript-model.md`)*
+
+These constraints apply at the subagent level. A subagent configured to use EinsteinHyperClassifier operates under all three restrictions simultaneously.
+
+---
+
+### 8.4 The HyperClassifier and before_reasoning Paradox
+
+This is an architectural tension that every Agentforce designer needs to understand explicitly.
+
+**The advisory recommends:** for logic that must execute unconditionally on every turn before topic selection, use `before_reasoning` on `agent_router`. This ensures mandatory initialization (populating `EndUserId`, `EndUserName`, session context) runs before HyperClassifier makes its routing decision.
+
+**The constraint states:** when EinsteinHyperClassifier is configured as the model for a subagent, `before_reasoning` cannot be used on that subagent.
+
+**The resolution:** if your agent requires mandatory pre-classification logic (authentication checks, session variable population, required context loading), you **cannot use EinsteinHyperClassifier as the model for `agent_router`**. The `before_reasoning` hook and the HyperClassifier model are mutually exclusive on the same subagent.
+
+**Why the state-based routing workaround fails:** a common intuitive design pattern is to use a state-based routing condition on a "User Verification" topic (`RunningUserValidated == False`) to enforce mandatory logic before business topics are reached. This pattern does not work reliably when HyperClassifier is enabled, because HyperClassifier routing and state-based routing conditions operate in **separate execution phases**. HyperClassifier selects the topic first, based on semantic relevance. If a user asks a business question, HyperClassifier routes to the relevant business topic — and the `RunningUserValidated == False` condition on the User Verification topic is evaluated afterward, too late to intercept the routing decision.
+
+**The correct design decision matrix:**
+
+| Need | Correct model for agent_router |
+|---|---|
+| Maximum classification speed, no mandatory pre-classification logic | EinsteinHyperClassifier |
+| Mandatory pre-classification logic (auth, session init, required vars) | Standard LLM (GPT 4.1, Claude Haiku 4.5, Gemini 3.5 Flash) |
+| Both mandatory logic AND fast classification | Standard LLM on agent_router; use HyperClassifier on specialist subagents only |
+
+The performance benefit of HyperClassifier is real and significant. The architectural constraint is equally real. Make this tradeoff explicitly, not by accident.
+
+---
+
+## 9. The Posture Spectrum
 
 ### From Fully Scripted to Fully Agentic
 
-The concept of posture is what unifies everything discussed so far. Early AI systems forced a binary choice: either full scripted control (deterministic, predictable, brittle) or full LLM latitude (flexible, adaptive, unsafe). Posture lets you choose exactly how much of each you need, for each specific subagent, based on what that subagent actually does.
+Posture is what unifies everything discussed so far. Early AI systems forced a binary choice: either full scripted control (deterministic, predictable, brittle) or full LLM latitude (flexible, adaptive, unsafe). Posture lets you choose exactly how much of each you need, for each specific subagent, based on what that subagent actually does.
 
 This is not a configuration setting. It is a design philosophy backed by specific, implementable controls.
 
 ---
 
-### 7.1 Agentic, Mixed, and Scripted
+### 9.1 Agentic, Mixed, and Scripted
 
 **Agentic posture (the default):** the LLM chooses which actions to call and when, extracts slot parameters from conversation, and determines response content and sequencing. Best for open-ended tasks, information retrieval, and conversational flows with no specific security or ordering requirements. Start here.
 
@@ -652,344 +862,410 @@ This is not a configuration setting. It is a design philosophy backed by specifi
 
 ---
 
-### 7.2 The Five Justifications for Determinism
+### 9.2 The Five Justifications for Determinism
 
 One of the strongest patterns in Salesforce's Agentforce design guidance is the discipline around adding deterministic controls. Add determinism only when you have a specific, named justification. Without a justification, keep the posture agentic.
 
 **The five valid justifications:**
 
-1. **Regulatory requirement** — a compliance rule mandates specific sequencing, wording, or disclosure that cannot vary
-2. **Trust gate** — identity verification must complete before access is granted
-3. **Irreversible action** — once fired, the action cannot be undone
-4. **External system ordering** — an external API requires operations in a specific sequence
-5. **Observed production failure** — a specific behavior has failed in production and deterministic control is the proven fix
+1. **Regulatory requirement** — a compliance rule mandates specific sequencing, wording, or disclosure that cannot vary.
+2. **Trust gate** — identity verification must complete before access is granted.
+3. **Irreversible action** — once fired, the action cannot be undone.
+4. **External system ordering** — an external API requires operations in a specific sequence.
+5. **Observed production failure** — a specific behavior has failed in production and deterministic control is the proven fix.
 
-If the justification does not match one of these five, keep the posture agentic. Adding determinism without justification increases brittleness, removes the LLM's ability to handle natural variation in user input, and increases maintenance burden without a concrete safety benefit. The agentic default is not laziness — it is recognition that the LLM's adaptive reasoning is a feature, one that should only be constrained when a specific risk justifies the cost.
+If the justification does not match one of these five, keep the posture agentic. Adding determinism without justification increases brittleness, removes the LLM's ability to handle natural variation in user input, and increases maintenance burden without a concrete safety benefit.
 
 ---
 
-### 7.3 The Three Control Primitives
+### 9.3 The Three Control Primitives
 
 When a justification for determinism exists, three primitives implement it. Each operates at a different layer and can be combined for defense-in-depth.
 
-**`available when`:** hard Phase 1 filter removing the action from the tool schema when the condition is False. Authorization-layer control. The LLM cannot call the action because, from its perspective, it does not exist.
+**`available when`:** hard Phase 1 filter removing the action from the tool schema when the condition is False. Authorization-layer control. The LLM cannot call the action because, from the LLM's perspective, it does not exist.
 
-**Parameter pinning:** binding a parameter to `@variables.X` instead of `...` forces a specific value at Phase 1 time. The LLM cannot substitute a different value from conversation. Use for verified identifiers and sensitive values that should not be extractable from user input.
+**Parameter pinning (`with param = @variables.X`):** replaces probabilistic slot-fill with deterministic variable binding. The LLM cannot override the parameter value with content from conversation. Use for verified identities and sensitive record IDs.
 
-**Conditional instructions:** `if/else` blocks in `reasoning.instructions: ->` mode ensure the LLM only sees the branch matching current state. Use for security-state-dependent instruction sets.
-
-> **Scenario: Three Layers on One Action**
->
-> A payment action has: `available when @variables.is_verified == True` (the action is invisible until verified), `with account_number = @variables.verified_account` (the account number cannot be overridden from conversation), and a conditional instruction block showing "Process the payment" only when verified and "Please verify your identity first" otherwise. Three independent layers of control — an unverified user gets no payment action in their tool list, no ability to inject an account number, and sees only the verification instruction.
+**Conditional instructions:** `if` blocks in `instructions: ->` that change what text reaches the LLM based on current state. The LLM only sees the branch that matched — it has no awareness of branches that did not match.
 
 ---
 
-### 7.4 The Minimal Instructions Principle
+### 9.4 The Minimal Instructions Principle
 
-Keep instructions minimal. The fewer instructions you give the LLM, the better it generally performs — as long as those instructions accurately represent what you need.
+The most powerful authoring insight in all of Agentforce is also the most counterintuitive: **less instruction text produces better agent behavior.**
 
-This feels counterintuitive. More guidance should produce better behavior. But LLM reasoning does not work like human reading. When a model receives instructions packed with conditional rules, exceptions, and clarifications, it must resolve all of that context simultaneously in every reasoning iteration. Competing instructions create noise. Redundant instructions create ambiguity.
+The instinct when building an agent is to write more instructions — to anticipate every edge case, address every possible user input, and add guidance for every situation the LLM might encounter. This instinct is wrong. More instructions introduce:
 
-Push as much logic as possible out of AgentScript instructions and into actions. Logic in actions is reusable across subagents and agents, does not add context load to the LLM, and can be tested independently. Logic in instructions is ephemeral and adds to the token budget on every iteration.
+- **Conflicting directives** — two instructions that both apply to the same situation but specify different behaviors.
+- **Stale coverage** — instructions written for a version of the agent that no longer exists.
+- **Attention dilution** — the LLM trying to satisfy too many constraints simultaneously and satisfying none of them cleanly.
+- **Maintenance burden** — every instruction must be updated when the agent changes.
 
-Every unnecessary instruction token brings the context budget closer to the 10,000-token threshold where latency spikes and LLM accuracy degrades. Adding instructions without a concrete reason does not make the agent safer or better. It makes it slower and noisier.
+**The correct approach:**
+- Write one instruction per concrete behavioral requirement.
+- Remove any instruction that cannot be traced to a specific, observed need.
+- Let the LLM use its general capability for everything not explicitly constrained.
+- Add instructions only when a specific behavior has failed without them.
 
----
-
-## 8. The Einstein Trust Layer
-
-### Why a Trust Layer Is Necessary
-
-In a simple prompt-based system, your data leaves your system boundary the moment you send it to an LLM API. What happens to it after that is governed by the API provider's terms of service. For enterprise Salesforce customers with sensitive CRM data — customer records, financial data, health information, personal identifiers — this is not acceptable.
-
-The Einstein Trust Layer exists because hybrid reasoning requires hybrid governance. You need the intelligence of a large language model and the data protection of Salesforce's enterprise security model. The ETL is the mechanism that provides both simultaneously.
-
----
-
-### 8.1 What It Is and When It Operates
-
-The Einstein Trust Layer (ETL) is the runtime security boundary that operates on every turn, for every user session, in every Agentforce production deployment. It sits between Phase 1 output and the LLM — every context package passes through it before reaching the foundation model, and every model response passes back through it before returning to the reasoning loop.
-
-The ETL is not a one-time authoring check. It is actively running on every single inference call, continuously, in production.
-
-**The ETL sequence on input:**
-1. Sharing rule and field-level security enforcement — data in the context respects the same permission model as a direct SOQL query by the running user
-2. Prompt injection and toxicity detection — the input is screened for malicious injection attempts and inappropriate content before reaching the model
-
-**The ETL sequence on output:**
-1. Toxicity detection on the model's response
-2. Grounding quality check before the response returns to the reasoning loop
+The principle extends to subagents. Do not add a subagent because you might need it. Add it only when a distinct behavioral domain genuinely requires separate state management, a different system prompt, or a different action set. Every unnecessary subagent adds routing overhead, increases the chance of misrouting, and complicates the conversation flow for no benefit.
 
 ---
 
-### 8.2 The Zero-Retention Policy
+## 10. The Einstein Trust Layer
 
-The ETL Zero-Retention Policy guarantees that customer CRM data used for grounding in an Agentforce inference call is **never stored, never logged, and never used to train external public models** by the underlying LLM providers — OpenAI, Anthropic, Google, or any other. The data flows into the LLM gateway only for that specific inference call and is discarded immediately after the inference completes.
+### Security Is Not Optional Infrastructure
 
-This is a contractual and architectural guarantee from Salesforce, not a configuration option that can accidentally be disabled. It is enforced at the LLM gateway boundary.
+The Einstein Trust Layer (ETL) is not a feature you enable on specific agents. It is a mandatory architectural component — a set of agreements, security technology, and data and privacy controls built into the Salesforce platform — that wraps every LLM interaction across all Agentforce deployments. Every prompt that leaves your org and every response that returns goes through this layer.
 
-The answer to the common enterprise question — "does our Salesforce customer data train OpenAI's models if we use Agentforce?" — is **no.** The mechanism is the ETL zero-retention policy enforced at the LLM gateway, not a contractual promise alone.
-
----
-
-### 8.3 Data Permissions and Content Screening
-
-The ETL extends Salesforce's existing governance model to the LLM boundary in two important ways.
-
-**Permission enforcement:** Salesforce sharing rules and field-level security are enforced at every agent action. When grounding data is pulled for an LLM call, it respects the same permission model as a direct SOQL query executed by the running user. The model cannot receive data the running user is not authorized to see — regardless of how the grounding query was constructed.
-
-**Content screening:** the ETL screens inputs for malicious prompt injection attempts — attempts by adversarial users to include hidden instructions in their messages to alter the model's behavior — and for inappropriate content. It screens model outputs for toxicity and grounding quality before those outputs return to the reasoning loop.
-
-Together, these capabilities mean the ETL is not just a data privacy mechanism. It is the security and governance layer that makes it possible for enterprises to deploy LLM-powered agents against their most sensitive CRM data with reasonable confidence that existing access controls remain in effect.
+Understanding what the ETL does — and does not — do is essential for setting correct security expectations in production.
 
 ---
 
-## 9. Reasoning Constraints
+### 10.1 What It Is and When It Operates
 
-### Design Constraints as Architecture Drivers
+The ETL operates on every LLM call. Its processing happens in two directions:
 
-Every platform has constraints. What makes Agentforce's constraints interesting is that they are not arbitrary limitations — they are deliberate design choices that prevent runaway costs, infinite loops, and degraded reasoning quality at scale. Understanding them as architecture drivers, not obstacles, is what separates agents that work in production from agents that work in demos.
+**Prompt journey (outbound):** secure data retrieval and grounding, data masking (where applicable — see Section 10.3), and prompt defense via system policies.
 
----
+**Response journey (inbound):** toxicity scoring of the LLM response and audit logging of prompts, responses, and trust signals to Data 360.
 
-### 9.1 The 3–4 Loop Iteration Limit
+The ETL is the boundary between your Salesforce org and external model providers. It is designed to ensure that what leaves your org is appropriately protected and what returns is appropriately screened and logged.
 
-The reasoning loop has a hard platform guardrail of approximately 3–4 iterations per turn before the runtime forces an exit. This is enforced by the Atlas FSM — it is not a configurable timeout, it is a hard architectural constraint.
-
-A reasoning iteration is one complete Phase 1 + Phase 2 cycle. Each time the LLM calls an action and re-resolution begins, the iteration counter increments. Failed retries via backward arrows also count. When the cap is reached, the platform forces the turn to exit with an error response.
-
-**Concrete design implications:**
-
-- Count your maximum possible iterations on every execution path during design, not after deployment
-- Workflows requiring more than 3–4 sequential LLM-driven decisions per turn must be broken across multiple user turns
-- Circular subagent references will hit this cap unpredictably, producing confusing errors
-- Monitoring for turns that frequently hit the cap in production is a signal the workflow needs structural redesign — not a signal to seek a higher limit
-
-> **Scenario: The Hidden Loop**
->
-> An agent workflow has: collect order ID (1 iteration) → look up order status (2nd iteration) → check eligibility for return (3rd iteration) → log the interaction (4th iteration). On the happy path, this works. But if the order lookup fails and the LLM retries (backward arrow), you now have 5 iterations. The platform forces an exit. The user gets an "unexpected error" response that has nothing to do with their actual request. The fix is to move the logging to `after_reasoning` (free, deterministic, does not count as an iteration) and consolidate the status and eligibility lookups into a single action.
+> **Important:** ETL capabilities apply only to generative AI and Agentforce features. Standard Salesforce platform operations are not affected.
 
 ---
 
-### 9.2 The 10,000-Token Heuristic
+### 10.2 The Zero-Retention Policy
 
-The reasoning engine targets approximately 10,000 tokens per transaction payload as a performance and accuracy ceiling. This is not a hard API limit — it is the threshold beyond which response quality degrades and latency spikes become measurable.
+The ETL enforces a zero-data retention policy with external partner model providers such as OpenAI and Azure OpenAI. This policy has three specific commitments from the external provider:
 
-**What fills the token budget:**
+1. **No training use** — data sent to the LLM is not used for model training or product improvements.
+2. **No retention** — data is not retained by the third-party LLM after a response is sent back to Salesforce.
+3. **No human review** — no human being at the third-party provider looks at data sent to their LLM.
 
-| Source | Typical Range | Controllability |
-|---|---|---|
-| Global system instructions | 100–500 tokens | High — keep concise |
-| Subagent system overrides | 100–500 tokens per subagent | High — restate only required invariants |
-| Conversation history | Grows per turn | Partial — session design controls this |
-| Resolved reasoning.instructions | 100–1,000 tokens | High — `->` mode sends only matching branches |
-| Tool schemas | ~100 tokens per action | High — `available when` suppresses irrelevant tools |
-| Grounding data (ADL/knowledge) | Variable | High — use relevancy-ranked retrieval |
-
-**The three optimization levers:**
-
-1. **Conciseness** — remove any instruction that does not change behavior
-2. **Consolidation** — merge redundant actions and overlapping descriptions
-3. **Filtering** — use `available when` aggressively; every suppressed action removes its full schema from the budget for that iteration
-
-**A critical distinction Salesforce documentation makes explicit:** token count drives **latency and LLM accuracy**. Credit billing is charged per action execution — 20 credits per Apex or Flow action, 2–16 for Prompt Templates — regardless of token count. These are completely separate optimization concerns with completely separate levers. Reducing instruction length improves reasoning quality. Reducing unnecessary action executions reduces credit costs. Do not conflate them.
+**Important scope qualification:** this policy applies specifically to **external partner model providers**. Models built or fine-tuned by Salesforce and hosted within Salesforce's own trust boundary operate under different terms. Models you build and host on your own infrastructure are governed by your own policies. The zero-retention commitment is a contractual obligation with external providers, not a universal claim about all possible model configurations.
 
 ---
 
-## 10. Reasoning Anti-Patterns
+### 10.3 Data Permissions and Content Screening
 
-### Why Anti-Patterns Matter
+**Secure Data Retrieval and Grounding**
 
-Every platform has failure modes that appear repeatedly, across different teams, on different projects. The anti-patterns below are not theoretical — they are the most common production failures in Agentforce development. Each one has a recognizable symptom, a clear root cause, and a specific fix. Knowing them before you encounter them cuts diagnostic time from hours to minutes.
+When prompts are grounded with CRM data, the ETL enforces that grounding respects the executing user's permissions. Data retrieval preserves all standard Salesforce role-based controls, user permissions, and field-level security. A user cannot receive grounded context from records they do not have access to — the grounding is dynamic and permission-aware at runtime.
 
----
+**Data Masking**
 
-### AP-1: | Mode with Conditional Logic (The Invisible Bug)
+The ETL includes data masking that detects sensitive data in prompts before they are sent to the LLM, replacing it with placeholder text. Detection uses two methods: pattern-based (regex and ML models for names, companies, and other unstructured PII) and field-based (Shield Platform Encryption and data classification metadata).
 
-**Pattern:** writing conditional logic (`if/else` blocks) in `reasoning.instructions` using `|` (literal) mode instead of `->` (procedural) mode.
+> **Critical production note:** data masking for LLMs is **disabled for agents**. This applies specifically to Agentforce agent interactions. For embedded generative AI features such as Einstein Service Replies and Einstein Work Summaries, data masking is available and configurable. Authors building Agentforce agents must not rely on ETL data masking as a PII protection mechanism in agent conversations.
 
-**What happens:** the Phase 1 resolver treats the block as literal text and passes it to the LLM verbatim. The LLM receives `if @variables.is_verified == True: Process the account request.` as an English sentence and attempts to interpret it as a natural language instruction. Sometimes it follows the intent. Often it does not. The behavior varies between turns, making the bug intermittent and nearly impossible to reproduce reliably.
+**Prompt Defense**
 
-**Why it is dangerous:** no compile error, no runtime warning, no obvious symptom in normal interactions.
+The ETL applies system policies to prompts to decrease the likelihood of the LLM generating unintended or harmful outputs. These policies help defend against jailbreaking and prompt injection attacks. System policies can vary across different generative AI features and use cases.
 
-**Fix:** always use `->` mode when the instructions block contains any conditional logic, variable checks, `run` statements, or `set` statements.
+**Toxicity Scoring**
 
----
+The ETL applies toxicity scoring across two distinct scopes, with different default behavior for each:
 
-### AP-2: Post-Action Check at the Bottom (The Re-Resolution Trap)
+**Toxicity Detection in Responses — enabled by default, non-configurable:**
+Output toxicity scoring is a core safety mechanism of the Einstein Trust Layer. It is automatically active in all Agentforce environments. In Salesforce Setup under the Einstein Trust Layer "Safety and Security" tab, Toxicity Detection in Responses is enabled by default and **cannot be disabled**. Each LLM response is graded on a scale from `0` (harmless) to `1` (toxic) across categories such as hate speech, violence, and harassment, plus a boolean `isToxicityDetected` confidence flag.
 
-**Pattern:** placing a post-action result check at the bottom of a `reasoning.instructions: ->` block rather than at the top.
+**Toxicity Detection in Prompts — opt-in enhancement:**
+Input toxicity scoring is not active by default. Administrators must navigate to the Safety and Security tab in Setup and manually enable this setting. Enabling it prevents users from submitting toxic or adversarial inputs designed to bait or jailbreak the agent.
 
-**What happens:** re-resolution fires after the tool call and reads from the top. The LLM sees the initial instruction again before reaching the result check — causing double-execution of initial prompts and non-deterministic behavior.
+This architectural distinction is confirmed in the underlying data model. The `GenAiGatewayRequest__dlm` stream in Data Cloud tracks these behaviors via two separate fields:
 
-**Fix:** always place post-action conditional checks at the top of `instructions: ->` blocks. The initial user-facing instruction goes below and is only visible when no result yet exists.
+- `enableOutputSafetyScoring__c` — defaults to `true` for all agent feature requests.
+- `enableInputSafetyScoring__c` — defaults to `false` unless Toxicity Detection in Prompts is explicitly toggled in Setup.
 
----
+Toxicity scores and the `isToxicityDetected` flag are logged and stored in Data 360 as part of the audit trail. Pre-built reports and dashboards are available for analysis.
 
-### AP-3: Prose-Based Authorization (The Security Failure)
+**Audit Trail**
 
-**Pattern:** using a prose instruction ("Only call this action if the user is verified") instead of `available when` to restrict access to a sensitive action.
-
-**What happens:** prose authorization is probabilistic. Under adversarial input or in a sufficiently complex conversation state, the LLM may not follow the restriction. Unauthorized invocation is unlikely but possible.
-
-**Fix:** always use `available when` to gate actions with financial impact, PII access, or irreversible effects. Prose instructions and `available when` can coexist for defense-in-depth, but prose alone is never a sufficient security control.
-
----
-
-### AP-4: @inputs Used After Execution (The Silent Failure)
-
-**Pattern:** writing `set @variables.X = @inputs.paramName` after the action's `run` block has completed.
-
-**What happens:** the `@inputs` scope expired immediately after the `with` clauses during invocation. The `set` statement silently does nothing. The variable is not set, no error is thrown, and the `FunctionStep` trace shows no `postVars` diff.
-
-**Fix:** use `@outputs` for post-action value capture. If an input value needs to be preserved, assign it to a `@variables` reference before the action call using a separate `set` statement.
+Prompts, responses, and trust signals — including toxicity scores — are logged and stored in Data 360. Feedback can be used for improving prompt templates.
 
 ---
 
-### AP-5: instructions: Wrapper in Lifecycle Hooks (Compile Error)
+## 11. Reasoning Constraints
 
-**Pattern:** wrapping `before_reasoning` or `after_reasoning` content in an `instructions: ->` block.
+### Why Constraints Exist
 
-**What happens:** a compile error. The error message typically does not identify the wrapper as the cause.
-
-**Why it fails:** lifecycle hooks are deterministic-only surfaces that never invoke the LLM. The `instructions:` wrapper is a construct associated with LLM-facing surfaces. It is meaningless — and invalid — in a deterministic-only context.
-
-**Fix:** place `transition`, `run`, `set`, and `if` statements as direct children of the `before_reasoning` or `after_reasoning` block, with no `instructions:` wrapper.
+Every runtime system has hard limits. In Agentforce, those limits exist to prevent runaway loops, protect platform stability, and keep billing predictable. Understanding these constraints before you hit them in production is what separates smooth deployments from emergency incidents.
 
 ---
 
-### AP-6: Wrong Transition Syntax in Wrong Context (Compile Error)
+### 11.1 The Bounded Loop Iteration Limit
 
-**Pattern:** placing `@utils.transition to` in a directive block, or placing bare `transition to` in a `reasoning.actions` block.
+The Atlas Reasoning Engine enforces a bounded iteration ceiling on LLM-driven reasoning loops. When that ceiling is reached, the engine breaks out of the loop and returns control to the subagent router. This is a platform-enforced guardrail, not a configurable parameter.
 
-**What happens:** a compile error with an unhelpful message.
+> **On the specific number:** production session traces consistently show reasoning exhaustion occurring within a small number of LLM-driven iterations. The exact platform ceiling is not publicly documented by Salesforce in any official specification. This guide does not assert a specific numeric cap. Design your subagents with the understanding that chains of sequential LLM-driven action calls must be kept short.
 
-**Fix:** memorize the valid pairings. Bare `transition to` belongs in lifecycle hooks and `run` post-conditions. `@utils.transition to` and delegation references belong in `reasoning.actions`. No exceptions.
+**What counts as an iteration:** each Phase 1 + Phase 2 cycle is one iteration. Every time the LLM calls an action and re-resolution fires, that is one iteration consumed. Deterministic `run` blocks within Phase 1 do not consume iterations — only LLM-driven action calls in `reasoning.actions` do.
 
----
+**Historical context:** in the previous Agentforce model, even a simple conversational scenario required a minimum of three LLM cycles. The hybrid model exists precisely to let simple and deterministic steps bypass the LLM entirely, making the iteration ceiling a limit on LLM-driven work rather than an unavoidable baseline.
 
-### AP-7: Contradicting System and Reasoning Instructions (Undefined Behavior)
+**Why this matters for design:** a subagent that requires a long chain of sequential LLM-driven tool calls to complete its task risks hitting this limit before finishing. The recovery behavior — returning to the router — produces a confusing experience for the user and leaves the task incomplete.
 
-**Pattern:** global `system.instructions` says "Answer the user's questions helpfully" while a router subagent's `reasoning.instructions` says "Do not answer. Route only."
+**The three failure patterns this limit produces:**
 
-**What happens:** the LLM receives both simultaneously and resolves the contradiction probabilistically. The behavior is unstable across turns and will likely shift as model versions change.
+1. **Action chains that are too long** — a subagent designed to call multiple actions sequentially via `reasoning.actions` may not complete. Redesign to move deterministic steps to `run` blocks in Phase 1 (Pattern 1 from Section 6.2), which do not consume LLM iterations.
+2. **Recovery loops** — a consistently failing action causes the LLM to retry repeatedly. Each retry is an iteration. Successive failures can exhaust the ceiling before the LLM produces a useful response.
+3. **Slot-fill loops** — a required parameter that the LLM cannot extract from conversation causes repeated re-prompting. Each re-prompt is an iteration.
 
-**Fix:** write global instructions that are posture-neutral: "Perform only the current operating task. Answer only when that task calls for an answer. Otherwise route, verify, clarify, or escalate as directed."
-
----
-
-### AP-8: Subagent System Override Dropping Required Invariants (Silent Security Gap)
-
-**Pattern:** a subagent system override that omits invariants defined in the global system instructions, assuming they are inherited.
-
-**What happens:** the override completely replaces the global. Omitted invariants are silently dropped. The gap is intermittent and depends on which subagent the user routes to.
-
-**Fix:** treat every subagent system block as a complete, self-contained identity definition. Restate every invariant the subagent must retain. Maintain a standard invariant block that is included in every subagent system override.
+**The diagnostic signal:** a session trace that shows multiple `LLMStep` entries followed by an unexpected transition back to the router is the pattern for hitting this limit.
 
 ---
 
-### AP-9: @utils.setVariables Followed by Immediate Action (Turn-End Trap)
+### 11.2 Flex Credits and Token Consumption
 
-**Pattern:** listing `@utils.setVariables` and a target action in the same `reasoning.actions` block, expecting the action to fire in the same turn.
+Agentforce uses the **Flex Credits** model for action-based billing. Credits are consumed when actions execute — not when the agent responds. The platform separately enforces these hard runtime size limits:
 
-**What happens:** `setVariables` ends the turn after capturing values. The action never fires in that turn.
+- Maximum agent response: 1MB
+- Plan trace: 1M characters
+- Transformed plan trace: 32k tokens
 
-**Fix:** use the ellipsis slot-fill operator directly on the target action. `with order_id = ...` causes the LLM to extract the value and call the action in a single Phase 2 step.
+The 32k transformed plan trace limit is the relevant architectural ceiling for reasoning context. Key billing facts:
 
----
+- Flex Credits are priced at $0.10 per action (approximately $500 per 100,000 credits as of the last published rate).
+- Enterprise Edition customers receive a free credits allocation.
+- Utilities such as `@utils.escalate`, `@utils.setVariables`, and `@utils.end_session` are generally not billed as actions.
+- LLM calls (prompts) are billed separately in 2,000-token chunks under the Prompts usage type.
 
-### AP-10: Vague Action Description (Wrong Tool Selection)
-
-**Pattern:** action descriptions like "Get data," "Look up information," or "Handle customer issue."
-
-**What happens:** the LLM uses descriptions as its primary tool-selection signal. Vague descriptions make reliable selection impossible. The LLM may call the wrong action, call multiple actions unnecessarily, or repeatedly ask for clarification the actions already have access to.
-
-**Fix:** write descriptions specific enough for unambiguous selection. Include what the action does, what data it returns, what parameter it requires, and when to use it versus similar actions.
-
-> **Poor:** "Look up order information"
->
-> **Correct:** "Look up the current status, estimated delivery date, and tracking number for a specific customer order. Requires the order ID. Use this when the customer asks about the status or whereabouts of a particular order — not when they want to modify or cancel it."
+> **For current per-action credit rates and any billing thresholds, always refer to the Salesforce Agentforce pricing documentation.** Rates are subject to change and this guide does not guarantee the accuracy of specific pricing figures.
 
 ---
 
-## 11. Terminology Reference
+## 12. Reasoning Anti-Patterns
 
-A shared vocabulary is essential for working on Agentforce teams. These definitions are the precise meanings used throughout this guide and throughout Salesforce's Agentforce documentation.
+The following patterns consistently produce agents that are harder to debug, less reliable in production, and more expensive to maintain. They appear frequently in initial implementations. Recognizing them early saves significant remediation effort.
 
 ---
 
-**Turn**
-The complete cycle of one user message in, one agent response out. Includes `before_reasoning`, the full reasoning loop, and `after_reasoning`.
+**Anti-Pattern 1: The Unnecessary Router**
 
-**Reasoning Iteration**
-One complete Phase 1 (deterministic resolution) plus Phase 2 (LLM reasoning) cycle within the reasoning loop. Multiple iterations can occur within a single turn. Each LLM-driven action call starts a new iteration and increments the counter toward the 3–4 hard cap.
+Building a router-first architecture when the agent handles a single coherent domain. Routing adds an LLM turn, increases latency, and introduces a potential misrouting failure mode. A single well-structured subagent is always preferable to a router plus one specialist.
 
-**Deterministic Resolution**
-Phase 1 — evaluating all AgentScript constructs (conditions, `run` statements, variable injections, `available when` filters) before any LLM involvement. Always produces the same output for the same input state.
+*Signal:* a router subagent whose only destination is one other subagent.
 
-**Re-Resolution**
-The specific instance of Phase 1 that fires after every tool call within the reasoning loop. A full re-evaluation from the top of the `reasoning.instructions` block using updated variable state. Not a continuation — a full rebuild from the top.
+*Fix:* collapse the router and specialist into a single subagent with `available when` guards controlling action availability.
 
-**Slot Filling**
-The LLM extracting a parameter value from conversation context using the `...` (ellipsis) syntax. A Phase 2 probabilistic operation — the LLM decides what value matches the parameter. If absent, it prompts the user.
+---
 
-**Variable Binding**
-The runtime resolving `@variables.X` to its stored value at Phase 1 time. Fully deterministic — no LLM involved, no probability. The stored value is used directly. Security-critical distinction from slot filling.
+**Anti-Pattern 2: Instructions as LLM Conditions**
 
-**Tool Schema**
-The JSON function schema representation of an action handed to the LLM during Phase 2. Actions failing `available when` are completely excluded — from the LLM's perspective, they do not exist.
+Writing conditional logic in `|` mode pipe text rather than using `->` mode procedural blocks. The LLM interprets conditions probabilistically — sometimes correctly, often not, and never reliably.
 
-**| mode (Literal mode)**
-`reasoning.instructions` mode in which content is sent to the LLM verbatim without Phase 1 evaluation. Conditionals appear as English prose. Use only for simple, unconditional instructions.
+```yaml
+# WRONG
+instructions: |
+    If the user is verified, help them with their account.
+    If the user is not verified, ask them to verify.
 
-**-> mode (Procedural mode)**
-`reasoning.instructions` mode that activates Phase 1 deterministic evaluation. Use whenever the block contains conditional logic, variable injection, `run` statements, or `set` statements.
+# CORRECT
+instructions: ->
+    if @variables.is_verified == True:
+        | Help the user with their account.
+    else:
+        | Please verify your identity before we continue.
+```
 
-**Posture**
-The designed ratio of LLM latitude to authored determinism in a subagent. Agentic gives the LLM maximum latitude. Scripted gives the LLM zero discretion. Mixed applies selective controls where justified.
+*Signal:* intermittent behavior that is difficult to reproduce, where the agent sometimes follows an instruction and sometimes ignores it.
 
-**Handoff**
-One-way subagent transfer via `@utils.transition to` in `reasoning.actions`. The caller does not resume. The destination subagent owns the full response. The original subagent's `after_reasoning` does not fire if the handoff occurs mid-reasoning.
+*Fix:* convert `|` mode conditionals to `->` mode `if` / `else` blocks.
 
-**Delegation (Supervision)**
-Two-way subagent call via `@subagent.X` as an action reference in `reasoning.actions`. The child runs its full reasoning loop, produces a result, and control returns to the parent, which synthesizes the final response.
+---
 
-**DAG (Directed Acyclic Graph)**
-The mathematical structure for tool invocations and sequential dependencies in the Agent Graph. The "acyclic" property mathematically prevents infinite loops in the deterministic path.
+**Anti-Pattern 3: Scope Violation Chains**
 
-**FSM (Finite State Machine)**
-The mathematical structure for subagent transitions and retry logic in the Agent Graph. Managed by the Atlas engine. Enforces the 3–4 iteration hard cap. Records backward arrows for retry paths.
+Referencing `@outputs.X` or `@inputs.X` outside their valid scope windows, and then building further logic on top of the empty-string result. The action runs, the capture silently fails, and the downstream logic operates on an empty value.
 
-**Backward Arrow**
-An FSM retry edge recorded when the LLM attempts a tool call, receives an error, and reasons into an alternative approach. Visible as literal reverse edges in trace visualization tools.
+*Signal:* a `FunctionStep` with no change in `postVars`, followed by downstream behavior that ignores the action result.
 
-**GenAiPlannerBundle**
-The runtime metadata artifact created by the Salesforce platform when you publish an agent. The compiled output of the Atlas engine — what actually executes in production. Distinct from the AiAuthoringBundle (the `.agent` file developers author and deploy).
+*Fix:* capture all needed outputs immediately in `set` statements directly under the `run` block.
 
-**@variables**
-Session-persistent state. Valid anywhere in AgentScript logic and injectable into pipe text via `{!@variables.X}`. Persists for the life of the session.
+---
 
-**@outputs**
-Action return values. Valid only in `set` and `if` statements immediately after the action's `run` block. Expires after those statements complete. Using `@outputs` outside this window is a silent failure.
+**Anti-Pattern 4: Sensitive Parameters via Slot-Fill**
 
-**@inputs**
-Action input values. Valid only in `with` clauses during action invocation. Expires when the `with` clause finishes. Using `@inputs` in a subsequent `set` statement is a silent failure.
+Using the `...` ellipsis on action parameters that represent verified identities or sensitive record IDs. This allows the LLM to extract these values from user-provided conversation text, creating an injection vector.
 
-**10k Token Heuristic**
-Approximately 10,000 tokens as the architectural target for the total context package per reasoning transaction. Governs latency and LLM reasoning accuracy — not credit billing. A separate concern from action execution costs.
+*Signal:* any `with customer_id =...` or `with account_id =...` pattern where that ID should come from authenticated session state.
 
-**Credit Billing**
-20 Einstein credits per Apex or Flow action execution. 2–16 credits per Prompt Template action. Framework operations (transitions, conditionals, variable evaluations) are free. Completely separate from token count optimization.
+*Fix:* pin sensitive parameters to `@variables` that were populated during verified authentication.
 
-**Zero-Hallucination Pattern**
-Combining `filter_from_agent: True` and `is_used_by_planner: True` on an action output. Forces the LLM to invoke the action to obtain a routing value rather than guessing from conversation, while preventing the raw value from appearing in user-facing output.
+---
+
+**Anti-Pattern 5: Subagent System Override Without Invariant Restatement**
+
+Adding a subagent-level `system:` block for specialization without restating safety invariants from the global system block. The global block is silently replaced — invariants that should apply everywhere are dropped for that subagent.
+
+*Signal:* a subagent with its own system block that does not contain the same confidentiality, disclosure, and safety rules as the global block.
+
+*Fix:* treat every subagent system block as a complete, standalone identity definition. Restate all invariants explicitly.
+
+---
+
+**Anti-Pattern 6: LLM Action Chains Longer Than a Few Sequential Steps**
+
+Designing a subagent that requires a long sequence of LLM-driven action calls in `reasoning.actions` to complete its workflow. This risks hitting the platform's bounded iteration ceiling before the workflow finishes.
+
+*Signal:* session traces showing the reasoning loop terminated with multiple `LLMStep` entries and no clean user response, followed by an unexpected return to the router.
+
+*Fix:* move deterministic sequential steps to `run` blocks in Phase 1 (Section 6.2, Pattern 1), which do not consume LLM iterations. Reserve `reasoning.actions` for steps that genuinely require LLM judgment.
+
+---
+
+**Anti-Pattern 7: Global System Instructions That Contradict Subagent Posture**
+
+A global instruction that directs the LLM to behave one way (e.g., "always answer helpfully") while a routing or scripted subagent requires different behavior (e.g., "only route, never answer"). The LLM receives both simultaneously as one system prompt and resolves the contradiction probabilistically.
+
+*Signal:* a router subagent that occasionally answers questions directly instead of routing them.
+
+*Fix:* write the global system instruction in a posture-neutral way that is compatible with all subagent behaviors. Move task-specific behavioral direction into `reasoning.instructions` where it is scoped to the subagent.
+
+---
+
+**Anti-Pattern 8: Using State-Based Routing to Enforce Mandatory Pre-Classification Logic**
+
+Relying on a state-based routing condition on a semantically unrelated topic (e.g., "User Verification" with `RunningUserValidated == False`) to intercept all turns before a business topic runs. When HyperClassifier is enabled, this pattern fails silently: HyperClassifier routes to the most semantically relevant business topic first, and the state-based condition is evaluated afterward — too late to intercept.
+
+*Signal:* intermittent failures where mandatory verification or initialization logic is skipped when HyperClassifier routes to a business topic before state conditions are evaluated.
+
+*Fix:* use `before_reasoning` on `agent_router` for mandatory pre-classification logic. If HyperClassifier is required for its performance benefits, use a standard LLM on `agent_router` to preserve `before_reasoning` compatibility, and confine HyperClassifier to specialist subagents.
+
+---
+
+**Anti-Pattern 9: Transitions in before_reasoning Without Guards**
+
+Placing a `transition to` instruction in `before_reasoning` without a condition guard. Because `before_reasoning` fires on every parse — including after every tool call — an unconditional transition here fires repeatedly and creates an infinite routing loop.
+
+*Signal:* an agent that appears to route correctly on the first turn but enters an unresponsive loop on subsequent turns or multi-action flows.
+
+*Fix:* always wrap any `transition to` in `before_reasoning` inside an `if` condition that evaluates to True only when the transition is actually needed.
+
+---
+
+**Anti-Pattern 10: Treating Preview / Simulate as a Production Test Environment**
+
+Relying on Agentforce Builder's Preview and Simulate environment as a substitute for production testing. In the preview environment, actions are not executed live — the platform uses LLM simulation to emulate action responses. Simulation results reflect what the LLM believes the action would return, which may differ significantly from what the action actually returns with real data in production.
+
+*Signal:* an agent that behaves correctly in Preview but produces wrong or incomplete results in a real sandbox org, particularly in actions that depend on actual Salesforce records or external API responses.
+
+*Fix:* use the Agentforce Testing Center in a Sandbox org for pre-deployment validation. The Testing Center supports test cases created via CSV, AI-generation, knowledge base, or conversation import, evaluated with LLM-as-judge metrics. It is automatically enabled for all Agentforce customers in Sandbox orgs at no additional cost. Limits include 500 test cases per job; recommended batch sizes are 20-30 cases.
+
+---
+
+## 13. Terminology Reference
+
+**`@inputs.X`**
+The scope zone for action input values. Valid only in `with` clauses during action invocation. Scope expires when the `with` clause finishes. Do not reference outside this scope.
+
+**`@outputs.X`**
+The scope zone for action return values. Valid only in `set` and `if` statements immediately following the action's `run` block. Scope expires after those statements complete.
+
+**`@variables.X`**
+Session-persistent state. Valid anywhere in Agent Script logic and across subagent transitions. Injectable into pipe text via `{!@variables.X}`. Persists for the life of the session unless explicitly overwritten.
+
+**Agent Graph**
+The serialized execution plan compiled from the `.agent` source file when you publish an agent. Optimized for machine execution by the Atlas Reasoning Engine state machine executor. Not human-readable. Not directly accessible to authors.
+
+**Agent Script**
+The declarative DSL (domain-specific language) used to define Agentforce agent behavior. Combines deterministic logic instructions (`->`) with LLM reasoning prompts (`|`). Compiled into the GenAiPlannerBundle on publish.
+
+**Agentforce Builder**
+The recommended authoring environment for new agents, hosted within Agentforce Studio. Provides Canvas view (no-code) and Script view (direct Agent Script editing). Both views produce the same underlying artifact.
+
+**`after_reasoning`**
+The deterministic post-turn execution block. Runs after the reasoning loop produces a terminal response. Does not support `instructions:` wrapper. Does not support `|` pipe commands. Does not execute when a mid-reasoning handoff occurs or when `is_displayable: True` exits the loop early.
+
+**Atlas Reasoning Engine**
+The runtime planner at the heart of Agentforce. Receives a user message, interprets the Agent Script configuration, compiles it into an Agent Graph on publish, and executes it as a state machine. Combines a deterministic resolver, an LLM reasoning loop, and the Einstein Trust Layer. Sometimes referred to descriptively as the "Unified Planner" in architectural discussion (see *Unified Planner* entry).
+
+**`available when`**
+A Phase 1 hard filter on actions in `reasoning.actions`. When the condition evaluates to False, the action is completely removed from the tool schema. The LLM has no awareness the action exists. Not a suggestion — an enforced removal.
+
+**`before_reasoning`**
+The deterministic pre-parse execution block. Runs at the start of every parse, before HyperClassifier makes any routing decision, before any LLM is involved. Does not support `instructions:` wrapper. Use for session initialization, authentication gates, and mandatory data pre-loading. Never place unconditional `transition to` here — it fires on every parse and creates infinite loops.
+
+**Canvas view**
+The visual, no-code authoring surface within Agentforce Builder. Produces the same Agent Script artifact as Script view. Use for designing agent structure without writing raw syntax.
+
+**Chain-of-Thought (CoT) reasoning**
+The previous Agentforce model's reasoning approach. Generated a sequential plan and executed steps one by one. Replaced by the ReAct (Reasoning and Acting) approach in the current hybrid model.
+
+**Deterministic Resolution (Phase 1)**
+The first phase of every reasoning iteration. Evaluates conditions, executes `run` blocks, captures variables, injects tokens, filters tool schemas, and fires immediate transitions. Always produces the same output given the same input state. No LLM involved.
+
+**EinsteinHyperClassifier**
+A specialized model purpose-built for subagent classification. Recasts routing as a single-token prediction problem. 30x faster than general-purpose LLMs for classification. Mutually exclusive with `before_reasoning` and `after_reasoning` on the same subagent. Can only use `@utils.transition` as a tool.
 
 **Einstein Trust Layer (ETL)**
-The runtime security boundary between Phase 1 output and the LLM. Enforces zero-retention of CRM grounding data, screens inputs for prompt injection and toxicity, screens model outputs before they return to the reasoning loop, and enforces Salesforce sharing rules and field-level security at the LLM boundary. Operates on every inference call, in every session, in every production deployment.
+A mandatory architectural component that wraps every LLM call across all Agentforce deployments. Enforces data masking (note: disabled for agent interactions), prompt defense, toxicity scoring, zero-data retention with external providers, and audit logging to Data 360.
 
-**Zero-Retention Policy**
-The ETL guarantee that customer CRM data used for grounding is never stored, logged, or used to train external public models by the underlying LLM providers. Enforced at the LLM gateway boundary. A contractual and architectural guarantee from Salesforce.
+**Flex Credits**
+The action-based billing model for Agentforce. Credits are consumed when actions execute. Utilities such as `@utils.escalate`, `@utils.setVariables`, and `@utils.end_session` are generally not billed. Refer to Salesforce pricing documentation for current rates.
+
+**`filter_from_agent: True`**
+An action output flag that prevents the LLM from displaying the output value to the user. Used in the zero-hallucination routing pattern to keep routing signals internal.
+
+**GenAiPlannerBundle**
+The compiled metadata artifact produced by the Salesforce compiler from the `.agent` source file on publish. The artifact the Atlas Reasoning Engine executes at runtime. Contains both `AiAuthoringBundle` and `BotVersion` metadata for committed agents.
+
+**Handoff**
+A one-way subagent transfer via `@utils.transition to`. Control transfers completely to the called subagent. The caller does not resume. The original subagent's `after_reasoning` does not fire if the handoff occurs mid-reasoning.
+
+**Delegation**
+A control flow model where a parent subagent calls a child subagent as an action reference. The child runs its full reasoning loop, produces a result, and returns control to the parent for synthesis. Creates more composable, orchestratable agents than handoff.
+
+**`is_displayable: True`**
+An action output flag that causes the platform to exit the reasoning loop immediately when the LLM surfaces that output. Bypasses `after_reasoning`. Logic that must execute reliably should be placed in `before_reasoning` of the subsequent subagent when `is_displayable: True` is in the flow.
+
+**`is_used_by_planner: True`**
+An action output flag that allows the LLM to reason about the output value for routing decisions. Used in combination with `filter_from_agent: True` to create the zero-hallucination routing pattern.
+
+**Linked variable**
+A read-only variable populated from external session context at session start. Must have a `source` declaration. Must not have a default value. Primarily used for `EndUserId`, `ContactId`, and similar session-established identifiers.
+
+**LLM Reasoning (Phase 2)**
+The second phase of each reasoning iteration. The foundation model receives the resolved prompt string and filtered tool schemas from Phase 1, then decides to call an action, produce a terminal response, or delegate to a subagent. Triggered only at Agent Graph nodes that contain prompt instructions.
+
+**Mutable variable**
+A session-persistent, read-write variable. Must have a default value at definition time. Valid anywhere in Agent Script logic and across subagent transitions. Boolean defaults must be capitalized (`True`/`False`).
+
+**Parse**
+The primary unit of execution in Agent Script. A single complete cycle through a subagent's `before_reasoning`, `reasoning`, and `after_reasoning` blocks. The Atlas Reasoning Engine initiates a parse on first entry into a subagent, after every tool call, and on every new user turn within the same subagent. One user turn can trigger multiple parses.
+
+**Posture**
+The spectrum between fully agentic (maximum LLM latitude) and fully scripted (maximum deterministic control) for a subagent. The default is agentic. Deterministic controls are added only when one of the five valid justifications applies.
+
+**`reasoning.instructions`**
+The primary instruction surface for subagent reasoning. Rebuilt on every parse, including after every tool call. Supports literal mode (`|`) and procedural mode (`->`). Use `->` mode whenever the block contains conditionals, `run` statements, `set` statements, or variable injections.
+
+**Re-resolution**
+The process of rebuilding the `reasoning.instructions` block from scratch after each tool call, using updated variable state. Ensures the LLM always sees instructions reflecting current state. Requires post-action condition checks to be placed at the top of `->` blocks.
+
+**ReAct (Reasoning and Acting)**
+The reasoning approach used by the Atlas Reasoning Engine. Loops through reason, act, and observe cycles until a user goal is fulfilled. Replaced the previous Chain-of-Thought (CoT) approach. Enables adaptive, human-like conversational experiences while remaining grounded in deterministic business logic.
+
+**Script view**
+The direct Agent Script editing surface within Agentforce Builder. Produces the same underlying artifact as Canvas view. Use for precise control over logic instructions, prompt text, and Agent Script syntax.
+
+**`setVariables`**
+A `@utils` slot-fill utility that instructs the LLM to capture a variable value from conversation using a natural language description. A free framework utility that does not consume action credits.
+
+**`start_agent`**
+The entry subagent for every Agentforce turn, without exception. On every customer utterance, the agent begins execution at this block. Subagents do not resume between turns — each turn restarts at `start_agent` and routing classification runs again.
+
+**Transition (bare)**
+The `transition to @subagent.X` form valid in `before_reasoning`, `after_reasoning`, and `reasoning.instructions ->` blocks. Fully deterministic, no LLM involvement. One-way.
+
+**Transition (`@utils.transition`)**
+The `@utils.transition to @subagent.X` form valid only inside `reasoning.actions`. LLM-driven — the LLM decides when to invoke the transition. One-way.
+
+**Unified Planner**
+A descriptive characterization used in this guide and some architectural discussions to refer to the Atlas Reasoning Engine — the same hybrid execution environment that plans and orchestrates Agentforce agent turns. *Note: this term does not appear verbatim in official Salesforce platform documentation. It is used here as a descriptive label consistent with the engine's function, not as confirmed Salesforce nomenclature. Readers should use "Atlas Reasoning Engine" when citing official sources.*
+
+**Zero-hallucination routing pattern**
+A pattern combining `filter_from_agent: True` and `is_used_by_planner: True` on a classification action's output. The LLM must call the action to obtain the routing value — it has no cached or hallucinated value to use — and can then act on the real result for routing without exposing it to the user.
 
 ---
-
-*This guide covers the Agentforce Reasoning Engine (Daisy) as documented in Salesforce's Agentforce developer documentation and platform best practices.*
