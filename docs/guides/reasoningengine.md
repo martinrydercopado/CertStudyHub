@@ -2,11 +2,11 @@
 
 **How Agentforce Thinks — Turn-by-Turn Mechanics, Determinism, and LLM Probabilism**
 
-*Audience: Success Architects | August 2026*
+*Audience: Success Architects | Version 4 | August 2026*
+
 ---
 
 ## Table of Contents
-
 1. [The Mental Model](#1-the-mental-model)
    - 1.1 [What the Atlas Reasoning Engine Is](#11-what-the-atlas-reasoning-engine-is)
    - 1.2 [Why Hybrid Reasoning Exists: The Previous Model's Limits](#12-why-hybrid-reasoning-exists-the-previous-models-limits)
@@ -18,31 +18,36 @@
    - 2.2 [Phase 2: LLM Reasoning](#22-phase-2-llm-reasoning)
    - 2.3 [When the LLM Is Actually Triggered](#23-when-the-llm-is-actually-triggered)
    - 2.4 [Why This Split Is the Primary Diagnostic Tool](#24-why-this-split-is-the-primary-diagnostic-tool)
+   - 2.5 [Global Runtime Configuration: config.runtime](#25-global-runtime-configuration-configruntime)
 3. [The Complete Turn Anatomy](#3-the-complete-turn-anatomy)
    - 3.1 [The Re-Resolution Loop: The Inner Heartbeat](#31-the-re-resolution-loop-the-inner-heartbeat)
    - 3.2 [LLM Recovery After Failed Actions](#32-llm-recovery-after-failed-actions)
    - 3.3 [What the LLM Does NOT See](#33-what-the-llm-does-not-see)
-4. [The Five Instruction Surfaces](#4-the-five-instruction-surfaces)
+4. [The Instruction Surfaces](#4-the-instruction-surfaces)
    - 4.1 [Global System Instructions: The Persona Layer](#41-global-system-instructions-the-persona-layer)
    - 4.2 [Subagent System Override: Full Replacement, Not Merge](#42-subagent-system-override-full-replacement-not-merge)
    - 4.3 [reasoning.instructions: Two Modes, One Critical Rule](#43-reasoninginstructions-two-modes-one-critical-rule)
    - 4.4 [before_reasoning: The Pre-Parse, Pre-Classifier Gate](#44-before_reasoning-the-pre-parse-pre-classifier-gate)
    - 4.5 [after_reasoning: The Post-Turn Gate](#45-after_reasoning-the-post-turn-gate)
+   - 4.5.1 [after_response: The Connected Subagent Return Surface](#451-after_response-the-connected-subagent-return-surface)
 5. [Variables and State in the Reasoning Loop](#5-variables-and-state-in-the-reasoning-loop)
    - 5.1 [Mutable vs. Linked Variables](#51-mutable-vs-linked-variables)
-   - 5.2 [The Three Scope Zones](#52-the-three-scope-zones)
+   - 5.2 [The Four Scope Zones](#52-the-four-scope-zones)
    - 5.3 [The Silent Failure Zone](#53-the-silent-failure-zone)
    - 5.4 [Variable Persistence Across Subagents](#54-variable-persistence-across-subagents)
    - 5.5 [The setVariables Slot-Fill Utility](#55-the-setvariables-slot-fill-utility)
+   - 5.5.1 [ask for: Structured Variable Capture (Pilot)](#551-ask-for-structured-variable-capture-pilot)
    - 5.6 [The Three Input Binding Patterns](#56-the-three-input-binding-patterns)
 6. [Actions and the Reasoning Loop](#6-actions-and-the-reasoning-loop)
    - 6.1 [Deterministic vs. LLM-Driven Invocation](#61-deterministic-vs-llm-driven-invocation)
    - 6.2 [The Four Action Chaining Patterns](#62-the-four-action-chaining-patterns)
    - 6.3 [available when: Hard Filter, Not Soft Hint](#63-available-when-hard-filter-not-soft-hint)
-   - 6.4 [The Three Transition Mechanisms](#64-the-three-transition-mechanisms)
+   - 6.4 [The Four Transition Mechanisms](#64-the-four-transition-mechanisms)
    - 6.5 [Handoff vs. Delegation](#65-handoff-vs-delegation)
    - 6.6 [The Zero-Hallucination Routing Pattern](#66-the-zero-hallucination-routing-pattern)
+   - 6.7 [Inline Skills (Pilot)](#67-inline-skills-pilot)
 7. [The start_agent Subagent and Turn Restart Behavior](#7-the-start_agent-subagent-and-turn-restart-behavior)
+   - 7.5 [Goal-Based Agents: Beyond the Turn Model (Pilot)](#75-goal-based-agents-beyond-the-turn-model-pilot)
 8. [The EinsteinHyperClassifier](#8-the-einsteinhyperclassifier)
    - 8.1 [What HyperClassifier Is](#81-what-hyperclassifier-is)
    - 8.2 [How It Works: Single-Token Prediction](#82-how-it-works-single-token-prediction)
@@ -115,7 +120,7 @@ The most important concept in all of Agentforce is the clean division of respons
 
 | Deterministic Layer (authored control) | LLM Layer (probabilistic judgment) |
 |---|---|
-| `if` / `else` evaluation | Which action to call |
+| `if` / `else if` / `else` evaluation | Which action to call |
 | Variable injection | How to fill slot parameters |
 | `run @actions.X` execution | What to say to the user |
 | `available when` filtering | Whether to respond or call a tool |
@@ -125,6 +130,25 @@ The most important concept in all of Agentforce is the clean division of respons
 Here is the critical insight: **the LLM never sees raw Agent Script syntax.** It never sees `if` blocks, `run` statements, `@variables.X` references, or `available when` guards. It only ever sees the output of the deterministic pass — a clean, resolved prompt string plus a filtered set of tool schemas.
 
 Deterministic logic controls **what the agent knows**. The LLM controls **whether and how to act** on that knowledge.
+
+---
+
+### 1.4 Agentforce Builder: Where You Author
+
+Agentforce Builder is the recommended authoring environment for new agents, hosted within Agentforce Studio. It provides two editing surfaces that produce the same underlying artifact:
+
+- **Canvas view** — a no-code drag-and-drop interface for configuring subagents, actions, and instructions visually.
+- **Script view** — direct Agent Script editing. This is required for features that Canvas does not yet support, including `else if` conditional chains (see Section 4.3) and several pilot constructs introduced in 262.12 and 262.14.
+
+When you publish from either view, the compiler produces the **GenAiPlannerBundle** metadata artifact.
+
+---
+
+### 1.5 The Atlas Engine and the Agent Graph
+
+The **Agent Graph** is the serialized execution plan compiled from your `.agent` source file at publish time. It is optimized for machine execution by the Atlas Reasoning Engine state machine executor. It is not human-readable and is not directly accessible to authors.
+
+When diagnosing agent behavior, you work with session traces — not the Agent Graph directly. The trace reflects the actual execution path the engine followed, which is the reliable source of truth for what the deterministic resolver did versus what the LLM decided.
 
 ---
 
@@ -227,6 +251,39 @@ This binary framing eliminates a large class of guesswork before you ever read a
 
 ---
 
+### 2.5 Global Runtime Configuration: config.runtime
+
+*(New in 262.12)*
+
+The `config.runtime` block is a top-level configuration section that exposes boolean flags controlling global engine behaviors. These flags compile into `global_configuration.runtime` at publish time and affect the entire agent, not individual subagents.
+
+```yaml
+config:
+    agent_type: "StandardAgent"
+    runtime:
+        streaming: true
+        thought_chunks: false
+        citation: true
+        groundedness: true
+        reset_to_initial_node: false
+```
+
+**The five flags:**
+
+| Flag | Effect |
+|---|---|
+| `streaming` | Enables token-by-token streaming of agent responses to the client. |
+| `thought_chunks` | Emits intermediate reasoning steps to the client during processing. |
+| `citation` | Attaches source citations to grounded responses. |
+| `groundedness` | Activates groundedness validation (see Section 2.3, point 4). As of 262.12, architects have an explicit switch for this behavior rather than relying on implicit platform defaults. |
+| `reset_to_initial_node` | When `True`, the engine resets to `start_agent` after each turn rather than preserving any subagent position. Directly relevant to the stateless turn model described in Section 7. |
+
+> **Hard compile error:** an empty `runtime:` block — present but with no flags set — is a compile error as of 262.12. Either set at least one flag or omit the block entirely. An omitted block uses platform defaults for all flags.
+
+**Architectural note on `groundedness`:** prior to 262.12, groundedness validation was an implicit platform behavior with no author-controlled switch. The explicit flag means that architects designing agents for cost-sensitive deployments can now make a deliberate tradeoff: disable groundedness validation to eliminate the extra LLM call described in Section 2.3 point 4, accepting the reduced protection against hallucinated grounding. This is a consequential decision that should be made intentionally.
+
+---
+
 ## 3. The Complete Turn Anatomy
 
 ### What a Turn Actually Contains
@@ -305,7 +362,7 @@ Understanding what the LLM cannot see is just as important as understanding what
 
 **The LLM never sees:**
 
-- Raw `if` or `else` keywords or the conditions they contain
+- Raw `if`, `else if`, or `else` keywords or the conditions they contain
 - `run` statements or any indication one fired
 - `set` statements
 - `available when` conditions — failing actions simply do not appear in the tool schema, with no indication they ever existed
@@ -314,28 +371,32 @@ Understanding what the LLM cannot see is just as important as understanding what
 - `@variables.X` syntax — it only sees the resolved value after `{!@variables.X}` injection
 - Any action invocations that fired deterministically during Phase 1
 - Graph nodes that were traversed deterministically — the LLM is only invoked at nodes with prompt instructions
+- `@system_variables.X` syntax — system variables are resolved before the prompt is assembled; the LLM sees only the injected value
 
 **The practical authoring rule:** read your `reasoning.instructions` pipe text as if you were the LLM receiving it. Does it make sense as a standalone English instruction? Does it give you enough context to act? Or does it reference Agent Script constructs? If it references constructs, it needs to be rewritten.
 
 ---
 
-## 4. The Five Instruction Surfaces
+## 4. The Instruction Surfaces
 
 ### Why Multiple Surfaces Exist
 
-In simple prompt-based systems, there is one instruction: the prompt. In Agentforce, instructions are organized across five distinct surfaces, each with a different lifecycle, a different processor, and different rules. Each surface solves a specific problem: some instructions should apply universally, some should vary by subagent context, some should be rebuilt on every action call, and some should fire with no LLM involvement at all.
+In simple prompt-based systems, there is one instruction: the prompt. In Agentforce, instructions are organized across several distinct surfaces, each with a different lifecycle, a different processor, and different rules. Each surface solves a specific problem: some instructions should apply universally, some should vary by subagent context, some should be rebuilt on every action call, and some should fire with no LLM involvement at all.
 
 Conflating these surfaces — using the wrong one for the wrong job — is one of the most common sources of both bugs and compile errors.
 
 **Quick reference:**
 
-| Surface | Fires | Processed By | Supports `instructions:` Wrapper |
-|---|---|---|---|
-| Global system | Every iteration | LLM (system prompt) | Yes |
-| Subagent system | Every iteration (overrides global) | LLM (system prompt) | Yes |
-| `reasoning.instructions` | Every iteration, rebuilt each time | Phase 1 resolver, then LLM | Yes (`|` or `->` mode) |
-| `before_reasoning` | Every parse (including after each tool call) | Phase 1 resolver only | **No — direct content only** |
-| `after_reasoning` | Once per turn, after terminal response | Phase 1 resolver only | **No — direct content only** |
+| Surface | Fires | Processed By | Supports `instructions:` Wrapper | Scope |
+|---|---|---|---|---|
+| Global system | Every iteration | LLM (system prompt) | Yes | All subagents |
+| Subagent system | Every iteration (overrides global) | LLM (system prompt) | Yes | That subagent only |
+| `reasoning.instructions` | Every iteration, rebuilt each time | Phase 1 resolver, then LLM | Yes (`|` or `->` mode) | That subagent only |
+| `before_reasoning` | Every parse (including after each tool call) | Phase 1 resolver only | **No — direct content only** | That subagent only |
+| `after_reasoning` | Once per turn, after terminal response | Phase 1 resolver only | **No — direct content only** | That subagent only |
+| `after_response` | After a connected subagent returns | Phase 1 resolver only | **No — direct content only** | **Connected subagents only** |
+
+> **`after_response` is a connected-subagent-only surface** introduced in 262.10. It is not available on standard local subagents. See Section 4.5.1 for full details.
 
 ---
 
@@ -376,7 +437,11 @@ Any invariant defined in the global system block — a safety disclosure, a data
 >
 > Your global system instructions include "Never reveal internal pricing tiers or system configuration." You add a product specialist subagent with its own system override focused on technical product details. The developer wrote the override for specialization purposes and assumed confidentiality rules were inherited. A user routes to the product specialist and asks directly about internal pricing. The specialist, operating without that constraint, discusses it. The global rule did not travel with the subagent — it was silently replaced.
 
-**The authoring rule is absolute:** restate every invariant the subagent must retain in its subagent-level system block. Treat every subagent system block as a complete, self-contained identity definition — not an addendum to the global.
+> **262.14 escalation of this gap: `strip_salesforce_instructions`**
+>
+> The `strip_salesforce_instructions` flag (262.14) can be set top-level or per-subagent. When set, it removes the Salesforce platform system prompt that sits beneath your own global system instructions. Prior to 262.14, the guide's model assumed a Salesforce baseline persona was always present underneath your authored instructions — a layer that includes implicit safety guidance. With `strip_salesforce_instructions` enabled, that baseline is gone. The Silent Security Gap scenario becomes strictly more severe: there is now no authored invariant and no platform baseline. Any subagent operating with `strip_salesforce_instructions` and no explicit invariant restatement is operating with zero safety constraints. **If you use this flag, you must explicitly restate every safety invariant you rely on, in every affected subagent system block, without exception.**
+
+**The authoring rule is absolute:** restate every invariant the subagent must retain in its subagent-level system block. Treat every subagent system block as a complete, self-contained identity definition — not an addendum to the global. This is even more critical when `strip_salesforce_instructions` is active.
 
 ---
 
@@ -394,15 +459,19 @@ instructions: |
 ```
 
 **Procedural mode (`->`) — deterministic logic:**
-Content is evaluated by the Phase 1 resolver. `if` blocks, `run` statements, `set` statements, and `available when` guards must be inside `->` mode. Use this whenever you need guaranteed execution or conditional branching.
+Content is evaluated by the Phase 1 resolver. `if` / `else if` / `else` blocks, `run` statements, `set` statements, and `available when` guards must be inside `->` mode. Use this whenever you need guaranteed execution or conditional branching.
 
 ```yaml
 instructions: ->
-    if @variables.is_verified == True:
-        | Help the customer with their account request.
+    if @variables.tier == 'premium':
+        | You are assisting a premium customer. Prioritize their request.
+    else if @variables.tier == 'standard':
+        | Help the customer with their request per standard guidelines.
     else:
-        | Please verify your identity before we continue.
+        | Please verify your account tier before we continue.
 ```
+
+> **`else if` support:** `else if` chaining in `->` mode is supported as of 262.12. Note that Canvas view does not yet render `else if` chains visually — use Script view when authoring multi-branch conditionals. Canvas may rewrite `else if` chains incorrectly if the script is opened and saved in Canvas view.
 
 **The one critical rule:** you cannot mix modes in a single `instructions:` block. Choose `|` or `->`. If your block needs any `if`, `run`, or `set` statement, the entire block must use `->`.
 
@@ -501,6 +570,29 @@ after_reasoning:
 
 ---
 
+### 4.5.1 after_response: The Connected Subagent Return Surface
+
+*(New in 262.10 — connected subagents only)*
+
+`after_response` is a sixth instruction surface available exclusively on `connected_subagent` nodes. It fires after a connected (external or BYON) agent returns control to the orchestrator — filling the gap where `after_reasoning` cannot fire because connected subagents have no local reasoning loop.
+
+**Why this surface exists:** when a standard local subagent completes its turn, `after_reasoning` fires in the normal way. But a connected subagent runs its reasoning loop remotely. The orchestrator receives a response payload — it never ran a local reasoning loop — so there is no `after_reasoning` to trigger. `after_response` is the hook that fires in that position instead.
+
+**Accepted statements:** `run`, `set`, `if`, and `transition`. The pipe (`|`) instruction is explicitly disallowed. This is the same prohibition as `after_reasoning`, and for the same reason: there is no reasoning loop active at this point, so there is no LLM to receive a prompt instruction.
+
+```yaml
+connected_subagent:
+    target: agent://my-external-agent
+    after_response:
+        if @variables.handoff_result == 'escalate':
+            transition to @subagent.human_handoff
+        set @variables.external_complete = True
+```
+
+**Design consideration:** use `after_response` for state updates, routing decisions, and cleanup logic that must happen after a connected agent returns. Treat it the same way you treat `after_reasoning` in terms of what can and cannot appear there — and apply the same bypass awareness: if the connected subagent itself transitions mid-execution, `after_response` may not fire.
+
+---
+
 ## 5. Variables and State in the Reasoning Loop
 
 ### Why State Management Is Different Here
@@ -524,6 +616,8 @@ variables:
 
 **Critical syntax rule:** boolean default values must be capitalized — `True` or `False`. The parser rejects lowercase `true` and `false`. This produces a compile error that does not always clearly identify the capitalization as the cause.
 
+**Type deprecation note (262.10):** the `id` primitive type is deprecated in favor of `string`. If your variable definitions use `mutable id`, migrate them to `mutable string`. The `id` type will produce a deprecation warning and may be removed in a future release.
+
 **Linked variables** are read-only values populated from external session context — information Salesforce establishes at session start. They must have a `source` declaration and must **not** have a default value. Providing a default value on a linked variable is a compile error.
 
 ```yaml
@@ -537,9 +631,11 @@ Linked variables are the primary mechanism for knowing who the user is without a
 
 ---
 
-### 5.2 The Three Scope Zones
+### 5.2 The Four Scope Zones
 
-Agentforce defines three distinct variable scope zones. Each holds a different kind of value, is valid in a different context, and behaves very differently when used outside its valid scope.
+*(Updated in 262.12 and 262.14)*
+
+Agentforce defines four distinct variable Each holds a different kind of value, is valid in a different context, and behaves very differently when used outside its valid scope.
 
 **`@variables.X` — Session-persistent state**
 Valid anywhere in Agent Script logic and injectable into pipe text via `{!@variables.X}`. Persists for the life of the session unless explicitly overwritten.
@@ -550,7 +646,19 @@ Valid **only** in `set` and `if` statements immediately after the action's `run`
 **`@inputs.X` — Action input values**
 Valid **only** in `with` clauses during action invocation. Not valid in subsequent `set` statements or post-execution checks. Scope expires when the `with` clause finishes.
 
-**The correct mental model:** `@outputs` and `@inputs` are short-lived windows, not persistent stores. The moment an action's `with` clause or immediate post-run block completes, those windows close. Everything that needs to survive beyond the action must be explicitly transferred to `@variables` within those windows.
+**`@system_variables.X` — Read-only platform context**
+A set of predefined, read-only variables populated by the platform at the start of every inbound turn. They are resolved before the prompt is assembled — the LLM sees the injected value, not the syntax. Current system variables include:
+
+| Variable | Populated | Description |
+|---|---|---|
+| `@system_variables.current_modality` | Turn start (262.12) | The channel modality, e.g. `"voice"` or `"text"`. |
+| `@system_variables.current_connection` | Turn start (262.12) | The connection identifier for the current inbound session. |
+| `@system_variables.last_reply.interrupted` | Turn start (262.14, voice) | Boolean — whether the agent's last reply was interrupted by the user. |
+| `@system_variables.last_reply.interrupted_heard_text` | Turn start (262.14, voice) | The portion of the agent's last reply the user heard before interrupting. |
+
+Use `@system_variables.current_modality` to write subagents that behave differently on voice versus text channels — for example, suppressing markdown formatting or adjusting response length for voice.
+
+**The correct mental model for `@outputs` and `@inputs`:** these are short-lived windows, not persistent stores. The moment an action's `with` clause or immediate post-run block completes, those windows close. Everything that needs to survive beyond the action must be explicitly transferred to `@variables` within those windows.
 
 ---
 
@@ -606,6 +714,40 @@ reasoning:
 
 ---
 
+### 5.5.1 ask for: Structured Variable Capture (Pilot)
+
+*(Introduced as `collect` in 262.12; renamed `ask for` in 262.14. Syntax is explicitly flagged as pilot and may still change before GA. No official documentation page exists at time of publication.)*
+
+`ask for` is a structured variable capture statement that sits inside `reasoning.instructions` and gathers one variable at a time from the user in a controlled, resumable way. It is the natural successor to `@utils.setVariables` for scenarios where you need deterministic, turn-by-turn variable collection with branching, resume logic, and escape handling.
+
+```yaml
+instructions: ->
+    ask for @variables.preferred_contact_method
+        instructions: guidance
+            | How would you like to be contacted? Options are email, phone, or chat.
+    if @variables.preferred_contact_method == 'phone':
+        ask for @variables.phone_number
+            instructions: guidance
+                | Please provide your phone number including area code.
+```
+
+**How it works:**
+
+- The engine collects one variable at a time. After the user responds, the variable is set and the next statement in the block evaluates.
+- **If-branching** is fully supported inside `ask for` sequences, allowing the collection flow to branch based on already-collected values.
+- **Auto-resume:** if the user provides additional information mid-collection without being explicitly asked, the engine incorporates it rather than discarding it.
+- **Cancel / change-of-intent handling:** if the user expresses intent to cancel or change direction, the engine handles the escape without looping.
+- The variable's own `description` field flows to the LLM as per-field context — a cleaner mechanism than writing the entire extraction instruction inline.
+- The `instructions: guidance` block accepts paraphrasable natural language. The LLM may rephrase this to fit conversational context, unlike a `|` prompt that is injected verbatim.
+
+**Relationship to `setVariables`:** `ask for` is more structured than `setVariables`. Use `setVariables` for opportunistic, single-variable capture during a broader conversational flow. Use `ask for` when the variable collection sequence itself is the main purpose of the subagent turn.
+
+**The `collect-experimental` lint:** in 262.12, the `collect` form emitted an info-level `collect-experimental` lint once per script. As of 262.14, the statement is renamed `ask for` and the lint is no longer emitted under that name. If you have existing scripts using `collect`, migrate them to `ask for` syntax before GA.
+
+> **Pilot caveat:** syntax for `ask for` may still change before general availability. Validate against the current Agent Script compiler before relying on this feature in production workflows.
+
+---
+
 ### 5.6 The Three Input Binding Patterns
 
 Action parameters can be populated three ways. The choice between them has direct security and reliability implications.
@@ -620,7 +762,9 @@ Action parameters can be populated three ways. The choice between them has direc
 >
 > An agent processes refunds. The `issue_refund` action requires a `customer_id` parameter. If you use `with customer_id =...`, the LLM extracts a customer ID from the conversation — meaning a malicious user could type a different customer's ID and potentially trigger a refund against someone else's account. If you use `with customer_id = @variables.customer_id`, where that variable was set during verified authentication, the LLM has no ability to override the value from conversation. The verified ID flows through deterministically. This is the security-critical reason to choose variable binding over slot-fill for sensitive parameters.
 
-**The rule:** use `@variables` binding for verified identities, confirmed record IDs, and any sensitive value that should not be extractable from arbitrary user input. Use the ellipsis only for parameters the LLM legitimately needs to extract from conversation.
+> **262.10 default slot-fill behavior — check your action definitions:** as of 262.10, if an action input is marked `is_required: true` and has neither a `default` value nor a `with` clause, the compiler automatically marks it `slot_filled_by: LLM`. Previously, this gap was silent — the input was simply undefined. Now it silently becomes ellipsis-style LLM slot-fill. This is precisely the injection-risk pattern described above. **Audit your action definitions for required inputs without explicit binding.** Any `is_required` input that should be bound to a verified session variable but has no `with` clause will now default to LLM slot-fill as of 262.10 — and the behavior change is silent at runtime.
+
+**The rule:** use `@variables` binding for verified identities, confirmed record IDs, and any sensitive value that should not be extractable from arbitrary user input. Use the ellipsis only for parameters the LLM legitimately needs to extract from conversation. Never leave a required sensitive parameter unbound.
 
 ---
 
@@ -719,21 +863,38 @@ actions:
 
 When `is_verified` is False, `issue_refund` is invisible to the LLM. No amount of prompting, social engineering, or natural language instruction from the user can make the LLM call an action that does not appear in its tool list.
 
+**Lint hardening (262.10):** the compiler now flags `available when` conditions that resolve to non-boolean literals at compile time. If your condition evaluates to a string or number rather than a boolean, you will receive a lint warning. Treat this as a correctness signal — a non-boolean `available when` condition has undefined filtering behavior and should be rewritten to evaluate cleanly to `True` or `False`.
+
 **The action loop problem:** the platform does not automatically suppress an action after it has been called once. If `available when` remains True after the action runs and the reasoning instructions are ambiguous, the LLM will call the same action on every parse. Close the gate deterministically after execution — either by setting the gate variable to a closed state in post-execution logic, or by using a separate `has_run` boolean.
 
 ---
 
-### 6.4 The Three Transition Mechanisms
+### 6.4 The Four Transition Mechanisms
 
-Transitions are how agents move between subagents. Agentforce has three distinct mechanisms with strict rules about where each can be used. Using the wrong one in the wrong context produces a compile error.
+*(Renamed from "The Three Transition Mechanisms" — `escalate` added as of 262.14, `connected_subagent` as transition target added as of 262.10)*
 
-| Mechanism | Valid Context | LLM Involved | Direction |
-|---|---|---|---|
-| Bare `transition to @subagent.X` | `before_reasoning`, `after_reasoning`, `reasoning.instructions ->` | No | One-way |
-| `@utils.transition to @subagent.X` | `reasoning.actions` only | Yes (LLM decides when) | One-way |
-| `@subagent.X` as action reference | `reasoning.actions` only | Yes (LLM decides when) | Returns to caller |
+Transitions are how agents move between subagents. Agentforce has four distinct mechanisms with strict rules about where each can be used. Using the wrong one in the wrong context produces a compile error.
 
-All transitions are one-way by default. There is no return of control to the calling subagent unless you explicitly create a return transition in the destination subagent. When transitioning back to a subagent, flow starts at the **beginning** of that subagent — not where it last left off. The `escalate` keyword is reserved and cannot be used as a subagent or action name.
+| Mechanism | Valid Context | LLM Involved | Direction | Notes |
+|---|---|---|---|---|
+| Bare `transition to @subagent.X` | `before_reasoning`, `after_reasoning`, `reasoning.instructions ->` | No | One-way | Standard local subagents and connected subagents |
+| `@utils.transition to @subagent.X` | `reasoning.actions` only | Yes (LLM decides when) | One-way | Standard local subagents and connected subagents |
+| `@subagent.X` as action reference | `reasoning.actions` only | Yes (LLM decides when) | Returns to caller | Standard local subagents only |
+| `escalate` statement | Top-level or `reasoning.instructions` | No | One-way, single-fire | See below |
+
+**Connected subagents as transition targets (262.10):** `transition to @connected_subagent.X` now compiles cleanly through the normal supervision path. The interim compile warning from 262.8 is fully resolved. Both bare and `@utils.` forms support connected subagent targets.
+
+**The `escalate` statement (262.14):** `escalate` is a deterministic, single-fire statement that hands off to a fixed escalation target — typically a human agent or external queue. It fires exactly once and does not return control to the calling subagent.
+
+```yaml
+instructions: ->
+    if @variables.sentiment_score < 0.2:
+        escalate
+```
+
+The single-fire guarantee is architecturally significant. Unlike a `transition to` inside a looping `before_reasoning` block, `escalate` cannot re-fire on subsequent parses. This makes it the correct choice for escalation paths that must not loop — exactly the scenario that Anti-Pattern 9 warns about when unconditional transitions appear in `before_reasoning`. If your escalation logic previously used an unguarded `transition to` in `before_reasoning`, migrating it to `escalate` eliminates the loop risk by design.
+
+**Other transition rules:** all non-escalate transitions are one-way by default. There is no return of control to the calling subagent unless you explicitly create a return transition in the destination subagent. When transitioning back to a subagent, flow starts at the **beginning** of that subagent — not where it last left off.
 
 **Note on conditional transitions:** a conditional `transition to` at the top of a `reasoning.instructions ->` block executes before any prompt begins. This makes it more reliable for enforcing mandatory prerequisite flows than `available when` filtering — the transition fires before the LLM has seen any context at all.
 
@@ -746,6 +907,14 @@ Handoff and delegation represent two fundamentally different control flow models
 **Handoff (`@utils.transition to`):** control transfers completely to the called subagent. The caller does not resume. The destination owns the full response. The original subagent's `after_reasoning` does not fire if the handoff occurs mid-reasoning. Use when the destination should completely own the user experience from that point forward.
 
 **Delegation (`@subagent.X` as action reference):** the parent orchestrates, the child runs its full reasoning loop and produces a result, and control returns to the parent, which synthesizes the final response. Use when the parent needs to coordinate across multiple children or incorporate results into a unified response.
+
+**`delegate_escalation` on connected subagents (262.12):** connected subagents expose a `delegate_escalation` boolean (default `True`). When `True`, any escalation triggered within the connected subagent uses the connected subagent's own outbound escalation flow. When `False`, escalation delegates back to the orchestrator's escalation flow instead. This matters when the connected agent is a third-party or cross-org agent with its own escalation configuration that you do not want to override — or conversely, when you want the orchestrator to own all escalation paths uniformly.
+
+```yaml
+connected_subagent:
+    target: agent://partner-service-agent
+    delegate_escalation: False   # orchestrator owns all escalation
+```
 
 **The architectural implication:** building with delegation rather than pure handoff creates more composable, orchestratable agents. As multi-agent coordination capabilities evolve, agents built with the delegation pattern are much easier to incorporate into larger orchestration workflows without architectural rework.
 
@@ -763,6 +932,50 @@ Combining both creates the **zero-hallucination routing pattern.** The LLM must 
 
 ---
 
+### 6.7 Inline Skills (Pilot)
+
+*(New in 262.14 — skill_definitions block previewed as runtime WIP in 262.12)*
+
+Inline Skills introduce a new instruction-authoring primitive that mirrors how `reasoning.actions` maps actions to tools. Where actions invoke external Flows, Apex, or APIs, skills encapsulate reusable reasoning instructions that can be attached to subagents and invoked by the LLM as named capabilities.
+
+**Structure:**
+
+Skills are defined in a top-level `skill_definitions` block and attached per-node via `reasoning.skills` — directly mirroring the `reasoning.actions` pattern.
+
+```yaml
+skill_definitions:
+    summarize_case:
+        instructions: |
+            Summarize the key facts of the customer's case in three bullet points.
+            Focus on: what the customer requested, what was attempted, and current status.
+
+    de_escalation_phrasing:
+        target: skill://shared-de-escalation-v2
+```
+
+```yaml
+# In a subagent
+reasoning:
+    skills:
+        - @skill_definitions.summarize_case
+        - @skill_definitions.de_escalation_phrasing
+    actions:
+        - @actions.get_case_details
+```
+
+**Two skill definition styles:**
+
+- **Inline body:** the `instructions:` block is defined directly in `skill_definitions`. The skill's reasoning instructions are embedded in the agent script itself. Use for agent-specific, frequently iterated skill logic.
+- **`skill://` target:** the skill points at a named shared skill resource. Use for reusable skills shared across multiple agents or maintained separately.
+
+**How the LLM uses skills:** the LLM selects skills from `reasoning.skills` using the same mechanism it uses to select actions from `reasoning.actions` — based on the skill's name and description. Meaningful, specific skill names improve selection accuracy. This is the same naming discipline that applies to actions.
+
+**Relationship to actions:** skills and actions are complementary, not alternatives. Actions invoke external systems. Skills encapsulate reasoning patterns. A subagent can use both in the same turn.
+
+> **Pilot caveat:** Inline Skills are pilot in 262.14. The `skill_definitions` block and `reasoning.skills` syntax may change before GA. Do not use in production-critical agents without validating against the current compiler. The 262.12 `skills:` block preview was a precursor and is superseded by the 262.14 syntax.
+
+---
+
 ## 7. The start_agent Subagent and Turn Restart Behavior
 
 Every Agentforce turn begins at `start_agent`, without exception. On every customer utterance, the engine begins execution at this block. Subagents do not resume between turns — each turn restarts at `start_agent` and routing classification runs again.
@@ -773,7 +986,72 @@ This has several practical consequences:
 - **`before_reasoning` on `start_agent` fires on every turn.** This makes it the correct place for session-level initialization that must happen before any topic is selected.
 - **Subagent continuity is a design choice, not a platform default.** If you want a user to continue where they left off in a multi-turn workflow, that continuity must be encoded in variables and reflected in the routing logic of `start_agent`.
 
-> **Business implication:** this architecture makes Agentforce agents stateless at the platform level and stateful only through what you explicitly persist. This is a feature, not a limitation. It makes agents predictable, testable, and auditable in ways that session-memory-based systems are not.
+**BYON nodes as `start_agent` (262.8):** custom subagent nodes (Bring Your Own Node / connected subagents) can now serve as the initial and sole `start_agent` node. This means a BYON-hosted agent can be the entry point for the entire turn without requiring a standard local `start_agent` wrapper. The turn restart model still applies: every turn begins at whatever node is designated `start_agent`, whether that node is local or BYON.
+
+**`agent://` scheme (262.8):** connected subagent targets now use the `agent://` URI scheme. The previous `agentforce://` scheme is deprecated. Update any existing `connected_subagent` target declarations accordingly.
+
+```yaml
+# DEPRECATED
+connected_subagent:
+    target: agentforce://my-external-agent
+
+# CORRECT
+connected_subagent:
+    target: agent://my-external-agent
+```
+
+> **Business implication:** this architecture makes Agentforce agents stateless at the platform level and stateful only through what you explicitly persist. This is a feature, not a limitation. It makes agents predictable, testable, and auditable in ways that session-memory-based systems are not. See Section 7.5 for Goal-Based Agents, which introduce a different execution model operating outside this turn-based pattern.
+
+---
+
+### 7.5 Goal-Based Agents: Beyond the Turn Model (Pilot)
+
+*(New in 262.14 — pilot)*
+
+> **Scope note:** everything in Sections 1 through 7.4 describes the standard Agentforce turn-based model, where every interaction begins with a user utterance and ends with an agent response. Goal-Based Agents (GBA) / AgentIQ are a distinct execution model that does not share those foundations. GBA agents are not activated by user utterances — they are activated by triggers (including cron schedules) and pursue goals autonomously across multiple orchestrated steps. Read this section as an extension to the turn model, not a replacement.
+
+**What Goal-Based Agents are:**
+
+A Goal-Based Agent is an autonomous agent type gated behind `config.agent_type: "GoalBasedAgent"`. Instead of waiting for user utterances and responding turn-by-turn, a GBA agent pursues a declared goal through a structured workflow, potentially over an extended period, with no human in the loop for individual steps.
+
+GBA is the first Agentforce execution model that is genuinely **scheduled and autonomous** — not reactive. A GBA agent can wake up on a cron schedule, execute a multi-step orchestrated workflow, and complete without any user-initiated interaction.
+
+**Key blocks and constructs:**
+
+```yaml
+config:
+    agent_type: "GoalBasedAgent"
+
+workflows:
+    daily_account_review:
+        trigger:
+            cron: "0 8 * * 1-5"   # 8am Monday-Friday
+        orchestrator:
+            # Orchestration logic here
+
+# @dialect: agentforce-plugin
+plugins:
+    account_data: @plugins.account_data.*
+```
+
+| Block / Construct | Purpose |
+|---|---|
+| `workflows:` | Declares one or more named workflows the agent can execute. |
+| `trigger:` | Defines what activates a workflow. `cron:` enables scheduled execution. |
+| `orchestrator:` | Contains the orchestration logic for the workflow — sequencing subagents and skills to pursue the goal. |
+| `# @dialect: agentforce-plugin` | Pragma marking a file as an Agentforce plugin. |
+| `@plugins.<name>.*` | References a plugin's exported capabilities within GBA orchestration. |
+
+**Hard gating:** the `workflows`, `trigger`, and `orchestrator` blocks are valid only when `config.agent_type: "GoalBasedAgent"` is set. As of 262.14, these blocks produce a hard compile error if they appear in a standard agent script. This is a deliberate isolation — GBA constructs cannot accidentally leak into standard agents.
+
+**Design implications for architects:**
+
+- The `start_agent` / turn restart model does not apply to GBA workflows. A GBA workflow is initiated by its trigger, not by a user utterance.
+- The `config.runtime.reset_to_initial_node` flag (Section 2.5) is not meaningful for GBA workflows in the same way it is for standard agents — GBA workflows do not have an "initial node" in the turn model sense.
+- `@variables` scope within a GBA workflow spans the workflow execution, not a user session. This is a different persistence model from standard agents.
+- Because GBA agents operate autonomously, the "humans in control" model shifts: humans define the goal, trigger conditions, and guardrails in the workflow definition. The agent executes within those boundaries without per-step human approval.
+
+> **Pilot caveat:** GBA / AgentIQ is pilot in 262.14. Block names, trigger syntax, and plugin referencing patterns may change before GA. Do not deploy GBA agents in production without validating against current compiler and runtime documentation. Treat GBA design work done today as exploratory architecture.
 
 ---
 
@@ -829,6 +1107,8 @@ This is an architectural tension that every Agentforce designer needs to underst
 **The resolution:** if your agent requires mandatory pre-classification logic (authentication checks, session variable population, required context loading), you **cannot use EinsteinHyperClassifier as the model for `agent_router`**. The `before_reasoning` hook and the HyperClassifier model are mutually exclusive on the same subagent.
 
 **Why the state-based routing workaround fails:** a common intuitive design pattern is to use a state-based routing condition on a "User Verification" topic (`RunningUserValidated == False`) to enforce mandatory logic before business topics are reached. This pattern does not work reliably when HyperClassifier is enabled, because HyperClassifier routing and state-based routing conditions operate in **separate execution phases**. HyperClassifier selects the topic first, based on semantic relevance. If a user asks a business question, HyperClassifier routes to the relevant business topic — and the `RunningUserValidated == False` condition on the User Verification topic is evaluated afterward, too late to intercept the routing decision.
+
+**HyperClassifier diagnostic improvements (262.10):** when `before_reasoning` or `after_reasoning` blocks are present on a HyperClassifier-configured subagent, the compiler now correctly identifies the incompatibility and points to the appropriate alternative in its error message. If you have previously encountered opaque errors in this scenario, the 262.10 diagnostics provide a clearer path to resolution.
 
 **The correct design decision matrix:**
 
@@ -886,7 +1166,7 @@ When a justification for determinism exists, three primitives implement it. Each
 
 **Parameter pinning (`with param = @variables.X`):** replaces probabilistic slot-fill with deterministic variable binding. The LLM cannot override the parameter value with content from conversation. Use for verified identities and sensitive record IDs.
 
-**Conditional instructions:** `if` blocks in `instructions: ->` that change what text reaches the LLM based on current state. The LLM only sees the branch that matched — it has no awareness of branches that did not match.
+**Conditional instructions:** `if` / `else if` / `else` blocks in `instructions: ->` that change what text reaches the LLM based on current state. The LLM only sees the branch that matched — it has no awareness of branches that did not match.
 
 ---
 
@@ -927,7 +1207,7 @@ The ETL operates on every LLM call. Its processing happens in two directions:
 
 **Prompt journey (outbound):** secure data retrieval and grounding, data masking (where applicable — see Section 10.3), and prompt defense via system policies.
 
-**Response journey (inbound):** toxicity scoring of the LLM response and audit logging of prompts, responses, and trust signals to Data 360.
+**Response journey (inbound):** toxicity scoring of the LLM response and audit logging of prompts, responses, and trust signals Data 360.
 
 The ETL is the boundary between your Salesforce org and external model providers. It is designed to ensure that what leaves your org is appropriately protected and what returns is appropriately screened and logged.
 
@@ -1071,7 +1351,7 @@ instructions: ->
 
 *Signal:* intermittent behavior that is difficult to reproduce, where the agent sometimes follows an instruction and sometimes ignores it.
 
-*Fix:* convert `|` mode conditionals to `->` mode `if` / `else` blocks.
+*Fix:* convert `|` mode conditionals to `->` mode `if` / `else if` / `else` blocks.
 
 ---
 
@@ -1089,9 +1369,11 @@ Referencing `@outputs.X` or `@inputs.X` outside their valid scope windows, and t
 
 Using the `...` ellipsis on action parameters that represent verified identities or sensitive record IDs. This allows the LLM to extract these values from user-provided conversation text, creating an injection vector.
 
-*Signal:* any `with customer_id =...` or `with account_id =...` pattern where that ID should come from authenticated session state.
+**262.10 escalation:** as of 262.10, this pattern is no longer only a risk if you consciously write `with sensitive_id =...`. If an `is_required` action input has no `with` clause and no default, the compiler now automatically marks it `slot_filled_by: LLM`. A previously-silent gap in parameter binding is now silently converted to LLM slot-fill. **Audit all action definitions for `is_required` inputs that lack an explicit `with` clause.** The injection risk is now the default behavior for unbound required inputs — it does not require a deliberate authoring mistake to occur.
 
-*Fix:* pin sensitive parameters to `@variables` that were populated during verified authentication.
+*Signal:* any `with customer_id =...` or `with account_id =...` pattern where that ID should come from authenticated session state; or any `is_required` input with no `with` clause in an action that handles sensitive data.
+
+*Fix:* pin sensitive parameters to `@variables` that were populated during verified authentication. Always provide an explicit `with` clause for every `is_required` input.
 
 ---
 
@@ -1101,7 +1383,7 @@ Adding a subagent-level `system:` block for specialization without restating saf
 
 *Signal:* a subagent with its own system block that does not contain the same confidentiality, disclosure, and safety rules as the global block.
 
-*Fix:* treat every subagent system block as a complete, standalone identity definition. Restate all invariants explicitly.
+*Fix:* treat every subagent system block as a complete, standalone identity definition. Restate all invariants explicitly. If `strip_salesforce_instructions` is in use, this fix is doubly critical — there is no platform baseline to fall back on.
 
 ---
 
@@ -1141,7 +1423,7 @@ Placing a `transition to` instruction in `before_reasoning` without a condition 
 
 *Signal:* an agent that appears to route correctly on the first turn but enters an unresponsive loop on subsequent turns or multi-action flows.
 
-*Fix:* always wrap any `transition to` in `before_reasoning` inside an `if` condition that evaluates to True only when the transition is actually needed.
+*Fix:* always wrap any `transition to` in `before_reasoning` inside an `if` condition that evaluates to True only when the transition is actually needed. Alternatively, if the intent is to hand off to a fixed escalation target and never return, use the `escalate` statement (Section 6.4) instead. The `escalate` statement is single-fire by design and cannot loop — it is architecturally immune to the re-parse trigger that makes unguarded `transition to` dangerous in `before_reasoning`.
 
 ---
 
@@ -1163,8 +1445,14 @@ The scope zone for action input values. Valid only in `with` clauses during acti
 **`@outputs.X`**
 The scope zone for action return values. Valid only in `set` and `if` statements immediately following the action's `run` block. Scope expires after those statements complete.
 
+**`@system_variables.X`**
+Read-only platform context variables populated at the start of every inbound turn. Resolved before the prompt is assembled — the LLM sees the injected value, not the raw syntax. Includes `current_modality`, `current_connection` (both 262.12), and `last_reply.interrupted` / `last_reply.interrupted_heard_text` (262.14, voice channels). See Section 5.2.
+
 **`@variables.X`**
 Session-persistent state. Valid anywhere in Agent Script logic and across subagent transitions. Injectable into pipe text via `{!@variables.X}`. Persists for the life of the session unless explicitly overwritten.
+
+**`agent://` URI scheme**
+The current URI scheme for connected subagent targets, replacing the deprecated `agentforce://` scheme (deprecated in 262.8). Update all `connected_subagent` target declarations accordingly.
 
 **Agent Graph**
 The serialized execution plan compiled from the `.agent` source file when you publish an agent. Optimized for machine execution by the Atlas Reasoning Engine state machine executor. Not human-readable. Not directly accessible to authors.
@@ -1173,70 +1461,31 @@ The serialized execution plan compiled from the `.agent` source file when you pu
 The declarative DSL (domain-specific language) used to define Agentforce agent behavior. Combines deterministic logic instructions (`->`) with LLM reasoning prompts (`|`). Compiled into the GenAiPlannerBundle on publish.
 
 **Agentforce Builder**
-The recommended authoring environment for new agents, hosted within Agentforce Studio. Provides Canvas view (no-code) and Script view (direct Agent Script editing). Both views produce the same underlying artifact.
+The recommended authoring environment for new agents, hosted within Agentforce Studio. Provides Canvas view (no-code) and Script view (direct Agent Script editing). Both views produce the same underlying artifact. Some features — including `else if` chains and pilot constructs — require Script view.
 
-**`after_reasoning`**
-The deterministic post-turn execution block. Runs after the reasoning loop produces a terminal response. Does not support `instructions:` wrapper. Does not support `|` pipe commands. Does not execute when a mid-reasoning handoff occurs or when `is_displayable: True` exits the loop early.
+**`agentforce://` URI scheme**
+Deprecated as of 262.8. Replaced by `agent://`. See `agent://` entry.
 
-**Atlas Reasoning Engine**
-The runtime planner at the heart of Agentforce. Receives a user message, interprets the Agent Script configuration, compiles it into an Agent Graph on publish, and executes it as a state machine. Combines a deterministic resolver, an LLM reasoning loop, and the Einstein Trust Layer. Sometimes referred to descriptively as the "Unified Planner" in architectural discussion (see *Unified Planner* entry).
+**`ask for` statement**
+A pilot variable capture statement (introduced as `collect` in 262.12, renamed `ask for` in 262.14) that gathers one variable at a time from the user inside `reasoning.instructions`. Supports if-branching, auto-resume, and cancel/change-of-intent handling. The variable's `description` field flows to the LLM as per-field context. Syntax may still change before GA. See Section 5.5.1.
 
-**`available when`**
-A Phase 1 hard filter on actions in `reasoning.actions`. When the condition evaluates to False, the action is completely removed from the tool schema. The LLM has no awareness the action exists. Not a suggestion — an enforced removal.
+**`after_response`**
+A connected-subagent-only instruction surface (262.10) that fires after a connected agent returns. Accepts `run`, `set`, `if`, and `transition` statements. Pipe instructions are disallowed. See Section 4.5.1.
 
-**`before_reasoning`**
-The deterministic pre-parse execution block. Runs at the start of every parse, before HyperClassifier makes any routing decision, before any LLM is involved. Does not support `instructions:` wrapper. Use for session initialization, authentication gates, and mandatory data pre-loading. Never place unconditional `transition to` here — it fires on every parse and creates infinite loops.
+**`config.runtime` block**
+A top-level configuration block (262.12) exposing boolean flags for streaming, thought_chunks, citation, groundedness, and reset_to_initial_node. Compiles to `global_configuration.runtime`. An empty block is a hard compile error — set at least one flag or omit the block. See Section 2.5.
 
-**Canvas view**
-The visual, no-code authoring surface within Agentforce Builder. Produces the same Agent Script artifact as Script view. Use for designing agent structure without writing raw syntax.
+**`disable_graph_runtime`**
+Deprecated flag, now a hard compile error as of 262.12. Remove from any agent scripts that reference it. Previously deprecated; the transition to hard error was confirmed in 262.12.
 
-**Chain-of-Thought (CoT) reasoning**
-The previous Agentforce model's reasoning approach. Generated a sequential plan and executed steps one by one. Replaced by the ReAct (Reasoning and Acting) approach in the current hybrid model.
+**`escalate` statement**
+A deterministic, single-fire transition statement (262.14) usable at the top level or inside `reasoning.instructions`. Hands off to a fixed escalation target exactly once. Unlike `transition to`, it cannot loop — making it the correct choice for escalation paths in contexts where re-parse risk exists. See Section 6.4.
 
-**Deterministic Resolution (Phase 1)**
-The first phase of every reasoning iteration. Evaluates conditions, executes `run` blocks, captures variables, injects tokens, filters tool schemas, and fires immediate transitions. Always produces the same output given the same input state. No LLM involved.
+**`goal-based agent` / `GoalBasedAgent`**
+An agent type (pilot in 262.14) gated behind `config.agent_type: "GoalBasedAgent"` that operates outside the standard turn-based model. GBA agents use `workflows`, `trigger` (including cron), and `orchestrator` blocks to pursue goals autonomously. These blocks produce a hard compile error in standard agents. See Section 7.5.
 
-**EinsteinHyperClassifier**
-A specialized model purpose-built for subagent classification. Recasts routing as a single-token prediction problem. 30x faster than general-purpose LLMs for classification. Mutually exclusive with `before_reasoning` and `after_reasoning` on the same subagent. Can only use `@utils.transition` as a tool.
-
-**Einstein Trust Layer (ETL)**
-A mandatory architectural component that wraps every LLM call across all Agentforce deployments. Enforces data masking (note: disabled for agent interactions), prompt defense, toxicity scoring, zero-data retention with external providers, and audit logging to Data 360.
-
-**Flex Credits**
-The action-based billing model for Agentforce. Credits are consumed when actions execute. Utilities such as `@utils.escalate`, `@utils.setVariables`, and `@utils.end_session` are generally not billed. Refer to Salesforce pricing documentation for current rates.
-
-**`filter_from_agent: True`**
-An action output flag that prevents the LLM from displaying the output value to the user. Used in the zero-hallucination routing pattern to keep routing signals internal.
-
-**GenAiPlannerBundle**
-The compiled metadata artifact produced by the Salesforce compiler from the `.agent` source file on publish. The artifact the Atlas Reasoning Engine executes at runtime. Contains both `AiAuthoringBundle` and `BotVersion` metadata for committed agents.
-
-**Handoff**
-A one-way subagent transfer via `@utils.transition to`. Control transfers completely to the called subagent. The caller does not resume. The original subagent's `after_reasoning` does not fire if the handoff occurs mid-reasoning.
-
-**Delegation**
-A control flow model where a parent subagent calls a child subagent as an action reference. The child runs its full reasoning loop, produces a result, and returns control to the parent for synthesis. Creates more composable, orchestratable agents than handoff.
-
-**`is_displayable: True`**
-An action output flag that causes the platform to exit the reasoning loop immediately when the LLM surfaces that output. Bypasses `after_reasoning`. Logic that must execute reliably should be placed in `before_reasoning` of the subsequent subagent when `is_displayable: True` is in the flow.
-
-**`is_used_by_planner: True`**
-An action output flag that allows the LLM to reason about the output value for routing decisions. Used in combination with `filter_from_agent: True` to create the zero-hallucination routing pattern.
-
-**Linked variable**
-A read-only variable populated from external session context at session start. Must have a `source` declaration. Must not have a default value. Primarily used for `EndUserId`, `ContactId`, and similar session-established identifiers.
-
-**LLM Reasoning (Phase 2)**
-The second phase of each reasoning iteration. The foundation model receives the resolved prompt string and filtered tool schemas from Phase 1, then decides to call an action, produce a terminal response, or delegate to a subagent. Triggered only at Agent Graph nodes that contain prompt instructions.
-
-**Mutable variable**
-A session-persistent, read-write variable. Must have a default value at definition time. Valid anywhere in Agent Script logic and across subagent transitions. Boolean defaults must be capitalized (`True`/`False`).
-
-**Parse**
-The primary unit of execution in Agent Script. A single complete cycle through a subagent's `before_reasoning`, `reasoning`, and `after_reasoning` blocks. The Atlas Reasoning Engine initiates a parse on first entry into a subagent, after every tool call, and on every new user turn within the same subagent. One user turn can trigger multiple parses.
-
-**Posture**
-The spectrum between fully agentic (maximum LLM latitude) and fully scripted (maximum deterministic control) for a subagent. The default is agentic. Deterministic controls are added only when one of the five valid justifications applies.
+**Inline Skills**
+A pilot feature (262.14) introducing `skill_definitions` (top-level) and `reasoning.skills` (per-node) blocks that mirror the `reasoning.actions` pattern. Skills encapsulate reusable reasoning instructions rather than external action invocations. Can be defined inline or via `skill://` target references. See Section 6.7.
 
 **`reasoning.instructions`**
 The primary instruction surface for subagent reasoning. Rebuilt on every parse, including after every tool call. Supports literal mode (`|`) and procedural mode (`->`). Use `->` mode whenever the block contains conditionals, `run` statements, `set` statements, or variable injections.
@@ -1248,19 +1497,22 @@ The process of rebuilding the `reasoning.instructions` block from scratch after 
 The reasoning approach used by the Atlas Reasoning Engine. Loops through reason, act, and observe cycles until a user goal is fulfilled. Replaced the previous Chain-of-Thought (CoT) approach. Enables adaptive, human-like conversational experiences while remaining grounded in deterministic business logic.
 
 **Script view**
-The direct Agent Script editing surface within Agentforce Builder. Produces the same underlying artifact as Canvas view. Use for precise control over logic instructions, prompt text, and Agent Script syntax.
+The direct Agent Script editing surface within Agentforce Builder. Produces the same underlying artifact as Canvas view. Required for features not yet supported in Canvas, including `else if` chains (262.12) and several pilot constructs introduced in 262.14.
 
 **`setVariables`**
-A `@utils` slot-fill utility that instructs the LLM to capture a variable value from conversation using a natural language description. A free framework utility that does not consume action credits.
+A `@utils` slot-fill utility that instructs the LLM to capture a variable value from conversation using a natural language description. A free framework utility that does not consume action credits. For structured, multi-variable sequential capture, prefer `ask for` (Section 5.5.1).
 
 **`start_agent`**
-The entry subagent for every Agentforce turn, without exception. On every customer utterance, the agent begins execution at this block. Subagents do not resume between turns — each turn restarts at `start_agent` and routing classification runs again.
+The entry subagent for every Agentforce turn, without exception. On every customer utterance, the agent begins execution at this block. Subagents do not resume between turns — each turn restarts at `start_agent` and routing classification runs again. As of 262.8, BYON / connected subagent nodes can serve as `start_agent`.
+
+**`strip_salesforce_instructions`**
+A 262.14 flag (top-level or per-subagent) that removes the Salesforce platform system prompt from beneath your authored instructions. Eliminates the implicit safety baseline that was previously always present. Must be used with explicit invariant restatement in every affected subagent system block. See Section 4.2.
 
 **Transition (bare)**
-The `transition to @subagent.X` form valid in `before_reasoning`, `after_reasoning`, and `reasoning.instructions ->` blocks. Fully deterministic, no LLM involvement. One-way.
+The `transition to @subagent.X` form valid in `before_reasoning`, `after_reasoning`, and `reasoning.instructions ->` blocks. Fully deterministic, no LLM involvement. One-way. Supports both local and connected subagent targets as of 262.10.
 
 **Transition (`@utils.transition`)**
-The `@utils.transition to @subagent.X` form valid only inside `reasoning.actions`. LLM-driven — the LLM decides when to invoke the transition. One-way.
+The `@utils.transition to @subagent.X` form valid only inside `reasoning.actions`. LLM-driven — the LLM decides when to invoke the transition. One-way. Supports both local and connected subagent targets as of 262.10.
 
 **Unified Planner**
 A descriptive characterization used in this guide and some architectural discussions to refer to the Atlas Reasoning Engine — the same hybrid execution environment that plans and orchestrates Agentforce agent turns. *Note: this term does not appear verbatim in official Salesforce platform documentation. It is used here as a descriptive label consistent with the engine's function, not as confirmed Salesforce nomenclature. Readers should use "Atlas Reasoning Engine" when citing official sources.*

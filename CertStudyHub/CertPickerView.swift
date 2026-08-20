@@ -2,6 +2,8 @@ import SwiftUI
 
 struct CertPickerView: View {
     private let certs = CertCatalog.all
+    private let deepDives = CertCatalog.deepDives
+    private let certifications = CertCatalog.certifications
     private let progressManager = ProgressManager.shared
     @State private var showBackup = false
 
@@ -69,22 +71,57 @@ struct CertPickerView: View {
                             .font(.largeTitle)
                             .fontWeight(.bold)
 
-                        Text("Choose a certification to study")
+                        Text("Choose a topic to study")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
                     .padding(.top, 24)
 
-                    // Cert Cards
-                    LazyVGrid(columns: columns, spacing: 20) {
-                        ForEach(certs) { cert in
-                            NavigationLink(value: cert.id) {
-                                CertCard(cert: cert)
-                            }
-                            .buttonStyle(.plain)
+                    // ── Deep Dives Section ──
+                    VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Deep Dives")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                            Text("In-depth study guides — not official Salesforce certifications")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                         }
+                        .padding(.horizontal, 20)
+
+                        LazyVGrid(columns: columns, spacing: 20) {
+                            ForEach(deepDives) { cert in
+                                NavigationLink(value: cert.id) {
+                                    CertCard(cert: cert)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal, 20)
                     }
-                    .padding(.horizontal, 20)
+
+                    // ── Certifications Section ──
+                    VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Certifications")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                            Text("Official Salesforce certification exam prep")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.horizontal, 20)
+
+                        LazyVGrid(columns: columns, spacing: 20) {
+                            ForEach(certifications) { cert in
+                                NavigationLink(value: cert.id) {
+                                    CertCard(cert: cert)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                    }
 
                     // AI Disclaimer
                     HStack(spacing: 6) {
@@ -149,23 +186,6 @@ struct CertCard: View {
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.primary)
-
-            // Subtitle for bonus topics
-            if let subtitle = cert.subtitle {
-                HStack(spacing: 4) {
-                    Image(systemName: "star.fill")
-                        .font(.system(size: 9))
-                    Text(subtitle)
-                        .font(.caption2)
-                }
-                .foregroundStyle(.orange)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 3)
-                .background(
-                    Capsule()
-                        .fill(.orange.opacity(0.12))
-                )
-            }
 
             // Stats
             HStack(spacing: 16) {

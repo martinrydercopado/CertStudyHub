@@ -1,8 +1,5 @@
 # Tracing and Analytics in Agentforce
 
-**Audience:** Success Architects  
-**Purpose:** Enable Success Architects to help customers design, build, troubleshoot, and continuously improve Agentforce agents using Salesforce's native observability tooling.
-
 ---
 
 ## Contents
@@ -45,7 +42,6 @@ For a Success Architect, observability is also a trust-building tool. Customers 
 Agentforce observability depends on a stack of capabilities that must be explicitly enabled. None of them are on by default. Before advising a customer on tracing or analytics, confirm this infrastructure is in place.
 
 ### Required Foundation
-
 - **Data Cloud (Data 360) provisioned** with the CRM Connector active. All session data, optimization data, and platform tracing data live in Data Cloud. Without it, none of the DMOs exist.
 - **Agentforce enabled** in the org with at least one deployed agent generating sessions.
 - **Appropriate permissions assigned** to admin and developer users:
@@ -88,7 +84,23 @@ This is a completely separate toggle from Session Tracing. It enables the back-e
 
 Platform Tracing is the tool for diagnosing performance issues and integration failures that are invisible in session traces. It is not enabled by default, and customers frequently do not know it exists until a Success Architect introduces it.
 
-### Step 4: Install the Consumption Tagging App (if needed)
+### Step 4: Configure the `config.runtime` Block (262.12+)
+
+Starting in 262.12, Agent Script supports a top-level `config.runtime:` block that exposes explicit boolean toggles for platform-level reasoning behaviors. These flags compile into `global_configuration.runtime` and directly affect what architects see (or do not see) in traces.
+
+**Observability-relevant flags:**
+
+| Flag | What It Controls | Tracing Impact |
+|---|---|---|
+| `groundedness` | Enables or disables the grounding check | When set to `false`, no `ReasoningStep` will appear in session traces — responses can go out without a grounding gate. A missing `ReasoningStep` no longer means a bug; it may mean this flag is off. |
+| `reset_to_initial_node` | Controls whether the agent resets to `start_agent` between sessions | Affects the statelessness assumptions in Section 7. When `false`, prior subagent context may persist across turns in unexpected ways, which can cause Pattern H counter anomalies. |
+| `streaming`, `thought_chunks`, `citation` | Streaming response behavior and citation display | Minor trace impact; primarily a UI concern. |
+
+> **Hard compile error:** An empty `config.runtime:` block is a compile error as of 262.12. The block must either be omitted entirely or contain at least one flag. If a customer reports a compile failure on a previously working agent after a platform upgrade, check for a bare `runtime:` block with no flags set.
+
+**Why this matters for tracing:** The guide's grounding discussion in Sections 4 and 5 assumes that grounding is always active. That assumption is no longer safe. When reading a trace that shows no `ReasoningStep` spans, check `config.runtime.groundedness` before concluding the agent has a structural problem.
+
+### Step 5: Install the Consumption Tagging App (if needed)
 
 If consumption reporting is a stakeholder requirement, the **Consumption Tagging app** must be installed from the Digital Wallet on AppExchange before the Consumption Analytics Dashboard is available. Plan for this before go-live — it cannot be rushed in after the fact.
 
@@ -103,6 +115,7 @@ If consumption reporting is a stakeholder requirement, the **Consumption Tagging
 - [ ] Agentforce Optimization enabled (same setup page)
 - [ ] Audit and Feedback enabled with target data space selected (same setup page)
 - [ ] Agent Platform Tracing enabled (Setup > Agent Platform Tracing)
+- [ ] `config.runtime` block reviewed: `groundedness` flag confirmed, empty block removed if present
 - [ ] Consumption Tagging app installed (if Consumption Analytics Dashboard required)
 - [ ] Alert thresholds configured relative to expected session volume before go-live
 
@@ -285,9 +298,16 @@ When reading Platform Tracing span trees, a common point of confusion is seeing 
 | Agent Script Block | Span Characteristics | LLM Involved? |
 |---|---|---|
 | `before_reasoning` | Deterministic; no `run.llmstep` span; variables set and actions fire before LLM sees anything | No |
-| `reasoning` (deterministic `->`) | Deterministic conditional; fires actions or sets variables based on logical expressions | No |
+| `reasoning` (deterministic `->`) | Deterministic conditional; fires actions or sets variables based on logical expressions. `else if` chains (262.12+, Script view only) follow the same deterministic pattern — no LLM call regardless of chain depth. | No |
 | `reasoning` (prompt `\|`) | Generates a `run.llmstep` span; LLM receives the compiled prompt | Yes |
 | `after_reasoning` | Fires after LLM response; deterministic; only present if not interrupted by `is_displayable: True` | No |
+| `after_response` *(connected subagents only, 262.10+)* | Fires after a connected (external/BYON) subagent returns control; accepts `run`, `set`, `if`, and `transition` statements. Templates are not allowed here because there is no reasoning loop at this point. **No `run.llmstep` span is generated** — this surface is invisible in span trees unless an action within it fires a `run.action.*` child span. | No |
+
+> **Connected subagent trace note (262.10+):** `after_response` is the fifth instruction surface and is exclusive to connected subagents. If you are reading a trace for an agent with connected subagents and see `run.action.*` spans that appear to fire without a preceding `run.llmstep`, the most likely explanation is that they originate from an `after_response` block, not from a `before_reasoning` or deterministic `reasoning` block on a local subagent.
+
+**HyperClassifier and `before_reasoning`/`after_reasoning`:** The HyperClassifier (EinsteinHyperClassifier model) is incompatible with `before_reasoning` and `after_reasoning` blocks. As of 262.10, the compiler now surfaces a diagnostic that points directly at the correct alternative when this misuse is detected, rather than producing a generic error. If a customer reports a HyperClassifier compile error involving these blocks, the diagnostic message itself now identifies the fix.
+
+**`strip_salesforce_instructions` (262.14+):** This flag strips the Salesforce baseline system prompt, settable at the top level or per subagent. When it is active, `LLMStep.messages_sent` in session traces will not include the standard Salesforce system prompt. Do not treat its absence as a data collection failure. The guide's discussion of global-vs-subagent system instruction layers assumes the Salesforce baseline is always present underneath customer instructions. That assumption no longer holds when this flag is set. If `strip_salesforce_instructions` is enabled without explicit replacement instructions covering the same invariants (persona, safety rails, scope constraints), the "Silent Security Gap" risk is compounded — the safety net is gone and nothing replaces it.
 
 **Linked variables note:** Agent Script linked variables that bind to `@MessagingSession.Id`, `@MessagingEndUser.ContactId`, or `@VoiceCall.Id` are the script-level equivalent of the `ssot__AiAgentInteractionId__c` join field in the STDM. This means the session context a variable captures at the script level flows directly into the DMO records that represent that session in Data Cloud. Architects can trace a variable's value from its definition in the `.agent` file all the way to its representation in the STDM query results.
 
@@ -302,21 +322,25 @@ A session trace is a sequence of steps recorded for each interaction (turn). Eac
 | Step Type | What It Represents | Key Fields to Check |
 |---|---|---|
 | `UserInputStep` | The raw user message as received | Does it match what the user sent? Encoding or truncation issues appear here. |
-| `NodeEntryStateStep` | Subagent activation | Which subagent fired? Was it the expected one? |
+| `NodeEntryStateStep` | Subagent activation | Which subagent fired? Was it the expected one? Variable values at subagent entry are visible here — including `@system_variables.current_modality` and `@system_variables.current_connection` (262.12+), which identify the channel (voice vs. text) and connection type at the start of the turn. |
 | `EnabledToolsStep` | List of actions available to the LLM at this point | Is the expected action listed? If not, check `available when` gate conditions. |
 | `LLMStep` | LLM reasoning call | `messages_sent` shows the full compiled prompt; `response_messages` shows what the LLM decided to do. |
 | `FunctionStep` | Action invocation | Input, output, and error. This is the primary step for diagnosing action failures. |
-| `ReasoningStep` | Grounding assessment | GROUNDED or UNGROUNDED. This is the quality gate on agent responses. |
+| `ReasoningStep` | Grounding assessment | GROUNDED or UNGROUNDED. This is the quality gate on agent responses. Absent when `config.runtime.groundedness: false` is set — see Section 2. |
 | `PlannerResponseStep` | Final agent response to user | Includes the safety score. Review content against expected output. |
 | `TrustGuardrailsStep` | Instruction adherence evaluation | Shows whether the agent followed its instructions. Look for LOW adherence as a signal for instruction issues. |
-| `TransitionStep` | Subagent routing event | Where did the agent transition to? Was it the expected destination? |
+| `TransitionStep` | Subagent routing event | Where did the agent transition to? Was it the expected destination? As of 262.10, connected subagents are valid transition targets through the normal supervision path — a `TransitionStep` to a connected subagent is no longer a warning condition. |
 | `SessionEndStep` | Session termination | How and why the session ended. |
+
+**Channel-specific system variables (262.12+):** Two new read-only system variables are populated at the start of every inbound turn: `@system_variables.current_modality` (e.g., `"voice"` or `"text"`) and `@system_variables.current_connection`. These values are visible in `NodeEntryStateStep` records alongside other variable state. When diagnosing channel-specific failures — for example, behavior that differs between voice and messaging deployments — filter session traces by `current_modality` before applying Pattern analysis. Two additional voice-specific variables were added in 262.14: `@system_variables.last_reply.interrupted` (boolean, true if the user interrupted the agent's response mid-delivery) and `@system_variables.last_reply.interrupted_heard_text` (the partial text heard before interruption). These are useful when diagnosing voice sessions where users appear to be getting stuck in a loop — confirm whether the loop is caused by interruptions rather than genuine misrouting.
 
 ### Grounding: The Hidden Quality Gate
 
-Every LLM response in Agentforce goes through a grounding check. The `ReasoningStep` records whether the agent's response is grounded — meaning it can be verified against the data the agent actually retrieved — or ungrounded, meaning the agent asserted something that its own action outputs do not support.
+Every LLM response in Agentforce goes through a grounding check by default. The `ReasoningStep` records whether the agent's response is grounded — meaning it can be verified against the data the agent actually retrieved — or ungrounded, meaning the agent asserted something that its own action outputs do not support.
 
 > **Based on consistently observed platform behavior:** Two consecutive UNGROUNDED results on `ReasoningStep` trigger the agent's terminal fallback message ("I apologize, but I encountered an unexpected error"). This specific threshold is not documented explicitly in primary Salesforce documentation, but it is a widely consistent practitioner observation.
+
+> **262.12 change:** The `config.runtime.groundedness` flag can now disable grounding explicitly. When `groundedness: false` is set, no `ReasoningStep` will appear in traces and the two-consecutive-UNGROUNDED threshold does not apply. Confirm this flag before treating a missing `ReasoningStep` as an anomaly.
 
 Grounding failures are almost always fixable. The pattern is straightforward: the `FunctionStep` output contains the data; the `ReasoningStep` shows UNGROUNDED; the `LLMStep.response_messages` shows the agent paraphrasing or inferring beyond that data. The fix is a targeted instruction update telling the LLM to quote specific fields verbatim rather than summarizing.
 
@@ -325,14 +349,15 @@ Grounding failures are almost always fixable. The pattern is straightforward: th
 ### Trace Reading Checklist (Per Turn)
 
 - [ ] `UserInputStep` — Does the utterance match what you expected?
-- [ ] `NodeEntryStateStep` — Did the correct subagent activate?
+- [ ] `NodeEntryStateStep` — Did the correct subagent activate? Check `current_modality` if the issue is channel-specific.
 - [ ] `EnabledToolsStep` — Is the expected action listed? If missing, check `available when` gate variable values.
-- [ ] `LLMStep.messages_sent` — Did instructions compile correctly? Are variables interpolated?
-- [ ] `FunctionStep` — Did the action fire? What inputs did it receive? What did it return?
-- [ ] `ReasoningStep` — Is the status GROUNDED?
+- [ ] `LLMStep.messages_sent` — Did instructions compile correctly? Are variables interpolated? Is the Salesforce system prompt present (or intentionally absent via `strip_salesforce_instructions`)?
+- [ ] `FunctionStep` — Did the action fire? What inputs did it receive? What did it return? Check for slot-filled inputs (see Pattern B note).
+- [ ] `ReasoningStep` — Is the status GROUNDED? If the step is absent, check `config.runtime.groundedness`.
 - [ ] `PlannerResponseStep` — Review the safety score. Does the response content match action output?
 - [ ] Multiple `run.llmstep` spans? — Expected in multi-action subagents (one per parse). Not a loop.
 - [ ] Missing `after_reasoning` spans? — Check if `is_displayable: True` fired in that subagent.
+- [ ] `run.action.*` spans with no preceding `run.llmstep`? — May originate from an `after_response` block on a connected subagent.
 
 ---
 
@@ -388,8 +413,8 @@ Every agent interaction generates a tree of spans. Each span represents one unit
 |---|---|
 | `run.interaction` | Root span for the entire interaction |
 | `run.llmstep` | An LLM reasoning call |
-| `run.topic.*` | Subagent-level processing |
-| `run.action.*` | An action invocation (Apex, Flow, etc.) |
+| `run.topic.*` | Subagent-level processing — local or connected. As of 262.10, connected subagents are valid transition targets through the normal supervision path, so `run.topic.*` spans may now represent a connected (external/BYON) subagent rather than a local one. The span structure and interpretation are the same in either case. |
+| `run.action.*` | An action invocation (Apex, Flow, etc.) — including actions fired from `after_response` blocks on connected subagents (no preceding `run.llmstep` in that case). Inline Skills invocations (262.14 pilot) also appear under `run.action.*`. |
 | `run.invokeActions.FLOW` | A Flow action execution |
 | `run.invokeActions.EXTERNAL_SERVICE` | An external (MCP) action call |
 
@@ -761,9 +786,11 @@ These patterns cover the most frequently encountered agent issues. Each has a co
 
 **Symptom:** The agent responds without calling an expected action. The `FunctionStep` for that action is absent from the trace.
 
-**Where to look:** `EnabledToolsStep` — is the action listed? If not, the issue is an `available when` gate that evaluated to false. Check the variable values in the `NodeEntryStateStep` to see the state of gate variables at the moment of evaluation.
+**Where to look:** `EnabledToolsStep` — is the action listed? If not, the issue is an `available when` gate that evaluated to false. Check the variable values in the `NodeEntryStateStep` to see the state of gate variables at the moment of evaluation. As a design-time prevention step: the `available-when-non-boolean` lint flag (262.10+) catches `available when` conditions that resolve to non-boolean literals at compile time — this class of gate failure should be caught in sandbox before reaching production.
 
-**Fix direction:** If the gate condition is wrong, correct the variable logic. If the variable was not set, trace back to where it should have been set and confirm the action or `@utils.setVariables` call that should populate it actually fired.
+**Slot-fill behavior change (262.10+):** If the action *is* listed in `EnabledToolsStep` and *does* appear to invoke (a `FunctionStep` is present), but the inputs look different from what the agent script specifies, check whether the action definition has required inputs (`is_required: true`) with no bound `with` clause. As of 262.10, the compiler auto-marks such inputs as `slot_filled_by: LLM` rather than leaving them unfilled. The action will invoke, but the LLM will prompt the user for the missing parameter rather than failing silently. In traces, this appears as additional turns between the first `EnabledToolsStep` and the eventual `FunctionStep`. This is the same injection-risk pattern as an explicit `@utils.setVariables` call — the LLM determines the input value from user utterance rather than from a deterministic source. If you see unexpected extra turns before an action fires, check the action definition for unbound required inputs.
+
+**Fix direction:** If the gate condition is wrong, correct the variable logic. If the variable was not set, trace back to where it should have been set and confirm the action or `@utils.setVariables` call that should populate it actually fired. For slot-filled required inputs: bind all required inputs explicitly with a `with` clause or provide a safe default to prevent LLM-driven parameter resolution on sensitive fields.
 
 ---
 
@@ -819,6 +846,8 @@ These patterns cover the most frequently encountered agent issues. Each has a co
 
 **Fix direction:** If logic in `after_reasoning` must execute reliably, move it into the `before_reasoning` block of the subsequent subagent. Do not place logic that must run in `after_reasoning` when the triggering action has `is_displayable: True`.
 
+> **Deterministic `escalate` statement (262.14+):** The new top-level `escalate` statement — usable inside `reasoning.instructions` — fires exactly once and hands off to a fixed escalation target without an LLM reasoning step. In Platform Tracing, a deterministic `escalate` appears as a `TransitionStep` to the escalation target with no preceding `run.llmstep` span for that transition. It will not fire a second time if the subagent is re-entered, unlike a `@utils.escalate` call placed inside a `reasoning` prompt block that could be re-triggered on a subsequent parse. If a trace shows an escalation `TransitionStep` with no LLM call before it, and no `after_reasoning` spans following it, this is expected behavior for a deterministic `escalate` — it is not a missing-span anomaly.
+
 ---
 
 ### Pattern H: `before_reasoning` Counter Shows Inflated Count
@@ -828,6 +857,8 @@ These patterns cover the most frequently encountered agent issues. Each has a co
 **Where to look:** Check where the counter variable is incremented in the Agent Script. If the increment is in `before_reasoning`, the variable is counting parses, not turns.
 
 **Root cause:** `before_reasoning` executes on every parse, including re-entry after each action call within a turn. In a subagent that fires two actions per turn, `before_reasoning` runs three times per user turn (once on entry, once after each action return). A counter incremented here will be two to three times the actual turn count.
+
+**Additional trigger (262.12+):** If `config.runtime.reset_to_initial_node: false` is set, subagent context may persist across turns in ways that cause `before_reasoning` to execute more often than expected per user turn. If Pattern H appears on an agent using this flag, check whether the node is being re-entered from a prior session state rather than from a fresh `start_agent` dispatch.
 
 **Fix direction:** Move the counter increment to `after_reasoning`, or use an action-based incrementor that fires explicitly once per intended measurement unit.
 
@@ -839,14 +870,18 @@ These patterns cover the most frequently encountered agent issues. Each has a co
 |---|---|
 | Wrong subagent invoked | `LLMStep.tools_sent` and subagent descriptions |
 | Action not invoked | `EnabledToolsStep` — is the action listed? Check `available when` gate variable values. |
+| Action fires with unexpected inputs | Check action definition for unbound required inputs (slot-filled by LLM as of 262.10) |
 | Unexpected error response | Two consecutive UNGROUNDED `ReasoningStep` entries |
 | Agent ignores action data | `LLMStep.response_messages` after `FunctionStep` |
 | Slow response | `ssot__TelemetryTraceSpan__dlm` performance profiling query |
-| Stuck session (repetitive questions) | `ssot__AiAgentInteractionMessage__dlm` for repeated user messages |
+| Stuck session (repetitive questions) | `ssot__AiAgentInteractionMessage__dlm` for repeated user messages; check `last_reply.interrupted` on voice sessions |
 | Missing `after_reasoning` spans | Check if triggering action has `is_displayable: True` |
-| Inflated turn counter | Check if counter increment is in `before_reasoning` (counts parses, not turns) |
+| Escalation `TransitionStep` with no preceding LLM call | Expected for deterministic `escalate` statement (262.14+) |
+| Missing `ReasoningStep` entirely | Check `config.runtime.groundedness` — may be explicitly disabled |
+| Inflated turn counter | Check if counter increment is in `before_reasoning` (counts parses, not turns); also check `reset_to_initial_node` flag |
 | High escalation spike | Health alert, then STDM session filter for affected time window |
 | Credit consumption anomaly | `AiAgentGenerativeAiUsage_std__dlm` billable usage by agent |
+| `run.action.*` span with no preceding `run.llmstep` | May originate from an `after_response` block on a connected subagent |
 
 ---
 
@@ -947,6 +982,8 @@ When a customer promotes an agent from sandbox to production:
 5. **Shift from CLI trace review to SOQL.** The development workflow of opening individual trace files does not scale to production volumes. Ensure the customer team understands the STDM query patterns in Section 7 before go-live.
 6. **Install the Consumption Tagging app** if consumption reporting is a stakeholder requirement. Plan for this before go-live.
 
+> **Note on Goal-Based Agents (262.14 pilot):** The session lifecycle model described throughout this guide — turn-based interactions dispatched through `start_agent`, producing STDM session and interaction records — is specific to standard conversational agents. Goal-Based Agents (GBA) introduce scheduled/autonomous execution via `trigger` (cron) blocks and `workflows` that operate outside the turn-based model. The STDM implications (different session lifecycle, workflow-level spans, cron-triggered sessions) are not yet fully documented for production observability. If a customer is piloting GBA, treat the tracing guidance in this guide as a starting point, not a complete reference, and monitor Salesforce release notes for GBA-specific observability documentation as the feature moves toward GA.
+
 ---
 
 ## 10. Mapping Observability to Business KPIs
@@ -1017,7 +1054,7 @@ A critical architectural distinction: **actions are billed per execution, regard
 
 The reason hybrid reasoning saves credits is not that the actions themselves become free. It eliminates redundant LLM reasoning steps — bypassing the LLM for predictable transitions, state checks, and variable assignments prevents expensive prompt loops.
 
-The four `@utils` functions are the only operations that are genuinely free at all times, because they are platform-native control plane utilities rather than external invocations.
+The `@utils` functions are the only operations that are genuinely free at all times, because they are platform-native control plane utilities rather than external invocations.
 
 ### Credit Consumption Reference
 
@@ -1027,8 +1064,10 @@ The four `@utils` functions are the only operations that are genuinely free at a
 | `@utils.setVariables` | FREE | Framework state management; never billed |
 | `@utils.escalate` | FREE | Framework escalation; never billed |
 | `@utils.end_session` | FREE | Framework session termination; never billed |
-| `if`/`else` control flow | FREE | Deterministic resolution; no LLM call |
-| `before_reasoning` / `after_reasoning` hooks | FREE | Deterministic pre/post-processing; no LLM call |
+| Deterministic `escalate` statement (262.14+) | FREE | Top-level escalation; fires once; same billing treatment as `@utils.escalate` |
+| `if`/`else`/`else if` control flow | FREE | Deterministic resolution; no LLM call |
+| `before_reasoning` / `after_reasoning` / `after_response` hooks | FREE | Deterministic pre/post-processing; no LLM call |
+| `ask for` / `collect` variable capture (pilot, 262.12+) | FREE | Uses `@utils.setVariables` under the hood; the variable capture itself is not billed. However, the LLM reasoning turn that evaluates the user's response to the capture prompt is subject to normal prompt billing. |
 | Atlas reasoning loop | FREE | The core ReAct reasoning cycle is not billed as an action |
 | Flow actions | 20 credits | Per execution — billed whether triggered by LLM or deterministic script |
 | Apex actions | 20 credits | Per execution — billed whether triggered by LLM or deterministic script |
@@ -1058,6 +1097,8 @@ Every `FunctionStep` in a session trace represents a credit expenditure. A sessi
 An elevated escalation rate is not just a user experience problem. If the fallback path involves action retries, it also represents unplanned credit consumption at scale. Tight escalation monitoring has a secondary benefit as a cost anomaly detector.
 
 Actions that fail due to platform limits (CPU time, SOQL row limits, heap size) appear as `FunctionStep` errors in session traces. In production, each of these represents credits spent on a failed invocation. Monitoring error volume by operation type is therefore both a reliability metric and a cost metric.
+
+**Slot-filled required inputs and credit cost:** As noted in Pattern B, unbound required action inputs are now auto-slot-filled by the LLM (262.10+). Each additional turn generated to collect a slot-filled value is a normal turn with normal billing implications. An agent that requires three extra user turns to gather inputs that could have been bound deterministically is spending credits on LLM reasoning that could have been free. Review action definitions in `AiAgentGenerativeAiUsage_std__dlm` anomaly investigations to check whether elevated per-session credit costs correlate with slot-fill-driven extra turns.
 
 ---
 
@@ -1092,14 +1133,16 @@ Is it affecting many users simultaneously?
 ### Trace Reading Checklist (Per Turn)
 
 - [ ] `UserInputStep` — Does the utterance match what you expected?
-- [ ] `NodeEntryStateStep` — Did the correct subagent activate?
+- [ ] `NodeEntryStateStep` — Did the correct subagent activate? Check `current_modality` for channel-specific issues.
 - [ ] `EnabledToolsStep` — Is the expected action listed? If missing, check `available when` gate variable values.
-- [ ] `LLMStep.messages_sent` — Did instructions compile correctly? Are variables interpolated?
-- [ ] `FunctionStep` — Did the action fire? What inputs did it receive? What did it return?
-- [ ] `ReasoningStep` — Is the status GROUNDED?
+- [ ] `LLMStep.messages_sent` — Did instructions compile correctly? Are variables interpolated? Is the Salesforce system prompt present (or intentionally absent via `strip_salesforce_instructions`)?
+- [ ] `FunctionStep` — Did the action fire? What inputs did it receive? Were any inputs slot-filled by LLM rather than bound deterministically?
+- [ ] `ReasoningStep` — Is the status GROUNDED? If absent, check `config.runtime.groundedness`.
 - [ ] `PlannerResponseStep` — Review the safety score. Does the response content match action output?
 - [ ] Multiple `run.llmstep` spans? — Expected in multi-action subagents (one per parse). Not a loop.
 - [ ] Missing `after_reasoning` spans? — Check if `is_displayable: True` fired in that subagent.
+- [ ] `run.action.*` spans with no preceding `run.llmstep`? — May originate from `after_response` on a connected subagent.
+- [ ] `TransitionStep` to escalation with no preceding LLM call? — Expected for deterministic `escalate` statement.
 
 ### Key DMO Tables at a Glance
 
@@ -1129,6 +1172,7 @@ Is it affecting many users simultaneously?
 - [ ] Agentforce Optimization enabled: same setup page
 - [ ] Audit and Feedback enabled with target data space selected: same setup page
 - [ ] Agent Platform Tracing enabled: Setup > Agent Platform Tracing
+- [ ] `config.runtime` block reviewed: `groundedness` flag confirmed, empty block removed if present
 - [ ] Consumption Tagging app installed (if Consumption Analytics Dashboard required)
 - [ ] Alert thresholds configured relative to expected session volume before go-live
 

@@ -25,11 +25,13 @@
     - [Ambient Agent](#ambient-agent)
     - [Autonomous Agent](#autonomous-agent)
     - [Collaborative Agent](#collaborative-agent)
+    - [Goal-Based Agent](#goal-based-agent)
 6. [Part 5: Multi-Agent Orchestration](#part-5-multi-agent-orchestration)
     - [When to Recommend Multi-Agent](#when-to-recommend-multi-agent)
     - [The Supervisor Pattern](#the-supervisor-pattern)
     - [The One-Level Delegation Rule](#the-one-level-delegation-rule)
     - [Deployment Topologies](#deployment-topologies)
+    - [Connected Subagents as First-Class Participants](#connected-subagents-as-first-class-participants)
     - [Trust and Identity in Multi-Agent Systems](#trust-and-identity-in-multi-agent-systems)
     - [Context and the Hierarchy Principle](#context-and-the-hierarchy-principle)
 7. [Part 6: Core Architectural Principles](#part-6-core-architectural-principles)
@@ -87,6 +89,20 @@ Valid causes for deterministic control:
 
 If none of these causes apply, leave the decision to the model. Over-scripted agents are brittle, expensive to maintain, and paradoxically less reliable than agents that give the LLM appropriate latitude. An instruction like "Step 1: do X, Step 2: do Y" written in prose is not deterministic. It is a suggestion the LLM may or may not follow. Only explicit runtime gates are truly enforced.
 
+**Instruction surfaces and where they live.** At any given subagent, developers have several distinct places where instructions can be placed, each with different execution characteristics. The Architect needs to understand these surfaces at a conceptual level in order to specify the design correctly.
+
+| Surface | When it executes | Nature |
+|---|---|---|
+| `before_reasoning` block | Before each reasoning loop, every turn | Deterministic |
+| `reasoning.instructions` block | Assembled into the LLM prompt at reasoning time | Mixed (deterministic gates + probabilistic prompts) |
+| `after_reasoning` block | After the reasoning loop, before the response | Deterministic |
+| `after_response` block | After the LLM response is returned | Deterministic |
+| System instructions | Framing layer below all reasoning | Probabilistic (LLM-read) |
+
+The `after_response` surface is specific to **connected subagents** (agents that delegate to an external Agentforce agent via an `agent://` reference) and fires after that external agent returns its result. Because there is no active reasoning loop at that point, only deterministic statements are valid there: variable assignments, conditional branching, and transitions. No template rendering or LLM prompts will execute in `after_response`. This matters to the Architect because it means any post-handoff logic that requires LLM reasoning must be handled differently — either in the connected subagent itself before it returns, or by transitioning to a local subagent after the response comes back.
+
+The design implication is practical: when the Architect specifies what should happen after a connected agent returns — logging a result, routing to the next step, evaluating the output — that logic belongs in `after_response` and must be deterministic. If the post-handoff behavior requires nuanced judgment, design a local follow-up subagent and transition to it from `after_response` rather than trying to embed reasoning there.
+
 > **Scenario.** A financial services client wants an agent that can update a customer's payment method. The update changes external state, is potentially irreversible, and has financial consequences. The Architect marks this as a consequential action and specifies that it must be protected by a machine-enforced confirmation gate: the action is only available when an explicit confirmation variable has been set by a prior confirmation subagent. The developer implements this as an `available when` guard, not as a prose instruction like "always confirm before changing payment details." The prose version the LLM may bypass. The gate version the runtime will not.
 
 ---
@@ -106,11 +122,20 @@ This phase produces the Agent Spec. Nothing should be built until the Spec is co
 **What to define in this phase:**
 
 - **Goal.** Define the agent's goal as an observable outcome, not a procedure. A vague goal invites agent drift. "Help customers resolve service requests" is a procedure. "Resolve service cases without human escalation by correctly identifying the issue, retrieving the relevant knowledge article, and providing a verifiable next step" is an observable outcome.
-- **Agent type.** Classify the agent using the taxonomy in Part 4 of this guide. Is it Conversational, Proactive, Ambient, Autonomous, or Collaborative? The type determines architecture, data access patterns, and governance requirements.
-- **Persona.** Define how the agent should present itself. The persona influences tone, escalation language, and the system instructions developers will write.
+- **Agent type.** Classify the agent using the taxonomy in Part 4 of this guide. Is it Conversational, Proactive, Ambient, Autonomous, Collaborative, or Goal-Based? The type determines architecture, data access patterns, and governance requirements. If the proposed agent is intended to run on a schedule or operate without a user initiating the conversation, classify it as a Goal-Based Agent before proceeding — the design approach differs fundamentally from the turn-based model this lifecycle otherwise assumes. See Part 4 for detail.
+- **Persona.** Define how the agent should present itself. The persona influences tone, escalation language, and the system instructions developers will write. Be aware that the platform-level Salesforce system prompt contributes a behavioral baseline underneath your persona — see the discussion of `strip_salesforce_instructions` in Part 3.
 - **Topics and actions.** Map the topics the agent will handle and the actions it will have access to. Audit for overlap: having more than one action that does the same task degrades the agent's ability to reason correctly about which tool to use.
 - **Data sources.** Identify what data the agent needs and where it lives. Does it need real-time CRM records? Unstructured knowledge articles? External systems via MCP or MuleSoft? Each data source has implications for latency, governance, and the RAG retrieval strategy.
 - **Guardrails.** Define the ethical and operational boundaries. What topics is the agent not permitted to discuss? What actions require human review before execution? What happens when the agent cannot help?
+- **Runtime configuration choices.** As of recent platform releases, several behaviors that were previously implicit platform defaults are now explicit, configurable flags that developers set in the `config.runtime` block. This is an Architect-level decision, not a developer detail, because these flags control the agent's fundamental reasoning behavior. The Architect should specify in the Agent Spec how each of the following flags should be set and why:
+  - **`groundedness`**: Whether responses must be grounded in retrieved data. For agents that handle factual queries about products, policies, or records, this should be on. Disabling it allows the LLM to reason freely, which is appropriate for creative or analytical tasks but dangerous for factual ones.
+  - **`reset_to_initial_node`**: Whether the agent resets to its starting state after each conversation turn completes. This has implications for stateful multi-turn flows: enabling it provides a clean slate each turn, but it means subagent context must be explicitly carried through variables rather than assumed to persist.
+  - **`streaming`** and **`thought_chunks`**: Whether responses are streamed incrementally and whether the reasoning trace is surfaced to the user. These affect the user experience and should be specified as design decisions.
+  - **`citation`**: Whether the agent surfaces its retrieval sources in responses. This is a governance choice: regulated industries may require it; consumer-facing agents may find it distracting.
+
+  An empty `config.runtime` block is a compile error. The block must either be fully omitted or contain at least one explicitly set flag. Architects should document their decisions for each flag in the Agent Spec so developers are not left to guess.
+
+- **Modality.** If the agent will be deployed across multiple channels — chat, voice, embedded experience — specify which modalities are in scope. The platform now provides a `@system_variables.current_modality` variable (e.g., "voice" or "text") and `@system_variables.current_connection` at the start of every turn. Developers can use these to adapt behavior per channel. The Architect should specify in the Agent Spec which modalities are supported and what behavioral differences should exist between them — for example, whether the voice version should skip formatted lists in responses, or whether confirmation flows should be simplified on voice.
 - **Prioritization.** Before committing to a scope, map the proposed capabilities against business KPIs. Build only what moves a metric the client can measure.
 
 > **Scenario.** A retail client wants an agent that handles customer returns. During ideation, the Architect maps the return workflow and identifies three distinct moments: eligibility check (is this item returnable?), refund calculation (how much?), and refund issuance (write to the system). The first two are read-only and relatively safe. The third writes to an external system and is irreversible. The Architect specifies in the Agent Spec that the third moment requires an explicit confirmation step before the action executes. This decision is made in Phase 1. The developer implements it in Phase 2. The tester validates it in Phase 3. If it were left undecided, it would likely be skipped.
@@ -123,7 +148,7 @@ In Phase 2, developers implement the Agent Spec. The Architect's role shifts to 
 
 **Key development activities:**
 
-- **Authoring environment.** Developers work in Agentforce Builder, which supports both a visual Canvas view and a direct Agent Script view. For teams building complex workflows, Agent Script is the recommended authoring path because it makes the hybrid reasoning boundary explicit and auditable.
+- **Authoring environment.** Developers work in Agentforce Builder, which supports both a visual Canvas view and a direct Agent Script view. For teams building complex workflows, Agent Script is the recommended authoring path because it makes the hybrid reasoning boundary explicit and auditable. Note that some newer language features — including `else if` conditional chains — are only available in Agent Script view and not yet supported in Canvas. The Architect should flag this during code review: conditional governance logic that looks like a multi-branch `if/else` chain in a design review may not be expressible in Canvas and should be designated as a Script-view deliverable.
 - **Subagent structure.** Each subagent should have a single, narrow responsibility. A subagent that tries to handle too many topics degrades in accuracy. The Architect should review the subagent map against the Agent Spec and flag any subagent that is trying to do more than one job.
 - **Action design.** Each action should have a single responsibility. An action that creates a billing account and sends a confirmation email in the same call is harder to retry, harder to test, and harder for the agent to reason over than two discrete actions. All write operations must be idempotent: the agent's reasoning loop may retry an action if it receives an ambiguous response, and retrying a non-idempotent write causes real damage.
 - **Org environment.** For agents that require Data 360 access, development happens in a sandbox org. For agents that do not, scratch orgs are also an option. The environment choice has downstream implications for how data is seeded for testing.
@@ -240,13 +265,17 @@ This pattern has three key properties:
 
 ### Escalation to a Human Agent
 
-For customer-facing deployments, the agent must have a defined escalation path to a live human agent. This is not just a user experience consideration. It is a safety requirement. Design the escalation path as a first-class subagent transition, not an afterthought.
+For customer-facing deployments, the agent must have a defined escalation path to a live human agent. This is not just a user experience consideration. It is a safety requirement. Design the escalation path as a first-class concern in the Agent Spec, not an afterthought.
+
+**Escalation mechanisms.** The platform now provides a deterministic `escalate` statement that the Architect should designate as the standard escalation mechanism for all governed or regulated contexts. Unlike a transition to an escalation subagent, the `escalate` statement fires exactly once and hands off to a fixed escalation target. Its single-fire property is architecturally significant: it eliminates the risk of an escalation being re-triggered if the agent's reasoning loop cycles again — which was a documented failure mode in earlier architectures that expressed escalation as a reasoning-loop transition. For regulated deployments where accidental re-escalation would be a compliance problem, the `escalate` statement is the correct implementation approach. The Agent Spec should distinguish between escalation paths that warrant this deterministic, single-fire mechanism and those that can be handled as a standard subagent transition.
 
 Key design decisions for escalation:
 
 - **What triggers escalation?** Define explicit conditions: the user explicitly requests a human, the agent fails to resolve the issue within a defined number of turns, the agent detects distress signals, or the agent reaches a topic it cannot handle.
 - **What context is carried over?** When escalating, the full conversation context must be available to the human agent. An escalation that forces the customer to repeat themselves is a failure.
 - **Who can initiate escalation?** In a multi-agent system, only the orchestrating agent should escalate to a human. Subagents should not initiate escalations independently. They should signal to the orchestrator, which makes the final decision.
+
+**A note on persona and the Salesforce system prompt.** The platform includes a Salesforce-managed system prompt that sits beneath the Architect's own system instructions and contributes a baseline behavioral persona. This baseline is always present by default. Starting in recent releases, a `strip_salesforce_instructions` flag can remove it, either globally or per subagent. The Architect must understand the governance implication of enabling this flag: any behavioral invariant that was previously enforced by that baseline is now gone and must be explicitly replaced. If a client enables `strip_salesforce_instructions` for persona customization reasons and does not rewrite the equivalent invariants into their own system instructions, the agent loses its implicit safety framing and out-of-scope refusal posture. This is a governance decision that the Architect must make explicitly and document in the Agent Spec. The safe default is to leave the flag off. If a client has a legitimate reason to remove the Salesforce system prompt, the Agent Spec must include a replacement set of behavioral invariants that covers everything the default prompt was providing. Treat this like a configuration-level security review, not a cosmetic change.
 
 ---
 
@@ -261,8 +290,6 @@ A well-architected agent with correctly placed deterministic gates will require 
 ## Part 4: Agent Taxonomy
 
 Before designing a system, classify each agent you are building. Classification is not a bureaucratic exercise. It determines the architecture, the data access pattern, the governance model, and the user experience design. Trying to build without classification leads to agents that are ambiguously scoped and architecturally mismatched to their use case.
-
-Agentforce recognizes five agent types.
 
 ---
 
@@ -326,6 +353,27 @@ Agentforce recognizes five agent types.
 
 ---
 
+### Goal-Based Agent
+
+**What it is.** A Goal-Based Agent (also referred to in the platform as a GoalBasedAgent type, associated with the AgentIQ capability) is a fundamentally different execution model from every other type in this taxonomy. Where all other agent types wait for a user request or an event to trigger them, a Goal-Based Agent can be triggered by a schedule — a cron expression — and executes an autonomous workflow defined as a structured `workflows` block with an `orchestrator` governing its steps. There may be no user in the conversation at all.
+
+**Value.** It enables enterprises to deploy proactive, time-driven, end-to-end automation that runs on its own cadence: nightly data enrichment, weekly compliance sweeps, daily pipeline hygiene, or any other process that should operate continuously and without manual initiation.
+
+**CRM scenario.** A revenue operations team needs end-of-week pipeline hygiene: stale opportunities must be flagged, follow-up tasks created, and a summary report delivered to regional managers every Friday evening. A Goal-Based Agent is configured with a weekly trigger. It runs autonomously at the scheduled time, queries the pipeline, evaluates each opportunity against staleness criteria, creates tasks, and delivers the report — without any human initiating the conversation.
+
+**Architectural considerations.** Goal-Based Agents require a fundamentally different design approach and the Architect should recognize this early in the engagement, because the ADLC as described elsewhere in this guide assumes a turn-based, conversational model. When classifying an agent as Goal-Based, the following considerations apply:
+
+- **No user in the loop by default.** The entire workflow may execute without a human ever seeing an intermediate result. This makes the governance design more demanding, not less. The Architect must define explicit checkpoints where the agent stops and waits for human review, and must define what happens when it cannot reach a decision within its delegated scope.
+- **Scheduled execution changes the failure profile.** A conversational agent that fails produces a poor user experience. A Goal-Based Agent that fails silently at 2am on a Friday may not be discovered until Monday. Design explicit failure handling and alerting into the workflow specification from the start.
+- **Plugin architecture.** Goal-Based Agents use a plugin model (`@plugins.<name>.*`) for reusable capability modules. The Architect is responsible for defining the plugin boundary: what capabilities belong inside the agent definition and what should be extracted into a reusable plugin that other agents or workflows can reference. Poorly bounded plugins create the same monolith problem at the plugin level that poorly bounded subagents create at the agent level.
+- **The `agent_type` designation is a hard configuration gate.** The `config.agent_type: "GoalBasedAgent"` setting unlocks the `workflows`, `trigger`, and `orchestrator` blocks. These blocks produce compile errors outside that agent type. The Architect should include the agent type designation in the Agent Spec explicitly so developers do not attempt to use these constructs in a standard agent configuration and encounter confusing compile failures.
+- **HITL design for scheduled agents.** The Plan and Present pattern (Part 3) applies here but must be adapted: instead of presenting a plan to a user in a live conversation, the agent surfaces its proposed actions to a designated reviewer asynchronously — typically via a notification, a draft record, or a task — before executing irreversible steps. The Architect must design the asynchronous review path and specify the timeout behavior: how long does the agent wait for human review before it either proceeds, cancels, or escalates?
+- **Pilot status.** As of the guide's current date, Goal-Based Agents are in pilot. The core architectural patterns described here are stable, but specific syntax details are subject to change. Architects should treat the workflow structure as settled for planning purposes while expecting minor implementation adjustments before GA.
+
+> **Scenario.** An enterprise wants a Goal-Based Agent to run monthly contract renewal analysis across all accounts. The Architect classifies it as a Goal-Based Agent, specifies a monthly cron trigger, and defines three explicit checkpoints in the workflow specification: after opportunity identification (present a list for human confirmation before scoring), after risk scoring (present flagged accounts for review before outreach), and after draft outreach is generated (require account manager approval before sending). The agent operates autonomously within each phase but surfaces a human decision point at each boundary. This is not incidental. It is specified in the Agent Spec before development begins.
+
+---
+
 ## Part 5: Multi-Agent Orchestration
 
 As agent systems grow in complexity, single agents inevitably reach their limits. A single agent handling too many topics degrades in accuracy. A single agent cannot efficiently parallelize work across domains. And a single agent creates a single point of failure and a single governance bottleneck.
@@ -382,7 +430,21 @@ The orchestrating agent must be designed as a true coordinator: it plans, delega
 |---|---|---|
 | **SOMA** | Multiple specialized agents collaborate within a single Salesforce org, sharing governance and context. | Different domains need separate agents but operate within one org boundary. |
 | **MOMA** | A primary agent delegates to specialist agents in other trusted orgs via the Agent-to-Agent (A2A) protocol. | The enterprise operates multiple Salesforce orgs and needs a unified user experience across them. |
-| **3P / MCP** | Agents connect to external non-Salesforce agents or tools via the Model Context Protocol or A2A interoperability. | The workflow requires capabilities that live outside Salesforce entirely. |
+| **3P / MCP** | Agents connect to external non-Salesforce agents or tools Context Protocol or A2A interoperability. | The workflow requires capabilities that live outside Salesforce entirely. |
+
+---
+
+### Connected Subagents as First-Class Participants
+
+A connected subagent is a reference from one Agentforce agent to another, either within the same org or across org boundaries via the `agent://` scheme. Connected subagents were previously treated as a routing mechanism distinct from local subagent transitions: developers could hand off to a connected agent but could not use that connected agent as a standard transition target in the same way as a local subagent.
+
+That distinction has now been resolved. Connected subagents are fully supported as transition targets using the standard transition syntax. The Architect can design transition flows that move freely between local and connected subagents without treating the cross-boundary hop as a special case requiring a different design pattern. This is a meaningful design simplification: it means the Architect no longer needs to insert a local "relay" subagent to handle the handoff before transitioning to a connected agent.
+
+**Design decisions that remain the Architect's responsibility:**
+
+- **Escalation routing after a connected subagent.** When a connected subagent is in the delegation path and an escalation occurs, the orchestrating agent must decide whether the escalation routes through the connected subagent's own outbound flow or returns to the orchestrator. This is controlled by the `delegate_escalation` flag on the connected subagent configuration (default: true, meaning the connected agent handles its own escalation outbound). The Architect should specify this explicitly for each connected subagent in the Agent Spec. In multi-org deployments, the answer is not always obvious: a connected subagent in a partner org may have its own escalation path to a different team, which may or may not be the right path for the end user's actual issue. Specify it. Do not leave it at default without a deliberate choice.
+- **Post-return logic.** Any deterministic logic that must execute after a connected subagent returns — routing, variable capture, conditional branching — belongs in the `after_response` block on the connected subagent definition, as described in Part 1's instruction surfaces table. If that post-return logic requires LLM reasoning, transition to a local subagent from `after_response` rather than trying to embed it there.
+- **Trust and identity.** All trust and identity considerations from the section below apply equally to connected subagent relationships. Identity propagation must be explicit. The connected agent must not receive elevated permissions relative to the originating user.
 
 ---
 
@@ -441,6 +503,8 @@ An agent that reasons without access to current, validated data will hallucinate
 
 **RAG governance.** The Architect must also govern what data the agent can retrieve. Data 360 supports attribute-based access control at the object, field, and row level. For unstructured data, metadata filters can restrict what gets retrieved before the query even runs. Governance over knowledge base content is equally important: data that enters the vector store without validation rules is a RAG poisoning risk.
 
+**Groundedness as a configurable design decision.** Previously, whether an agent grounded its responses in retrieved data was a behavior influenced by RAG retriever configuration and prompt design. The platform now exposes a `groundedness` flag in the `config.runtime` block that makes this explicit and enforceable at the runtime level. The Architect should treat this as a design decision in the Agent Spec. For factual-query agents, this flag belongs on. For creative or analytical agents where reasoning should not be constrained to retrieved content, it may be appropriate to leave it off — but that choice should be documented and deliberate, not an oversight.
+
 **The design implication.** Identify every data dependency in the Agent Spec. For each dependency, specify the data source, the retrieval mechanism, the latency requirement, and the access control model. Do this before development begins.
 
 > **Scenario.** An insurance company builds an agent that answers policy questions. Initial tests go well because developers test against their own policy documents. In UAT, agents trained on older knowledge articles return answers that contradict current policy. The Architect adds a governance requirement: knowledge articles can only enter the RAG index after approval by the policy team, and the index is re-validated after every policy update.
@@ -458,6 +522,14 @@ Security in agentic systems is not a layer added at the end. It is built into ev
 - **Preventive (pre-deployment).** Define what the agent is and is not permitted to do before it is built. Scope the agent's topics and actions explicitly. An agent that is not given access to a tool cannot be prompted into using it.
 - **Active / runtime.** Enforce behavioral boundaries at runtime through deterministic gates, `available when` conditions, and gateway-level policy enforcement. Agentforce Gateway enforces policies on outbound MCP traffic. MuleSoft Omni Gateway enforces policies on A2A and REST calls. These are runtime guarantees, not instructions to the LLM.
 - **Self-improving (the outer loop).** Use session tracing and behavioral analytics to detect governance failures in production: cases where the agent behaved outside its intended boundaries, returned unsafe content, or was manipulated by adversarial inputs. Feed these findings back into the guardrail design.
+
+**A critical change to parameter binding behavior.** Prior to recent platform releases, an action input that was marked as required but had no explicit parameter binding and no default value would surface as a visible gap — a configuration the compiler would flag or that would fail at runtime in a diagnosable way. The platform has changed this behavior: an unbound required input now automatically becomes an LLM slot-fill target, meaning the LLM is asked to supply the value from conversational context at reasoning time.
+
+This matters deeply to the Architect because it transforms a configuration gap into a silent injection surface. The LLM slot-filling that value is doing exactly what the adversarial testing section in Phase 3 warns against: it is taking a runtime parameter from the conversational context, which a malicious user can influence. An attacker who knows a required action input is being slot-filled can attempt to steer the LLM's value resolution through prompt injection. The Architect must treat unbound required action inputs as a security review item, not a developer oversight to clean up later.
+
+**The practical implication for action design review.** During Phase 2 review, the Architect should audit every action's input configuration against three criteria: Is the input required? Is it explicitly bound via a `with` clause or a variable? If neither, is there a deliberate reason the LLM should supply it from context? If the answer to the last question is no, the binding is a defect that creates a governance risk. This audit should be a standard part of the code review process for any agent with consequential write actions.
+
+**`available when` conditions must be boolean.** The compiler now flags `available when` conditions that resolve to non-boolean values as lint errors. This is a hardening improvement that reinforces a principle the Architect should already be enforcing: guard conditions on consequential actions must be precise and unambiguous. A guard condition that resolves to a non-boolean value was never behaving correctly. The lint flag makes silent misconfigurations visible.
 
 **Zero trust for agents.** Identity and access management for agentic systems must shift from static, role-based controls to dynamic, intent-based permissions. An agent should be granted access to a tool or data source for a specific task, and that access should be revoked immediately after the task completes. This principle applies to both human-agent and agent-to-agent interactions.
 

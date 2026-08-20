@@ -7,23 +7,24 @@ struct CertHomeView: View {
     @State private var quizVM: QuizViewModel
     @State private var studyVM: StudyViewModel
 
-    private var isQuizOnly: Bool {
-        certConfig.studySections.isEmpty && !certConfig.questions.isEmpty
-    }
+    private var hasQuiz: Bool { !certConfig.questions.isEmpty }
+    private var hasStudy: Bool { !certConfig.studySections.isEmpty }
+    private var hasGuide: Bool { certConfig.guideURL != nil }
 
-    private var isStudyOnly: Bool {
-        certConfig.questions.isEmpty && !certConfig.studySections.isEmpty
+    /// Number of available content tabs
+    private var tabCount: Int {
+        (hasStudy ? 1 : 0) + (hasQuiz ? 1 : 0) + (hasGuide ? 1 : 0)
     }
 
     init(certConfig: CertConfig) {
         self.certConfig = certConfig
         self._quizVM = State(initialValue: QuizViewModel(certConfig: certConfig))
         self._studyVM = State(initialValue: StudyViewModel(certConfig: certConfig))
-        // Default to study tab when no quiz, quiz tab when no study
-        if certConfig.questions.isEmpty {
+        // Default tab: study if available, else quiz, else reference
+        if !certConfig.studySections.isEmpty {
             self._selectedTab = State(initialValue: 0)
-        } else if certConfig.studySections.isEmpty {
-            self._selectedTab = State(initialValue: 1)
+        } else if !certConfig.questions.isEmpty {
+            self._selectedTab = State(initialValue: 0)
         } else {
             self._selectedTab = State(initialValue: 0)
         }
@@ -33,32 +34,39 @@ struct CertHomeView: View {
 
     var body: some View {
         Group {
-            if isQuizOnly {
-                // Quiz-only mode — no tab bar, just the quiz view
-                QuizView(viewModel: quizVM, certConfig: certConfig)
-            } else if isStudyOnly {
-                // Study-only mode — no tab bar, just the study guide
-                StudyGuideView(viewModel: studyVM, certConfig: certConfig)
+            if tabCount == 1 {
+                // Single-content mode — no tab bar
+                if hasStudy {
+                    StudyGuideView(viewModel: studyVM, certConfig: certConfig)
+                } else if hasQuiz {
+                    QuizView(viewModel: quizVM, certConfig: certConfig)
+                } else if let guideURL = certConfig.guideURL {
+                    ReferenceGuideView(url: guideURL, certConfig: certConfig)
+                }
             } else {
                 TabView(selection: $selectedTab) {
-                    StudyGuideView(viewModel: studyVM, certConfig: certConfig)
-                        .tabItem {
-                            Label("Study Guide", systemImage: "book.fill")
-                        }
-                        .tag(0)
+                    if hasStudy {
+                        StudyGuideView(viewModel: studyVM, certConfig: certConfig)
+                            .tabItem {
+                                Label("Study Guide", systemImage: "book.fill")
+                            }
+                            .tag(0)
+                    }
 
-                    QuizView(viewModel: quizVM, certConfig: certConfig)
-                        .tabItem {
-                            Label("Quiz", systemImage: "questionmark.circle.fill")
-                        }
-                        .tag(1)
+                    if hasQuiz {
+                        QuizView(viewModel: quizVM, certConfig: certConfig)
+                            .tabItem {
+                                Label("Quiz", systemImage: "questionmark.circle.fill")
+                            }
+                            .tag(hasStudy ? 1 : 0)
+                    }
 
                     if let guideURL = certConfig.guideURL {
                         ReferenceGuideView(url: guideURL, certConfig: certConfig)
                             .tabItem {
                                 Label("Reference", systemImage: "doc.richtext")
                             }
-                            .tag(2)
+                            .tag(tabCount - 1)
                     }
                 }
             }

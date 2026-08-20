@@ -24,6 +24,7 @@
    - 7.1 [Two Different Scopes, Two Different Numbers](#71-two-different-scopes-two-different-numbers)
    - 7.2 [Constraints Reference Table](#72-constraints-reference-table)
    - 7.3 [Supported Agent Type Combinations](#73-supported-agent-type-combinations)
+   - 7.4 [Goal-Based Agents: Beyond Turn-Based Orchestration (Pilot)](#74-goal-based-agents-beyond-turn-based-orchestration-pilot)
 8. [Identity, Security, and Authentication](#8-identity-security-and-authentication)
 9. [Performance and Latency](#9-performance-and-latency)
 10. [Observability and Testing](#10-observability-and-testing)
@@ -63,7 +64,7 @@ Multi-agent orchestration in Agentforce operates across three streams, each suit
 
 | Stream | Scope | Mechanism | GA Status |
 |---|---|---|---|
-| **SOMA** | Intra-org, multi-domain | `connected_subagent` block, graph-based reasoner | **GA — staged rollout in progress (see §2.1)** |
+| **SOMA** | Intra-org, multi-domain | `connected_subagent` block, graph-based reasoner | **GA — staged rollout complete (see §2.1)** |
 | **MOMA** | Cross-org (Salesforce) | DC1 trust boundaries, MBus metadata sync, org-to-org agent sharing | GA (MuleSoft/DC1-dependent) |
 | **3P Outbound (A2A)** | Salesforce to external agent platforms | A2A protocol via Named Credentials | Pilot |
 | **3P Inbound (A2A)** | External platform into Salesforce | A2A protocol, ECA-scoped auth | Pilot |
@@ -77,15 +78,15 @@ All patterns can coexist in the same enterprise architecture. An orchestrator ca
 
 SOMA enables a Superagent to coordinate multiple specialized agents within a **single Salesforce org**. The orchestrator receives all user requests, selects the appropriate connected subagent based on descriptions and routing rules, delegates the task, and synthesizes the result.
 
-**GA rollout status (as of August 19, 2026):** SOMA within-org multi-agent orchestration entered general availability in August 2026 via a staged, pod-by-pod rollout. The rollout schedule is:
+**GA rollout status (as of August 20, 2026):** SOMA within-org multi-agent orchestration entered general availability in August 2026 via a staged, pod-by-pod rollout. The rollout schedule is:
 
 | Phase | Status |
 |---|---|
 | Pilot orgs | Complete |
 | Sandbox canary | Complete (8/17) |
 | GUS + optional sandboxes | Complete (8/18) |
-| Production canary | In progress — expected to complete 8/19 evening |
-| Sandbox production canary | Starts 8/20 |
+| Production canary | Complete (8/19) |
+| Sandbox production canary | Complete (8/20) |
 | Datacenter canary | Starts 8/21 |
 | All remaining orgs | Starts 8/24 |
 | **Full rollout completion** | **~August 25–26, 2026** |
@@ -184,7 +185,7 @@ The `connected_subagent` block declares a connection to another Agentforce agent
 ```agentscript
 connected_subagent Billing_Agent:
     label: "Billing_Agent"
-    target: "agentforce://X00Dfi200000dpFZ_Billing_Agent"
+    target: "agent://X00Dfi200000dpFZ_Billing_Agent"
     loading_text: |
         Reviewing your billing details...
     description: "Use this agent for any request about invoices, payment history, charges, refunds, or subscription billing. Do not use for shipping or returns."
@@ -193,9 +194,49 @@ connected_subagent Billing_Agent:
         CustomerTier: string = @variables.CustomerTier
 ```
 
+> **Target scheme update (262.8):** The `target` field now uses the `agent://` URI scheme. The previous `agentforce://` scheme is deprecated. Update any existing scripts that reference `agentforce://` targets — deprecated URI forms will not be supported indefinitely.
+
 **Description quality matters more than anything else.** The Atlas Reasoning Engine routes entirely based on the description field. Overlapping descriptions across connected subagents cause misrouting. Make descriptions specific, non-overlapping, and include explicit guidance on when *not* to use the agent.
 
 **The `loading_text` field** sets the progress message shown to users while the subagent is working. Customize this per subagent to communicate what is happening without exposing internal routing logic.
+
+**BYON and custom nodes as the start node (262.8).** A custom or BYON (Bring Your Own Node) node can now serve as the initial — and only — `start_agent` node. This is relevant for teams building non-standard orchestrator entry points (for example, a custom routing node that enforces business rules before any topic classification runs). The standard start node model remains the default; this capability exists for architectures that need to own the very first step of the reasoning graph.
+
+**Instruction surfaces on connected subagents.** Connected subagents support a specific set of instruction blocks. Understanding which surface to use, and where, prevents misrouted logic and compilation errors.
+
+| Surface | Where it fires | Allowed in connected subagents |
+|---|---|---|
+| `before_reasoning` | Before the LLM reasoning loop | Yes |
+| `reasoning.instructions` | Inside the reasoning loop | Yes |
+| `after_reasoning` | After the reasoning loop | Yes |
+| `reasoning.actions` (tools) | LLM-callable tools within reasoning | Yes |
+| `after_response` | After the connected agent returns to the orchestrator | Yes — connected subagents only |
+
+**`after_response` on connected subagents (262.10).** The `after_response` block is a fifth instruction surface that fires on the orchestrator side *after* a connected agent has returned its result. It accepts `run`, `set`, `if`, and `transition` statements. Prompt templates are not allowed here — there is no active reasoning loop at that point, so there is no LLM to render them.
+
+This surface is the correct place to handle post-delegation logic: updating orchestrator variables based on what the subagent returned, conditionally routing to another agent, or marking a workflow step as complete. Without `after_response`, that logic has to live inside the orchestrator's next reasoning turn, which means it is LLM-dependent rather than deterministic.
+
+```agentscript
+connected_subagent Billing_Agent:
+    ...
+    after_response:
+        if @variables.billing_resolved == true:
+            -> transition to Close_Session
+        -> set @variables.last_delegated_agent = "Billing_Agent"
+```
+
+#### Security: Unbound Required Action Inputs (262.10)
+
+Starting in 262.10, if an action input is marked `is_required` and has no default value and no `with` clause binding it, the compiler **automatically marks it `slot_filled_by: LLM`** instead of leaving it unfilled. This is a meaningful change to previous behavior, where that gap was silent and would surface only at runtime.
+
+The security concern is not subtle. An unbound required input that the LLM fills from user-provided text is exactly the surface through which a user can inject unexpected values into action calls — overriding filters, escalating access, or triggering unintended flows. This was already an anti-pattern before 262.10; the difference now is that the platform resolves the gap for you rather than failing loudly, so architects may not notice it has happened.
+
+**What to do.** Audit all connected subagent action definitions for required inputs that lack an explicit `with` binding. For each one, make an explicit choice:
+- Bind it deterministically using `with: @variables.SomeVariable` if the value should come from verified context.
+- Add `slot_filled_by: LLM` explicitly if LLM slot-fill is intentional and the input is low-risk.
+- Add input validation logic in `before_reasoning` if the value is sensitive.
+
+Do not rely on silent LLM slot-fill for inputs that gate access to data, execute writes, or trigger external integrations.
 
 ### 5.2 Variable Mapping and State Sync
 
@@ -206,6 +247,8 @@ Variables are the mechanism for passing context from the orchestrator to connect
 | Context (linked) variables | Read-only | Populated at session start; not synced bidirectionally | CRM data, session metadata, stable grounding |
 | Custom variables | Mutable | One-way: orchestrator to subagent (bidirectional sync is a post-GA fast-follow) | Conversation state, user choices, verified flags |
 
+> **Type note (262.10):** The `id` primitive type is deprecated in favor of `string`. Update any variable declarations using `id` — `string` is the correct type for Salesforce record IDs and all other identifier values going forward.
+
 **Current behavior (GA).** Variable mapping is one-way: the orchestrator pushes values down to the subagent at session start. If a subagent learns something important during its turn — the user is now verified, or has selected a product — that information does not automatically flow back to the orchestrator. Design workflows with this in mind: architect your orchestrator to re-collect needed state rather than assuming subagent updates propagate back.
 
 **Post-GA fast-follow.** Bidirectional state sync (`<>` mapping in Agent Script) is planned as a fast-follow after GA. When available, the orchestrator will receive the full updated variable state after every subagent turn, including all variables the subagent was permitted to write back. This release will also include the last 20 messages of conversation history as the default context window (up from 10).
@@ -214,9 +257,23 @@ Variables are the mechanism for passing context from the orchestrator to connect
 
 **Mapping validation.** If a mapped variable is renamed or deleted in either the orchestrator or the subagent, the system blocks the save and surfaces a validation error. This is intentional: a silent mapping break is nearly impossible to debug at runtime.
 
+**System variables for channel-aware routing (262.12).** Two new system variables are populated at the start of every inbound turn and are available to all subagents, including connected ones:
+
+- `@system_variables.current_modality` — the current channel modality (e.g., `"voice"`, `"text"`). Use this to adjust routing or response style based on whether the user is on a voice channel or a text channel.
+- `@system_variables.current_connection` — the active connection context for the session.
+
+These are read-only system variables. They are particularly useful in multi-agent networks where different connected subagents may need to behave differently depending on whether the user is on a voice call versus a chat session. Reference them in `available when` clauses or in `before_reasoning` blocks to gate behavior by modality.
+
+**Voice interrupt system variables (262.14).** For agents deployed on voice channels, two additional system variables support interrupt-aware workflows:
+
+- `@system_variables.last_reply.interrupted` — boolean; `true` if the user interrupted the agent's last response.
+- `@system_variables.last_reply.interrupted_heard_text` — the text the user spoke during the interruption.
+
+These variables are voice-channel-specific and will be empty on text channels. Use them in `after_response` blocks or `before_reasoning` to handle mid-response interruptions gracefully rather than treating them as new standalone utterances.
+
 ### 5.3 Deterministic Routing with Agent Script
 
-For critical business logic, use `@when` expressions in Agent Script to define hard routing rules. These execute before the reasoning engine runs, so they are faster, more predictable, and easier to audit.
+For critical business logic, use conditional expressions in Agent Script to define hard routing rules. These execute before the reasoning engine runs, so they are faster, more predictable, and easier to audit.
 
 ```agentscript
 # Route verified users directly to Order Management
@@ -229,12 +286,45 @@ if @variables.customer_tier == "Platinum":
     -> transition to Premium_Support_Agent
 ```
 
-Deterministic transitions execute immediately. They do not consume an LLM call. Use them for:
+**Deterministic transition mechanisms.** Agent Script supports four deterministic routing and termination mechanisms. Each has a distinct purpose:
+
+| Mechanism | Syntax | Behavior | Use for |
+|---|---|---|---|
+| Transition to local subagent | `-> transition to SubagentName` | One-way; control returns to start_agent after the target subagent completes | Routing to standard internal subagents |
+| Transition to connected subagent | `-> transition to @connected_subagent.AgentName` | One-way; fully supported as of 262.10 | Routing deterministically to a connected (multi-agent) subagent |
+| `@utils.transition to` | `-> @utils.transition to SubagentName` | One-way via utility; supports conditional logic | Routing from within reasoning actions |
+| `escalate` | `-> escalate` | Deterministic; single-fire; hands off to a fixed escalation target | Escalating to a human agent or fixed fallback |
+
+**Connected subagents as valid transition targets (262.10).** Prior to 262.10, `transition to @connected_subagent.X` emitted a compile-time warning. That warning is fully resolved. Deterministic routing to connected subagents now compiles cleanly through the normal supervision path. This closes the gap where connected subagents were reachable only via LLM-driven routing — architects can now hard-code routes to connected subagents for the same mandatory prerequisite gates and tier-based routing patterns described above.
+
+**The `escalate` statement (262.14).** The `escalate` statement is a top-level deterministic mechanism usable directly inside `reasoning.instructions`. It hands off to a fixed escalation target and fires exactly once. It cannot be re-triggered in the same turn. This single-fire guarantee is the key design property: accidental re-fires — for example, from a `before_reasoning` loop that runs multiple times — are precisely the bug class that makes escalation in complex workflows hard to reason about. Use `escalate` wherever a human handoff must happen exactly once and unconditionally.
+
+```agentscript
+if @variables.escalation_requested == true:
+    -> escalate
+```
+
+**`else if` conditionals in `->` mode (262.12).** Full `else if` chains are now supported in Agent Script's deterministic (`->`) mode. Use them to write branching routing logic without nesting multiple independent `if` blocks.
+
+```agentscript
+if @variables.customer_tier == "Platinum":
+    -> transition to Premium_Support_Agent
+else if @variables.customer_tier == "Gold":
+    -> transition to Standard_Support_Agent
+else:
+    -> transition to General_Inquiry_Agent
+```
+
+> **Canvas UI note:** `else if` chains are currently supported in Script view only. The Canvas UI does not yet render them. Build and maintain `else if` routing logic in Script view.
+
+Deterministic transitions do not consume an LLM call. Use them for:
 - Mandatory prerequisite gates (identity verification before order access)
 - Predictable high-volume routing (customer tier-based routing)
 - Required workflow steps that must not be bypassed
 
 Reserve LLM-driven routing (the reasoning engine's default behavior) for cases where the correct subagent depends on nuanced user intent that cannot be pre-coded.
+
+**`available when` routing guards (262.10).** The compiler now emits a lint warning when an `available when` clause resolves to a non-boolean literal. Boolean-returning conditions are required. If your routing guards use comparisons that could accidentally resolve to a string or number, the lint will catch it at compile time rather than producing silent misrouting at runtime.
 
 ---
 
@@ -246,7 +336,32 @@ The orchestrator receives every user request. It reads each connected subagent's
 
 **Latency note.** In supervised mode, every user turn involves at minimum: an orchestrator routing call (LLM hop 1), an agent-to-agent API call, a subagent topic selection (LLM hop 2), and response synthesis back up the chain (LLM hop 3). At P95, this adds 12–20 seconds of orchestration overhead on top of the subagent's own execution time. Design SLAs accordingly.
 
-**Streaming.** Token streaming is enabled by default. Users see sub-agent output appearing in a collapsible reasoning panel word by word while synthesis runs — eliminating the blank waiting state. The final synthesized response then streams into the main chat area. Streaming can be disabled per agent in script with `additional_parameter__disable_streaming: True`; the Superagent's flag takes precedence over subagent flags for the end-user experience.
+**Runtime configuration (262.12).** A `config.runtime` block is now available at the top level of an agent's script. It exposes boolean flags that control platform-level behaviors:
+
+```agentscript
+config:
+    ...
+    runtime:
+        streaming: true
+        thought_chunks: true
+        citation: false
+        groundedness: true
+        reset_to_initial_node: false
+```
+
+| Flag | Effect |
+|---|---|
+| `streaming` | Enables or disables token streaming for this agent. Replaces the previous `additional_parameter__disable_streaming` approach. |
+| `thought_chunks` | Controls whether intermediate reasoning chunks are emitted to the reasoning panel. |
+| `citation` | Enables or disables source citation in responses. |
+| `groundedness` | Explicitly enables or disables groundedness validation. Previously this was an implicit platform behavior with no direct switch. |
+| `reset_to_initial_node` | When `true`, resets conversation state to the initial node after the session ends. Relevant to architectures that reuse session state across turns. |
+
+> **Compile error on empty `runtime` block:** An empty `runtime:` block is now a hard compile error. If you declare the block, you must set at least one flag. Either populate it or omit it entirely.
+
+Two things are worth calling out for multi-agent architects specifically. The `groundedness` flag changes the prior assumption that groundedness was always active underneath your agent configuration — it is now an explicit, auditable switch. If your orchestrator's security model assumes groundedness is enforced, add `groundedness: true` explicitly rather than relying on default platform behavior. And `reset_to_initial_node` is directly relevant to Section 7's discussion of session state and statelessness: if your orchestrator accumulates state across a session that should not persist into a new turn, this flag provides the reset mechanism.
+
+**Streaming.** With the `config.runtime` block, streaming is now controlled via `runtime.streaming: true/false`. Users see sub-agent output appearing in a collapsible reasoning panel word by word while synthesis runs — eliminating the blank waiting state. The final synthesized response then streams into the main chat area. The Superagent's flag takes precedence over subagent flags for the end-user experience.
 
 **Progress messaging.** During delegation, users see a configurable progress message ("Collaborating with our team..."). Admins configure this per Superagent in the builder. Sub-agent outputs appear in a collapsible reasoning panel (visible on LEX, Slack, and Enhanced Chat; hidden on WhatsApp, SMS, and Mobile).
 
@@ -266,7 +381,7 @@ The orchestrator fans out to multiple specialists simultaneously. Each runs inde
 
 **When to use.** Tasks requiring multiple independent inputs: portfolio analysis, composite risk assessment, multi-system due diligence. Running several analyses in parallel — for example, risk scoring, market insights, regulatory grading, and tax harvesting — means none needs to wait for another to begin.
 
-**Watch out.** The orchestrator waits for *all* agents before synthesizing. A single timing out subagent blocks the whole response. Build explicit partial-result handling into synthesis logic before deploying parallel patterns in production.
+**Watch out.** The orchestrator waits for *all* agents before synthesizing. A single timing-out subagent blocks the whole response. Build explicit partial-result handling into synthesis logic before deploying parallel patterns in production.
 
 > **Status:** Not yet available in GA rollout. Target: post-GA.
 
@@ -305,6 +420,7 @@ These two numbers operate at different levels of the architecture. A SOMA networ
 | 3P agent call timeout | **120 seconds** | Scoped specifically to outbound calls to third-party (3P) agents via A2A. If a 3P agent does not respond within 120 seconds, the system prompts the user to retry. This is **not** an orchestrator-wide timeout. |
 | Variable mapping direction | One-way: orchestrator to subagent | Bidirectional is a post-GA fast-follow. |
 | Context history on delegation | Last 10 messages | Confirmed in Pilot PRD. Verify against your org's release notes post-GA rollout completion; this value may be updated. |
+| `config.runtime` empty block | Hard compile error | An empty `runtime:` block fails compilation. Set at least one flag or omit the block. |
 
 > **Note on subagent counts:** The previously published "5 internal subagents per connected subagent (hard limit)" figure in v3.0 has been removed. That figure could not be sourced from any Salesforce primary documentation and is directly contradicted by official PM guidance. The verified limits are: up to 10 topics per agent and up to 10 actions per subagent (both soft recommendations), with no documented hard cap on internal subagent or topic count per connected subagent.
 
@@ -317,6 +433,41 @@ These two numbers operate at different levels of the architecture. A SOMA networ
 | AEA | ASA | Yes |
 | ASA | AEA | No |
 | Any | File-based (SDR, Analytics) | Post-GA |
+
+### 7.4 Goal-Based Agents: Beyond Turn-Based Orchestration (Pilot)
+
+> **Pilot status:** Everything in this section describes pilot functionality introduced in 262.14. Syntax and block structure are subject to change before GA. Do not use this section's content to represent production-ready capabilities.
+
+The Supervisor pattern described throughout this guide — and the turn-based `start_agent` model that underlies it — assumes a user is present: a human sends a message, the orchestrator routes it, an agent responds. Every section of this guide from Section 4 onward is built on that model.
+
+Goal-Based Agents (also referred to as AgentIQ internally) introduce a fundamentally different execution model. Instead of responding to inbound user turns, a Goal-Based Agent is triggered by a scheduled event or an external condition and executes an autonomous, multi-step workflow without a human in the loop for each step. This is not a variation of the Supervisor pattern. It is a separate agent type with its own blocks, its own scheduling primitives, and its own compile-time enforcement.
+
+**Why it matters for this guide.** Multi-agent architects evaluating long-running, scheduled, or event-driven workflows should be aware that Goal-Based Agents exist as an emerging option — and that mixing Goal-Based Agent blocks into a standard agent script is now a hard compile error (262.14 enforces this). The two models are intentionally separated at the compiler level.
+
+**Enabling Goal-Based Agents.** The `config.agent_type` field must be set to `"GoalBasedAgent"`. Omitting this flag while using the blocks below will produce a compile error.
+
+```agentscript
+config:
+    name: "Portfolio_Review_Agent"
+    agent_type: "GoalBasedAgent"
+```
+
+**New blocks introduced by Goal-Based Agents:**
+
+| Block | Purpose |
+|---|---|
+| `workflows` | Defines the named multi-step workflows the agent can execute |
+| `trigger` | Specifies scheduling rules (cron syntax) that initiate workflow execution without a user turn |
+| `orchestrator` | Configures how the agent coordinates across workflow steps |
+| `# @dialect: agentforce-plugin` | File-level declaration marking a file as an agent plugin |
+
+**Plugins.** Goal-Based Agents can reference modular skill packages declared with the `# @dialect: agentforce-plugin` file directive. Once declared, they are referenced in script as `@plugins.<name>.*`. This is distinct from Inline Skills (see below) — plugins are externally defined, file-level constructs; Inline Skills are node-level definitions within a single agent's script.
+
+**What to do now.** Goal-Based Agents are pilot-gated and syntax is subject to change. The appropriate action for teams evaluating scheduled or autonomous workflows is to register interest with your Salesforce account team and follow the pilot program. Do not build production dependencies on the `workflows`, `trigger`, or `orchestrator` blocks until GA guidance is published.
+
+**Inline Skills (Pilot, 262.14).** A related pilot feature worth noting: `reasoning.skills` is a per-node block that mirrors how `reasoning.actions` maps tools to LLM-callable functions, but for skills rather than actions. Skills can be defined inline with an `instructions` body, or they can point at an external `skill://` target. A top-level `skill_definitions` block registers skills for use across subagents.
+
+This is a new instruction-authoring primitive that sits alongside actions in the reasoning surface. It is in pilot and syntax may change. Architects designing agent networks that will need skill-level modularity should be aware it is coming, but should not build production logic against it until the GA surface is stable.
 
 ---
 
@@ -338,6 +489,20 @@ These two numbers operate at different levels of the architecture. A SOMA networ
 **Trust boundary rules (MOMA).** An org can belong to only one agent trust boundary at a time. Trust boundaries are stored in GDoT. Agent sharing is opt-in: admins explicitly mark agents as shareable. Shared agents are grouped into Agent Groups that control per-org visibility. An org cannot be in multiple agent trust boundaries simultaneously, though it can be in one DC1 trust boundary and one agent trust boundary at the same time.
 
 **Who can connect agents.** Org Admin only. Connecting agents in a SOMA or MOMA network is an elevated operation restricted to administrators.
+
+**`strip_salesforce_instructions` (262.14).** This flag removes the Salesforce system prompt from an agent's context. It can be applied top-level (removing it for the entire agent) or per-subagent (removing it for a specific node).
+
+This has direct security and governance implications for multi-agent networks. The guide's system instruction model — described in Sections 4 and 6 — assumes a Salesforce baseline persona sits underneath any custom instructions you write. That baseline provides a behavioral floor: it constrains tone, enforces basic safety behaviors, and gives the LLM a grounded starting persona even when your own instructions are silent on a topic.
+
+Stripping it removes that floor entirely. In a SOMA network, this means:
+
+- Any behavioral invariant the Salesforce baseline was silently covering — safety constraints, refusal behaviors, persona defaults — must now be restated explicitly in your own system instructions or in the orchestrator's global instruction block.
+- Connected subagents that inherit from the orchestrator's instructions do so against your custom baseline, not the Salesforce one. If a subagent was relying on the Salesforce baseline to fill gaps in its own instructions, those gaps are now uncovered.
+- The risk is highest in networks where individual connected subagents have thin or partial instruction sets, because the baseline was doing more work per node than architects may have realized.
+
+If you use `strip_salesforce_instructions`, treat it as a requirement to perform a full audit of all system instruction surfaces across the network — orchestrator and every connected subagent — to ensure no gap is left unaddressed.
+
+**Escalation path governance.** The `delegate_escalation` field on connected subagents (boolean, default `true`) controls whether, when a connected subagent triggers an escalation, it uses the connected subagent's own outbound escalation flow or the orchestrator's. With the default of `true`, escalation follows the connected subagent's own flow — which may route to a queue or agent group configured in a different org or context than the orchestrator's. Set `delegate_escalation: false` on connected subagents where you want all escalation to flow through the orchestrator's centralized path. This is particularly important in MOMA networks, where connected subagents in different orgs may have escalation targets that are invisible to the orchestrating org's governance team.
 
 ---
 
@@ -368,7 +533,7 @@ Multi-agent architectures carry higher latency than single-agent solutions by de
 
 ## 10. Observability and Testing
 
-### 10.1 Unified Trace and Session Logging
+### 10.1 Unified Trace and Logging
 
 Every multi-agent session generates independent trace logs for both the Superagent and all connected subagents, stored in STDM (Salesforce Trace Data Model). The architecture supports bidirectional lookup:
 
@@ -413,9 +578,11 @@ Agentforce Builder provides three interchangeable views, all of which compile to
 |---|---|
 | Conversational | Describe the network in natural language ("I need a supervisor agent that coordinates my Billing Agent and Logistics Agent"). The system generates connections automatically. |
 | Canvas | Point-and-click configuration via the Resource tab. Select Connected Agents, then Add. Multiple agents can be added together. |
-| Script | Direct Agent Script editing. Supports `@when` expressions, conditionals, variable mappings, and explicit `connected_subagent` blocks. |
+| Script | Direct Agent Script editing. Supports conditionals, variable mappings, `else if` chains, and explicit `connected_subagent` blocks. |
 
 Admins can switch between views at any time without losing work. All views reflect the same underlying configuration.
+
+> **Note:** `else if` chains in deterministic (`->`) mode are only visible and editable in Script view. Canvas does not yet render them. Routing logic that uses `else if` should be authored and maintained in Script view.
 
 ### 11.2 Connecting Agents
 
@@ -436,6 +603,8 @@ Before publishing, run **Check Network Health** to validate the agent network. V
 | Loop detection (A routes to B which routes back to A) | Block — not permitted |
 | Skill overlap | LLM-based warning with suggestions; does not hard-block |
 | Language compatibility | Error if no overlapping supported languages between Superagent and subagent |
+| `available when` non-boolean condition | Lint warning — condition resolves to a non-boolean literal |
+| Empty `config.runtime` block | Hard compile error — set at least one flag or omit the block |
 
 ### 11.4 Composability and Updates
 
@@ -451,7 +620,8 @@ Sub-agents can be added or removed from an active Superagent without deactivatin
 
 | Setting | Location | Configurable by | Default |
 |---|---|---|---|
-| Streaming on/off | Per agent, script | Admin | On |
+| Streaming on/off | `config.runtime.streaming` in agent script | Admin | On |
+| Groundedness on/off | `config.runtime.groundedness` in agent script | Admin | Platform default (set explicitly to ensure it) |
 | Handoff on/off (post-GA) | Per subagent, script (`allow_direct_handoff`) | Admin | On for trusted agents |
 | Variable mapping direction | Script | Admin | Explicit — no default |
 | Global instructions (brand tone, policies) | Orchestrator script | Admin | Off; subagent opts in |
@@ -459,6 +629,8 @@ Sub-agents can be added or removed from an active Superagent without deactivatin
 | Trust designation | Platform | Salesforce | — |
 | Reasoning panel visibility | Platform, per channel | Not configurable | Visible on rich UI channels only |
 | Who can connect agents | Platform | Org Admin only | — |
+| Escalation path | `delegate_escalation` on connected subagent | Admin | `true` (connected subagent's own flow) |
+| Salesforce system prompt | `strip_salesforce_instructions` | Admin | Off (baseline present) |
 
 ---
 
@@ -533,31 +705,47 @@ An enterprise AI platform serving internal staff with HR, finance, and IT querie
 Use this checklist before activating a SOMA Superagent network for production traffic.
 
 ### Org Readiness
+
 - [ ] Confirm SOMA is enabled in your org — check your pod's rollout status if not yet visible (full rollout expected by ~August 25–26, 2026)
 - [ ] Einstein and Agentforce features are enabled in org settings
 - [ ] Org Admin permissions are confirmed for the user connecting agents
 - [ ] All sub-agents are individually activated before being added to the network
 
 ### Architecture Review
+
 - [ ] Each connected subagent has a distinct, non-overlapping description
 - [ ] Delegation depth is 1 level only (no A to B to C chains)
 - [ ] Network width is at or below 8 connected subagents; if wider, document the rationale and run extended performance testing
 - [ ] Complex multi-step subagent workflows that may approach 30 seconds of reasoning time are identified — plan to route these to Handoff Mode (post-GA) or restructure as single-agent flows
 - [ ] Circular routing (A to B back to A) has been checked and is absent
 - [ ] The supported agent-type combination is confirmed (AEA-to-AEA, ASA-to-ASA, or AEA-to-ASA only; ASA-to-AEA is not supported)
+- [ ] All `connected_subagent` target fields use the `agent://` URI scheme (not the deprecated `agentforce://`)
+- [ ] `config.runtime` block, if present, sets at least one flag (empty block is a compile error)
+- [ ] If `strip_salesforce_instructions` is enabled on any agent or subagent, a full audit of all system instruction surfaces in the network has been completed and all behavioral invariants are restated explicitly
 
 ### Variable and Context Design
+
 - [ ] Variable mapping is one-directional (orchestrator to subagent); no workflow logic assumes subagent writes propagate back automatically
 - [ ] Context history dependency is within the 10-message window per delegation call
 - [ ] All mapped variables exist in both the orchestrator and the target subagent; validation errors are resolved before publishing
+- [ ] All variable declarations use `string` rather than the deprecated `id` type
+- [ ] All required action inputs either have an explicit `with` binding, a declared default, or an intentional `slot_filled_by: LLM` annotation — no required inputs are left implicitly unbound
+
+### Routing and Escalation
+
+- [ ] All `available when` conditions are confirmed to return boolean values (non-boolean conditions emit a lint warning and may produce silent misrouting)
+- [ ] `delegate_escalation` is set intentionally on all connected subagents — `true` routes escalation through the connected subagent's own flow; `false` routes it through the orchestrator
+- [ ] Any use of the deterministic `escalate` statement is reviewed to confirm it fires exactly once per turn and is not placed in a context where it could be re-triggered
 
 ### Performance and SLA Planning
+
 - [ ] SLAs account for 12–20 seconds of P95 orchestration overhead (supervised mode) on top of subagent execution time
-- [ ] Streaming is confirmed on for all agents in the network (check per-agent script flags)
+- [ ] Streaming is confirmed on for all agents in the network (`config.runtime.streaming: true`)
 - [ ] Progress messaging text is customized for your use case
 - [ ] Failure messages are reviewed: clean, user-facing, and actionable; no internal errors or sub-agent names exposed
 
 ### Testing
+
 - [ ] Agent network validated with Check Network Health in builder
 - [ ] Conversation preview tested in Agentforce Builder for at least the core happy-path scenarios
 - [ ] Routing logic tested: does the orchestrator select the correct subagent for each intended query type?
@@ -566,6 +754,7 @@ Use this checklist before activating a SOMA Superagent network for production tr
 - [ ] Latency measured under realistic load; results within acceptable SLA range
 
 ### For 3P / Cross-Platform (Beta only)
+
 - [ ] Named Credentials confirmed and connection status is active for all registered 3P agents
 - [ ] Allowlist is configured with only the intended AF agents exposed to external vendors
 - [ ] ECA is configured with `a2a_api` scope for inbound flows

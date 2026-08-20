@@ -1,14 +1,22 @@
 import SwiftUI
 
 enum CertCatalog {
-    static let all: [CertConfig] = [
-        agentforce,
-        agentOps,
-        dataCloud360,
+    // ── Deep Dives ──
+    static let deepDives: [CertConfig] = [
+        agentforceArchitect,
         reasoningEngine,
         rag,
-        multiagent,
         tracinganalytics,
+        multiagent,
+        customLWC,
+        agentOps,
+        agentforceCoworker
+    ]
+
+    // ── Certifications ──
+    static let certifications: [CertConfig] = [
+        agentforce,
+        dataCloud360,
         agentforceSales,
         agentforceService,
         businessAnalyst,
@@ -21,6 +29,75 @@ enum CertCatalog {
         sharingVisibility,
         uxDesigner
     ]
+
+    static let all: [CertConfig] = deepDives + certifications
+
+    // ── Deep Dive Definitions ──
+
+    static let agentforceArchitect = CertConfig(
+        id: "agentforcearchitect",
+        name: "The Agentforce Architect: A Design and Planning Guide",
+        shortName: "Agentforce Architect",
+        icon: "building.columns.fill",
+        primaryColor: Color(red: 0.15, green: 0.39, blue: 0.92),
+        secondaryColor: Color(red: 0.23, green: 0.51, blue: 0.96),
+        headerGradient: [
+            Color(red: 0.12, green: 0.23, blue: 0.54),
+            Color(red: 0.12, green: 0.25, blue: 0.69),
+            Color(red: 0.15, green: 0.39, blue: 0.92)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "agentforcearchitect",
+        isBonusTopic: true,
+        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcearchitect")
+    )
+
+    static let customLWC = CertConfig(
+        id: "customlwc",
+        name: "Custom Lightning Components in Agentforce Agents",
+        shortName: "Custom LWC",
+        icon: "bolt.fill",
+        primaryColor: Color(red: 0.49, green: 0.23, blue: 0.93),
+        secondaryColor: Color(red: 0.55, green: 0.36, blue: 0.96),
+        headerGradient: [
+            Color(red: 0.30, green: 0.11, blue: 0.58),
+            Color(red: 0.36, green: 0.13, blue: 0.71),
+            Color(red: 0.49, green: 0.23, blue: 0.93)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "customlwc",
+        isBonusTopic: true,
+        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=customlwc")
+    )
+
+    static let agentforceCoworker = CertConfig(
+        id: "agentforcecoworker",
+        name: "Agentforce Coworker: A Success Architect's Guide",
+        shortName: "Agentforce Coworker",
+        icon: "person.2.fill",
+        primaryColor: Color(red: 0.03, green: 0.57, blue: 0.70),
+        secondaryColor: Color(red: 0.13, green: 0.83, blue: 0.93),
+        headerGradient: [
+            Color(red: 0.09, green: 0.31, blue: 0.39),
+            Color(red: 0.08, green: 0.37, blue: 0.46),
+            Color(red: 0.03, green: 0.57, blue: 0.70)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "agentforcecoworker",
+        isBonusTopic: true,
+        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcecoworker")
+    )
+
+    // ── Certification Definitions ──
 
     static let agentforce = CertConfig(
         id: "agentforce",
@@ -65,10 +142,9 @@ enum CertCatalog {
             QuizLength(id: 50, label: "All 50 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~30 min")
         ],
         questions: AgentOpsQuestionBank.all,
-        studySections: AgentOpsStudyBank.sections,
+        studySections: [],
         storageKeyPrefix: "agentops",
         isBonusTopic: true,
-        subtitle: "Deep Dive — Not an official Salesforce certification",
         guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentops")
     )
 
@@ -98,8 +174,8 @@ enum CertCatalog {
 
     static let reasoningEngine = CertConfig(
         id: "reasoningengine",
-        name: "Inside Daisy: The Agentforce Reasoning Engine",
-        shortName: "Daisy",
+        name: "Inside the Atlas Reasoning Engine",
+        shortName: "Atlas",
         icon: "cpu.fill",
         primaryColor: Color(red: 0.40, green: 0.20, blue: 0.60),
         secondaryColor: .purple,
@@ -115,10 +191,9 @@ enum CertCatalog {
             QuizLength(id: 44, label: "All 44 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~22 min")
         ],
         questions: ReasoningEngineQuestionBank.all,
-        studySections: ReasoningEngineStudyBank.sections,
+        studySections: [],
         storageKeyPrefix: "reasoningengine",
         isBonusTopic: true,
-        subtitle: "Deep Dive — Not an official Salesforce certification",
         guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=reasoningengine")
     )
 
@@ -142,14 +217,11 @@ enum CertCatalog {
             QuizLength(id: 77, label: "All 77 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~39 min")
         ],
         questions: RAGQuestionBank.all,
-        studySections: RAGStudyBank.sections,
+        studySections: [],
         storageKeyPrefix: "rag",
         isBonusTopic: true,
-        subtitle: "Deep Dive — Not an official Salesforce certification",
         guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=rag")
     )
-
-    // ── Study-Only Certs (no quiz yet) ──
 
     static let agentforceSales = CertConfig(
         id: "agentforcesales",
@@ -410,10 +482,9 @@ enum CertCatalog {
             QuizLength(id: 70, label: "All 70 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~35 min")
         ],
         questions: MultiAgentQuestionBank.all,
-        studySections: MultiAgentStudyBank.sections,
+        studySections: [],
         storageKeyPrefix: "multiagent",
         isBonusTopic: true,
-        subtitle: "Deep Dive — Not an official Salesforce certification",
         guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=multiagent")
     )
 
@@ -436,10 +507,9 @@ enum CertCatalog {
             QuizLength(id: 77, label: "All 77 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~39 min")
         ],
         questions: TracingAnalyticsQuestionBank.all,
-        studySections: TracingAnalyticsStudyBank.sections,
+        studySections: [],
         storageKeyPrefix: "tracinganalytics",
         isBonusTopic: true,
-        subtitle: "Deep Dive — Not an official Salesforce certification",
         guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=tracinganalytics")
     )
 
