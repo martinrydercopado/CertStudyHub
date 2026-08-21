@@ -1,5 +1,16 @@
 # RAG, Agentforce & Data Cloud
-## A Success Architect Guide
+## A Success Architect Guide — Version 3.2
+
+*Updated August 20, 2026*
+*This guide was generated using AI with grounding in official Salesforce documentation. Review for accuracy before using.*
+
+---
+
+> **How to use this guide:** Read it in order the first time. Each section builds on the last. The arc runs from "how Agentforce thinks" through "how to set up and govern a grounded agent in production." Real-world scenarios are embedded throughout to anchor abstract concepts to client conversations you will actually face.
+>
+> **Scope note:** This guide is written for Success Architects. It covers what you need to understand, recommend, and troubleshoot — not how to implement at a developer level. Pro-code patterns (Apex, Connect API, MuleSoft) are noted where they exist so you can have informed conversations, but implementation detail is left to the delivery team.
+>
+> **Terminology note:** The Agentforce reasoning engine has two names depending on context. "Atlas" is the public-facing name for the runtime engine — the term you use with clients and in documentation. "Unified Planner" is the engineering product name used in the Salesforce Engineering blog and internal architecture discussions. Both refer to the same system. This guide uses "Atlas" when discussing the runtime and "Unified Planner" when discussing the engineering architecture.
 
 ---
 
@@ -26,7 +37,7 @@
 
 **Part 5: Trust, Infrastructure, and Governance**
 - [Chapter 11: The Einstein Trust Layer — Your Security Answer](#chapter-11-the-einstein-trust-layer)
-- [Chapter 12: Data Cloud — The Intelligence Infrastructure](#chapter-12-data-cloud)
+- [Chapter 12: Data 360 — The Intelligence Infrastructure](#chapter-12-data-360)
 - [Chapter 13: The Four-Layer Permission Model](#chapter-13-the-four-layer-permission-model)
 
 **Part 6: Production Operations**
@@ -83,21 +94,23 @@ The deterministic layer always runs first and sets the boundaries. The LLM opera
 
 The answer depends on which Agentforce Builder was used to create the agent — and this distinction matters for performance, cost, and capability conversations.
 
-| Builder | Default Reasoning Model |
+> **Important:** Salesforce's "Salesforce Default" model is a managed mix rather than a fixed single model. The current mix includes GPT-4o alongside other models. Salesforce may update the composition of this managed mix across releases without a versioned change. The table below reflects the current documented defaults, but verify against the latest release notes before quoting specific models to clients, and note that the exact model served can change.
+
+| Builder | Documented Default Reasoning Model |
 |---|---|
-| Legacy Agentforce Builder | OpenAI / Azure OpenAI GPT-4o |
-| New Agentforce Builder | OpenAI GPT-4.1 or Anthropic Claude Haiku 4.5 |
+| Legacy Agentforce Builder | Salesforce Default (currently includes GPT-4o) |
+| New Agentforce Builder | Salesforce Default; recommended configurations use GPT-4.1 or Anthropic Claude Haiku 4.5 |
 
 Salesforce documentation recommends GPT-4.1, Claude Haiku 4.5, and Gemini 3.5 Flash as the three models most thoroughly tested with Agentforce agents. Neither GPT-4.1 nor Claude Haiku 4.5 is positioned as categorically superior — they optimize for different dimensions, and the right choice depends on your client's specific requirements.
 
 **The trust boundary distinction is the key differentiator for SA conversations:**
 
-- **Claude Haiku 4.5** runs within the **Salesforce Extended Trust Boundary** — AWS Bedrock, using Salesforce-managed private connections. This offers stronger data residency assurance for regulated industry clients. Claude Haiku 4.5 does not support multimodal features.
-- **GPT-4.1** runs over the **Salesforce Shared Trust Boundary** — public internet with contractual zero data retention protections. It supports multimodal features and is Salesforce's recommended default for most agent configurations.
+- **Claude Haiku 4.5** runs within the **Salesforce trust boundary** — AWS Bedrock, using Salesforce-managed private connections. This offers stronger data residency assurance for regulated industry clients. Claude Haiku 4.5 does not support multimodal features.
+- **GPT-4.1** runs over the **shared trust boundary** — public internet with contractual zero data retention protections. It supports multimodal features and is Salesforce's recommended default for most agent configurations.
 
 > **Client conversation tip:** When a regulated industry client (financial services, healthcare, government) asks which model to use, lead with the trust boundary distinction rather than benchmark comparisons. For most compliance conversations, data residency is the deciding criterion. When capability and feature set are the primary concern, GPT-4.1 is the stronger starting point. Always recommend thorough testing with the client's own workload before committing to a model in production — benchmark scores on generic datasets do not reliably predict performance on a specific domain.
 
-Clients migrating from legacy to new builder should be aware that the default model changes and should re-evaluate their agent's performance after migration.
+Clients migrating from legacy to new builder should be aware that the default model configuration changes and should re-evaluate their agent's performance after migration.
 
 ---
 
@@ -360,7 +373,7 @@ Each chunk is converted into a numeric vector representation using an embedding 
 |---|---|
 | E5-Large V2 (open source) | English-only corpora |
 | Multilingual E5-Large (open source) | Multi-language corpora |
-| OpenAI Ada 002 | Verify availability in current release notes — status may have changed since this guide was written |
+| OpenAI Ada 002 | Verify availability in current release notes — status may have changed |
 
 **Embedding model selection is an architectural commitment.** The embedding model must be the same at indexing time and query time. A mismatch produces low similarity scores for every query — which means retrievals always miss. More critically: changing the embedding model after index creation is a de facto destructive operation. Different models use entirely different vector spaces and dimensionalities — every existing vector in the index is invalidated, requiring a full teardown and re-indexing of all content. Treat model selection as an irreversible architectural decision. The multilingual model is the safe default for any org serving users in more than one language.
 
@@ -457,7 +470,7 @@ Hybrid search is the recommended default for most production RAG deployments. Th
 
 - **Quality improvement:** More reliable first-hit retrieval across diverse query types
 - **Latency cost:** Hybrid runs two separate search operations and then reranks — observable latency increase
-- **Credit cost:** Hybrid search consumes roughly twice as many Data Cloud service credits as vector-only search
+- **Credit cost:** Hybrid search consumes more Data Cloud service credits than vector-only search. This is internally confirmed by Salesforce Data Cloud support. The exact credit multiplier is not published externally — do not quote a specific ratio to clients; quote the direction only.
 
 For corpora consisting of pure, continuous prose where users consistently phrase queries in natural language, vector-only search is sufficient and less expensive. For corpora containing product catalogs, SKU numbers, support case IDs, or technical specifications, hybrid is the safer choice.
 
@@ -485,7 +498,7 @@ Ensemble retrievers do not simply merge relevance scores from individual retriev
 
 The **Agentforce Data Library (ADL)** is the no-code/low-code path to production RAG. When you create an ADL, the platform automatically provisions the complete pipeline: Data Stream, Data Lake Object (DLO), Data Model Object (DMO), Search Index, Retriever, Prompt Template, and Agent Action. One ADL per agent. The agent is the scope.
 
-**ADL is the right default for most client deployments.** It is faster to provision, easier to maintain, and designed specifically for the Agentforce use case. Choose manual configuration only when the ADL's constraints genuinely prevent the required architecture.
+**ADL is the right default for most client deployments.** It is faster to provision, easier to maintain, and designed specifically for the Agentforce use case. Choose manual only when the ADL's constraints genuinely prevent the required architecture.
 
 #### 7.2 ADL Is a Single-Source Architecture — Today
 
@@ -494,43 +507,6 @@ This is one of the most important architectural facts to communicate clearly in 
 **ADL currently supports only two source types: files (SFDRIVE) and Salesforce Knowledge articles (KNOWLEDGE).** No other data sources are supported through the ADL interface.
 
 **ADL is designed as a single-source architecture.** An ADL can contain either files or knowledge articles — or both. If an ADL contains both, it creates two separate retrievers (one per source path) and bundles them into a default ensemble retriever. This works well when both sources are complementary for the same question domain.
-
-However: **the Ensemble Retriever that dynamically merges results from heterogeneous external sources is currently roadmap only.** If the client needs to ground responses in content from sources that ADL does not natively support — long-text fields on non-Knowledge objects, external databases, proprietary document stores — manual configuration is required today.
-
-> **Critical note:** When a client says "we have a knowledge base," always clarify whether they mean Salesforce Knowledge articles (`Knowledge__kav` records) or some other system. These are completely different architectures with different provisioning behaviors, permission requirements, and failure modes. Never assume.
-
-#### 7.3 When ADL Is Not Enough
-
-Use this checklist in every discovery conversation. If any item applies, manual configuration or a pro-code approach is required:
-
-- Content lives in long-text fields on non-Knowledge Salesforce objects
-- Content lives in an external system with data residency restrictions that prevent upload
-- Access control requirements need runtime procedural logic beyond pre-filters
-- The client needs ensemble retrieval across more than two heterogeneous non-ADL sources
-- The client already has an active custom retriever they want to reuse (use the `RETRIEVER` source type)
-
-#### 7.4 Multi-Source Architecture: Two Formal Approaches
-
-When a client needs answers that draw from more than one knowledge domain, there are two formal architectural approaches. Understanding the distinction gives you vocabulary for design conversations.
-
-**Approach 1: One prompt template with multiple retrievers**
-
-All retrievers feed into a single prompt template. The agent asks one question and receives context from all sources, merged and reranked. Best when:
-- Sources are complementary — a complete answer often requires evidence from more than one domain
-- It is not possible to predict in advance which source applies to which question type
-
-**Approach 2: Separate prompt template per retriever**
-
-Each retriever has its own prompt template and corresponding agent action. The agent selects which action to call based on the nature of the question. Best when:
-- It is possible to specify which data source applies to which question type
-- Different sources require different instructions or response formats
-- You want to avoid contaminating one source's results with another's noise
-
-> **Important architecture rule:** A search index maps to exactly one data source. For four data sources (files, knowledge articles, cases, custom records), four separate search indexes are required. There is no single-index multi-source configuration. This is a key discovery question: "How many distinct data sources do you need the agent to draw from?"
-
-#### 7.5 The Scoping Decision Tree
-
-Use this in every discovery conversation to determine the right architecture:
 
 ```
 Does the client have content to ground the agent?
@@ -600,7 +576,7 @@ SFDRIVE indexes each file individually as it is uploaded (Just-in-Time / JIT ind
 
 **External file storage — SFDRIVE is not limited to Salesforce-hosted files:**
 
-SFDRIVE supports files from external storage platforms without copying the physical files into Data Cloud. Only the raw textual content from the chunking process, and the DMO records, reside on Data Cloud. The physical files stay in their original location.
+SFDRIVE supports files from external storage platforms without copying the physical files into Data 360. Only the raw textual content from the chunking process, and the DMO records, reside on Data 360. The physical files stay in their original location.
 
 Supported external storage platforms:
 - AWS S3
@@ -629,7 +605,7 @@ This is a documented platform behavior that catches almost every first-time impl
 
 1. You create the KNOWLEDGE library. The CRM Connector is triggered.
 2. The Day 0 chunking job fires almost immediately.
-3. But the CRM Connector has not yet committed article data to the lakehouse — there is a brief visibility delay.
+3. But the CRM Connector has not yet committed article data to the lakehouse — there is approximately a **17-second** visibility delay before data is queryable.
 4. The chunking job sees 0 rows, skips processing, and emits a READY status anyway.
 5. The library shows READY with a non-null `retrieverId` — but contains 0 indexed chunks.
 
@@ -722,7 +698,7 @@ The `knowledge:` block must be placed between the `connection:` block (if presen
 ```yaml
 # Correct placement:
 connection:
-    messaging: ...    # if present
+    messaging:...    # if present
 
 knowledge:
     rag_feature_config_id: "ARFPC_<libraryId>"
@@ -829,9 +805,29 @@ Salesforce has contractual agreements with all LLM providers — OpenAI, Anthrop
 
 For clients in regulated industries: ZDR is the answer to "does our data train their model?" The answer is contractually no.
 
-**Pillar 2: Dynamic Data Masking**
+---
 
-Before a prompt reaches the LLM, the Trust Layer scans it for sensitive patterns — PII fields, financial data, health information — and replaces identified values with synthetic tokens. The LLM reasons over masked data. The response is de-tokenized before it reaches the user. The original values never leave Salesforce.
+**Pillar 2: Data Masking — Scope and Current Limitations**
+
+> **v3.2 Correction:** This pillar was incorrectly described in v3.1 as always-on for all Agentforce workloads. The accurate position is below.
+
+Unlike Salesforce's standard turnkey generative AI features (Service Reply Recommendations, Case Summarization, Search Answers), **dynamic data masking is currently disabled for Agentforce agent workflows** — that is, any prompt generated and sent by the Atlas Reasoning Engine as part of agent planning or action execution. This is a deliberate, documented architectural decision, not a defect: masking strips business context (account names, case details, customer identifiers) that the agent needs to reason accurately. Salesforce has not published a roadmap to change this.
+
+Masking still applies in two narrower cases:
+- Turnkey GenAI features invoked outside the agent planner (Service Replies, Work Summaries, Search Answers)
+- Prompt templates called directly via Flow, Apex, or LWC — outside of an agent context
+
+**What compensates for the lack of masking in agent workflows:**
+- Zero Data Retention (ZDR) still fully applies
+- Data in transit and at rest is encrypted
+- Prompt Injection Detection and Prompt Defense (Pillars 3 and 4) still run on every agent prompt
+- Toxicity Scoring (Pillar 5) still runs on every response
+- Standard Salesforce sharing, FLS, and permission sets still gate what data the agent can surface
+- Data 360's ABAC framework with CEDAR policies provides granular field- and row-level security at the data layer (see Chapter 12)
+
+**Client conversation implication:** When asked "is our PII masked before it reaches the LLM?" for an agent use case, the honest answer is no — masking is off for that path today. Lead with ZDR, encryption, and the trust-boundary model instead. Be direct that this is current-state architecture, not a client-configurable toggle.
+
+---
 
 **Pillar 3: Prompt Injection Detection**
 
@@ -847,70 +843,91 @@ Every LLM response is scored for toxic content before it reaches the user. Respo
 
 Input-level toxicity detection (before the prompt reaches the LLM) and output-level toxicity detection (before the response reaches the user) both run. For sensitive use cases (HR grievances, healthcare discussions), test with realistic conversation samples before launch to calibrate thresholds appropriately.
 
-#### 11.3 The Audit Trail
-
-The Audit Trail captures every prompt, every response, every trust signal applied, and every user feedback event — stored in Data Cloud.
-
-**For compliance teams:** Pre-built dashboards for audit reporting. Every interaction is traceable.
-
-**For architects:** The Audit Trail is also a quality improvement data source. Patterns of negative feedback reveal content gaps. Patterns where specific users' data frequently surfaces in retrieved content can reveal corpus design issues — or permission gaps at the pre-filter level.
-
-#### 11.4 The Circuit Breaker — Resilience Architecture
-
-Agentforce implements an LLM provider failover mechanism. When primary provider traffic experiences sustained failures above an internal threshold, the platform bypasses retries and routes traffic to an equivalent endpoint — for OpenAI traffic, this means Azure OpenAI.
-
-> **Note on specific thresholds:** Exact circuit breaker parameters (failure percentage thresholds, window duration, reset timers) are not published in Salesforce's public documentation. The architectural behavior described here is confirmed. Do not quote specific numbers to clients — reference Salesforce's published SLA commitments and the circuit breaker architecture concept instead.
-
-**The geographic routing implication:** When the failover fires for US orgs, traffic stays within the US. For EU orgs, failover routes to the nearest Azure OpenAI deployment — which may be US-based. This is a cross-border transfer that should be noted in data residency documentation for EU clients and confirmed against current Salesforce infrastructure documentation before go-live.
-
-#### 11.5 The "Is Data Cloud Required?" Matrix
-
-| Feature | Requires Data Cloud |
-|---|---|
-| Basic conversational agent (no RAG) | No |
-| RAG via Agentforce Data Library | **Yes** |
-| Full Audit Trail | **Yes** |
-| Toxicity scoring storage | **Yes** |
-| Agentforce Analytics | **Yes** |
-| Agent Observability | **Yes** |
-| Bring Your Own LLM | **Yes** |
-| Unstructured data grounding (PDFs, files) | **Yes** |
-
-**The practical answer for enterprise clients:** If they want the features that make Agentforce enterprise-grade — RAG, compliance, analytics, observability — they need Data Cloud. Frame it this way: "Data Cloud is the intelligence infrastructure that makes your agent trustworthy, measurable, and continuously improvable."
-
----
-
-### Chapter 12: Data Cloud — The Intelligence Infrastructure
-
-#### 12.1 Why Data Cloud Matters for RAG
-
-Data Cloud is the foundational infrastructure for Agentforce grounding. The ADL provisions its entire pipeline within Data Cloud. The Audit Trail lives in Data Cloud. Observability data flows through Data Cloud. Without it, none of the enterprise-grade features discussed in this guide exist.
-
 > **Scenario: The Frantic Go-Live Morning**
 >
 > 8 AM on go-live day. The agent is deployed. Permission sets are assigned. The ADL shows READY. But every test question gets a polite decline.
 >
 > The four-layer diagnostic in order:
-> 1. Layer 1 check: Is the Data Cloud permission set assigned to the agent user? Confirmed.
-> 2. Layer 2 check: Does the agent user have access to the correct Data Cloud data space? Missing. The data space permission was never assigned. A 30-second fix that took 90 minutes to diagnose.
+> 1. Layer 1 check: Is the Data 360 permission set assigned to the agent user? Confirmed.
+> 2. Layer 2 check: Does the agent user have access to the correct Data 360 data space? Missing. The data space permission was never assigned. A 30-second fix that took 90 minutes to diagnose.
 >
 > Go-live is delayed by two hours. The four-layer permission model in Chapter 13 is the pre-launch checklist that prevents this scenario.
 
-#### 12.2 Data Cloud as a Zero-Copy Infrastructure
+---
 
-Data Cloud's architecture supports zero-copy data access for structured data from external platforms — Snowflake, Databricks, cloud storage. For RAG specifically, SFDRIVE-based libraries also follow a zero-copy model for external file storage: the physical files never move to Data Cloud. Only the text extracted from chunking, and the DMO records containing vectors, reside there. This matters for:
+### Chapter 12: Data 360 — The Intelligence Infrastructure
 
+Data 360 is Salesforce's cloud-native, metadata-driven data platform — the infrastructure layer that makes RAG possible at enterprise scale. Understanding its architecture gives SAs the vocabulary to have meaningful conversations with data architects and enterprise IT teams.
+
+#### 12.1 The Storage Architecture
+
+Data 360 is built on a **tiered storage model** that combines two complementary layers:
+
+**Lakehouse layer (Apache Iceberg / Parquet):** Scalable, cost-efficient storage for large volumes of historical and batch data. Built for advanced analytics and machine learning. Abstractions stack from raw Parquet files at the base, through Iceberg table metadata, through a Salesforce Cloud Table layer that adds semantic metadata and cross-platform abstractions, up to a Lake Access Library consumed by application developers.
+
+**Real-time layer (Low Latency Store):** A petabyte-scale NVMe SSD storage layer that sits above the Lakehouse. Processes real-time signals and engagement data. In-session data (such as recent agent conversation turns) is processed in memory and flushed to the Low Latency Store for subsequent fast millisecond access. Customer Profile Context is pre-fetched from the Lakehouse and cached here for real-time personalization. Data eventually migrates to the Lakehouse for long-term persistence.
+
+**For RAG conversations:** This tiered model is what allows agents to access large historical document corpora (Lakehouse) while also maintaining low-latency access to real-time session context (LLS) within a single conversation.
+
+#### 12.2 Data Organization: DLOs, DMOs, and Data Spaces
+
+Understanding how data is organized in Data 360 is essential when discussing RAG corpus architecture with technical clients.
+
+**Data Lake Objects (DLOs):** The core persistent storage layer. Stores cleaned, transformed data and serves as the long-term repository. DLOs include structured DLOs (traditional tabular data), Unstructured Data Lake Objects (UDLOs — directory tables pointing to unstructured content like files and documents), and External DLOs (federated views of data that stays in external systems).
+
+**Data Model Objects (DMOs):** The harmonized layer. Created by mapping DLO fields to the standard Customer 360 Data Model. DMOs are the single source of truth for customer data — the foundation for profile creation, segmentation, and activation. For Knowledge article RAG, the search index is built against a structured DMO.
+
+**Data Spaces:** The fundamental logical container for organizing all data and metadata. Data spaces enforce isolation at multiple layers: data-level isolation (queries cannot cross data space boundaries without explicit authorization), access control integration (permission sets tied to data spaces), and governance with full audit trails. Data spaces are how multi-tenant and multi-business-unit organizations maintain separation while sharing a single Data 360 instance.
+
+#### 12.3 Data 360 as a Zero-Copy Infrastructure
+
+Data 360's architecture supports zero-copy data access for structured data from external platforms — Snowflake, Databricks, BigQuery, Redshift — through both query-based federation (JDBC pushdown) and file-based federation (Apache Iceberg / Parquet directly from object storage). For RAG specifically, SFDRIVE-based libraries also follow a zero-copy model for external file storage: the physical files never move to Data 360. Only the text extracted from chunking, and the DMO records containing vectors, reside there.
+
+This matters for:
 - **Data residency compliance:** The original file stays in its source location (S3, Azure Blob, etc.)
-- **Storage cost:** Clients are not paying Data Cloud storage costs for large binary files
+- **Storage cost:** Clients are not paying Data 360 storage costs for large binary files
 - **Governance:** Source-side access controls on the file storage remain the authoritative gate
 
-#### 12.3 Data 360 ABAC and RAG Security
+Zero-copy also extends to unstructured data sources — hyperscaler storage (S3, GCS, Azure), Slack, and Google Drive — which Data 360's unstructured processing pipelines can access without physical data movement.
 
-Data 360 supports **attribute-based access control (ABAC)** at the object, field, and row levels via Data Governance Policy settings. This is the primary mechanism for controlling what data is visible to whom within RAG search indexes.
+#### 12.4 Data 360 ABAC and RAG Security
 
-For structured data, user access conditions are implemented using user attributes and permission sets. For unstructured data — the files and Knowledge articles powering RAG — metadata filtering (pre-filters on search indexes) can restrict what gets retrieved for a given user or context.
+Data 360 implements a comprehensive **attribute-based access control (ABAC)** framework using **CEDAR policy language** at the object, field, and row levels. This is architecturally significant for RAG deployments.
 
-Together, these controls mean RAG security can be as granular as the content requires: different users retrieve from different slices of the same corpus, enforced at the retrieval layer before any LLM call. To protect against RAG poisoning attacks — where malicious content is injected into the corpus to manipulate agent responses — apply strict data governance and validation rules before data becomes available for vector search.
+The framework operates through three interlocking components:
+
+- **Policy Information Point (PIP):** Automated tagging and classification using LLM and ML to identify sensitive categories (PII.Email, PII.Phone, PII.Name, PHI, FinancialData) in both structured and unstructured data. Tag propagation follows data lineage automatically — from DLO through DMO through derived objects.
+- **Policy Enforcement Point (PEP):** The Authorization Service intercepts all data access requests from consumption layers (queries, GenAI RAG retrievers, CRM enrichment) and consults the Policy Decision Point.
+- **Policy Decision Point (PDP):** Evaluates CEDAR policy definitions against current attributes to make authoritative access decisions.
+
+**CEDAR policy enforcement levels for RAG:**
+- Object Level Security: controlling access to entire DLOs or DMOs
+- Field Level Security: restricting access to specific sensitive fields
+- Row Level Security: filtering data to show only relevant rows based on user attributes
+- Dynamic Data Masking: masking fields in structured data and content in unstructured data at the point of access, without altering underlying data
+
+For RAG specifically, metadata filtering (pre-filters on search indexes) restricts what gets retrieved for a given user or context, enforced at the retrieval layer before any LLM call. Together, these controls mean RAG security can be as granular as the content requires — different users retrieve from different slices of the same corpus.
+
+**To protect against RAG poisoning attacks** — where malicious content is injected into the corpus to manipulate agent responses — apply strict data governance and validation rules through the ABAC framework before data becomes available for vector search.
+
+#### 12.5 Incremental Processing: SNCE and CDF
+
+Two mechanisms power Data 360's near-real-time processing, which directly affects how quickly content changes propagate to the RAG index:
+
+**Storage Native Change Events (SNCE):** Every successful write to an Iceberg table triggers a native notification event. Downstream pipelines subscribe to these events rather than polling. This shifts Data 360 from a batch-poll model to a reactive, incremental model.
+
+**Change Data Feed (CDF):** Built on SNCE, CDF provides a streamlined mechanism to consume only the changed records. Data 360's optimized Iceberg writer computes and persists changes as part of the write operation, making CDF generation efficient. Processing jobs selectively process only altered records, avoiding expensive full-table scans.
+
+**For RAG conversations:** When clients ask "how quickly does the agent know about content changes?", SNCE and CDF are the architectural answer. The propagation latency from content change to retrieval availability depends on the chunking job interval (approximately 10 minutes for KNOWLEDGE libraries), not on batch ETL windows.
+
+#### 12.6 Private Connectivity
+
+For regulated industry clients who restrict internet-exposed data lake access, Data 360 supports private, network-level connectivity:
+
+- **AWS PrivateLink:** Connects Data 360 directly to customer-provisioned endpoints within their AWS accounts, with all traffic remaining on the AWS backbone using private IP addressing
+- **Private Interconnect:** Cross-cloud private connectivity for Azure (ExpressRoute) and Google Cloud (Cloud Interconnect) environments, available as either Customer-Managed or Salesforce-Managed configurations
+
+This matters for SA conversations: the "we can't put our data lake on the internet" blocker is addressable through Private Connectivity, not a fundamental barrier to Data 360 adoption.
 
 ---
 
@@ -918,31 +935,31 @@ Together, these controls mean RAG security can be as granular as the content req
 
 When RAG is working in development but failing in production, permissions are the first diagnostic layer. The failure usually lives at exactly one of these four layers.
 
-#### Layer 1: Data Cloud Permission Set
+#### Layer 1: Data 360 Permission Set
 
-The Einstein Agent User must be assigned the correct Data Cloud permission set. Without it, the agent user cannot access Data Cloud at all — no retrieval queries execute, no results return, and no error surfaces to the user. The agent just says "I don't have that information."
+The Einstein Agent User must be assigned the correct Data 360 permission set. Without it, the agent user cannot access Data 360 at all — no retrieval queries execute, no results return, and no error surfaces to the user. The agent just says "I don't have that information."
 
-**Diagnostic check:** In Setup, confirm the agent user profile has the required Data Cloud permission set assigned. This is frequently missed during go-live handoffs because it lives outside the Agentforce setup flow.
+**Diagnostic check:** In Setup, confirm the agent user profile has the required Data 360 permission set assigned. This is frequently missed during go-live handoffs because it lives outside the Agentforce setup flow.
 
 #### Layer 2: Data Space Access
 
-Within Data Cloud, the agent user must have access to the correct data space — the logical partition of Data Cloud where the ADL's search index lives. Access to Data Cloud generally (Layer 1) does not automatically grant access to every data space within it.
+The agent user must have access to the specific Data 360 data space that contains the search index. Without it, the retrieval query executes but returns 0 results — same symptom as Layer 1 but different fix. Data spaces enforce isolation at the permission set level.
 
-**Diagnostic check:** Confirm the agent user is granted access to the specific data space that contains the ADL. Mismatches here produce the same symptom as Layer 1 failure: silent empty retrieval results.
+**Diagnostic check:** In Data 360 Setup, verify the agent user's permission set includes access to the relevant data space.
 
 #### Layer 3: Search Index Permissions
 
-The search index itself has its own access control. The agent user must be authorized to query the specific search index powering the ADL's retriever. A user with Data Cloud access and data space access but no search index permission cannot execute retrieval queries.
+The search index itself must be configured to allow access by the agent user. This is a separate configuration from data space access.
 
-**Diagnostic check:** Inspect the search index's permission configuration in Einstein Studio and confirm the agent user or its assigned role is listed.
+**Diagnostic check:** In the ADL or search index configuration, verify that the agent user's permission set is listed in the index access controls.
 
-#### Layer 4: Knowledge Article Visibility (KNOWLEDGE source type only)
+#### Layer 4: Knowledge Article Sharing and Publish Status
 
-For KNOWLEDGE ADLs, one additional layer applies: the Knowledge article's data categories and sharing rules. The CRM Connector respects Knowledge's native visibility controls. Articles that the agent user's profile cannot see in Salesforce are not indexed — and therefore cannot be retrieved.
+For KNOWLEDGE libraries, article sharing must be configured to allow access by the agent user, and articles must have `PublishStatus = 'Online'`. Articles in Draft or Archived status are not indexed and do not appear in retrieval results.
 
-**Diagnostic check:** Confirm the agent user's profile has Read access to the relevant Knowledge article types and data categories. A common mistake: the agent user has all four permission layers configured correctly, but the Knowledge articles are scoped to an internal audience and the agent user is an external community profile.
+**Diagnostic check:** SOQL query against `Knowledge__kav` filtered to `PublishStatus = 'Online'` and confirm the expected articles are present. Verify the article's Data Category assignments match the scope configured in the search index.
 
-> **The four-layer mental model:** Think of these as four gates on the same path. All four must be open for retrieval to succeed. Any one closed gate produces the same visible symptom — silent retrieval failure — but a different root cause. Always check them in order, from Layer 1 to Layer 4.
+> **The four-layer permission checklist is pre-launch, not post-failure.** Running through these four checks before go-live takes 15 minutes. Not running them means the go-live scenario described in Chapter 11 is almost guaranteed.
 
 ---
 
@@ -952,36 +969,24 @@ For KNOWLEDGE ADLs, one additional layer applies: the Knowledge article's data c
 
 ### Chapter 14: Observability — Seeing Inside the Agent
 
-#### 14.1 The Observability Data Model
+#### 14.1 The Observability Architecture
 
-All Agentforce session and interaction data flows into Data Cloud as a set of related DMOs. Understanding the data hierarchy is what makes querying it in the Salesforce AI Query Library or building custom dashboards practical.
+Agentforce session data is captured in a set of Data Model Objects (DMOs) within Data 360. These DMOs are what power the out-of-the-box dashboards and are also queryable directly for custom reporting.
 
-```
-AiAgentSession (1)
-+-- AiAgentInteraction (N)         -- one per conversation turn
-|   +-- AiAgentInteractionStep (N) -- internal steps per turn
-+-- AiAgentMoment (N)              -- one per intent in the session
-|   +-- AiAgentTagAssociation (N)  -- quality score junctions
-AiRetrieverQualityMetric (N)       -- RAG-specific quality scores
-```
+#### 14.2 The Session and Interaction DMOs
 
-#### 14.2 Key DMO Fields for SA-Level Queries
+**AiAgentSession:** One record per conversation session. Contains session-level metadata: agent ID, channel, start/end timestamps, and resolution status.
 
-**AiAgentSession:**
-- `StartTimestamp` / `EndTimestamp` — session duration
-- `AiAgentChannelType` — channel (messaging, voice, web)
-- `AiAgentSessionEndType` — `USER_ENDED`, `AGENT_ENDED`, or null
-- `VariableText` — final variable snapshot for the session (useful for debugging workflow state)
-
-**AiAgentInteraction:**
+**AiAgentInteraction:** One record per agent turn (parse cycle). Key fields:
 - `TopicApiName` — the subagent that handled this turn (maps to Agent Script subagent API names)
 - `StartTimestamp` / `EndTimestamp` — turn duration
 - `TelemetryTraceId` — distributed tracing ID for correlating with LLM gateway logs
 
-**AiAgentInteractionStep:**
+**AiAgentInteractionStep:** One record per step within a turn. Key fields:
 - `StepType` — `LLM_STEP`, `ACTION_STEP`, `TRUST_GUARDRAILS_STEP`
-- `EndTimestamp` — frequently `NOT_SET` for in-progress or interrupted steps (see Known Issues)
-- Two important data quality notes: the platform uses `"NOT_SET"` (string) as a sentinel for null values, and the `TRUST_GUARDRAILS_STEP` error field may contain the Python string `"None"` — which is not a real error. Filter accordingly.
+- `EndTimestamp` — frequently `NOT_SET` for in-progress or interrupted steps
+
+Two important data quality notes: the platform uses `"NOT_SET"` (string) as a sentinel for null values, and the `TRUST_GUARDRAILS_STEP` error field may contain the Python string `"None"` — which is not a real error. Filter accordingly in any custom queries or dashboards.
 
 #### 14.3 RAG Quality Metrics — The AiRetrieverQualityMetric DMO
 
@@ -1010,83 +1015,42 @@ This DMO provides per-retrieval quality scores for agents using RAG. It is separ
 
 Not all observability data appears immediately. These cadences matter for SAs setting client expectations about dashboards and reporting:
 
-| Data type | Typical refresh | Notes |
-|---|---|---|
-| Session data (`AiAgentSession`) | Near real-time | Usually available within minutes of session end |
-| Step data (`AiAgentInteractionStep`) | Near real-time | Same as session data |
-| Quality scores (tag associations) | LLM-evaluated async | May lag session end by minutes to hours depending on evaluation queue |
-| RAG quality metrics (`AiRetrieverQualityMetric`) | Async, post-session | Roadmap: real-time dashboard planned |
-| Audit Trail | Near real-time | Available in Data Cloud for compliance queries |
-
-#### 14.5 The Quality Score Join Chain
-
-Quality scores flow through a join chain that is not obvious from the DMO names alone:
-
-```
-AiAgentMoment
-    --> AiAgentTagAssociation (FK: AiAgentMomentId + FK: AiAgentTagId)
-        --> AiAgentTag.Value (integer 1-5)
-            --> AiAgentTagDefinition (tag type and engine)
-```
-
-The `AssociationReasonText` field in `AiAgentTagAssociation` contains the LLM-generated reasoning for the score — useful for understanding why a specific interaction received a low quality score.
+- **Session and interaction data:** Near real-time (typically minutes)
+- **RAG quality metrics:** Available within approximately 30 minutes of session completion
+- **Billing and credit consumption data:** 24-hour delay — do not use for same-day operational decisions
+- **Audit trail data:** Near real-time for Trust Layer events; 24-hour delay for aggregated reports
 
 ---
 
 ### Chapter 15: When to Involve a Developer — Pro-Code RAG
 
-#### 15.1 The Handoff Decision
+#### 15.1 The No-Code Boundary
 
-The ADL and no-code retriever configuration covers the majority of production RAG use cases. But there are specific requirements that genuinely require developer involvement. Knowing the handoff triggers protects delivery timelines — a team that discovers a pro-code requirement at go-live is in a difficult position.
+The ADL and Agent Script cover the majority of production RAG use cases. A developer conversation is warranted when the client's requirements exceed what the ADL supports.
 
-#### 15.2 Pro-Code Trigger: Apex Connect API for Advanced Retrieval
+**Escalate to a developer when:**
 
-When retrieval requirements exceed what no-code retriever pre-filters can express, Apex classes can call the Data Cloud Connect API directly. This enables:
+- The knowledge source is not Knowledge articles or files (e.g., long-text fields on Case, Order, or custom objects)
+- The client needs to retrieve from an external system with its own API (e.g., a document management system, Confluence, SharePoint with custom auth)
+- Retrieval requires custom business logic before returning results (e.g., filtering based on a complex entitlement calculation)
+- The client needs to combine multiple heterogeneous sources in a single retrieval call
+- Data residency requirements mandate that content never enters Salesforce storage, even temporarily
 
-- **Full SQL query expressions** against the search index, including `WHERE` clauses, `JOIN` conditions, and `ORDER BY` on non-similarity fields
-- **Post-retrieval filters** — apply filters after the similarity search has returned results, using related fields that were not included in the search index
-- **Nested pre-filter conditions** that combine multiple attributes with complex boolean logic not expressible in the declarative filter UI
-- **Procedural access control logic** — dynamically determine which content a user is entitled to retrieve based on runtime conditions that cannot be expressed as static or dynamic pre-filters
+**The pro-code path:** Custom Apex Action that calls an external retrieval API, populates a variable with the result, and passes it to the reasoning instructions. The Agent Script pattern is identical to the ADL pattern — the variable name changes, the retrieval action changes, the guard logic is identical.
 
-The Apex class wraps the Connect API call, processes the results, and returns them to the agent action as a structured payload. **This is the trigger to escalate to a developer:** when the client's access control or retrieval scoping requirements cannot be fully expressed in the retriever's pre-filter configuration.
+#### 15.2 MuleSoft as a Retrieval Broker
 
-#### 15.3 Pro-Code Trigger: Non-RAG Search Index Use Cases
-
-Search indexes can be used for purposes other than traditional RAG. SAs may encounter these in client conversations and should be able to recognize them as legitimate use cases — even if they require developer involvement to implement.
-
-**Use case 1: Similarity search without LLM generation**
-
-A search index can surface similar records to a human user without sending results to an LLM at all. Example: when a service rep creates a new case, a Flow-triggered retriever searches the resolved-cases index for the 10 most similar past cases and surfaces them in the UI. No agent, no LLM call, no generative output — just semantic similarity serving a human workflow.
-
-**Use case 2: Text classification using vector search**
-
-A search index built from previously classified examples can classify new text by majority vote. The classification query retrieves the 50 or 100 most semantically similar examples, reads their class labels, and assigns the most frequently occurring label to the new text. This approach works for intent detection, topic annotation, and case routing — without any LLM prompt or fine-tuned classifier. It is a legitimate production pattern for clients who want semantic classification without generative AI cost or latency.
-
-Both of these use cases require Apex or Flow-based retriever invocation rather than the Agentforce agent action. Flag them as developer-required during discovery.
-
-#### 15.4 Pro-Code Trigger: MuleSoft for External System Content
-
-When content lives in an external system with data residency restrictions that prevent uploading to Salesforce or Data Cloud, the recommended pattern is a MuleSoft-orchestrated custom retriever. MuleSoft handles the extraction, transformation, and secure forwarding of content from the external system. The custom retriever then exposes that content as an ADL `RETRIEVER` source type.
-
-This pattern keeps the physical data in its original jurisdiction while still making it available for agent grounding — satisfying both the residency requirement and the grounding requirement.
+For clients with complex external knowledge stores, MuleSoft acts as a retrieval broker between the Agentforce agent and the external system. The Apex action calls MuleSoft, which applies business logic, calls the external API, and returns a normalized result. This pattern keeps the agent implementation clean and keeps external system integration complexity inside MuleSoft, where it is maintainable.
 
 ---
 
 ### Chapter 16: The Credit Model — What RAG Actually Costs
 
-#### 16.1 Two Billing Models
+#### 16.1 The Flex Credit Framework
 
-As of Summer '26, Agentforce offers two pricing models. Most new deployments use Flex Credits.
+All Agentforce consumption is measured in Flex Credits. The base rate is $500 per 100,000 credits. Every action, retrieval, and processing event consumes credits at a published rate.
 
-**Flex Credits:** Action-based billing. Every agent action execution consumes credits, whether deterministic or LLM-selected. The credit multiplier is 20 per action (production). Sandbox actions consume at 80% of the production rate (16 credits). Utilities — escalations, variable assignments, subagent transitions — are not billed as actions.
-
-**Conversations:** Outcome-based billing for the Help Agent. A session is billed as a resolved conversation when: the session has at least two turns, the final user feedback is not explicitly negative, and the session ends without escalation to a human (or ends with explicitly positive feedback). Actions and Data 360 queries within a resolved session are not billed separately. Unresolved sessions are not billed.
-
-#### 16.2 Flex Credits Rate Table
-
-**100,000 Flex Credits = $500 ($0.005 per credit). Each standard action costs 20 credits = $0.10 per action.**
-
-This table covers the usage types most relevant to RAG-grounded agent deployments:
+#### 16.2 The Credit Table
 
 | Usage Type | Billing Unit | Credits (Production) | Credits (Sandbox) | Cost per Unit (Production) |
 |---|---|---|---|---|
@@ -1115,41 +1079,9 @@ For a 1,000-file corpus averaging 2 MB per file (2,000 MB total):
 - `basic` mode total: 300,000 credits = **$1,500**
 - `enhanced` mode total: 1,200,000 credits = **$6,000**
 
-This is a one-time cost but it is material and should be quantified before recommending enhanced mode at scale.
+This is a one-time cost at initial indexing, but it recurs whenever the content fields are updated. Avoid unnecessary full re-indexes.
 
-**Web search fallback cost:** When a retrieval miss triggers the web search fallback, the session incurs $0.10 for the empty `AnswerQuestionsWithKnowledge` call plus $0.10 for the General Web Search call. At high volume, this doubles retrieval cost for every missed query. Improving corpus quality is always more cost-effective than relying on the fallback at scale.
-
-#### 16.4 Buying Models
-
-Three purchasing models are available:
-
-| Model | Description | Best for |
-|---|---|---|
-| Pre-Purchase | Buy a set amount upfront for the contract term. Pay upfront, draw down from balance. Maximum savings. | Clients with predictable, high-volume usage |
-| Pre-Commit | Commit to a baseline, pay monthly in arrears. True-up at term end if below commitment. | Clients scaling up over time |
-| PayGo | No upfront commitment. Pay only for what you use. Monthly billing. | Pilots, new deployments, unpredictable volumes |
-
-Agentforce 1 Edition customers receive 2.5M Flex Credits per org per year included. Agentforce add-on licenses ($125/user/month for Sales/Service, $150/user/month for Industries) include unmetered usage for licensed employees.
-
-#### 16.5 Estimating RAG Costs for a Client
-
-A straightforward cost model for a customer-facing RAG agent:
-
-```
-Monthly action cost =
-    daily_sessions
-    x avg_actions_per_session
-    x $0.10 per action
-    x 30 days
-```
-
-Example: 20 daily "Where Is My Order" sessions, 2 actions per session:
-- 20 sessions x 2 actions x $0.10 x 30 days = **$120/month**
-
-Add corpus indexing costs separately. For a 500-file product documentation library averaging 1 MB per file in `basic` mode:
-- 500 MB x $0.75/MB = **$375 one-time indexing cost**
-
-Always present these two line items separately to clients — they appear on different parts of the invoice and are governed by different consumption meters.
+**The web search fallback cost trap:** As noted in Chapter 9, a high retrieval miss rate combined with a web search fallback doubles the per-session retrieval cost. Improving corpus quality is always more cost-effective than relying on the fallback.
 
 ---
 
@@ -1159,176 +1091,105 @@ Always present these two line items separately to clients — they appear on dif
 
 ### Chapter 17: Troubleshooting — The Diagnostic Ladder
 
-This chapter provides a structured troubleshooting sequence for the most common production issues. Work through the ladder from top to bottom. Each rung rules out one failure class.
+#### 17.1 The Diagnostic Principle
 
-#### 17.1 The RAG Diagnostic Ladder
+Agentforce failures have a predictable structure. The deterministic layer runs first. If something is wrong there, the LLM never gets a chance to succeed. Work from the bottom up: permissions, then ADL readiness, then Agent Script logic, then LLM behavior.
 
-When a grounded agent fails to produce grounded answers, this is the sequence:
+#### 17.2 The Four-Rung Ladder
 
-**Rung 1: Is the agent topic and agent action being called?**
+**Rung 1: Permissions (Chapter 13)**
 
-Check the session trace in Data Cloud (`AiAgentInteractionStep`) and confirm that `AnswerQuestionsWithKnowledge` is appearing as an `ACTION_STEP`. If it is not appearing, the agent is routing to the wrong subagent or the action is being filtered out by an `available when` condition that evaluated to false.
+Before touching any Agent Script or corpus configuration, run through all four permission layers. Most "the agent isn't answering" failures at go-live live here. Start here every time.
 
-**Rung 2: Is the right retriever being passed to the action?**
+**Rung 2: ADL Readiness**
 
-In Einstein Studio, confirm that the prompt template associated with the `AnswerQuestionsWithKnowledge` action is wired to the correct retriever — the one provisioned by the ADL, not a manually created one that may be misconfigured. A correct retriever assignment is the most common fix at this rung.
+Check the ADL status. For SFDRIVE, confirm all files show `INDEXED` status. For KNOWLEDGE, confirm the `retrieverId` is non-null *and* a live test query returns non-empty results (not just `retrieverId` non-null). The Day 0 race condition (Chapter 18) is the most common failure here.
 
-**Rung 3: Does the search index contain vectors?**
+**Rung 3: Agent Script Logic**
 
-In the Data Cloud Query Editor, run a count query against the chunk DMO of the search index. Compare the count of indexed chunks against the count of source records (Knowledge articles or files). A mismatch indicates incomplete indexing — either the Day 0 race condition (Chapter 18) or a stalled incremental index job.
+Reconstruct the resolved prompt. What did the LLM actually receive? Is the guard variable name correct? Is the `AnswerQuestionsWithKnowledge` call in `before_reasoning` or incorrectly placed as an LLM-callable tool? Is there an action loop?
 
-```sql
-SELECT 'INDEX' AS Location,
-       COUNT(DISTINCT SourceRecordId__c) AS RecordCount
-FROM <chunk_DMO_of_search_index>
-UNION
-SELECT 'SOURCE' AS Location,
-       COUNT(DISTINCT Id__c) AS RecordCount
-FROM <source_DMO>
-ORDER BY Location;
-```
+**Rung 4: LLM Behavior**
 
-**Rung 4: Is the retriever augmenting the prompt with content?**
+If the resolved prompt is correct and the retrieval result is populated, but the response is still wrong, the issue is in the LLM reasoning instructions. Tighten the anti-hallucination guard, clarify the answer scope, or adjust subagent descriptions to improve routing.
 
-In Prompt Builder, use resolution-only mode (no LLM call) to inspect whether the prompt template is being populated with retrieved chunks. If the resolution shows an empty retriever output, the retrieval query itself is returning 0 results — which points to a permission issue (Chapters 13 or 18) or a language alignment mismatch (Chapter 8.2).
+#### 17.3 Testing Center for RAG — Current Limitations
 
-**Rung 5: Is the anti-hallucination guard syntactically correct?**
+> **v3.2 addition:** This note was missing from v3.1.
 
-If the retriever is returning content but the agent is still hallucinating, the guard is broken. Check that the variable name in the guard exactly matches the variable name used to store the retrieval result. A case mismatch or typo causes the empty-check to never fire.
+The Agentforce Testing Center provides powerful batch testing for topic classification, action sequences, and response quality. However, **the RAGAS-style RAG quality metrics (Context Precision, Faithfulness, Answer Relevance) are not currently available in Testing Center batch test runs.** These metrics are available in:
+- Interactive (single-turn) testing within Agent Builder
+- The production AiRetrieverQualityMetric DMO dashboard
 
-#### 17.2 Retrieval Quality Rungs — When the Agent Answers But Answers Wrongly
+Batch-test RAG quality scoring is on the roadmap (targeted approximately for Dreamforce timeframe). Until it is GA, automated Test Suite RAG scoring requires custom scorers via the Testing API. Do not promise clients that Testing Center batch runs will surface RAG quality scores — set the expectation accordingly.
 
-Once basic retrieval is confirmed working, quality problems require a different diagnostic approach.
-
-**Check the AiRetrieverQualityMetric DMO first.** The three scores (Context Precision, Faithfulness, Answer Relevance) tell you which layer of the RAG pipeline has the quality problem. Use the pattern table in Chapter 14.3 to identify the root cause before making changes.
-
-**Retrieval confidence and the fallback threshold:**
-
-Each retrieved chunk has a similarity score. When the highest-scoring chunk's similarity is below a meaningful threshold, the retrieval result is technically non-empty but semantically irrelevant — and passing it to the LLM produces confidently wrong answers. Configuring a minimum similarity threshold below which the agent falls back to a clarifying question or escalation is an advanced but important production configuration. Discuss this with the delivery team when a client reports that the agent gives answers that sound authoritative but are subtly wrong.
-
-**Content freshness and temporal accuracy:**
-
-For time-sensitive content (pricing, regulations, policy terms that change quarterly), a freshness check on the retrieved chunk's source record update date can qualify agent responses. Example: if the most recently updated article relevant to a query was last updated 8 months ago, the agent can include a disclaimer: "This information is based on content last updated in [date]. Please verify with our team for the latest terms." This is a pro-code configuration implemented in the retrieval Apex action, but SAs should raise it as a design consideration when the corpus contains time-sensitive content.
-
-#### 17.3 Routing Failure Diagnosis
-
-When the agent routes to the wrong subagent:
-
-1. Check the subagent description. It is the primary signal the Router uses for classification.
-2. Check for overlapping descriptions across subagents. Ambiguous descriptions produce inconsistent routing.
-3. Check whether the EinsteinHyperClassifier is being used. It is faster but has tool limitations and may produce different routing decisions than the standard reasoning engine for edge cases.
+The Testing Center does support:
+- Topic classification validation
+- Action sequence verification
+- Response quality (LLM-as-judge, 0-5 scale, score ≥3 = Pass)
+- Citation validation
+- Instruction adherence
+- Multi-turn conversation testing via conversation history import
 
 ---
 
 ### Chapter 18: Known Platform Issues
 
-These are documented, named platform behaviors — not bugs you should spend hours diagnosing from scratch. Know them before go-live.
+#### 18.1 The Day 0 Race Condition (KNOWLEDGE Libraries)
 
-#### Issue 1: KNOWLEDGE Day 0 Race Condition
+Covered in Chapter 8.2. The CRM Connector has approximately a **17-second** visibility delay after library creation before article data is queryable. The Day 0 chunking job fires immediately processes 0 rows, emitting a false READY status. Always verify with a live test query, not just `retrieverId` presence.
 
-**What happens:** KNOWLEDGE ADL shows READY with a non-null `retrieverId` but contains 0 indexed chunks. The chunking job ran before the CRM Connector's data commit propagated.
+#### 18.2 Post-Day-0 Incremental Refresh Stall
 
-**Detection:** Live test query returns empty `knowledgeSummary`.
+> **v3.2 addition:** This is a separate and distinct failure mode from the Day 0 race condition.
 
-**Resolution:** Wait 10 minutes after `retrieverId` appears, then test. If still empty, force re-index via ADL CLI (`sf agent adl update --content-fields`).
+After a successful Day 0 index, the KNOWLEDGE library can silently stall on *incremental* refreshes. Symptoms: the library shows READY and `retrieverId` is non-null, the Day 0 index was successful, but new or updated articles are not appearing in retrieval results.
 
-#### Issue 2: `is_displayable: True` Skips `after_reasoning`
+**Root cause:** Streaming jobs stop receiving change-data-feeds (CDF) from the source DMO. This is sometimes caused by a BYOK (Bring Your Own Key) or encryption misconfiguration that prevents the SNCE/CDF pipeline from reading the underlying Iceberg table snapshots. Documented in support investigation SI-0287033.
 
-**What happens:** When an action has `is_displayable: True`, the platform exits the reasoning loop as soon as the action output is displayed. `after_reasoning` silently does not execute.
+**Standard fix:** A manual full Rebuild of the search index (not just a re-trigger) forces a complete re-scan of all current articles, bypassing the stalled CDF pipeline. After Rebuild, monitor incremental refresh for 24 hours to confirm the pipeline resumes.
 
-**Detection:** Orchestration logic in `after_reasoning` that should fire doesn't. No error. No log entry for the skipped block.
+**Pre-launch check:** If the org uses BYOK or custom encryption, verify CDF pipeline health as part of the go-live checklist — not just Day 0 READY status.
 
-**Resolution:** Move must-execute orchestration logic to the `before_reasoning` block of the destination subagent.
+#### 18.3 The `after_reasoning` Skip (is_displayable: True)
 
-#### Issue 3: Language Alignment Silent Failure
+Covered in Chapter 2.2. When `is_displayable: True` is set on an action, `after_reasoning` never executes for that parse. Move must-execute orchestration logic to `before_reasoning` of the next subagent.
 
-**What happens:** Agent user's language setting does not match indexed Knowledge article language. Retriever returns 0 results silently.
+#### 18.4 The Language Alignment Silent Failure
 
-**Detection:** All questions get "I don't have that information" responses. SOQL on `Knowledge__kav` shows articles in a different locale than the agent user's profile.
+Covered in Chapter 8.2. `en_US` vs. `en_GB` is treated as a mismatch by the retriever. The retriever silently returns 0 results. The fix is confirming the agent user's language/locale matches the indexed articles' language.
 
-**Resolution:** Align agent user locale with Knowledge article language, or use the Multilingual E5-Large embedding model which supports cross-language retrieval.
+#### 18.5 The `ARFPC_` Prefix Omission
 
-#### Issue 4: `NOT_SET` Sentinel in Observability Queries
+Covered in Chapter 8.3. The `rag_feature_config_id` must include the `ARFPC_` prefix. The validation error does not explain the requirement.
 
-**What happens:** Data Cloud uses the string `"NOT_SET"` for absent values in the STDM schema — not SQL `NULL`. Queries filtering for `IS NULL` miss these records entirely.
+#### 18.6 Circuit Breaker Failover
 
-**Detection:** Observability queries return unexpectedly low row counts.
-
-**Resolution:** Filter for `field != 'NOT_SET'` or use `COALESCE(field, 'NOT_SET')` patterns. Document this behavior for any internal or client-facing dashboards built on this schema.
-
-#### Issue 5: `AiAgentInteractionStep.EndTimestamp` Frequently Missing
-
-**What happens:** `EndTimestamp` on interaction steps is `NOT_SET` for many step records, including completed ones. Duration calculations using this field produce incorrect results.
-
-**Resolution:** Calculate duration from `AiAgentInteraction` timestamps rather than step-level timestamps. Step-level duration analysis is unreliable without additional filtering.
-
-#### Issue 6: `TRUST_GUARDRAILS_STEP` Python `"None"` Error Field
-
-**What happens:** The error field on `TRUST_GUARDRAILS_STEP` records contains the Python string literal `"None"` — not a SQL null, and not a real error. Queries counting errors that include this field will overcount.
-
-**Detection:** Error counts seem high, but no corresponding user-visible errors occurred.
-
-**Resolution:** Filter `TRUST_GUARDRAILS_STEP` out of error counts. This step type is excluded from the `action_error_count` metric for this reason.
+When an LLM provider is unavailable, the Trust Layer activates a circuit breaker that fails over to an alternate provider. The specific thresholds (error rate, latency) that trigger the circuit breaker are not published externally. No new corroboration of specific figures has been found; keep this caveat as-is in client conversations.
 
 ---
 
 ### Chapter 19: Client Conversation Frameworks
 
-#### 19.1 The "Is My Data Safe?" Conversation
+#### 19.1 "Is Our Data Safe?" — The Security Framework
 
-**Client concern:** A security officer or CTO asks whether Salesforce uses their customer data to train AI models.
+Use the five Trust Layer pillars from Chapter 11. Lead with ZDR (contractual guarantee, no model training). Add encryption (in transit TLS 1.2+, at rest AES-256). Add Prompt Injection Detection and Prompt Defense. Add Toxicity Scoring.
 
-**SA response framework:**
+For agent workflows specifically: be direct that dynamic data masking is currently off for the agent planner path. Lead with ZDR and the other active controls. Do not position masking as an active safeguard for agent prompts.
 
-"The answer is contractually no. Salesforce has Zero Data Retention agreements in place with every LLM provider — OpenAI, Anthropic, Google — which prohibit them from retaining any prompt data or using it for training. These are legal commitments, not just technical settings.
+For regulated industries: lead with the trust boundary distinction (Salesforce trust boundary vs. shared trust boundary), ZDR, and the Data 360 ABAC framework for data-layer security.
 
-Beyond ZDR, everything that leaves Salesforce passes through the Einstein Trust Layer — which masks sensitive fields like PII before the prompt reaches the model, and scans every response for toxicity before it reaches your users. Your data never trains anyone's model, and personally identifiable information never reaches the LLM in its original form.
+#### 19.2 "How Does It Know About Our Products?" — The RAG Framework
 
-For your compliance team: all of this is auditable. Every prompt, every response, every trust signal applied is captured in the Audit Trail in Data Cloud. You have a complete record of what the agent said and why."
+Walk through the four stages of grounding maturity (Chapter 4.4). Position where the client currently sits and what Stage 4 requires. Connect corpus design (Chapter 5.5) to the business conversation about content ownership and governance.
 
-#### 19.2 The "Why Is the Agent Making Things Up?" Conversation
+#### 19.3 "What Does This Cost?" — The Credit Framework
 
-**Client concern:** After go-live, the client reports that the agent is giving confident but incorrect answers.
+Start with the action credit ($0.10 per action). Add the corpus processing cost ($0.75/MB basic, $3.00/MB enhanced). Estimate session volume. Build a simple credit model before go-live. Flag the web search fallback cost trap and the action loop billing risk.
 
-**SA response framework:**
+#### 19.4 "How Do We Keep It Accurate?" — The Governance Framework
 
-"This is a solvable problem and it has a predictable set of root causes. Let me walk through the diagnostic.
-
-First question: is the retrieval working at all? [Pull the session trace.] If the `AnswerQuestionsWithKnowledge` action isn't appearing in the step data, the agent isn't even trying to retrieve — it's routing to the wrong place or the retrieval action is being filtered out.
-
-If retrieval is happening but answers are still wrong, the second question is whether the anti-hallucination guard is syntactically correct. If the empty-check variable name doesn't match the variable holding the retrieval result, the guard never fires and the LLM uses its general knowledge.
-
-If retrieval is happening and the guard is correct, the third question is whether the corpus contains the right content. What did the agent say? What should it have said? Does the correct answer exist somewhere in the knowledge base? If it doesn't, the agent will fall back to general knowledge or the guard, and the fix is corpus enrichment — not configuration.
-
-We have three quality metrics in Data Cloud — Context Precision, Faithfulness, and Answer Relevance — that will tell us exactly which layer of the pipeline has the problem."
-
-#### 19.3 The "What Does This Cost?" Conversation
-
-**Client concern:** CFO or procurement asks for a cost estimate before approving production rollout.
-
-**SA response framework:**
-
-"Agentforce RAG costs have two main components. Let me give you the model.
-
-The first component is agent actions: every time the agent retrieves from the knowledge base or performs another action, that consumes Flex Credits. Each standard action costs 20 credits, and 100,000 credits cost $500 — so each action costs $0.10. If your agent handles 500 conversations a day and each conversation involves 2 actions on average, that is 20 sessions per day times 2 actions times $0.10 times 30 days — $120 per month.
-
-The second component is indexing: when we first build the knowledge corpus, there is a processing cost for chunking and vectorizing the content. For standard documents, this is $0.75 per megabyte. For complex documents with tables and images, it is $3.00 per megabyte. For a 500-file library averaging 1 MB per file in standard mode, that is a $375 one-time cost.
-
-These two line items appear separately on the invoice — action credits and Data Cloud processing credits are billed on different meters. I can give you a precise estimate if you share your expected daily session volume, average session depth, and approximate corpus size."
-
-#### 19.4 The "Can It Know About Our Products?" Conversation
-
-**Client concern:** A business sponsor in the discovery phase asks whether the agent can answer questions about their specific product catalog, pricing, and policies.
-
-**SA response framework:**
-
-"Yes — this is exactly what Retrieval-Augmented Generation is designed to solve.
-
-LLMs are trained on general knowledge up to a cutoff date. They know nothing about your products, your policies, or your processes. Without grounding, an agent answering a product question is guessing — and a confident, wrong guess in a customer conversation is worse than 'I don't know.'
-
-RAG solves this by building a searchable index from your own content — your Knowledge articles, your documentation, your policy PDFs. When a customer asks a product question, the agent searches that index, retrieves the relevant passages, and answers from your content specifically. The agent cites the source, so customers — and your compliance team — can verify exactly where the answer came from.
-
-The agent stays current because the index is built from your live Knowledge base. When you update a policy, the agent automatically reflects the update at the next indexing cycle. You are not maintaining two things — you maintain your Knowledge base and the agent follows."
+Three levers: corpus governance (quarterly Knowledge audit, clear ownership), retrieval tuning (chunking enrichment, embedding model, pre-filters), and RAG quality monitoring (AiRetrieverQualityMetric DMO). Frame it as an ongoing operational discipline, not a one-time launch activity.
 
 ---
 
@@ -1338,195 +1199,69 @@ The agent stays current because the index is built from your live Knowledge base
 
 ### Chapter 20: Six Production Architecture Patterns
 
-These six patterns cover the most common production Agentforce + RAG configurations. Each pattern includes when to use it, how it works, and the key architectural decisions involved.
+#### Pattern 1: Single-Source Knowledge Agent
 
-#### Pattern 1: Single ADL, Single Subagent
+**When to use:** Client has a well-maintained Salesforce Knowledge base. Single line of business. Single language.
 
-**When to use:** Single domain. Homogeneous corpus. Straightforward retrieval. The simplest production configuration.
+**Architecture:** ADL (KNOWLEDGE) → ensemble retriever (single source) → `AnswerQuestionsWithKnowledge` in `before_reasoning` → anti-hallucination guard → citations enabled.
 
-**Architecture:**
-
-```
-User
-  |
-  v
-Agent (single subagent)
-  |
-  v
-AnswerQuestionsWithKnowledge
-  |
-  v
-ADL (KNOWLEDGE or SFDRIVE)
-  |
-  v
-Search Index --> Retriever --> Prompt Template --> LLM
-```
-
-**Key decisions:**
-- KNOWLEDGE vs. SFDRIVE source type (based on where content lives)
-- `basic` vs. `enhanced` index mode (based on document complexity)
-- Chunk enrichment type (based on how users phrase queries vs. how content is written)
-- Anti-hallucination guard configuration
-
-**SA guidance:** This is the right starting point for most clients. Do not add complexity until the single-subagent configuration is working reliably.
+**Risks:** Language alignment. Day 0 race condition. Primary index field selection (immutable). Corpus governance.
 
 ---
 
-#### Pattern 2: Multi-Subagent, Domain-Gated RAG
+#### Pattern 2: File Library Agent
 
-**When to use:** Multiple conversation domains. Each domain has a distinct knowledge corpus. Users should not be able to access content from the wrong domain.
+**When to use:** Client has proprietary documentation in PDF, HTML, or TXT format. Content is not in Knowledge articles. Document structure is complex.
 
-**Architecture:**
+**Architecture:** ADL (SFDRIVE) → file mode selection (basic vs. enhanced based on content complexity) → `AnswerQuestionsWithKnowledge` in `before_reasoning` → anti-hallucination guard.
 
-```
-User
-  |
-  v
-Start Agent (Router)
-  |
-  +-- [billing question]  --> Billing Subagent  --> Billing ADL
-  |
-  +-- [product question]  --> Product Subagent  --> Product ADL
-  |
-  +-- [returns question]  --> Returns Subagent  --> Returns ADL
-```
-
-**Key decisions:**
-- Subagent descriptions must be precise and non-overlapping
-- Each subagent has its own `knowledge:` block pointing to its specific ADL
-- Consider using `available when` guards to prevent cross-domain retrieval
+**Risks:** Enhanced mode cost on large corpora. File size limits (100 MB). Index failure states.
 
 ---
 
-#### Pattern 3: Dynamic Pre-Filter RAG (Single Corpus, Multi-Segment)
+#### Pattern 3: Hybrid Knowledge + File Agent
 
-**When to use:** One corpus, multiple user segments with different content entitlements. Financial services, healthcare, multi-tier subscription products.
+**When to use:** Client has both Knowledge articles and supplementary PDFs (e.g., policy documents, technical manuals) for the same domain.
 
-**Architecture:**
+**Architecture:** ADL containing both KNOWLEDGE and SFDRIVE sources → platform auto-creates two retrievers + default ensemble retriever → agent wired to ensemble retriever → cross-source reranking handles unified results.
 
-```
-User (with segment attribute captured at session start)
-  |
-  v
-Identity Subagent
-    [captures: @variables.customerSegment]
-  |
-  v
-Knowledge Subagent
-  |
-  v
-AnswerQuestionsWithKnowledge
-    [dynamic pre-filter: Segment__c = @variables.customerSegment]
-  |
-  v
-Single ADL (full corpus)
-    --> Retriever returns only segment-eligible chunks
-```
-
-**Key decisions:**
-- Segment attribute must be captured deterministically before retrieval (not LLM-inferred)
-- Dynamic pre-filter field must be indexed in the search index
-- The anti-hallucination guard is especially critical here: an empty result means the content exists but is not accessible to this segment — not that it doesn't exist
+**Risks:** Always wire to the ensemble retriever, not to individual source retrievers. Verify retriever selection in prompt template configuration.
 
 ---
 
-#### Pattern 4: Knowledge-First with Web Search Fallback
+#### Pattern 4: Segmented Retrieval Agent (Dynamic Pre-Filters)
 
-**When to use:** The agent covers a mix of proprietary content (policies, processes) and public general information (industry FAQs, regulatory definitions). Compliance-approved for web access.
+**When to use:** Client serves multiple user segments with different content entitlements from a single corpus. Example: individual, business, and enterprise policyholders.
 
-**Architecture:**
+**Architecture:** Identity verification subagent → segment variable set → retrieval subagent with dynamic pre-filter passing segment variable → scoped `knowledgeSummary` returned per segment.
 
-```
-User question
-  |
-  v
-AnswerQuestionsWithKnowledge (primary)
-  |
-  +-- [knowledgeSummary non-empty] --> Answer with citation
-  |
-  +-- [knowledgeSummary empty]
-        |
-        v
-      General Web Search (fallback)
-        |
-        v
-      Answer labeled "from public sources"
-```
-
-**Key decisions:**
-- Responses from each source must be clearly labeled with their origin
-- Proprietary and web content must never be blended without explicit attribution
-- Monitor miss rates: high fallback frequency signals corpus gaps, not a successful fallback pattern
+**Risks:** Segment variable must be set before retrieval action fires. Pre-filter placeholder must match the runtime variable name exactly.
 
 ---
 
-#### Pattern 5: Multi-Agent Orchestration (SOMA)
+#### Pattern 5: Web-Augmented Agent (Knowledge-First Fallback)
 
-**When to use:** Complex enterprise deployments where different specialized agents handle different functional domains, and a Supervisor agent coordinates across them.
+**When to use:** Client's agent scope includes both proprietary content and general public information. Compliance team has approved web search use.
 
-**Architecture:**
+**Architecture:** Proprietary ADL retrieval as primary → empty `knowledgeSummary` check → General Web Search as fallback → explicit source labeling in response.
 
-```
-Supervisor Agent
-  |
-  +-- Plan Agent    (project planning, timeline)
-  |
-  +-- Service Agent (customer inquiries, cases)
-  |
-  +-- Sales Agent   (opportunity management, proposals)
-```
-
-**Two routing mechanisms:**
-
-| Mechanism | How it works | Use when |
-|---|---|---|
-| LLM Reasoning Engine routing | Supervisor LLM selects subagent based on descriptions | Complex, contextual routing where the choice depends on nuanced conversation content |
-| EinsteinHyperClassifier routing | Deterministic classifier routes based on trained patterns | High-volume, well-defined routing categories where latency matters; note tool limitations |
-
-**Key decisions:**
-- Subagent (specialist agent) descriptions are the routing signal — invest heavily in them
-- Trust boundary configuration: agents sharing the same org can communicate natively; cross-org agent communication requires trust boundary configuration
-- Each specialist agent maintains its own ADL and retrieval context
-
-**Connected agent syntax note:** Multi-agent designs use `connected_agent` blocks in Agent Script, distinct from standard subagents. The routing description can be overridden at the tool invocation site in the calling agent's reasoning instructions — useful when the same specialist agent plays different roles in different calling contexts.
+**Risks:** High miss rate doubles cost. Not appropriate for regulated industries without explicit compliance approval.
 
 ---
 
-#### Pattern 6: Jargon Grounding Pattern
+#### Pattern 6: Single-Org Multi-Agent (SOMA) Orchestration
 
-**When to use:** The client's user base uses terminology, product nicknames, or abbreviations that differ from the indexed content's vocabulary. This creates a semantic gap between how users ask questions and how documents are written — a gap that QUESTION enrichment alone cannot fully close when the terms are not known at index time.
+SOMA — Single-Org Multi-Agent — went GA in Summer '26. It enables a single Super Agent to own the user interaction while delegating to up to **7 Connected Subagents** within the same Salesforce org. The Supervisor pattern is used: the Super Agent receives all user requests, routes to the appropriate specialist Connected Subagent, receives results, and synthesizes the response.
 
-**Architecture:**
+**Key architectural constraints:**
+- Maximum 7 Connected Subagents per Super Agent
+- One level of delegation only (Super Agent → Connected Subagent; Connected Subagents cannot delegate further)
+- Connected Subagents respond and return results — they do not route or orchestrate independently
+- Communication within the same org uses the A2A Lite API (v1.1 Agent API)
 
-```
-User question (contains jargon)
-  |
-  v
-Terminology Subagent
-  |
-  v
-FetchTerminologyMap action (runs once per session)
-    [retrieves: old term -> canonical term mapping from KAV]
-  |
-  v
-Translation step (LLM translates user jargon -> canonical terms)
-  |
-  v
-Canonical question
-  |
-  v
-AnswerQuestionsWithKnowledge (retrieves against canonical terms)
-  |
-  v
-Answer
-```
+**When to use:** Client has multiple specialized agents within a single org that need to collaborate on complex requests without context switching. Example: a financial services firm with Portfolio Agent, Risk Agent, Compliance Agent, and Client Communication Agent all coordinating under a single interface.
 
-**Why this pattern matters:** Reindexing a large corpus every time a product is renamed or a new abbreviation enters circulation is expensive and slow. Maintaining a lightweight terminology map in Salesforce Knowledge — one article, one table, business-user-editable — enables terminology updates to propagate to the agent within the Knowledge indexing cycle (minutes) with no re-indexing of the main corpus.
-
-**Key decisions:**
-- The terminology map fetch must run once per session and be guarded against loop-on-parse
-- The translation step should not alter the user's question for domains outside the terminology map
-- Business users, not IT, should own and maintain the terminology map
+**MOMA (Multi-Org Multi-Agent)** extends this pattern across multiple Salesforce orgs within a shared DC1 trust boundary, with Primary Agents connecting to Secondary Agents in different orgs. All participating orgs must reside within the same DC1 trust boundary. MOMA delegation is strictly one-level (Primary → Secondary only; daisy-chaining is not supported).
 
 ---
 
@@ -1536,24 +1271,16 @@ Answer
 
 ### A1: The Four Silent Failure Checklist
 
-Use before every go-live. Each item on this list produces the same visible symptom — the agent says "I don't have that information" — but a different root cause.
+Silent failures are failures where the agent responds without error but the response is wrong or empty. Check in order:
 
-- [ ] **Data Cloud permission set** assigned to the Einstein Agent User
-- [ ] **Data space access** granted to the Einstein Agent User for the correct data space
-- [ ] **Search index permission** granted to the Einstein Agent User or their role
-- [ ] **Knowledge article visibility** confirmed: agent user profile can see the relevant article types and data categories
-- [ ] **Language alignment** confirmed: agent user locale matches Knowledge article language
-- [ ] **`retrieverId` verified non-null** and live test query returns non-empty `knowledgeSummary` (for KNOWLEDGE ADLs)
-- [ ] **KNOWLEDGE Day 0 wait** completed: 10 minutes elapsed after `retrieverId` appeared before declaring success
-- [ ] **`ARFPC_` prefix** present in `rag_feature_config_id`
-- [ ] **Anti-hallucination guard** variable name verified to match retrieval result variable name
-- [ ] **`after_reasoning` dependencies** not present on subagents with `is_displayable: True` actions
+1. **Permission silent failure:** Agent user missing Data 360 permission set or data space access. Symptom: agent declines every question.
+2. **Day 0 race condition:** KNOWLEDGE library shows READY but contains 0 indexed chunks. Symptom: `knowledgeSummary` always empty. Verify with live test query.
+3. **Language alignment failure:** Agent user language does not match indexed article language. Symptom: retriever returns 0 results for every query. No error visible.
+4. **Guard variable name mismatch:** Anti-hallucination guard references wrong variable name. Symptom: LLM answers from general knowledge when retrieval misses instead of deflecting.
 
 ---
 
 ### A2: RAG Anti-Hallucination Guard Template
-
-Copy this template. Substitute the variable names and support channel with client-specific values.
 
 ```
 before_reasoning:
@@ -1566,126 +1293,80 @@ before_reasoning:
 reasoning:
     | Use only the content in @variables.knowledgeResult to answer
       the user's question.
-    | Do not supplement the answer with information from general
-      knowledge, even if you believe the answer is correct.
+    | Do not use general knowledge or information from outside
+      @variables.knowledgeResult.
     | If @variables.knowledgeResult is empty or does not contain
       information relevant to the user's question, respond with:
       "I wasn't able to find that information in our knowledge base.
-       For help with this, please contact [support channel]."
-    | Always cite the source of your answer using the citation
-      metadata provided in the knowledgeSummary.
+       Please contact [support channel] for assistance."
+    | Always cite the source article when answering from
+      @variables.knowledgeResult.
 ```
 
 ---
 
 ### A3: The Scoping Decision Tree
 
-Use this in every discovery conversation before recommending an architecture.
-
 ```
-Does the client need the agent to answer questions about
-their specific products, policies, or processes?
+Is RAG needed?
 |
-+-- No  --> No RAG needed. Use agent topics and CRM actions.
++-- Client questions are only about CRM data (Account, Case, Order)
+|    --> No RAG. Use Apex or Flow actions to fetch CRM records.
 |
-+-- Yes --> Where does the authoritative content live?
-    |
-    +-- Salesforce Knowledge articles
-    |    --> ADL: KNOWLEDGE source type
-    |
-    +-- Files (PDF, HTML, TXT) in Salesforce or external storage
-    |    --> ADL: SFDRIVE source type
-    |         (external storage: S3, GCS, Azure Blob supported)
-    |
-    +-- Existing active Custom Retriever
-    |    --> ADL: RETRIEVER source type
-    |
-    +-- Public website only (no proprietary content)
-    |    --> General Web Search action
-    |         (requires compliance approval for regulated industries)
-    |
-    +-- External system with data residency restrictions
-    |    --> MuleSoft + Custom Retriever (escalate to developer)
-    |
-    +-- Long-text fields on non-KAV Salesforce objects
-    |    --> Manual configuration (escalate to developer)
-    |
-    +-- Multiple sources from different systems
-         --> How many distinct sources?
-              |
-              +-- Two (files + KAV)
-              |    --> Single ADL with ensemble retriever (built-in)
-              |
-              +-- More than two
-                   --> Manual configuration + Ensemble Retriever
-                        (escalate to developer)
++-- Client questions require proprietary content knowledge
+     --> RAG required.
+     |
+     +-- Content is in Salesforce Knowledge articles?
+     |    --> ADL: KNOWLEDGE
+     |
+     +-- Content is in PDF/HTML/TXT files?
+     |    --> ADL: SFDRIVE
+     |         |
+     |         +-- Complex tables/images/multi-column layouts?
+     |              --> enhanced mode (verify cost first)
+     |
+     +-- Both Knowledge and files?
+     |    --> ADL with both sources + ensemble retriever
+     |
+     +-- External system (Confluence, SharePoint, custom API)?
+     |    --> Pro-code: Apex action + MuleSoft retrieval broker
+     |
+     +-- Long-text fields on non-KAV Salesforce objects?
+          --> Manual configuration (pro-code)
 ```
 
 ---
 
 ### A4: Content Authoring Best Practices Checklist
 
-Use this in the corpus design conversation with the client's Knowledge Manager or Content Team. Complete before any production indexing begins.
+Before go-live, review the corpus against these criteria:
 
-**Article Structure**
-- [ ] Articles use heading tags (H1-H6) for all major and minor sections
-- [ ] Each article covers one coherent topic — not a catch-all dump
-- [ ] Articles are a minimum of 300-400 words; very short articles are consolidated or expanded
-- [ ] Sentences are logically related and paragraphs cohere within a topic
-
-**Content Depth**
-- [ ] Articles include detailed explanations, not just summaries or pointers
-- [ ] Real-world examples are included for each major scenario
-- [ ] Examples are written conversationally, as a user would describe the situation
-- [ ] Common synonyms and abbreviations for key terms are explained within the article text
-
-**Structured Content (Knowledge Articles)**
-- [ ] Long-text content is spread across multiple fields (Question, Description, Resolution, Exceptions)
-- [ ] Metadata fields are populated for filtering (category, product line, audience)
-- [ ] Identifying fields are chosen that will be useful as prepend fields (Title, Product Name)
-
-**Complex Formats (Files)**
-- [ ] Documents with tables have been reviewed; complex tables converted to JSON or HTML where possible
-- [ ] Long tables have been split into logical sub-tables with clear headings
-- [ ] Files requiring enhanced (Intelligent Context) mode have been identified and tagged
-
-**Scope and Governance**
-- [ ] Corpus scope is defined and aligned with the agent's conversation scope
-- [ ] Out-of-scope content is excluded or tagged for exclusion via data categories
-- [ ] Outdated articles have been retired or flagged for retirement
-- [ ] Knowledge audit cadence is established (quarterly minimum)
-- [ ] Content owner is identified for ongoing governance
+- [ ] Articles are thorough, not brief. Each article provides complete information, not pointers to other resources.
+- [ ] Articles include real-world examples in conversational language.
+- [ ] HTML-formatted articles use heading tags (H1-H6) for logical structure.
+- [ ] Knowledge articles use multiple fields (Question, Description, Resolution, Exceptions) rather than a single body field.
+- [ ] Common synonyms and abbreviations are included in article text.
+- [ ] The corpus scope matches the agent's topic scope. No tangentially related content.
+- [ ] Content governance owner is identified. Quarterly audit cadence is scheduled.
+- [ ] All articles are published (`PublishStatus = 'Online'`).
+- [ ] Data categories are assigned and aligned with the search index scope.
+- [ ] Language/locale of articles matches the agent user's language setting.
 
 ---
 
 ### A5: Multi-Source Architecture Decision Guide
 
-Use this when a client needs answers from more than one knowledge domain.
-
-**Step 1: How many distinct data sources are needed?**
-
-Count the distinct data source types. Remember: one search index per source. Four sources requires four search indexes.
-
-**Step 2: Are the sources complementary or independent?**
-
-- If a complete answer to a typical question requires content from more than one source, the sources are **complementary** — use Approach 1 (one prompt template, multiple retrievers / ensemble).
-- If questions can be reliably classified as belonging to one source or another, the sources are **independent** — use Approach 2 (separate prompt template per source, agent selects the right action).
-
-**Step 3: Is everything within ADL's supported scope?**
-
-ADL today supports: Salesforce Knowledge articles (KNOWLEDGE), files from Salesforce-managed storage or external cloud storage (SFDRIVE), and existing active custom retrievers (RETRIEVER).
-
-If any required source is outside this scope — external databases, non-KAV Salesforce objects with long-text fields, systems with residency restrictions — manual configuration and developer involvement are required.
-
-**Step 4: Use the decision matrix**
-
-| Sources | All ADL-compatible? | Approach |
-|---|---|---|
-| 1 source | Yes | Single ADL, Pattern 1 |
-| 2 sources (files + KAV) | Yes | Single ADL with built-in ensemble retriever |
-| 2+ sources, ADL-compatible | Yes | Multiple ADLs, Approach 1 or 2 |
-| Any source outside ADL scope | No | Manual configuration (developer required) |
-| 4+ heterogeneous sources | Partially | Manual configuration + Ensemble Retriever |
+| Scenario | Recommended Architecture |
+|---|---|
+| Single Knowledge source, single language | ADL (KNOWLEDGE), vector search |
+| Single Knowledge source, multi-language | ADL (KNOWLEDGE), multilingual embedding model |
+| Files only, simple prose | ADL (SFDRIVE), basic mode |
+| Files only, complex layouts | ADL (SFDRIVE), enhanced mode (cost-justify first) |
+| Knowledge + Files, same domain | ADL with both sources, default ensemble retriever |
+| Knowledge + external system | ADL (KNOWLEDGE) + Apex custom action for external retrieval |
+| Multiple orgs, same trust boundary | MOMA (Primary + Secondary agents) |
+| Single org, multiple specialist agents | SOMA (Super Agent + up to 7 Connected Subagents) |
+| External data lake, no file movement | Data 360 zero-copy federation → custom retriever |
 
 ---
 
@@ -1693,22 +1374,23 @@ If any required source is outside this scope — external databases, non-KAV Sal
 
 | Term | Definition |
 |---|---|
-| **ADL** | Agentforce Data Library. The no-code/low-code provisioning path for RAG in Agentforce. Creates and manages the full pipeline: DLO, DMO, Search Index, Retriever, Prompt Template, and Agent Action. |
-| **Atlas** | The public name for the Agentforce Reasoning Engine. Executes agent logic, manages conversation state, calls actions, and coordinates LLM reasoning. Use this name with clients. |
-| **Chunk** | A text fragment produced by splitting a larger document for embedding and indexing. The unit of retrieval in a RAG pipeline. |
-| **CRM Connector** | The Salesforce-managed integration that reads Knowledge articles from the `Knowledge__kav` object and makes them available to Data Cloud for indexing. |
-| **DMO** | Data Model Object. The structured representation of a data entity within Data Cloud. The search index is built on top of a DMO. |
-| **DLO** | Data Lake Object. Raw data storage layer in Data Cloud, upstream of the DMO. |
-| **Dynamic Pre-Filter** | A retriever filter whose value is resolved at runtime from conversation context, enabling per-user or per-session scoping of retrieval results. |
-| **Embedding model** | The model that converts text into numerical vectors. Must be the same at indexing and query time. Changing after index creation requires full re-indexing. |
-| **Ensemble Retriever** | A retriever that combines results from multiple individual retrievers, reranking across sources using a cross-encoder model. |
-| **EinsteinHyperClassifier** | A faster, deterministic classifier option for subagent routing. Offers lower latency but has tool limitations compared to the standard LLM reasoning engine. |
-| **Flex Credits** | Salesforce's action-based pricing model for Agentforce. 100,000 credits = $500. Each standard action execution costs 20 credits = $0.10 per action. |
-| **knowledgeSummary** | The output payload from `AnswerQuestionsWithKnowledge`. Contains the retrieved chunks as a formatted string for injection into the prompt. |
-| **Parse** | The atomic unit of Agent Script execution. One complete cycle through `before_reasoning`, `reasoning`, and `after_reasoning`. Fires on first subagent entry, after every action, and on every new user turn. |
-| **Pre-filter** | A filter applied before the similarity search runs, narrowing the candidate pool. More efficient than post-filtering because ineligible records are excluded before vector comparison. |
-| **RAG** | Retrieval-Augmented Generation. The pattern of retrieving relevant content from a managed corpus at query time and injecting it into the prompt as grounding context. |
-| **SFDRIVE** | The ADL source type for file-based libraries. Supports PDF, TXT, and HTML files from Salesforce-managed storage or external platforms (S3, GCS, Azure Blob). |
-| **Unified Planner** | The engineering product name for the Atlas Reasoning Engine. Use "Atlas" with clients; use "Unified Planner" when discussing engineering architecture. |
-| **ZDR** | Zero Data Retention. The contractual agreements between Salesforce and LLM providers prohibiting retention of prompt data or its use for model training. |
-| **Zero Copy** | A Data Cloud architecture principle where physical data files are not duplicated into Data Cloud. Only extracted text and metadata reside on Data Cloud; the source file stays in its original location. |
+| Atlas Reasoning Engine | Public-facing name for the Agentforce runtime engine |
+| Unified Planner | Engineering product name for the Atlas runtime; unifies Agent Graph + Voice Planner |
+| ADL | Agentforce Data Library — the no-code RAG provisioning tool |
+| DLO | Data Lake Object — persistent storage layer in Data 360 |
+| UDLO | Unstructured Data Lake Object — directory table for unstructured content |
+| DMO | Data Model Object — harmonized Customer 360 data layer |
+| Data Space | Logical isolation container in Data 360 |
+| SNCE | Storage Native Change Events — reactive change notification from Iceberg tables |
+| CDF | Change Data Feed — incremental change consumption built on SNCE |
+| ABAC | Attribute-Based Access Control — Data 360's governance framework |
+| CEDAR | Policy language used to define ABAC rules in Data 360 |
+| SOMA | Single-Org Multi-Agent — orchestration pattern for multiple agents within one Salesforce org (GA Summer '26) |
+| MOMA | Multi-Org Multi-Agent — orchestration pattern across multiple Salesforce orgs within the same DC1 trust boundary |
+| ZDR | Zero Data Retention — contractual guarantee that LLM providers do not retain prompt data |
+| Salesforce trust boundary | Network path for Claude Haiku 4.5 via AWS Bedrock with Salesforce-managed private connections |
+| Shared trust boundary | Network path for GPT-4.1 via public internet with contractual ZDR protections |
+| ARFPC_ prefix | Required prefix on `rag_feature_config_id` in the Agent Script `knowledge:` block |
+| knowledgeSummary | The string payload returned by `AnswerQuestionsWithKnowledge` containing retrieved chunks |
+| Day 0 race condition | KNOWLEDGE library false READY status caused by ~17-second CRM Connector visibility delay |
+| Parse | The atomic unit of Agentforce execution: one complete cycle through before_reasoning, reasoning, and after_reasoning |

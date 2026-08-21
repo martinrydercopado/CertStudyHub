@@ -293,6 +293,26 @@
     "quizLengths": []
   },
   {
+    "id": "dc360devops",
+    "name": "Data 360 DevOps",
+    "shortName": "Data 360 DevOps",
+    "icon": "\ud83d\udd27",
+    "primaryColor": "#0D9488",
+    "secondaryColor": "#2DD4BF",
+    "headerGradient": [
+      "#134E4A",
+      "#115E59",
+      "#0D9488"
+    ],
+    "passingScore": 70,
+    "questionBank": "dc360devops",
+    "storageKeyPrefix": "dc360devops",
+    "isBonusTopic": true,
+    "subtitle": null,
+    "guideFile": "dc360devops",
+    "quizLengths": []
+  },
+  {
     "id": "agentforce",
     "name": "Agentforce Specialist",
     "shortName": "Agentforce",

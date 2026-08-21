@@ -10,7 +10,8 @@ enum CertCatalog {
         multiagent,
         customLWC,
         agentOps,
-        agentforceCoworker
+        agentforceCoworker,
+        dc360DevOps
     ]
 
     // ── Certifications ──
@@ -95,6 +96,27 @@ enum CertCatalog {
         storageKeyPrefix: "agentforcecoworker",
         isBonusTopic: true,
         guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcecoworker")
+    )
+
+    static let dc360DevOps = CertConfig(
+        id: "dc360devops",
+        name: "Data 360 DevOps",
+        shortName: "Data 360 DevOps",
+        icon: "wrench.and.screwdriver",
+        primaryColor: Color(red: 0.05, green: 0.58, blue: 0.53),
+        secondaryColor: Color(red: 0.18, green: 0.83, blue: 0.75),
+        headerGradient: [
+            Color(red: 0.07, green: 0.31, blue: 0.29),
+            Color(red: 0.07, green: 0.37, blue: 0.35),
+            Color(red: 0.05, green: 0.58, blue: 0.53)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "dc360devops",
+        isBonusTopic: true,
+        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=dc360devops")
     )
 
     // ── Certification Definitions ──

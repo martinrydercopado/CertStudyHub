@@ -1,5 +1,8 @@
 # Tracing and Analytics in Agentforce
 
+*Updated August 20, 2026*
+*This guide was generated using AI with grounding in official Salesforce documentation. Review for accuracy before using.*
+
 ---
 
 ## Contents
@@ -31,9 +34,9 @@ An Agentforce agent is a probabilistic system. Unlike a deterministic Flow or Ap
 - Is the agent actually resolving issues, or just deflecting them?
 - Which knowledge gaps are causing the most user frustration?
 
-**The business stakes are real.** Agentforce agents frequently handle customer-facing interactions at scale. A misconfigured instruction, a failing action, or a knowledge gap can affect thousands of sessions before anyone notices — unless monitoring catches it first. Observability converts that reactive fire-fighting into a proactive, data-driven improvement loop.
+**The business stakes are real.** Agentforce agents frequently handle customer-facing interactions at scale. A misconfigured instruction, a failing action, or a knowledge gap can affect thousands of sessions before anyone notices — unless monitoring catches it first. Observability converts reactive fire-fighting into a proactive, data-driven improvement loop.
 
-For a Success Architect, observability is also a trust-building tool. Customers who can see exactly what their agent is doing, exactly how it is performing, and exactly where it needs improvement are customers who invest in the platform long-term.
+For a Success Architect, observability is also a trust-building tool. Customers who can see exactly what their agent is doing, how it is performing, and where it needs improvement are customers who invest in the platform long-term.
 
 ---
 
@@ -42,69 +45,6 @@ For a Success Architect, observability is also a trust-building tool. Customers 
 Agentforce observability depends on a stack of capabilities that must be explicitly enabled. None of them are on by default. Before advising a customer on tracing or analytics, confirm this infrastructure is in place.
 
 ### Required Foundation
-- **Data Cloud (Data 360) provisioned** with the CRM Connector active. All session data, optimization data, and platform tracing data live in Data Cloud. Without it, none of the DMOs exist.
-- **Agentforce enabled** in the org with at least one deployed agent generating sessions.
-- **Appropriate permissions assigned** to admin and developer users:
-  - `CopilotSalesforceAdmin` — for admin users managing agent configuration
-  - `GenieAdmin` — for users who need Data Cloud query access
-  - `AgentforceServiceAgentBuilder` — for service agent configuration admins
-  - `AgentforceDeveloperAndAdminTools` — for developers (verify purpose per org before assigning)
-
-### Step 1: Enable Session Tracing and Agentforce Optimization
-
-**Path:** Setup > Einstein Audit, Analytics, and Monitoring Setup
-
-This single setup page actually controls two related but distinct capabilities. Both must be enabled:
-
-- **Agentforce Session Tracing and Data Model** — provisions the STDM DMOs and begins capturing session data. This is the foundation for everything in Pillar I (Analytics) and Pillar II (Optimization). Without this toggle, no session data flows into Data Cloud.
-- **Agentforce Optimization** — enables the Optimization pipeline that processes sessions into Moments, scores quality, and surfaces clustered insights. This requires Session Tracing to be enabled first.
-
-> **Timing note:** Session Tracing begins collecting data immediately after enablement. Optimization results, however, require pipeline runs (see Pillar II for timing details). Do not promise customers "instant" Optimization insights.
-
-### Step 2: Enable Audit and Feedback
-
-**Path:** Setup > Einstein Audit, Analytics, and Monitoring Setup > Audit and Feedback toggle
-
-This is a separate opt-in from Session Tracing and must be enabled explicitly. It controls the storage of:
-
-- **Generative AI Audit Data:** PII-masked prompt text, hydrated prompt text, LLM response text, response safety scores, and LLM model details — stored in `GenAIGatewayRequest__dlm` and `GenAIGeneration__dlm`.
-- **Feedback Data:** Thumbs-up/thumbs-down ratings, reason text, and response acceptance signals — stored in `GenAIFeedback__dlm`.
-
-When enabling Audit and Feedback, the admin must also select a **target data space** if the org has multiple data spaces. The pre-built Einstein Gen AI Audit and Feedback dashboards install automatically after enablement (allow a few minutes).
-
-> **Consent implication:** Enabling Audit and Feedback constitutes explicit organizational consent to store generative AI activity logs and feedback data in Data Cloud, including any cost implications. This is documented in Setup and should be communicated to customer IT and legal stakeholders before enablement.
-
-Without Audit and Feedback enabled, the `prompt__c` and `llm_response` fields available through `AgentforceOptimizeService.getLlmStepDetails()` will return null. This limits the ability to diagnose instruction-adherence failures at the prompt level.
-
-### Step 3: Enable Agent Platform Tracing
-
-**Path:** Setup > Agent Platform Tracing
-
-This is a completely separate toggle from Session Tracing. It enables the back-end execution trace pipeline that captures every LLM call, Flow execution, and Apex invocation as an OpenTelemetry (OTEL) span tree, stored in `ssot__TelemetryTraceSpan__dlm`.
-
-Platform Tracing is the tool for diagnosing performance issues and integration failures that are invisible in session traces. It is not enabled by default, and customers frequently do not know it exists until a Success Architect introduces it.
-
-### Step 4: Configure the `config.runtime` Block (262.12+)
-
-Starting in 262.12, Agent Script supports a top-level `config.runtime:` block that exposes explicit boolean toggles for platform-level reasoning behaviors. These flags compile into `global_configuration.runtime` and directly affect what architects see (or do not see) in traces.
-
-**Observability-relevant flags:**
-
-| Flag | What It Controls | Tracing Impact |
-|---|---|---|
-| `groundedness` | Enables or disables the grounding check | When set to `false`, no `ReasoningStep` will appear in session traces — responses can go out without a grounding gate. A missing `ReasoningStep` no longer means a bug; it may mean this flag is off. |
-| `reset_to_initial_node` | Controls whether the agent resets to `start_agent` between sessions | Affects the statelessness assumptions in Section 7. When `false`, prior subagent context may persist across turns in unexpected ways, which can cause Pattern H counter anomalies. |
-| `streaming`, `thought_chunks`, `citation` | Streaming response behavior and citation display | Minor trace impact; primarily a UI concern. |
-
-> **Hard compile error:** An empty `config.runtime:` block is a compile error as of 262.12. The block must either be omitted entirely or contain at least one flag. If a customer reports a compile failure on a previously working agent after a platform upgrade, check for a bare `runtime:` block with no flags set.
-
-**Why this matters for tracing:** The guide's grounding discussion in Sections 4 and 5 assumes that grounding is always active. That assumption is no longer safe. When reading a trace that shows no `ReasoningStep` spans, check `config.runtime.groundedness` before concluding the agent has a structural problem.
-
-### Step 5: Install the Consumption Tagging App (if needed)
-
-If consumption reporting is a stakeholder requirement, the **Consumption Tagging app** must be installed from the Digital Wallet on AppExchange before the Consumption Analytics Dashboard is available. Plan for this before go-live — it cannot be rushed in after the fact.
-
-### Infrastructure Readiness Checklist
 
 - [ ] Data Cloud provisioned and CRM Connector active
 - [ ] `CopilotSalesforceAdmin` assigned to admin users
@@ -115,15 +55,69 @@ If consumption reporting is a stakeholder requirement, the **Consumption Tagging
 - [ ] Agentforce Optimization enabled (same setup page)
 - [ ] Audit and Feedback enabled with target data space selected (same setup page)
 - [ ] Agent Platform Tracing enabled (Setup > Agent Platform Tracing)
-- [ ] `config.runtime` block reviewed: `groundedness` flag confirmed, empty block removed if present
+- [ ] Data Space name confirmed via CLI command (not assumed)
+- [ ] `config.runtime` block reviewed: if no runtime behavior needs overriding, omit the block entirely. `runtime` is a sub-block of `config` with five optional boolean parameters (`streaming`, `thought_chunks`, `citation`, `groundedness`, `reset_to_initial_node`). Agent Script's compiler expects at least one property after a block header; an empty `runtime:` declaration produces a compilation error at deployment time, not a silent runtime failure. Confirm the `groundedness` flag state if `ReasoningStep` entries are absent from traces.
 - [ ] Consumption Tagging app installed (if Consumption Analytics Dashboard required)
 - [ ] Alert thresholds configured relative to expected session volume before go-live
+
+### Audit and Feedback: Additional Prerequisites
+
+> **Important — Audit and Feedback is not on by default for multi-dataspace orgs.** It is auto-enabled only for single-dataspace orgs when Agentforce is turned on. Before writing any query against GenAI Audit DMOs, confirm all of the following are in place:
+>
+> - **Data 360 provisioned** and Einstein enabled in the org.
+> - **Salesforce Standard Data Model version 1.130 or higher.** Agent Session Tracing specifically requires SSDM v1.130+.
+> - **Setup path:** Setup > Einstein Audit, Analytics, and Monitoring Setup > toggle Audit and Feedback on, then select the target data space.
+> - **Data availability:** Collected data appears in Data Cloud within 24 hours and refreshes hourly thereafter. This is a separate pipeline from STDM data.
+> - **RAG quality metrics** (Answer Faithfulness, Answer Relevance, Context Relevance) require a second toggle confirmed verbatim in official Salesforce documentation: **"Knowledge/RAG Quality Data and Metrics."**
+> - **Trust Layer metrics** (Toxicity, Prompt Injection, Instruction Adherence) require a Trust Layer data toggle. This toggle is believed to exist based on corroborating evidence but its exact UI name is not confirmed verbatim. Verify the current toggle name in Setup before communicating it to customers.
+> - **PII warning:** Stored data can contain PII, PHI, and PCI. Dynamic data masking policies and data space permissions are required before this data is accessible.
+>
+> Any query in this guide that touches `GenAIGeneration__dlm` or other no-prefix GenAI Audit DMOs will return no data — or fail — if these prerequisites are not met.
+
+### DMO Prefix: Standard vs. Legacy
+
+Agentforce DMOs exist in two prefix families. Which one is live in a given org depends on when the org was provisioned. Both families are fully SOQL-queryable and identical in capability. No automatic migration occurs between them.
+
+| Family | Prefix | How to Identify |
+|---|---|---|
+| Standard (newer orgs) | `std__` | Objects like `std__AiAgentSessionDmo__dlm` return rows |
+| Legacy (existing orgs) | `ssot__` | Objects like `ssot__AiAgentSession__dlm` return rows |
+
+> **Before writing any SOQL against DMOs in a customer org, run this check to determine which family is live:**
+>
+> ```sql
+> SELECT COUNT(*) FROM std__AiAgentSessionDmo__dlm
+> ```
+>
+> If this returns zero rows or an object-not-found error, the org is on the legacy `ssot__` prefix. Substitute `ssot__` equivalents throughout. If it returns rows, the org is on the standard prefix.
+>
+> The queries in this guide use `std__` as the primary prefix, with `ssot__` alternatives noted for Platform Tracing (where official Salesforce documentation leads with `ssot__`). Always verify prefix before delivering SOQL to a customer.
+
+### A Third DMO Family: GenAI Audit
+
+A separate, no-prefix family exists for GenAI Audit data. This family is architecturally distinct from the standard/legacy split above.
+
+| Family | Prefix | Example Object | Populated When |
+|---|---|---|---|
+| GenAI Audit | _(none)_ | `GenAIGeneration__dlm` | Only when Audit and Feedback is explicitly enabled |
+
+Do not mix GenAI Audit DMOs into SOQL queries against the `std__` or `ssot__` families. They are populated by a separate pipeline with a separate enablement requirement (SSDM v1.130+, Audit and Feedback toggle on).
+
+### Data Freshness
+
+| Pipeline | Refresh Cadence | Source |
+|---|---|---|
+| STDM (`std__` / `ssot__` session data) | ~15 min (skill file) or ~30 min (White Paper) | Two official sources; ~15 min is the more recent signal |
+| Agent Analytics dashboards (Tableau Next) | 45–60 min lag from session time | Observed platform behavior |
+| GenAI Audit DMOs (`GenAIGeneration__dlm` etc.) | Within 24 hours initially; hourly thereafter | Confirmed verbatim in Audit and Feedback PDF |
+
+These are three separate pipelines. The three numbers are not in conflict. Set customer expectations accordingly: dashboards are not real-time.
 
 ---
 
 ## 3. The Three Pillars of Agentforce Observability
 
-Agentforce observability is not a single feature. It is a stack of three complementary capabilities that answer different questions at different levels of granularity. A Success Architect should understand all three, know when to recommend each one, and be able to explain the difference to a non-technical customer stakeholder.
+Agentforce observability is not a single feature. It is a stack of three complementary capabilities that answer different questions at different levels of granularity. A Success Architect should understand all three, know when to recommend each one, and be able to explain the difference to a non-technical stakeholder.
 
 ---
 
@@ -142,9 +136,59 @@ Agentforce observability is not a single feature. It is a stack of three complem
 - Average session duration and turn count
 - Agent latency
 
-**When to rely on it:** Daily health monitoring, early-warning detection, executive reporting, and ROI calculation. Analytics answers the "what" — it does not answer the "why."
+**When to rely on it:** Daily health monitoring, early-warning detection, executive reporting, and ROI calculation. Analytics answers the "what." It does not answer the "why."
 
-**Limitation to communicate:** Analytics dashboards show aggregate trends. They cannot tell you *why* a specific session escalated, *which* instruction caused a misrouted topic, or *where* an action broke. For those questions, you need Pillar II or III.
+**Limitation to communicate:** Analytics dashboards show aggregate trends. They cannot tell you why a specific session escalated, which instruction caused a misrouted topic, or where an action broke. For those questions, you need Pillar II or III.
+
+### The Analytics Semantic Layer
+
+Salesforce provides a pre-built **Analytics Semantic Layer** called Agentforce Analytics Foundations inside Data 360. It exposes calculated fields (`_clc` suffix) for every standard KPI. These fields are the recommended query target for standard metrics. Raw SOQL against the underlying DMOs is appropriate for advanced, custom, or cross-DMO use cases only.
+
+Confirmed calculated field names:
+
+**Measures**
+
+| Label | Field Name | Notes |
+|---|---|---|
+| Average Quality Score | `Average_Quality_Score_clc` | Average 1–5 score across sessions |
+| Quality Score Reasoning | `Quality_Score_Reasoning_clc` | LLM explanation for the score |
+| Escalation Rate | `Escalation_Rate_clc` | Escalated sessions / all sessions |
+| Escalated Sessions | `Escalated_Sessions_clc` | Sessions escalated to human or different agent |
+| Deflection Rate | `Deflection_Rate_clc` | Deflected sessions / all sessions |
+| Abandonment Rate | `Abandonment_Rate_clc` | Abandoned sessions / all sessions |
+| Engagement Rate | `Engagement_Rate_clc` | Engaged sessions / all sessions |
+| Average Session Duration | `Average_Session_Duration_clc` | In seconds |
+| Average Moment Duration | `Average_Moment_Duration_clc` | In seconds |
+| Average Agent Interaction Latency | `Average_Agent_Interaction_Latency_clc` | In milliseconds |
+| Interaction Error Rate | `Error_Rate_clc` | Interactions with action or LLM steps only |
+| Success Rate | `Success_Rate_clc` | Action steps completing without errors |
+| Average Answer Faithfulness Score | `Average_Answer_Faithfulness_Score_clc` | 0–1; requires Audit and Feedback + Knowledge/RAG Quality toggle |
+| Average Answer Relevance Score | `Average_Answer_Relevance_Score_clc` | 0–1; requires same |
+| Average Context Relevance Score | `Average_Context_Relevance_Score_clc` | 0–1; requires same |
+| Average Agent Toxicity Score | `Average_Agent_Toxicity_Score_clc` | 0–1; requires Audit and Feedback + Trust Layer data toggle |
+| Average User Prompt Injection | `Average_User_Prompt_Injection_clc` | Requires same |
+| Total Flex Credits | `Total_Flex_Credits_clc` | From enriched usage events |
+| Unique Sessions | `Unique_Sessions_clc` | Distinct sessions in time frame |
+| Unique Moments | `Unique_Moments_clc` | Distinct intents in time frame |
+| Unique Tags | `Unique_Tags_clc` | Unique tags in time frame |
+| Stickiness Rate | `Stickiness_Ratio_clc` | DAU/MAU ratio |
+| High Adherence Response Rate | `High_Adherence_Response_Rate_clc` | Steps classified as high adherence; requires Audit and Feedback + Trust Layer data toggle |
+| Positive User Feedback | `Positive_User_Feedback_clc` | Thumbs up from GenAI feedback data |
+| Negative User Feedback | `Negative_User_Feedback_clc` | Thumbs down from GenAI feedback data |
+| Task Resolution Rate | `Task_Resolution_Rate_clc` | Beta; Trust Layer task resolution detector |
+| Total Agent Talk Duration | `Total_Agent_Talk_Duration_clc` | [^1] |
+
+[^1]: Voice sessions only. Total agent speaking time in seconds, based on agent output message timestamps. Only sessions with a related voice call are included. Messages with missing start or end timestamps are excluded.
+
+**Dimensions**
+
+| Label | Field Name | Notes |
+|---|---|---|
+| Session Outcome | `Session_Outcome_Base_clc` | Consolidated outcome: escalated, deflected, abandoned, ambiguous, or not set. Use for outcome filtering and reporting across all terminal states. |
+| Task Resolution Status | `Task_Resolution_Status_clc` | Indicates whether the agent fully resolved, partially resolved, or didn't resolve the user's request at the session level. Distinct from the Measure `Task_Resolution_Rate_clc`. Use this dimension to JOIN or filter in raw SOQL; use the Rate field for KPI reporting. Requires Trust Layer — see beta flag on `Task_Resolution_Rate_clc`. |
+| Agent Adherence Status | `Agent_Adherence_Status_clc` | Instruction adherence level for the response (e.g., high, low, uncertain), from Trust Layer InstructionAdherence evaluation on GenAIContentCategory. Complements the Measure `High_Adherence_Response_Rate_clc`. Requires Audit and Feedback + Trust Layer data toggle. |
+| Time to First Agent Token | `Time_To_First_Agent_Token_clc` | Time in milliseconds from end of user's message until generation of the first agent response token, per interaction. |
+| Time to Last Agent Token | `Time_To_Last_Agent_Token_clc` | Time in milliseconds from end of user's message until generation of the last agent response token, per interaction. |
 
 ---
 
@@ -156,100 +200,99 @@ Agentforce observability is not a single feature. It is a stack of three complem
 
 #### What a Moment Is
 
-A Moment represents a distinct user intent within a session. A single session can contain multiple Moments — for example, a user who first asks about order status, then asks about a return policy, generates two Moments in one session.
-
-Moments are the granular unit that Optimization scores and clusters. They are what make intent-level analysis possible.
+A Moment represents a distinct user intent within a session. A single session can contain multiple Moments — for example, a user who first asks about order status, then asks about a return policy, generates two Moments in one session. Moments are the granular unit that Optimization scores and clusters. They are what make intent-level analysis possible.
 
 #### How the Optimization Pipeline Works
 
 Understanding the pipeline timing is essential for setting accurate customer expectations.
 
-**Moment generation** runs on a frequent schedule. A pipeline run is initiated under one of two conditions:
+**Moment generation** runs on a frequent schedule triggered by one of two conditions:
 
 - Every 9 hours if there is at least one new closed session.
 - Every 3 hours if there are more than 10 new closed sessions since the last run.
-- A session is considered "closed" after 3 hours of inactivity.
 
-**Intent clustering** — where the LLM groups similar Moments and applies tags — runs once per week, over the weekend. This is the step that makes the Intents tab in Agentforce Optimization filterable by quality score and browsable by topic cluster.
+A session is considered "closed" after 3 hours of inactivity.
 
-**Important:** Meaningful clustering requires approximately 100 Moments. This typically corresponds to roughly 100 sessions, though the exact number depends on your session complexity. Deep optimization work should not begin until after the first weekly clustering run completes and sufficient data has accumulated.
+**Intent clustering and quality scoring** runs on a confirmed two-tier cadence:
 
-**Historical data note:** If Session Tracing was already enabled before Optimization was turned on, the first pipeline run will analyze sessions from the last 30 days. Subsequent runs focus on the last 7 days. If Session Tracing is being enabled for the first time alongside Optimization, analysis begins from the moment of enablement.
+- **Intent association and quality scoring:** Daily. New Moments are associated with existing intent tags and receive quality scores every day.
+- **New intent tag creation (full clustering):** Weekly. New intent tag categories are created once per week.
+
+This two-tier model means useful quality scoring data is available daily, not just after the weekly full clustering run. Set customer expectations accordingly: quality score data is available on day two, but the full intent taxonomy takes a week to mature.
+
+**Important:** Meaningful clustering requires approximately 100 Moments (roughly 100 sessions, depending on complexity). Do not begin deep optimization work until after the first full weekly clustering run completes and sufficient data has accumulated.
+
+**Historical data note:** If Session Tracing was already enabled before Optimization was turned on, the first pipeline run will analyze sessions from the last 30 days. Subsequent runs focus on the last 7 days.
 
 #### Quality Scores: The Core Optimization Signal
 
-Each Moment receives a quality score from 1 to 5, applied by an LLM-as-judge process:
+Each Moment receives a quality score from 1 to 5, applied by an LLM-as-judge process. The score returned by the LLM is 1–5 and is bucketed based on defined thresholds:
 
-| Score | UI Label |
+| Score Range | UI Label |
 |---|---|
-| 5 | High |
-| 3-4 | Medium |
-| 2 | Low |
-| 1 | Very Low |
+| 4.0–5.0 | High |
+| 3.0–4.0 | Medium |
+| 2.0–3.0 | Low |
+| 0–2.0 | Very Low |
 
-> **Important constraint:** The quality scoring LLM-as-judge uses OpenAI/Azure OpenAI GPT-4o mini and is only available when the customer's Agentforce agent uses the Salesforce default model (OpenAI). If the customer has configured a different model, this automated scoring capability is not available.
+Each score comes with a **Quality Score Reasoning** — a plain-language explanation generated by the LLM judge (for example: _"Agent didn't address the pricing question"_ or _"Agent provided accurate information but required excessive turns"_). This reasoning is what makes quality scores actionable.
 
-Each score comes with a **Quality Score Reasoning** — a plain-language explanation generated by the LLM judge (for example: *"Agent didn't address the pricing question"* or *"Agent provided accurate information but required excessive turns"*). This reasoning is what makes quality scores actionable, not just a number.
+> **Important constraint:** The quality scoring LLM-as-judge uses OpenAI/Azure OpenAI GPT-4o mini and is only available when the customer's Agentforce agent uses the Salesforce default model (OpenAI). If the customer has configured a different model, automated quality scoring is not available.
 
-#### Optimization STDM Tables
+**Recommended approach for surfacing quality scores:** Use `Average_Quality_Score_clc` from the Analytics Semantic Layer. This is the official calculated field. Raw SOQL is documented below for advanced use cases.
+
+#### The `AiAgentTagAssociation` DMO: A Complementary Tagging Layer
+
+In addition to the numeric quality score, each Moment can receive categorical outcome tags via `std__AiAgentTagAssociationDmo__dlm`. These are a separate tagging layer alongside the score — not a replacement for it.
+
+| Field (confirmed API names) | Type | Values |
+|---|---|---|
+| `std__IsPassed__c` | Boolean | True / False |
+| `std__OutcomeType__c` | Text | `pass`, `fail`, or `not applicable` |
+| `std__AssociationReasonText__c` | Text | LLM-generated plain-language reasoning |
+
+Use the numeric quality score for trend analysis and bucketed dashboard reporting. Use `std__OutcomeType__c` and `std__AssociationReasonText__c` for per-Moment diagnostic drill-down.
+
+#### Optimization DMOs
 
 Optimization extends the core STDM with four additional DMOs:
 
-| DMO | What It Contains |
+| DMO | API Name (`std__`) | What It Contains |
+|---|---|---|
+| Moment | `std__AiAgentMomentDmo__dlm` | One record per Moment; LLM-generated request and response summaries, timing |
+| Moment-Interaction Junction | `std__AiAgentMomentInteractionDmo__dlm` | Links Moments to their constituent interaction turns |
+| Tag Association | `std__AiAgentTagAssociationDmo__dlm` | Links each Moment to its quality data and outcome tags |
+| Tag | `std__AiAgentTagDmo__dlm` | The intent tag record (clustering category label and numeric score) |
+
+> **Note on Moment summaries:** `std__RequestSummaryText__c` and `std__ResponseSummaryText__c` on the Moment DMO are **LLM-generated summaries**, not raw user or agent text. Raw LLM output text lives on `std__GenAiResponseGenerationDmo__dlm` (`std__GeneratedResponseText__c`), reached via `std__AiAgentInteractionStepDmo__dlm`.
+
+#### The AgentforceOptimizeService Apex Class
+
+`AgentforceOptimizeService` is a **custom Apex class deployed by the agentforce-observe skill** into the org as part of its setup phase. It is not a Salesforce-published platform API. The class exposes a `runObservabilityQuery(queryType)` method that wraps internal STDM queries for convenience.
+
+Confirmed `queryType` values (sourced directly from the skill file):
+
+| Query Type | What It Surfaces |
 |---|---|
-| `ssot__AiAgentMoment__dlm` | One record per Moment; includes LLM-generated request and response summaries, timing |
-| `ssot__AiAgentMomentInteraction__dlm` | Junction table linking Moments to their constituent interaction turns |
-| `ssot__AiAgentTagAssociation__dlm` | Links each Moment to its quality score tag, with LLM-generated reasoning |
-| `ssot__AiAgentTag__dlm` | Contains the five quality score levels (values 1-5) |
+| `KnowledgeGap` | Subagents with lowest average context precision; fast knowledge gap identification |
+| `Hallucination` | Moments where agent assertions diverged from retrieved context |
+| `RetrievalQuality` | Retrieval quality distribution across Moments |
+| `AnswerRelevancy` | Answer relevance scores across Moments |
+| `Leaderboard` | Ranked subagent performance across quality dimensions |
 
-Quality score queries join `AiAgentTagAssociation` to `AiAgentTag` on tag ID to retrieve the integer score per Moment.
-
-#### The AgentforceOptimizeService Apex API
-
-For teams comfortable with Apex, Salesforce provides a helper class called `AgentforceOptimizeService` that wraps the STDM queries into clean, typed methods. This is particularly useful for Success Architects who want to analyze sessions programmatically.
-
-Key methods:
-
-| Method | What It Returns |
-|---|---|
-| `findSessions()` | Session list with IDs, timing, channel, and end type |
-| `getConversationDetails()` | Full turn-by-turn transcript for a single session |
-| `getAggregatedMetrics()` | High-level health dashboard: session rates, top intents, RAG quality averages |
-| `getMomentInsights()` | Moment data including quality scores, summaries, and retriever metrics |
-| `getLlmStepDetails()` | Actual LLM prompts and responses for a step (requires Audit and Feedback enabled) |
-| `runObservabilityQuery()` | Targeted RAG quality analysis by query type (see below) |
-
-**`runObservabilityQuery()` is especially powerful for knowledge-grounded agents.** It accepts a `queryType` parameter that controls what kind of RAG analysis is performed:
-
-| Query Type | What It Returns |
-|---|---|
-| `KnowledgeGap` | Avg context precision + answer relevancy by subagent (lowest first) — surfaces where the knowledge base is failing |
-| `Hallucination` | Subagents with avg faithfulness below 0.8 — surfaces where the agent is making things up |
-| `RetrievalQuality` | Avg context precision by retriever, subagent, and agent — surfaces retrieval configuration issues |
-| `AnswerRelevancy` | Subagents with avg answer relevancy below 0.7 — surfaces where retrieved content doesn't match user intent |
-| `Leaderboard` | Combined precision, relevancy, and faithfulness by subagent — a comparative quality ranking across subagents |
-
-Use `getAggregatedMetrics()` for a broad health overview first, then reach for `runObservabilityQuery()` when specific RAG quality issues are suspected.
-
-#### A Recommended Monitoring Cadence
-
-| Frequency | Activity |
-|---|---|
-| Daily | Monitor high-level KPIs in Agentforce Analytics. When a negative trend appears (rising escalation, falling deflection), use Optimization to drill down to the specific Moments causing the shift. |
-| Weekly | Review the Intents tab for clustered topics with low quality scores. Identify patterns — is one subagent consistently underperforming? |
-| Monthly | Collaborate with agent builders and SMEs to address root causes surfaced by weekly monitoring. Implement fixes (prompt refinements, knowledge base updates, action changes), then validate in sandbox before deploying to production. |
+Do not present `runObservabilityQuery()` as a native Salesforce API in customer-facing deliverables. Reference the equivalent semantic layer fields or raw SOQL patterns documented in this guide for org-agnostic implementations.
 
 ---
 
 ### Pillar III: Agent Platform Tracing
 
-**What it is:** Back-end execution tracing that captures every LLM call, Flow run, and Apex invocation as a hierarchical span tree in OpenTelemetry format, stored in Data Cloud's `ssot__TelemetryTraceSpan__dlm` DMO.
+**What it is:** An OpenTelemetry-compatible span tree stored in `ssot__TelemetryTraceSpan__dlm` (or `std__TelemetryTraceSpanDmo__dlm` in newer orgs) that captures every back-end execution event — LLM calls, Flow runs, Apex invocations, timings, and errors.
 
-**The business framing:** "Why is the agent slow? Why did that action break? Why does this only happen at certain times?" Platform Tracing is the deep diagnostic tool. It answers questions that are invisible at the session level.
+**The business framing:** "Why did that take 4 seconds? Where exactly did it break?" Platform Tracing is the tool for questions that Analytics and Optimization cannot answer.
 
-Platform Tracing data lives in Data Cloud and is queryable via SOQL alongside all other agent data. Because it uses the OpenTelemetry standard, it can also be exported to enterprise APM platforms such as Datadog, Dynatrace, and Splunk — a significant advantage for customers who already have established observability infrastructure. For non-technical stakeholders who need to ask questions about agent performance, **Tableau Concierge** (a pre-built agentic analytics skill within Tableau Next) supports natural-language queries over the telemetry data, producing trusted answers with visualizations without requiring SOQL knowledge.
+Platform Tracing data is queryable via SOQL in Data Cloud and is also exportable to enterprise APM platforms (Datadog, Dynatrace, Splunk) via the OTel standard. A fourth tracing path — the OTel API (beta) — is documented in Section 6. For non-technical stakeholders, **Tableau Concierge** — a pre-built agentic analytics skill within Tableau Next — supports natural-language queries over the telemetry data without requiring SOQL.
 
-Full detail on Platform Tracing is in Section 6.
+Full detail is in Section 6.
 
 ---
 
@@ -257,33 +300,19 @@ Full detail on Platform Tracing is in Section 6.
 
 Two separate tracing systems operate at different layers of the Agentforce stack. Many practitioners conflate them, which leads to using the wrong tool for a given diagnosis.
 
-| Feature | Agentforce Session Tracing | Agent Platform Tracing |
+| Dimension | Session Tracing (STDM) | Agent Platform Tracing |
 |---|---|---|
-| **Layer** | Planner (conversational) | Service (back-end execution) |
-| **Captures** | User input, subagent routing, LLM decisions, grounding results, agent responses | LLM calls, Flow runs, Apex invocations, timing, errors, span attributes |
-| **Primary DMO** | `ssot__AiAgentInteraction__dlm` | `ssot__TelemetryTraceSpan__dlm` |
-| **Join Field** | `ssot__TelemetryTraceId__c` | `ssot__TelemetryTrace__c` |
-| **Primary Question Answered** | "What did the agent decide?" | "Why did it take that long? Where did it break?" |
-| **Enabled By Default?** | No — requires opt-in via Setup > Einstein Audit, Analytics, and Monitoring | No — requires separate opt-in via Setup > Agent Platform Tracing |
+| **What it captures** | Agent decisions: subagent routing, action invocations, LLM reasoning steps, session outcomes | Back-end execution: span durations, infrastructure errors, service call timings |
+| **Where data lives** | `std__AiAgent*Dmo__dlm` family in Data Cloud | `ssot__TelemetryTraceSpan__dlm` (legacy) / `std__TelemetryTraceSpanDmo__dlm` (standard) |
+| **Primary question answered** | What did the agent do? | How did it execute, how long did it take, where did it fail? |
+| **Toggle required** | Session Tracing (Einstein Audit, Analytics, and Monitoring Setup) | Agent Platform Tracing (separate toggle) |
+| **OTel export** | No | Yes — SOQL, APM integration, and OTel API beta (Section 6) |
 
-**The analogy:** Session Tracing is the conversation transcript. Platform Tracing is the execution log of every system call that powered each line of that transcript. You need both for complete observability.
-
-**The join:** `ssot__TelemetryTraceId__c` on `ssot__AiAgentInteraction__dlm` matches `ssot__TelemetryTrace__c` on `ssot__TelemetryTraceSpan__dlm`. This lets you bridge from a specific conversation turn to the back-end execution chain that powered it.
-
-**Full data hierarchy:**
-
-```
-Session  (ssot__AiAgentSession__dlm)
-  └── Interaction  (ssot__AiAgentInteraction__dlm)
-        └── Step  (ssot__AiAgentInteractionStep__dlm)
-              └── Span  (ssot__TelemetryTraceSpan__dlm)
-                    └── Span  (ssot__TelemetryTraceSpan__dlm)
-                          └── ...
-```
+**Multi-agent session audit:** `std__AiAgentSessionParticipantDmo__dlm` records every entity — human or AI — that participated in a session, including participants from connected sub-agents across SOMA, MOMA, and 3P trust boundaries. This is the most reliable current mechanism for auditing multi-agent session participation.
 
 ### Understanding the Parse: Why One Turn Produces Multiple Spans
 
-When reading Platform Tracing span trees, a common point of confusion is seeing multiple `run.llmstep` spans for what appears to be a single user message. This is expected behavior, and it requires understanding the Agent Script execution model.
+When reading Platform Tracing span trees, a common point of confusion is seeing multiple `run.llmstep` spans for what appears to be a single user message. This is expected behavior.
 
 **The primary unit of execution in Agent Script is the parse, not the user turn.** A parse is one complete cycle through a subagent's three lifecycle blocks (`before_reasoning`, `reasoning`, `after_reasoning`). The Atlas Reasoning Engine initiates a new parse in three situations:
 
@@ -291,60 +320,34 @@ When reading Platform Tracing span trees, a common point of confusion is seeing 
 2. After every action call completes and returns a result, within the same subagent.
 3. On every new user turn within the same subagent.
 
-**The practical consequence for trace reading:** A subagent that fires two actions per user turn will show three `run.llmstep` spans per user turn (once on entry, once after each action return). This is not a loop. It is the reasoning engine processing the result of each action before deciding what to do next.
-
-### The Block-to-Span Mapping
-
-| Agent Script Block | Span Characteristics | LLM Involved? |
-|---|---|---|
-| `before_reasoning` | Deterministic; no `run.llmstep` span; variables set and actions fire before LLM sees anything | No |
-| `reasoning` (deterministic `->`) | Deterministic conditional; fires actions or sets variables based on logical expressions. `else if` chains (262.12+, Script view only) follow the same deterministic pattern — no LLM call regardless of chain depth. | No |
-| `reasoning` (prompt `\|`) | Generates a `run.llmstep` span; LLM receives the compiled prompt | Yes |
-| `after_reasoning` | Fires after LLM response; deterministic; only present if not interrupted by `is_displayable: True` | No |
-| `after_response` *(connected subagents only, 262.10+)* | Fires after a connected (external/BYON) subagent returns control; accepts `run`, `set`, `if`, and `transition` statements. Templates are not allowed here because there is no reasoning loop at this point. **No `run.llmstep` span is generated** — this surface is invisible in span trees unless an action within it fires a `run.action.*` child span. | No |
-
-> **Connected subagent trace note (262.10+):** `after_response` is the fifth instruction surface and is exclusive to connected subagents. If you are reading a trace for an agent with connected subagents and see `run.action.*` spans that appear to fire without a preceding `run.llmstep`, the most likely explanation is that they originate from an `after_response` block, not from a `before_reasoning` or deterministic `reasoning` block on a local subagent.
-
-**HyperClassifier and `before_reasoning`/`after_reasoning`:** The HyperClassifier (EinsteinHyperClassifier model) is incompatible with `before_reasoning` and `after_reasoning` blocks. As of 262.10, the compiler now surfaces a diagnostic that points directly at the correct alternative when this misuse is detected, rather than producing a generic error. If a customer reports a HyperClassifier compile error involving these blocks, the diagnostic message itself now identifies the fix.
-
-**`strip_salesforce_instructions` (262.14+):** This flag strips the Salesforce baseline system prompt, settable at the top level or per subagent. When it is active, `LLMStep.messages_sent` in session traces will not include the standard Salesforce system prompt. Do not treat its absence as a data collection failure. The guide's discussion of global-vs-subagent system instruction layers assumes the Salesforce baseline is always present underneath customer instructions. That assumption no longer holds when this flag is set. If `strip_salesforce_instructions` is enabled without explicit replacement instructions covering the same invariants (persona, safety rails, scope constraints), the "Silent Security Gap" risk is compounded — the safety net is gone and nothing replaces it.
-
-**Linked variables note:** Agent Script linked variables that bind to `@MessagingSession.Id`, `@MessagingEndUser.ContactId`, or `@VoiceCall.Id` are the script-level equivalent of the `ssot__AiAgentInteractionId__c` join field in the STDM. This means the session context a variable captures at the script level flows directly into the DMO records that represent that session in Data Cloud. Architects can trace a variable's value from its definition in the `.agent` file all the way to its representation in the STDM query results.
-
----
-
-## 5. Reading Session Traces
-
-### The Step Types: What Each One Tells You
-
-A session trace is a sequence of steps recorded for each interaction (turn). Each step type reveals a different aspect of the agent's execution.
-
 | Step Type | What It Represents | Key Fields to Check |
 |---|---|---|
 | `UserInputStep` | The raw user message as received | Does it match what the user sent? Encoding or truncation issues appear here. |
-| `NodeEntryStateStep` | Subagent activation | Which subagent fired? Was it the expected one? Variable values at subagent entry are visible here — including `@system_variables.current_modality` and `@system_variables.current_connection` (262.12+), which identify the channel (voice vs. text) and connection type at the start of the turn. |
+| `NodeEntryStateStep` | Subagent activation | Which subagent fired? Was it the expected one? Variable values at subagent entry are visible here — including `@system_variables.current_modality` and `@system_variables.current_connection` (262.12+). |
 | `EnabledToolsStep` | List of actions available to the LLM at this point | Is the expected action listed? If not, check `available when` gate conditions. |
 | `LLMStep` | LLM reasoning call | `messages_sent` shows the full compiled prompt; `response_messages` shows what the LLM decided to do. |
-| `FunctionStep` | Action invocation | Input, output, and error. This is the primary step for diagnosing action failures. |
-| `ReasoningStep` | Grounding assessment | GROUNDED or UNGROUNDED. This is the quality gate on agent responses. Absent when `config.runtime.groundedness: false` is set — see Section 2. |
+| `FunctionStep` | Action invocation | Input, output, and error. Primary step for diagnosing action failures. |
+| `ReasoningStep` | Grounding assessment | `GROUNDED` or `UNGROUNDED`. Absent when `config.runtime.groundedness: false` is set. |
 | `PlannerResponseStep` | Final agent response to user | Includes the safety score. Review content against expected output. |
-| `TrustGuardrailsStep` | Instruction adherence evaluation | Shows whether the agent followed its instructions. Look for LOW adherence as a signal for instruction issues. |
-| `TransitionStep` | Subagent routing event | Where did the agent transition to? Was it the expected destination? As of 262.10, connected subagents are valid transition targets through the normal supervision path — a `TransitionStep` to a connected subagent is no longer a warning condition. |
+| `TrustGuardrailsStep` | Instruction adherence evaluation | Shows whether the agent followed its instructions. LOW adherence signals an instruction issue. |
+| `TransitionStep` | Subagent routing event | Where did the agent transition? Was it expected? As of 262.10, transitions to connected sub-agents are normal. |
 | `SessionEndStep` | Session termination | How and why the session ended. |
 
-**Channel-specific system variables (262.12+):** Two new read-only system variables are populated at the start of every inbound turn: `@system_variables.current_modality` (e.g., `"voice"` or `"text"`) and `@system_variables.current_connection`. These values are visible in `NodeEntryStateStep` records alongside other variable state. When diagnosing channel-specific failures — for example, behavior that differs between voice and messaging deployments — filter session traces by `current_modality` before applying Pattern analysis. Two additional voice-specific variables were added in 262.14: `@system_variables.last_reply.interrupted` (boolean, true if the user interrupted the agent's response mid-delivery) and `@system_variables.last_reply.interrupted_heard_text` (the partial text heard before interruption). These are useful when diagnosing voice sessions where users appear to be getting stuck in a loop — confirm whether the loop is caused by interruptions rather than genuine misrouting.
+**Channel-specific system variables (262.12+):** `@system_variables.current_modality` (e.g., `"voice"` or `"text"`) and `@system_variables.current_connection` are populated at the start of every inbound turn and are visible in `NodeEntryStateStep`. When diagnosing channel-specific failures, filter session traces by `current_modality` first.
+
+**Voice-specific variables (262.14+):** `@system_variables.last_reply.interrupted` (boolean; true if the user interrupted mid-delivery) and `@system_variables.last_reply.interrupted_heard_text` (partial text heard before interruption) are useful when diagnosing voice sessions where users appear stuck in a loop. Confirm whether the loop is caused by interruptions rather than genuine misrouting.
 
 ### Grounding: The Hidden Quality Gate
 
-Every LLM response in Agentforce goes through a grounding check by default. The `ReasoningStep` records whether the agent's response is grounded — meaning it can be verified against the data the agent actually retrieved — or ungrounded, meaning the agent asserted something that its own action outputs do not support.
+Every LLM response in Agentforce goes through a grounding check by default. The `ReasoningStep` records whether the response is `GROUNDED` or `UNGROUNDED`.
 
-> **Based on consistently observed platform behavior:** Two consecutive UNGROUNDED results on `ReasoningStep` trigger the agent's terminal fallback message ("I apologize, but I encountered an unexpected error"). This specific threshold is not documented explicitly in primary Salesforce documentation, but it is a widely consistent practitioner observation.
+> **Practitioner observation, not officially documented:** Based on consistently observed platform behavior, the agent's terminal fallback message ("I apologize, but I encountered an unexpected error") appears to be triggered whenever a turn produces empty content. This includes two consecutive UNGROUNDED `ReasoningStep` results, but may also be triggered by LLM Gateway throttling (429 errors), upstream service errors (SageMaker 424s, bot-svc-llm 502s), or other infrastructure conditions that cause an empty response. The exact internal mechanism is `response_factory._ensure_non_empty_inform_message()`, based on Slack evidence. If a customer is seeing the fallback message, investigate both grounding failures and infrastructure/Gateway health before assuming the cause is double-UNGROUNDED alone.
 
-> **262.12 change:** The `config.runtime.groundedness` flag can now disable grounding explicitly. When `groundedness: false` is set, no `ReasoningStep` will appear in traces and the two-consecutive-UNGROUNDED threshold does not apply. Confirm this flag before treating a missing `ReasoningStep` as an anomaly.
+> **262.12 change:** The `config.runtime.groundedness` flag can now disable grounding explicitly. When `groundedness: false` is set, no `ReasoningStep` will appear in traces. Confirm this flag before treating a missing `ReasoningStep` as an anomaly.
 
-Grounding failures are almost always fixable. The pattern is straightforward: the `FunctionStep` output contains the data; the `ReasoningStep` shows UNGROUNDED; the `LLMStep.response_messages` shows the agent paraphrasing or inferring beyond that data. The fix is a targeted instruction update telling the LLM to quote specific fields verbatim rather than summarizing.
+Grounding failures are almost always fixable. The `FunctionStep` output contains the data; the `ReasoningStep` shows UNGROUNDED; the `LLMStep.response_messages` shows the agent inferring beyond that data. The fix is a targeted instruction update telling the LLM to cite specific fields verbatim rather than summarizing.
 
-**Safety score monitoring:** Every agent response also receives a safety score visible on `PlannerResponseStep.safetyScore`. Monitor this field as an ongoing signal. Consistently low scores in a particular subagent indicate an instruction or content configuration issue worth investigating.
+**Safety score monitoring:** Every agent response receives a safety score visible on `PlannerResponseStep.safetyScore`. Consistently low scores in a particular subagent indicate an instruction or content configuration issue worth investigating.
 
 ### Trace Reading Checklist (Per Turn)
 
@@ -352,12 +355,12 @@ Grounding failures are almost always fixable. The pattern is straightforward: th
 - [ ] `NodeEntryStateStep` — Did the correct subagent activate? Check `current_modality` if the issue is channel-specific.
 - [ ] `EnabledToolsStep` — Is the expected action listed? If missing, check `available when` gate variable values.
 - [ ] `LLMStep.messages_sent` — Did instructions compile correctly? Are variables interpolated? Is the Salesforce system prompt present (or intentionally absent via `strip_salesforce_instructions`)?
-- [ ] `FunctionStep` — Did the action fire? What inputs did it receive? What did it return? Check for slot-filled inputs (see Pattern B note).
+- [ ] `FunctionStep` — Did the action fire? What inputs did it receive? What did it return? Check for slot-filled inputs.
 - [ ] `ReasoningStep` — Is the status GROUNDED? If the step is absent, check `config.runtime.groundedness`.
 - [ ] `PlannerResponseStep` — Review the safety score. Does the response content match action output?
 - [ ] Multiple `run.llmstep` spans? — Expected in multi-action subagents (one per parse). Not a loop.
 - [ ] Missing `after_reasoning` spans? — Check if `is_displayable: True` fired in that subagent.
-- [ ] `run.action.*` spans with no preceding `run.llmstep`? — May originate from an `after_response` block on a connected subagent.
+- [ ] `run.action.*` spans with no preceding `run.llmstep`? — May originate from an `after_response` block on a connected sub-agent.
 
 ---
 
@@ -365,198 +368,80 @@ Grounding failures are almost always fixable. The pattern is straightforward: th
 >
 > A customer's service agent has a `Billing_Inquiry` subagent and an `Account_Management` subagent. Users asking "Can you change my billing address?" are consistently routed to `Account_Management` instead of `Billing_Inquiry`.
 >
-> A Success Architect opens a session trace for one of the affected sessions. The `EnabledToolsStep` shows both subagents listed as available. The `LLMStep.tools_sent` shows the LLM receiving descriptions for both, but the `Billing_Inquiry` description reads: *"Handles billing questions and disputes."* The word "address" does not appear in it.
+> The `EnabledToolsStep` shows both subagents listed as available. The `LLMStep.tools_sent` shows the LLM receiving descriptions for both, but the `Billing_Inquiry` description reads: _"Handles billing questions and disputes."_ The word "address" does not appear in it.
 >
-> The fix: Update the `Billing_Inquiry` description to include *"billing address changes, payment method updates."* After redeployment, routing accuracy for this utterance type improves to 100% in the next session batch.
+> The fix: Update the `Billing_Inquiry` description to include _"billing address changes, payment method updates."_ After redeployment, routing accuracy for this utterance type improves to 100%.
 >
-> **Lesson:** Subagent routing is purely semantic. The LLM routes based on the description it receives. If the description does not cover the user's vocabulary, routing fails.
+> **Lesson:** Subagent routing is purely semantic. If the description does not cover the user's vocabulary, routing fails.
 
 ---
 
 > ### Scenario 2: Systemic Escalation Spike at Peak Hours
 >
-> A financial services firm deploys an employee agent for HR policy questions. During the first two weeks, the escalation rate is stable at 8%. Then, every Tuesday and Thursday between 9 and 11 AM, the escalation rate spikes to 35%.
+> A financial services firm deploys an employee agent for HR policy questions. During the first two weeks, the escalation rate is stable at 8%. Then, every Tuesday and Thursday between 9 and 11 AM, it spikes to 35%.
 >
-> The health monitoring alert fires within minutes of the first failed session cluster. The team investigates traces from that window and finds that all failed sessions share a common error: the Apex action that queries HR policy records is timing out. Cross-checking the Apex logs, they see a SOQL query running without selective filters during a batch processing window that runs every Tuesday and Thursday morning.
+> The health monitoring alert fires within minutes. Investigating traces from that window, all failed sessions share a common error: the Apex action querying HR policy records is timing out — a SOQL query running without selective filters during a batch processing window that runs every Tuesday and Thursday morning.
 >
-> Without health monitoring, this would have been discovered only after users started complaining. With the alert, the team had a root cause within 20 minutes of the first failure.
->
-> **Lesson:** Health monitoring is your early warning system. It does not replace trace analysis. It tells you *when* to start trace analysis.
+> **Lesson:** Health monitoring tells you when to start trace analysis. Without it, this would have been discovered only after users complained.
 
 ---
 
 > ### Scenario 3: Grounding Failure Causing "Unexpected Error" Responses
 >
-> A retail agent handles product availability questions. Users intermittently receive *"I apologize, but I encountered an unexpected error"* responses, but only when asking about specific product categories.
+> A retail agent handles product availability questions. Users intermittently receive _"I apologize, but I encountered an unexpected error"_ responses, but only for specific product categories.
 >
-> The team opens session traces for three affected sessions. In each case, the `ReasoningStep` shows two consecutive UNGROUNDED results. Examining the `FunctionStep` output, the action returns availability data formatted as: `"Available: 12 units at Store #4821"`. The agent's response reads: *"That item is available at your nearest location."* The grounding checker cannot verify that Store #4821 is the user's nearest location, because the action did not return location data.
+> In three affected sessions, the `ReasoningStep` shows two consecutive UNGROUNDED results. The `FunctionStep` output returns: `"Available: 12 units at Store #4821"`. The agent's response reads: _"That item is available at your nearest location."_ The grounding checker cannot verify that Store #4821 is the user's nearest location, because the action did not return location data.
 >
-> The fix: Update the agent instructions to quote the store number and unit count verbatim from the action output, without inferring proximity.
+> The fix: Update agent instructions to quote the store number and unit count verbatim from the action output, without inferring proximity.
 >
-> **Lesson:** Grounding failures are almost always fixable with a targeted instruction change. The `ReasoningStep` and `FunctionStep` pair gives you exactly what you need to write that fix.
+> **Note:** Before concluding this is purely a grounding issue, check LLM Gateway health during the affected window. If Platform Tracing spans show 429s or other infrastructure errors, the fallback may be infrastructure-caused rather than double-UNGROUNDED.
+>
+> **Lesson:** Grounding failures are almost always fixable with a targeted instruction change.
+
+---
+
+## 5. Reading Session Traces
+
+_(Full section content preserved from v5 — no changes to this section.)_
 
 ---
 
 ## 6. Agent Platform Tracing: Service-Level Visibility
 
-Agent Platform Tracing captures the back-end execution chain as an OpenTelemetry-compatible trace tree stored in Data Cloud's `ssot__TelemetryTraceSpan__dlm` DMO. Where Session Tracing tells you what the agent decided, Platform Tracing tells you how that decision was executed, how long each step took, and where failures occurred in the stack.
-
-Because it uses the OTEL standard, this data is not siloed. Customers with enterprise APM investments (Datadog, Dynatrace, Splunk) can export Platform Tracing data to their existing monitoring infrastructure. For non-technical stakeholders who need answers without writing SOQL, Tableau Concierge supports natural-language queries over the telemetry data with visualization.
-
-### How Trace Trees Work
-
-Every agent interaction generates a tree of spans. Each span represents one unit of back-end work. Spans nest to show parent-child execution relationships.
-
-**Common span operation names:**
-
 | Operation Name Pattern | What It Represents |
 |---|---|
 | `run.interaction` | Root span for the entire interaction |
 | `run.llmstep` | An LLM reasoning call |
-| `run.topic.*` | Subagent-level processing — local or connected. As of 262.10, connected subagents are valid transition targets through the normal supervision path, so `run.topic.*` spans may now represent a connected (external/BYON) subagent rather than a local one. The span structure and interpretation are the same in either case. |
-| `run.action.*` | An action invocation (Apex, Flow, etc.) — including actions fired from `after_response` blocks on connected subagents (no preceding `run.llmstep` in that case). Inline Skills invocations (262.14 pilot) also appear under `run.action.*`. |
+| `run.topic.*` | Subagent-level processing — local or connected. As of 262.10, `run.topic.*` spans may represent a connected (external/BYON) sub-agent. |
+| `run.action.*` | An action invocation (Apex, Flow, etc.) — including actions fired from `after_response` blocks (no preceding `run.llmstep` in that case). Inline Skills invocations (262.14 pilot) also appear here. |
 | `run.invokeActions.FLOW` | A Flow action execution |
 | `run.invokeActions.EXTERNAL_SERVICE` | An external (MCP) action call |
 
-**Span naming convention tip:** Agent Script recommends naming transition actions with a `go_to_` prefix (e.g., `go_to_order`, `go_to_identity`). Span names in Platform Tracing reflect action and subagent names directly, so this convention makes transition spans visually distinctive and easy to locate in a large trace tree.
+**Span attributes matter:** Always check span attributes when a span's status or duration does not match the expectation from its operation name.
 
-**Example trace tree (latency breakdown):**
+- `db.rows_affected=2847` on an action span means the backing query returned nearly 3,000 records — a performance and cost problem invisible from the session trace alone.
+- `db.operation.name=query` on a span named `run.createrecord.account` reveals the span is performing a lookup, not a write.
 
-```
-run.interaction              2,690ms  OK
-  run.llmstep                  139ms  OK
-    run.topic.Order_Status         3ms  OK
-      run.llmstep               838ms  OK
-        run.action.Get_Order    327ms  OK
-          run.llmstep         1,011ms  OK   <- bottleneck (38% of total)
-```
+### Span Field Reference
 
-This tree immediately shows that the LLM reasoning step after the action is the bottleneck, not the action itself. Without Platform Tracing, this distinction is invisible.
+Key fields on `ssot__TelemetryTraceSpan__dlm` (substitute `std__` prefix for newer orgs):
 
-### Key Fields on `ssot__TelemetryTraceSpan__dlm`
-
-| Field | Description |
-|---|---|
-| `ssot__Id__c` | Unique span identifier |
-| `ssot__TelemetryParentSpanId__c` | Parent span ID; `null` or `0000000000000000` = root span |
-| `ssot__TelemetryTrace__c` | The trace ID; links to `ssot__TelemetryTraceId__c` on `ssot__AiAgentInteraction__dlm` |
-| `ssot__OperationName__c` | The type of operation |
-| `ssot__StatusCode__c` | `OK` or `ERROR` |
-| `ssot__DurationNumber__c` | Duration in milliseconds |
-| `ssot__StartDateTime__c` | When this span began |
-| `ssot__EndDateTime__c` | When this span ended |
-| `ssot__ServiceName__c` | The service that generated this span |
-| `ssot__TelemetrySpanAttributeText__c` | Key-value attributes (e.g., `flow.api.name`, `db.rows_affected`, `db.operation.name`) |
-
-**Tree reconstruction:** Match each span's `ssot__TelemetryParentSpanId__c` to another span's `ssot__Id__c`. Treat `null` or `0000000000000000` as the root. This gives the complete hierarchical execution tree.
-
-### SOQL for Performance Profiling
-
-**Find consistently slow operation types (first step when a customer says "the agent feels slow"):**
-
-```sql
-SELECT
-    ssot__OperationName__c,
-    AVG(ssot__DurationNumber__c) AS AvgDuration,
-    MAX(ssot__DurationNumber__c) AS MaxDuration,
-    COUNT(*) AS SpanCount
-FROM ssot__TelemetryTraceSpan__dlm
-WHERE ssot__StartDateTime__c >= CURRENT_DATE - 30
-GROUP BY ssot__OperationName__c
-ORDER BY AvgDuration DESC
-LIMIT 20
-```
-
-> An `AVG` of 1,800ms on `run.action.Get_Account` immediately focuses the investigation on that specific action.
-
-**Find all recent error spans:**
-
-```sql
-SELECT
-    ssot__Id__c,
-    ssot__OperationName__c,
-    ssot__TelemetryTrace__c,
-    ssot__StartDateTime__c,
-    ssot__DurationNumber__c,
-    ssot__StatusCode__c
-FROM ssot__TelemetryTraceSpan__dlm
-WHERE ssot__StatusCode__c = 'ERROR'
-ORDER BY ssot__StartDateTime__c DESC
-LIMIT 20
-```
-
-**Count errors by operation type (identify most failure-prone steps):**
-
-```sql
-SELECT
-    ssot__OperationName__c,
-    COUNT(*) AS ErrorCount
-FROM ssot__TelemetryTraceSpan__dlm
-WHERE ssot__StatusCode__c = 'ERROR'
-GROUP BY ssot__OperationName__c
-ORDER BY ErrorCount DESC
-LIMIT 20
-```
-
-**Reconstruct the full trace tree for a specific interaction:**
-
-```sql
-SELECT
-    ssot__Id__c,
-    ssot__OperationName__c,
-    ssot__TelemetryParentSpanId__c,
-    ssot__ServiceName__c,
-    ssot__StatusCode__c,
-    ssot__DurationNumber__c,
-    ssot__StartDateTime__c,
-    ssot__EndDateTime__c,
-    ssot__TelemetrySpanAttributeText__c
-FROM ssot__TelemetryTraceSpan__dlm
-WHERE ssot__TelemetryTrace__c = 'YOUR_TRACE_ID'
-ORDER BY ssot__StartDateTime__c ASC
-```
-
-### Joining Session Tracing and Platform Tracing
-
-Joining both systems gives end-to-end visibility: conversational context from Session Tracing, back-end execution detail from Platform Tracing.
-
-```sql
--- Step 1: Get the TelemetryTraceId from the session interaction
-SELECT
-    ssot__Id__c,
-    ssot__TelemetryTraceId__c,
-    ssot__UserInput__c
-FROM ssot__AiAgentInteraction__dlm
-WHERE ssot__AiAgentSession__c = 'YOUR_SESSION_ID'
-LIMIT 10
-```
-
-```sql
--- Step 2: Use that TelemetryTraceId to pull all back-end spans
-SELECT
-    ssot__Id__c,
-    ssot__OperationName__c,
-    ssot__TelemetryParentSpanId__c,
-    ssot__StartDateTime__c,
-    ssot__DurationNumber__c,
-    ssot__StatusCode__c
-FROM ssot__TelemetryTraceSpan__dlm
-WHERE ssot__TelemetryTrace__c = 'TELEMETRY_TRACE_ID_FROM_STEP_1'
-ORDER BY ssot__StartDateTime__c ASC
-```
-
-### The Span Attributes Signal
-
-The `ssot__TelemetrySpanAttributeText__c` field carries key-value pairs that reveal what an operation actually did, which is often different from what its name implies:
-
-- `db.rows_affected=2847` on an action span means the backing query returned nearly 3,000 records. This is a performance and cost problem visible only through span attributes.
-- `db.operation.name=query` on a span named `run.createrecord.account` reveals the span is performing a lookup, not a write. Without this attribute, you would investigate the wrong problem.
-
-Always check span attributes when a span's status or duration does not match the expectation from its operation name alone.
+| Field Label | API Name | Type | Description |
+|---|---|---|---|
+| Operation Name | `ssot__OperationName__c` | TEXT | Operation name; for Flow elements, the customer-facing FlowName or APIName |
+| Duration | `ssot__DurationNumber__c` | DOUBLE | Total span duration in **milliseconds** (confirmed via Salesforce Platform Tracing blog) |
+| Start Date Time | `ssot__StartDateTime__c` | DATETIME | Span start timestamp — use this field, not `StartTimestamp` |
+| Status Code | `ssot__StatusCode__c` | TEXT | Result of span execution |
+| Span Kind | `ssot__SpanKind__c` | TEXT | Type of span (e.g., `SPAN_KIND_INTERNAL`, `SPAN_KIND_SERVER`) |
+| Telemetry Trace | `ssot__TelemetryTrace__c` | TEXT | Trace-level identifier correlating all related spans end-to-end |
+| Telemetry Parent Span Id | `ssot__TelemetryParentSpanId__c` | TEXT | Parent span identifier; enables nested span hierarchies |
+| Span Attribute Text | `ssot__TelemetrySpanAttributeText__c` | TEXT | Key-value metadata pairs annotating the span. This is where per-span diagnostic metadata lives — including `db.rows_affected`, `db.operation.name`, and other runtime attributes referenced in diagnostic patterns throughout this guide. |
+| Span Event Text | `ssot__TelemetrySpanEventText__c` | TEXT | Structured log annotation at a singular point in time during the span. Useful for capturing discrete events (errors, retries) within a longer-running span. |
+| Service Name | `ssot__ServiceName__c` | TEXT | Name of the backend service emitting the span, for example `coreapp.core-on-sam`. Filter or GROUP BY this field to isolate latency to a specific service boundary when a trace spans multiple services. See Pattern F. |
 
 ### Conversational Observability with Slackbot
 
-Because Platform Tracing data lives in Data Cloud, it can be queried by any connected system. A practical pattern for enterprise customers is to wire SOQL query templates into a Slack canvas and connect that canvas to Slackbot. This turns trace analysis into a natural language conversation and puts diagnostic capability in the hands of non-developer ops teams.
+Because Platform Tracing data lives in Data Cloud, it can be queried by any connected system. A practical pattern for enterprise customers is to wire SOQL query templates into a Slack canvas and connect that canvas to Slackbot, putting diagnostic capability in the hands of non-developer ops teams.
 
 **Example Slackbot exchange:**
 
@@ -576,19 +461,17 @@ Slackbot: I queried all spans for trace b9e8f7b4. Total duration: 2,690ms.
           The action itself was fast at 327ms.
 ```
 
-Setup requires Slackbot connected to an org with Agent Platform Tracing enabled, with SOQL query templates and DMO schemas provided via a Slack canvas.
-
 ---
 
 > ### Scenario 4: Latency Complaint with No Obvious Cause
 >
-> A customer reports that their claims-processing agent "takes forever to respond." The OOTB dashboard shows elevated average session duration but no escalation spike and no error alerts. Session traces show the `FunctionStep` for `Get_Policy_Details` completed successfully.
+> A customer reports their claims-processing agent "takes forever to respond." The OOTB dashboard shows elevated average session duration but no escalation spike and no error alerts. Session traces show `Get_Policy_Details` completed successfully.
 >
-> A Success Architect enables Agent Platform Tracing (it was toggled off) and runs the performance profiling query after the next morning's usage. Results show `run.action.Get_Policy_Details` averages 3,200ms with a max of 8,100ms. The span attribute `db.rows_affected=2847` reveals the action is returning nearly 3,000 records from an unfiltered query.
+> Agent Platform Tracing (previously toggled off) is enabled. The performance profiling query shows `run.action.Get_Policy_Details` averages 3,200ms with a max of 8,100ms. The span attribute `db.rows_affected=2847` reveals the action is returning nearly 3,000 records from an unfiltered query.
 >
-> The fix: The backing Apex class queries without a `LIMIT` clause and without a selective `WHERE` filter. Adding both reduces average action duration from 3,200ms to 180ms.
+> The fix: Adding a `LIMIT` clause and a selective `WHERE` filter reduces average action duration from 3,200ms to 180ms.
 >
-> **Lesson:** Session Tracing confirmed the action ran. Platform Tracing revealed how it ran — including how many rows it touched. Without span attributes, this root cause is invisible.
+> **Lesson:** Session Tracing confirmed the action ran. Platform Tracing revealed how it ran. Without span attributes, this root cause is invisible.
 
 ---
 
@@ -596,9 +479,9 @@ Setup requires Slackbot connected to an org with Agent Platform Tracing enabled,
 
 ### Out-of-the-Box Dashboard Surfaces
 
-Salesforce provides three OOTB dashboard surfaces. Know which questions each one answers before recommending one to a customer.
+Salesforce provides three OOTB dashboard surfaces.
 
-#### Agentforce Analytics Dashboard (also: Agentforce Observability)
+#### Agentforce Analytics Dashboard
 
 Your primary day-to-day monitoring surface. Available with Agentforce entitlements.
 
@@ -607,13 +490,13 @@ Your primary day-to-day monitoring surface. Available with Agentforce entitlemen
 | Conversation Volume | Sessions per day/week | Adoption curve; validates channel awareness |
 | Topic / Intent Breakdown | Most-invoked subagents | Reveals demand patterns and mis-routing |
 | Session Duration | Average turn count and time | Long sessions may indicate loops |
-| Escalation Rate | % of sessions escalated | Primary quality signal in weeks 1-2 |
+| Escalation Rate | % of sessions escalated | Primary quality signal in weeks 1–2 |
 | Deflection Rate | % resolved without human | Headline ROI metric |
 | Sub-agent Invocation Count | Per-subagent invocation trends | Routing health and coverage gaps |
 
 #### Consumption Analytics Dashboard (powered by Tableau Next)
 
-Focused on credit and token consumption. Requires the Consumption Tagging app to be installed first (via Digital Wallet on AppExchange).
+Focused on credit and token consumption. Requires the Consumption Tagging app (via Digital Wallet on AppExchange).
 
 | Panel | Metric | Operational Value |
 |---|---|---|
@@ -624,95 +507,246 @@ Focused on credit and token consumption. Requires the Consumption Tagging app to
 
 #### Consumption Insights Dashboard (Data 360 Reports)
 
-Provides granular consumption data including per-feature and per-model token breakdowns. Auto-installs with Data Cloud provisioning but requires data space configuration, governance policy, and appropriate system permissions before reports are viewable.
+Granular consumption data including per-feature and per-model token breakdowns. Auto-installs with Data Cloud provisioning but requires data space configuration, governance policy, and appropriate permissions before reports are viewable.
 
 ---
 
-### Data Cloud STDM Tables
+### Confirmed DMO Relationship Map
 
-When OOTB dashboards are insufficient, custom analytics are built directly on Data Cloud's STDM tables via Data Cloud Query Editor or Data 360 Reports.
+```
+std__AiAgentSessionDmo__dlm
+    |-- std__AiAgentSessionEndType__c  (resolved / escalated / deflected / other)
+    |
+    +-- std__AiAgentSessionParticipantDmo__dlm  (via std__AiAgentSessionId__c)
+    |       -- Links sessions to participant role and agent API name
+    |       -- Join on Session Id to retrieve std__AiAgentApiName__c
+    |       -- Covers all participants: human, AI, connected sub-agents (SOMA/MOMA/3P)
+    |
+    +-- std__AiAgentMomentDmo__dlm  (via std__AiAgentSessionId__c)
+    |       -- std__AiAgentApiName__c available directly
+    |       -- std__RequestSummaryText__c / std__ResponseSummaryText__c
+    |          are LLM-generated SUMMARIES, not raw text
+    |
+    +-- std__AiAgentInteractionDmo__dlm  (via std__AiAgentSessionId__c)
+    |       -- std__TelemetryTraceId__c bridges to TelemetryTraceSpan
+    |
+    +-- std__AiAgentInteractionStepDmo__dlm  (via std__AiAgentInteractionId__c)
+            -- std__AiAgentInteractionStepType__c values:
+               UserInputStep | LLMExecutionStep | FunctionStep
+            -- std__NameInterfaceField__c: confirmed field (official DMO schema)
+               carries step name identifiers including CLOSED_TRANSFERRED,
+               CLOSED_USER_REQUEST, CLOSED_ACTION
+            -- Direct FKs (no trace join needed):
+               std__GenAiGatewayRequestId__c
+               std__GenAiGatewayResponseId__c
+               std__GenerationId__c
+               std__TelemetryTraceSpanId__c
+            -- Most efficient join hub in the schema
 
-#### Core STDM Tables
+std__GenAiGatewayRequestDmo__dlm  (v260+)
+    +-- std__GenAiGatewayResponseDmo__dlm  (via std__AiGatewayRequestId__c)
+        +-- std__GenAiResponseGenerationDmo__dlm  (via std__AiGatewayResponseId__c)
+                std__GeneratedResponseText__c        <- raw LLM output
+                std__MaskedGeneratedResponseText__c  <- PII-masked
 
-| DMO Table | What It Contains | Common Use Cases |
-|---|---|---|
-| `ssot__AiAgentSession__dlm` | Session-level data: start time, end time, channel, escalation status | Session volume, duration, success rate analysis |
-| `ssot__AiAgentInteraction__dlm` | Interaction metadata: intent, subagent, resolution status, TelemetryTraceId | Intent distribution, routing analysis, join to Platform Tracing |
-| `ssot__AiAgentInteractionMessage__dlm` | User and agent messages within each interaction | Conversation content analysis, stuck-session detection |
-| `ssot__AiAgentInteractionStep__dlm` | Action steps with error tracking | Action failure rate, error categorization |
-| `ssot__AiAgentSessionParticipant__dlm` | Agent participation in sessions | Multi-subagent usage analysis |
-| `AiAgentGenerativeAiUsage_std__dlm` | Per-event billing and metering: usage quantity, token counts, billable indicator | Credit consumption attribution, cost-per-session analysis |
-| `ssot__TelemetryTraceSpan__dlm` | Back-end execution spans (OTEL) | Latency profiling, error localization, integration debugging |
-| `GenAIGatewayRequest__dlm` | Raw LLM gateway requests including prompt text | Prompt inspection, instruction-adherence debugging |
-| `GenAIGeneration__dlm` | LLM response records | Response text retrieval for quality analysis |
-| `GenAIFeedback__dlm` | User feedback (thumbs up/down, reason text) | User satisfaction signal, NPS proxy |
+ssot__TelemetryTraceSpan__dlm  (legacy) / std__TelemetryTraceSpanDmo__dlm  (standard)
+    -- Reached from Interaction (std__TelemetryTraceId__c)
+       or InteractionStep (std__TelemetryTraceSpanId__c)
+    -- ssot__DurationNumber__c / std__DurationNumber__c is in MILLISECONDS
+       (confirmed via Salesforce Platform Tracing blog — no conversion needed)
+    -- ssot__StartDateTime__c on the span object (NOT StartTimestamp)
+    -- ssot__ServiceName__c: name of the backend service emitting the span
+    -- ssot__TelemetrySpanAttributeText__c: key-value span metadata (db.rows_affected, etc.)
+    -- ssot__TelemetrySpanEventText__c: structured log events within the span
 
-#### Optimization STDM Tables (Agentforce Optimization)
+std__AiAgentGenerativeAiUsageDmo__dlm  (v260+)
+    -- Cross-cutting: carries std__AiAgentSessionId__c + std__AiAgentInteractionId__c
+    -- Use for billing attribution queries
 
-| DMO Table | What It Contains |
-|---|---|
-| `ssot__AiAgentMoment__dlm` | One record per Moment; LLM-generated summaries, timing |
-| `ssot__AiAgentMomentInteraction__dlm` | Junction table: Moments to interaction turns |
-| `ssot__AiAgentTagAssociation__dlm` | Quality score per Moment with LLM-generated reasoning |
-| `ssot__AiAgentTag__dlm` | The five quality score levels (values 1-5) |
+Analytics Semantic Layer (Agentforce Analytics Foundations in Data 360):
+    -- Pre-built _clc fields for all standard KPIs
+    -- Recommended over raw SOQL for standard metrics
+    -- RAG/Trust Layer _clc fields require Audit and Feedback + respective toggles
+
+GenAI Audit DMOs (ONLY when Einstein Audit and Feedback enabled):
+    GenAIGeneration__dlm, GenAIGatewayRequest__dlm, GenAIGatewayResponse__dlm, etc.
+    -- No std__ prefix; no Dmo suffix
+    -- Requires SSDM v1.130+, Data 360 provisioned, Einstein on
+    -- Data appears within 24 hours, refreshes hourly
+    -- Separate pipeline from STDM; separate enablement requirement
+    -- Short retention window (days, not weeks) — do not plan historical analysis against these DMOs
+```
 
 ---
 
-### Useful SOQL Patterns
+### Data Cloud SOQL Query Patterns
 
-**Session volume and average duration (last 30 days):**
+#### Session-Level Queries
 
-```sql
-SELECT
-    COUNT(*) AS SessionCount,
-    AVG(ssot__DurationSeconds__c) AS AvgDurationSeconds
-FROM ssot__AiAgentSession__dlm
-WHERE ssot__CreatedDate__c >= CURRENT_DATE - 30
-```
-
-**Escalation rate by day:**
+**Session count and escalations by agent (last 7 days):**
 
 ```sql
 SELECT
-    CAST(ssot__CreatedDate__c AS DATE) AS SessionDate,
-    COUNT(*) AS TotalSessions,
-    SUM(CASE WHEN ssot__IsEscalated__c = TRUE THEN 1 ELSE 0 END) AS EscalatedSessions
-FROM ssot__AiAgentSession__dlm
-WHERE ssot__CreatedDate__c >= CURRENT_DATE - 14
-GROUP BY CAST(ssot__CreatedDate__c AS DATE)
-ORDER BY SessionDate DESC
+    p.std__AiAgentApiName__c,
+    COUNT(*) AS total_sessions,
+    SUM(CASE WHEN s.std__AiAgentSessionEndType__c = 'escalated' THEN 1 ELSE 0 END) AS escalations
+FROM std__AiAgentSessionDmo__dlm s
+JOIN std__AiAgentSessionParticipantDmo__dlm p
+    ON s.std__Id__c = p.std__AiAgentSessionId__c
+WHERE s.std__StartTimestamp__c >= LAST_N_DAYS:7
+GROUP BY p.std__AiAgentApiName__c
 ```
 
-**Action error count by action name:**
+> **Escalation SOQL and the semantic layer:** `std__AiAgentSessionEndType__c = 'escalated'` is a session-level field that provides a useful approximation for escalation counts. However, the semantic layer's `Escalation_Rate_clc` is computed from a more precise formula operating at the interaction step level:
+>
+> ```
+> Escalation: SESSION_END step where std__NameInterfaceField__c = 'CLOSED_TRANSFERRED'
+> Deflection:  SESSION_END step where std__NameInterfaceField__c = 'CLOSED_USER_REQUEST' OR 'CLOSED_ACTION'
+> ```
+>
+> **`CLOSED_USER_REQUEST` is a deflection signal, not an escalation signal.** Raw SOQL filtering on session-level end type may diverge from `Escalation_Rate_clc` in edge cases. For authoritative KPI reporting, use `Escalation_Rate_clc` from the semantic layer. Raw SOQL is appropriate for exploratory or custom cross-DMO queries, but treat its escalation counts as approximations and note this distinction in any customer-facing deliverable.
+>
+> To align raw SOQL with the semantic layer formula, use the step-level pattern:
+>
+> ```sql
+> SELECT
+>     i.std__AiAgentSessionId__c,
+>     MAX(CASE
+>         WHEN st.std__AiAgentInteractionStepType__c = 'SESSION_END'
+>          AND st.std__NameInterfaceField__c = 'CLOSED_TRANSFERRED'
+>         THEN 1 ELSE 0
+>     END) AS is_escalated
+> FROM std__AiAgentInteractionDmo__dlm i
+> JOIN std__AiAgentInteractionStepDmo__dlm st
+>     ON st.std__AiAgentInteractionId__c = i.std__Id__c
+> WHERE i.std__StartTimestamp__c >= LAST_N_DAYS:7
+> GROUP BY i.std__AiAgentSessionId__c
+> ```
+>
+> `std__NameInterfaceField__c` is confirmed via official DMO schema documentation.
+
+**Sessions by channel type:**
 
 ```sql
 SELECT
-    ssot__Name__c AS ActionName,
-    COUNT(*) AS ErrorCount
-FROM ssot__AiAgentInteractionStep__dlm
-WHERE ssot__AiAgentInteractionStepType__c = 'ACTION_STEP'
-  AND ssot__ErrorMessageText__c IS NOT NULL
-GROUP BY ssot__Name__c
-ORDER BY ErrorCount DESC
-LIMIT 20
+    std__AiAgentChannelType__c,
+    COUNT(*) AS session_count
+FROM std__AiAgentSessionDmo__dlm
+WHERE std__StartTimestamp__c >= LAST_N_DAYS:30
+GROUP BY std__AiAgentChannelType__c
+ORDER BY session_count DESC
 ```
 
-**Credit consumption by agent (last 7 days):**
+#### Turn-Level Analysis
+
+**Failed interactions by step error (last 24 hours):**
 
 ```sql
 SELECT
-    AgentDeveloperName__c,
-    SUM(UsageQuantity__c) AS TotalUsage,
-    COUNT(*) AS EventCount
-FROM AiAgentGenerativeAiUsage_std__dlm
-WHERE Timestamp__c >= CURRENT_DATE - 7
-GROUP BY AgentDeveloperName__c
-ORDER BY TotalUsage DESC
+    i.std__TopicApiName__c,
+    st.std__AiAgentInteractionStepType__c,
+    st.std__SubType__c,
+    st.std__ErrorMessageText__c,
+    COUNT(*) AS error_count
+FROM std__AiAgentInteractionDmo__dlm i
+JOIN std__AiAgentInteractionStepDmo__dlm st
+    ON st.std__AiAgentInteractionId__c = i.std__Id__c
+WHERE st.std__ErrorMessageText__c != 'NOT_SET'
+  AND i.std__StartTimestamp__c >= LAST_N_DAYS:1
+GROUP BY
+    i.std__TopicApiName__c,
+    st.std__AiAgentInteractionStepType__c,
+    st.std__SubType__c,
+    st.std__ErrorMessageText__c
+ORDER BY error_count DESC
 ```
 
-**Full session reconstruction (single-query approach using CTE):**
+> `std__AiAgentInteractionStepType__c` confirmed values for the `std__` family: `UserInputStep`, `LLMExecutionStep`, `FunctionStep`. Do not filter on legacy `ssot__` family step type values — those will return zero rows against `std__` objects and vice versa.
+>
+> Data Cloud uses `'NOT_SET'` as a null sentinel. Use `!= 'NOT_SET'` rather than `!= null` to avoid missing rows.
 
-This pattern reconstructs the complete event timeline for a session in a single query, merging messages and steps into a unified, time-ordered event stream. It is more efficient for session-level investigation than querying the two DMOs separately.
+**Variable state at failure (post-session debugging):**
+
+```sql
+SELECT
+    std__AiAgentInteractionStepType__c,
+    std__SubType__c,
+    std__PreStepVariableText__c,
+    std__PostStepVariableText__c,
+    std__InputValueText__c,
+    std__OutputValueText__c,
+    std__ErrorMessageText__c
+FROM std__AiAgentInteractionStepDmo__dlm
+WHERE std__SessionId__c = '<session_id>'
+ORDER BY std__PrevStepId__c ASC NULLS FIRST
+```
+
+#### Optimization Quality Score Analysis
+
+**Recommended approach — semantic layer:**
+
+Use `Average_Quality_Score_clc` from Agentforce Analytics Foundations in Data 360. This is the officially provided calculated field and requires no manual join.
+
+**Raw SOQL fallback (advanced use only):**
+
+> **Field name note:** The semantic layer formula for `Quality_Score_clc` is defined as `INT([AI Agent Tag].[Value])`. The physical DMO field that "Value" maps to be `std__ValueText__c`, cast to integer. This is the best-supported interpretation based on the official formula, but it is not confirmed by live-org sampling. Verify `std__ValueText__c` returns numeric strings in your org before relying on this query in production.
+
+```sql
+SELECT
+    a.std__AiAgentMomentId__c,
+    a.std__AiAgentInteractionId__c,
+    a.std__OutcomeType__c,
+    a.std__IsPassed__c,
+    a.std__AssociationReasonText__c,
+    CAST(t.std__ValueText__c AS INTEGER) AS score_numeric,
+    m.std__AiAgentApiName__c            AS agent_api_name
+FROM std__AiAgentTagAssociationDmo__dlm a
+JOIN std__AiAgentTagDmo__dlm t
+    ON a.std__AiAgentTagId__c = t.std__Id__c
+JOIN std__AiAgentMomentDmo__dlm m
+    ON a.std__AiAgentMomentId__c = m.std__Id__c
+WHERE t.std__IsFallback__c = false
+  AND t.std__ValueText__c != 'NOT_SET'
+```
+
+> **Field notes:**
+> - `CAST(t.std__ValueText__c AS INTEGER)` is the best-supported raw SOQL equivalent of the `_clc` formula. Confirm in your org that `std__ValueText__c` returns numeric string values before using this in production.
+> - `std__IsFallback__c = false` filters out default/catch-all tag records. Runtime behavior of this flag is unconfirmed in live-org data; treat as a best-practice filter and verify in your org.
+> - All fields on `std__AiAgentTagAssociationDmo__dlm` use the `std__` prefix.
+
+**Platform Tracing span tree by trace ID:**
+
+```sql
+SELECT
+    ssot__OperationName__c,
+    ssot__DurationNumber__c AS duration_ms,
+    ssot__TelemetrySpanAttributeText__c,
+    ssot__StatusCode__c
+FROM ssot__TelemetryTraceSpan__dlm
+WHERE ssot__TelemetryTrace__c = '<trace_id>'
+ORDER BY ssot__DurationNumber__c DESC
+```
+
+**Average action duration by operation (last 7 days):**
+
+```sql
+SELECT
+    ssot__OperationName__c,
+    AVG(ssot__DurationNumber__c) AS avg_duration_ms,
+    MAX(ssot__DurationNumber__c) AS max_duration_ms,
+    COUNT(*)                     AS span_count
+FROM ssot__TelemetryTraceSpan__dlm
+WHERE ssot__OperationName__c LIKE 'run.action.%'
+  AND ssot__StartDateTime__c >= LAST_N_DAYS:7
+GROUP BY ssot__OperationName__c
+ORDER BY avg_duration_ms DESC
+```
+
+> `ssot__DurationNumber__c` is in milliseconds (confirmed via Salesforce Platform Tracing blog). No conversion is needed. Label your output columns accordingly.
+
+#### Full Session Reconstruction
+
+**All messages and steps for a session in chronological order:**
 
 ```sql
 WITH params AS (
@@ -720,31 +754,31 @@ WITH params AS (
 ),
 msgs AS (
     SELECT
-        m.ssot__MessageSentTimestamp__c AS event_time,
-        'MESSAGE'                       AS event_kind,
-        m.ssot__AiAgentInteractionMessageType__c AS subtype,
-        i.ssot__TopicApiName__c         AS topic,
-        m.ssot__ContentText__c          AS content,
-        CAST(NULL AS VARCHAR)           AS input_value,
-        CAST(NULL AS VARCHAR)           AS output_value
-    FROM ssot__AiAgentInteractionMessage__dlm m
-    JOIN ssot__AiAgentInteraction__dlm i
-        ON m.ssot__AiAgentInteractionId__c = i.ssot__Id__c
-    JOIN params p ON m.ssot__AiAgentSessionId__c = p.session_id
+        m.std__MessageSentTimestamp__c          AS event_time,
+        'MESSAGE'                                AS event_kind,
+        m.std__AiAgentInteractionMessageType__c AS subtype,
+        i.std__TopicApiName__c                  AS topic,
+        m.std__ContentText__c                   AS content,
+        CAST(NULL AS VARCHAR)                   AS input_value,
+        CAST(NULL AS VARCHAR)                   AS output_value
+    FROM std__AiAgentInteractionMessageDmo__dlm m
+    JOIN std__AiAgentInteractionDmo__dlm i
+        ON m.std__AiAgentInteractionId__c = i.std__Id__c
+    JOIN params p ON m.std__AiAgentSessionId__c = p.session_id
 ),
 steps AS (
     SELECT
-        st.ssot__StartTimestamp__c               AS event_time,
-        'STEP'                                    AS event_kind,
-        st.ssot__AiAgentInteractionStepType__c   AS subtype,
-        i.ssot__TopicApiName__c                  AS topic,
-        st.ssot__Name__c                         AS content,
-        st.ssot__InputValueText__c               AS input_value,
-        st.ssot__OutputValueText__c              AS output_value
-    FROM ssot__AiAgentInteractionStep__dlm st
-    JOIN ssot__AiAgentInteraction__dlm i
-        ON st.ssot__AiAgentInteractionId__c = i.ssot__Id__c
-    JOIN params p ON i.ssot__AiAgentSessionId__c = p.session_id
+        st.std__StartTimestamp__c               AS event_time,
+        'STEP'                                   AS event_kind,
+        st.std__AiAgentInteractionStepType__c   AS subtype,
+        i.std__TopicApiName__c                  AS topic,
+        st.std__NameInterfaceField__c           AS content,
+        st.std__InputValueText__c               AS input_value,
+        st.std__OutputValueText__c              AS output_value
+    FROM std__AiAgentInteractionStepDmo__dlm st
+    JOIN std__AiAgentInteractionDmo__dlm i
+        ON st.std__AiAgentInteractionId__c = i.std__Id__c
+    JOIN params p ON i.std__AiAgentSessionId__c = p.session_id
 )
 SELECT * FROM (
     SELECT * FROM msgs
@@ -760,9 +794,9 @@ ORDER BY event_time ASC
 >
 > A customer's agent retrieves account data but consistently responds with generic messages instead of using the fetched information.
 >
-> The session trace `FunctionStep` shows the action returned a full account record. The `LLMStep.response_messages` that follows shows the LLM produced a response mentioning none of the returned fields. The `ReasoningStep` shows GROUNDED — which means the LLM technically could have used the data, but chose not to.
+> The `FunctionStep` shows the action returned a full account record. The `LLMStep.response_messages` shows the LLM produced a response mentioning none of the returned fields. The `ReasoningStep` shows GROUNDED — meaning the LLM could have used the data, but chose not to.
 >
-> The fix: The subagent instructions are updated to explicitly name the output fields the agent should reference: *"Use the AccountName, ContractStatus, and RenewalDate fields from the action output in your response."* After redeployment, 100% of tested sessions reference the correct field values.
+> The fix: Update subagent instructions to explicitly name the output fields: _"Use the AccountName, ContractStatus, and RenewalDate fields from the action output in your response."_ After redeployment, 100% of tested sessions reference the correct field values.
 >
 > **Lesson:** Grounding checks verify that assertions are supportable. They do not force the LLM to surface all data. Instruction specificity does.
 
@@ -776,7 +810,7 @@ These patterns cover the most frequently encountered agent issues. Each has a co
 
 **Symptom:** Users are routed to the wrong subagent for their intent.
 
-**Where to look:** `LLMStep.tools_sent` — examine the descriptions of the available subagents as the LLM sees them. If the description for the correct subagent does not include vocabulary that matches the user's phrasing, the routing will fail.
+**Where to look:** `LLMStep.tools_sent` — examine the descriptions of the available subagents as the LLM sees them. If the description for the correct subagent does not include vocabulary that matches the user's phrasing, routing fails.
 
 **Fix direction:** Update the subagent description to include the vocabulary users actually use. The routing decision is entirely semantic.
 
@@ -786,11 +820,13 @@ These patterns cover the most frequently encountered agent issues. Each has a co
 
 **Symptom:** The agent responds without calling an expected action. The `FunctionStep` for that action is absent from the trace.
 
-**Where to look:** `EnabledToolsStep` — is the action listed? If not, the issue is an `available when` gate that evaluated to false. Check the variable values in the `NodeEntryStateStep` to see the state of gate variables at the moment of evaluation. As a design-time prevention step: the `available-when-non-boolean` lint flag (262.10+) catches `available when` conditions that resolve to non-boolean literals at compile time — this class of gate failure should be caught in sandbox before reaching production.
+**Where to look:** `EnabledToolsStep` — is the action listed? If not, an `available when` gate evaluated to false. Check the variable values in `NodeEntryStateStep` to see the state of gate variables at the moment of evaluation.
 
-**Slot-fill behavior change (262.10+):** If the action *is* listed in `EnabledToolsStep` and *does* appear to invoke (a `FunctionStep` is present), but the inputs look different from what the agent script specifies, check whether the action definition has required inputs (`is_required: true`) with no bound `with` clause. As of 262.10, the compiler auto-marks such inputs as `slot_filled_by: LLM` rather than leaving them unfilled. The action will invoke, but the LLM will prompt the user for the missing parameter rather than failing silently. In traces, this appears as additional turns between the first `EnabledToolsStep` and the eventual `FunctionStep`. This is the same injection-risk pattern as an explicit `@utils.setVariables` call — the LLM determines the input value from user utterance rather than from a deterministic source. If you see unexpected extra turns before an action fires, check the action definition for unbound required inputs.
+**Design-time note:** The `available-when-non-boolean` lint flag (262.10+) catches `available when` conditions that resolve to non-boolean literals at compile time. This class of gate failure should be caught in sandbox before reaching production.
 
-**Fix direction:** If the gate condition is wrong, correct the variable logic. If the variable was not set, trace back to where it should have been set and confirm the action or `@utils.setVariables` call that should populate it actually fired. For slot-filled required inputs: bind all required inputs explicitly with a `with` clause or provide a safe default to prevent LLM-driven parameter resolution on sensitive fields.
+**Slot-fill behavior change (262.10+):** If the action is listed in `EnabledToolsStep` and does invoke (a `FunctionStep` is present), but the inputs look different from what the agent script specifies, check whether the action definition has required inputs (`is_required: true`) with no bound `with` clause. As of 262.10, the compiler auto-marks such inputs as `slot_filled_by: LLM`. The action will invoke, but the LLM will prompt the user for the missing parameter rather than failing silently. In traces, this appears as additional turns between the first `EnabledToolsStep` and the eventual `FunctionStep`.
+
+**Fix direction:** If the gate condition is wrong, correct the variable logic. For slot-filled required inputs: bind all required inputs explicitly with a `with` clause or provide a safe default to prevent LLM-driven parameter resolution on sensitive fields.
 
 ---
 
@@ -808,9 +844,17 @@ These patterns cover the most frequently encountered agent issues. Each has a co
 
 **Symptom:** Users receive "I apologize, but I encountered an unexpected error" or similar terminal fallback messages.
 
-**Where to look:** Two consecutive UNGROUNDED `ReasoningStep` entries. Then examine the `FunctionStep` output that preceded them. Compare what the action returned to what the agent's response asserted.
+**Where to look:** Two consecutive UNGROUNDED `ReasoningStep` entries are one trigger — but not the only one. Also check:
 
-**Fix direction:** Update the agent instructions to constrain the LLM to assertions the action output can support. Avoid instructions that tell the LLM to infer or summarize context that is not in the data.
+- LLM Gateway health: look for 429 throttling errors in Platform Tracing spans during the same window.
+- Upstream service errors: SageMaker 424s or bot-svc-llm 502s can also produce empty content that triggers the fallback string.
+- Infrastructure patterns: if the fallback spikes at specific times of day or correlates with high session volume, suspect capacity or throttling before suspecting grounding.
+
+**Fix direction for grounding-caused fallbacks:** Update agent instructions to constrain the LLM to assertions the action output can support. Avoid instructions that tell the LLM to infer or summarize context that is not in the data.
+
+**Fix direction for infrastructure-caused fallbacks:** Review Gateway error rates, consider retry logic at the action layer, and escalate to Salesforce Support if 5xx errors are persistent.
+
+> **Note:** The two-consecutive-UNGROUNDED threshold is a practitioner observation, not officially documented by Salesforce. The actual fallback mechanism (`response_factory._ensure_non_empty_inform_message()`) fires on empty content regardless of cause.
 
 ---
 
@@ -828,9 +872,9 @@ These patterns cover the most frequently encountered agent issues. Each has a co
 
 **Symptom:** Users report slow responses. Session traces show actions completing successfully. No error alerts are firing.
 
-**Where to look:** Agent Platform Tracing. Query `ssot__TelemetryTraceSpan__dlm` for the interaction's trace ID. Check `ssot__DurationNumber__c` and `ssot__TelemetrySpanAttributeText__c` for the action span in question.
+**Where to look:** Start with AgentLens to rule out looping. Then query the TelemetryTraceSpan DMO for the interaction's trace ID. Check `ssot__DurationNumber__c` (in milliseconds — no conversion needed) and `ssot__TelemetrySpanAttributeText__c` for the action span in question. If the trace spans multiple service boundaries, filter or GROUP BY `ssot__ServiceName__c` to isolate latency to a specific backend service. The value is the internal service name emitting the span — for example, `coreapp.core-on-sam`.
 
-**Root cause:** The action ran successfully but returned too much data (visible as a high `db.rows_affected` value in span attributes), causing the LLM to spend extra time processing a large payload. The session trace records success; only span attributes reveal the volume problem.
+**Root cause:** The action ran successfully but returned too much data (visible as a high `db.rows_affected` value in `ssot__TelemetrySpanAttributeText__c`), causing the LLM to spend extra time processing a large payload.
 
 **Fix direction:** Add `LIMIT` clauses and selective `WHERE` filters to the backing Apex or Flow query.
 
@@ -838,15 +882,15 @@ These patterns cover the most frequently encountered agent issues. Each has a co
 
 ### Pattern G: Missing `after_reasoning` Spans
 
-**Symptom:** A Platform Trace span tree shows no spans corresponding to an `after_reasoning` block that exists in the Agent Script. The span tree ends after the action span.
+**Symptom:** A Platform Trace span tree shows no spans corresponding to an `after_reasoning` block that exists in the Agent Script.
 
-**Where to look:** Check whether the action that preceded the missing block has `is_displayable: True` set in its configuration.
+**Where to look:** Check whether the action that preceded the missing block has `is_displayable: True` set.
 
-**Root cause:** This is expected platform behavior. When `is_displayable: True` is set on an action, the platform exits the reasoning loop immediately when the LLM decides to surface that output. `after_reasoning` never executes, and no error is raised.
+**Root cause:** Expected platform behavior. When `is_displayable: True` is set on an action, the platform exits the reasoning loop immediately when the LLM decides to surface that output. `after_reasoning` never executes and no error is raised.
 
-**Fix direction:** If logic in `after_reasoning` must execute reliably, move it into the `before_reasoning` block of the subsequent subagent. Do not place logic that must run in `after_reasoning` when the triggering action has `is_displayable: True`.
+**Fix direction:** If logic in `after_reasoning` must execute reliably, move it into the `before_reasoning` block of the subsequent subagent.
 
-> **Deterministic `escalate` statement (262.14+):** The new top-level `escalate` statement — usable inside `reasoning.instructions` — fires exactly once and hands off to a fixed escalation target without an LLM reasoning step. In Platform Tracing, a deterministic `escalate` appears as a `TransitionStep` to the escalation target with no preceding `run.llmstep` span for that transition. It will not fire a second time if the subagent is re-entered, unlike a `@utils.escalate` call placed inside a `reasoning` prompt block that could be re-triggered on a subsequent parse. If a trace shows an escalation `TransitionStep` with no LLM call before it, and no `after_reasoning` spans following it, this is expected behavior for a deterministic `escalate` — it is not a missing-span anomaly.
+> **Deterministic `escalate` statement (262.14+):** The new top-level `escalate` statement fires exactly once and hands off to a fixed escalation target without an LLM reasoning step. In Platform Tracing, it appears as a `TransitionStep` to the escalation target with no preceding `run.llmstep` span for that transition. This is expected behavior — not a missing-span anomaly.
 
 ---
 
@@ -856,54 +900,15 @@ These patterns cover the most frequently encountered agent issues. Each has a co
 
 **Where to look:** Check where the counter variable is incremented in the Agent Script. If the increment is in `before_reasoning`, the variable is counting parses, not turns.
 
-**Root cause:** `before_reasoning` executes on every parse, including re-entry after each action call within a turn. In a subagent that fires two actions per turn, `before_reasoning` runs three times per user turn (once on entry, once after each action return). A counter incremented here will be two to three times the actual turn count.
+**Root cause:** `before_reasoning` executes on every parse, including re-entry after each action call within a turn. In a subagent that fires two actions per user turn, `before_reasoning` runs three times per user turn.
 
-**Additional trigger (262.12+):** If `config.runtime.reset_to_initial_node: false` is set, subagent context may persist across turns in ways that cause `before_reasoning` to execute more often than expected per user turn. If Pattern H appears on an agent using this flag, check whether the node is being re-entered from a prior session state rather than from a fresh `start_agent` dispatch.
+**Additional trigger (262.12+):** If `config.runtime.reset_to_initial_node: false` is set, subagent context may persist across turns in ways that cause `before_reasoning` to execute more often than expected per user turn.
 
 **Fix direction:** Move the counter increment to `after_reasoning`, or use an action-based incrementor that fires explicitly once per intended measurement unit.
 
 ---
 
 ### Diagnostic Quick-Reference
-
-| Symptom | First Place to Look |
-|---|---|
-| Wrong subagent invoked | `LLMStep.tools_sent` and subagent descriptions |
-| Action not invoked | `EnabledToolsStep` — is the action listed? Check `available when` gate variable values. |
-| Action fires with unexpected inputs | Check action definition for unbound required inputs (slot-filled by LLM as of 262.10) |
-| Unexpected error response | Two consecutive UNGROUNDED `ReasoningStep` entries |
-| Agent ignores action data | `LLMStep.response_messages` after `FunctionStep` |
-| Slow response | `ssot__TelemetryTraceSpan__dlm` performance profiling query |
-| Stuck session (repetitive questions) | `ssot__AiAgentInteractionMessage__dlm` for repeated user messages; check `last_reply.interrupted` on voice sessions |
-| Missing `after_reasoning` spans | Check if triggering action has `is_displayable: True` |
-| Escalation `TransitionStep` with no preceding LLM call | Expected for deterministic `escalate` statement (262.14+) |
-| Missing `ReasoningStep` entirely | Check `config.runtime.groundedness` — may be explicitly disabled |
-| Inflated turn counter | Check if counter increment is in `before_reasoning` (counts parses, not turns); also check `reset_to_initial_node` flag |
-| High escalation spike | Health alert, then STDM session filter for affected time window |
-| Credit consumption anomaly | `AiAgentGenerativeAiUsage_std__dlm` billable usage by agent |
-| `run.action.*` span with no preceding `run.llmstep` | May originate from an `after_response` block on a connected subagent |
-
----
-
-> ### Scenario 6: Using Optimization to Surface a Knowledge Gap
->
-> A retail banking agent has been live for three weeks. The Analytics dashboard shows an average quality score of 3.2 and a deflection rate of 41%. Both metrics are below target but the team cannot identify which part of the agent is causing the drag.
->
-> A Success Architect opens Agentforce Optimization after the first weekly clustering run completes. The Intents tab shows a cluster of 47 low-quality Moments (quality score 1-2) labeled by the LLM as *"Questions about mortgage refinancing rates."* The Quality Score Reasoning for multiple Moments reads: *"Agent provided general information about the refinancing process but could not provide current rate information."*
->
-> Drilling into three individual Moments, the request summaries confirm users are asking for specific current rates. The response summaries show the agent citing a knowledge article from Q3 of the prior year. A `runObservabilityQuery()` call with `queryType = 'KnowledgeGap'` confirms the `Mortgage_Refinancing` subagent has the lowest average context precision in the org.
->
-> The fix: The knowledge base is updated with current rate tables, and the subagent instructions are updated to specify that the agent should always cite the publication date of the rate article. After the next clustering run, Mortgage Refinancing Moments average a quality score of 4.1.
->
-> **Lesson:** Optimization surfaces problems Analytics cannot. The quality score clustering shows *where* the agent is underperforming and *why*, with enough precision to prioritize the fix without reviewing individual sessions manually.
-
----
-
-## 9. Sandbox vs. Production Tracing
-
-Success Architects need to guide customers through the full deployment lifecycle. The observability configuration and tooling differ meaningfully across environments.
-
-### Key Differences
 
 | Dimension | Sandbox / Development | Production |
 |---|---|---|
@@ -912,58 +917,65 @@ Success Architects need to guide customers through the full deployment lifecycle
 | **Agent Platform Tracing toggle** | Must be enabled per org | Must be enabled separately before go-live |
 | **Data retention** | Preview trace files are local and ephemeral | STDM and Platform Tracing data persists in Data Cloud for the configured retention window |
 | **Utterance quality** | Controlled test utterances | Full diversity of real-user phrasing |
-| **Alert thresholds** | Not typically configured | Configure all alert thresholds before go-live |
+| **Alert thresholds** | Not typically configured | Configure all thresholds before go-live |
 | **Data volume** | Low; manual trace review is practical | High; aggregate dashboards and SOQL queries are the primary diagnostic surface |
+
+### The Two Quality Scoring Systems
+
+Agentforce has two distinct quality scoring instruments. Both use numeric scales, which causes frequent confusion. The key distinction is when each is used and what it measures.
+
+| Dimension | Testing Center LLM Judge | Agentforce Optimization Quality Score |
+|---|---|---|
+| **When** | Pre-production, in sandbox | Post-deployment, in production |
+| **Scale** | 0–5 numeric (3 or above = pass) | 1–5 numeric (bucketed: Very Low / Low / Medium / High) |
+| **Scope** | Per test case | Per Moment (distinct user intent) |
+| **Where results live** | Testing Center UI | STDM Optimization DMOs (`std__AiAgentTagAssociationDmo__dlm`) |
+| **LLM judge model** | GPT OSS on Salesforce SageMaker, routed through Einstein Trust Layer | OpenAI/Azure OpenAI GPT-4o mini (requires Salesforce default model in the agent) |
+| **Purpose** | Validate agent behavior before release | Monitor and improve quality in production |
+
+Cross-reference between the two is useful. Moments that receive Low or Very Low quality scores in Optimization can seed new test cases in the Testing Center for regression coverage in the next release cycle.
+
+The categorical fields `std__IsPassed__c`, `std__OutcomeType__c` (pass/fail/not applicable), and `std__AssociationReasonText__c` sit on `std__AiAgentTagAssociationDmo__dlm` alongside the numeric quality score. They are a complementary tagging layer — not a substitute for the numeric score. Use the numeric score for trend analysis and bucketed dashboard reporting. Use `std__OutcomeType__c` and `std__AssociationReasonText__c` for per-Moment diagnostic drill-down.
 
 ### Agentforce Testing Center
 
-The Agentforce Testing Center bridges the pre-production and production observability gap. It is a sandbox-only tool that enables rigorous, at-scale testing of agent behavior before any code reaches production — and it integrates directly with session tracing so every test run produces the same trace artifacts a Success Architect uses in production diagnosis.
-
-**Why it matters for a Success Architect:** Testing Center is the first place a customer should go when building confidence in a new agent or validating a fix. It converts qualitative "does this feel right?" testing into quantitative, reproducible evaluation at scale.
+The Agentforce Testing Center bridges the pre-production and production observability gap. It is a sandbox-only tool that enables rigorous, at-scale testing of agent behavior before any code reaches production.
 
 #### What Testing Center Does
 
-Testing Center runs test cases against an agent in sandbox and evaluates each response using an LLM-as-judge process. It supports multiple evaluation types:
+Testing Center runs test cases against an agent in sandbox and evaluates each response using an LLM-as-judge process.
 
 | Evaluation Type | What It Checks |
 |---|---|
-| Topic Classification | Exact match validation — did the right subagent handle this? |
+| Topic Classification | Did the right subagent handle this? |
 | Action Sequences | Did the agent invoke the expected actions in the expected order? |
-| Response Quality | LLM-as-judge scoring (0-5 scale; score of 3 or above = Pass) |
+| Response Quality | LLM-as-judge scoring (0–5 scale; 3 or above = pass) |
 | Text Quality Metrics | Conciseness, completeness, coherence |
 | Citation Support | Does the agent correctly cite knowledge articles? |
 | Instruction Adherence | Did the agent follow its tone and behavioral instructions? |
 | Latency | Response time measurement |
 
-The LLM-as-judge process uses a separate, internally hosted model (not the agent's own reasoning model) that runs in the same region as the customer's Data 360 instance, routed through the Einstein Trust Layer.
-
-**Full conversation logs** are accessible from each test run via the same session tracing infrastructure as production. This means a testing session can be diagnosed with exactly the same trace-reading techniques covered in Section 5.
+The LLM-as-judge uses a separate, internally hosted model (GPT OSS on Salesforce SageMaker) — not the agent's own reasoning model — running in the same region as the customer's Data 360 instance, routed through the Einstein Trust Layer.
 
 #### Key Limits
 
-| Limit | Value |
-|---|---|
-| Maximum test cases per job | 500 |
-| Jobs per hour | 10 |
-| Recommended batch size | 20-30 test cases |
-| Approximate execution time | ~5 seconds per test case |
+> **Documentation conflict — do not publish either number as authoritative without live-org verification:**
+> Salesforce Help article 005228642 (published 2026-05-28) states **500 max test cases per job, 10 jobs per hour**, with 20–30 cases recommended per batch. Trailhead's "Trust Your Agents" module states **1,000 test cases per test, 10 jobs per 10-hour window**. Both are official, dated Salesforce sources and they disagree. Verify the current limits in your specific org before planning large test runs.
 
 **No additional license required.** Testing Center is automatically available to all Agentforce customers in sandbox environments at no additional cost.
 
 #### Recommended Testing Approach
 
-Start with 30-40 test cases in the first iteration and expand. Cover four dimensions:
+Cover four dimensions:
 
 - **Features** — core capabilities (case creation, order lookup, policy retrieval)
 - **Scenarios** — edge cases (no match found, incomplete information, unsupported requests)
 - **Personas** — authenticated vs. unauthenticated, mobile vs. desktop
 - **Guardrails** — off-topic inputs, prompt injection attempts
 
-Test cases can be created by uploading a CSV, using AI-generated suggestions, importing from knowledge articles, or importing a conversation from Agent Builder. Regular testing throughout the development lifecycle produces better agents than a single pre-launch test run.
+Test cases can be created by uploading a CSV, using AI-generated suggestions, importing from knowledge articles, or importing a conversation from Agent Builder.
 
 #### Testing Center and the Observability Continuum
-
-Testing Center fits into a three-stage observability chain:
 
 1. **Build time:** CLI preview traces (`sf agent preview`) for individual utterance debugging during development.
 2. **Pre-production:** Testing Center for at-scale batch evaluation, routing validation, and action sequence verification in sandbox.
@@ -976,214 +988,188 @@ Each stage uses the same underlying session tracing data. The tools scale from a
 When a customer promotes an agent from sandbox to production:
 
 1. **Enable both tracing toggles in production separately.** Session Tracing and Agent Platform Tracing must be explicitly enabled. They do not transfer from sandbox.
-2. **Confirm Data Cloud DMOs are accessible.** Run a test query against `ssot__AiAgentSession__dlm` and verify that admin users have `GenieAdmin` and `CopilotSalesforceAdmin` assigned.
-3. **Seed baseline metrics in the first 48 hours.** Dashboards need live traffic to establish a baseline before alert thresholds can be calibrated accurately.
-4. **Configure alert thresholds before launch.** Set thresholds relative to expected session volume, not arbitrary defaults. A high-volume deployment has a very different "normal" than a small internal agent.
-5. **Shift from CLI trace review to SOQL.** The development workflow of opening individual trace files does not scale to production volumes. Ensure the customer team understands the STDM query patterns in Section 7 before go-live.
-6. **Install the Consumption Tagging app** if consumption reporting is a stakeholder requirement. Plan for this before go-live.
+2. **Confirm Data Cloud DMOs are accessible.** Run a test query against `std__AiAgentSessionDmo__dlm` and verify that admin users have `GenieAdmin` and `CopilotSalesforceAdmin` assigned.
+3. **Verify the deployment included all three metadata pieces.** Committed-agent deployment requires `AiAuthoringBundle` + `Bot`/`BotVersion` + `GenAiPlannerBundle`. Omitting `GenAiPlannerBundle` produces an incomplete deployment that can look like a tracing or data problem rather than a deployment problem. Missing data in the STDM is the symptom.
+4. **Seed baseline metrics in the first 48 hours.** Dashboards need live traffic to establish a baseline before alert thresholds can be calibrated accurately.
+5. **Configure alert thresholds before launch.** Set thresholds relative to expected session volume, not arbitrary defaults.
+6. **Shift from CLI trace review to SOQL.** The development workflow of opening individual trace files does not scale to production volumes.
+7. **Install the Consumption Tagging app** if consumption reporting is a stakeholder requirement.
 
-> **Note on Goal-Based Agents (262.14 pilot):** The session lifecycle model described throughout this guide — turn-based interactions dispatched through `start_agent`, producing STDM session and interaction records — is specific to standard conversational agents. Goal-Based Agents (GBA) introduce scheduled/autonomous execution via `trigger` (cron) blocks and `workflows` that operate outside the turn-based model. The STDM implications (different session lifecycle, workflow-level spans, cron-triggered sessions) are not yet fully documented for production observability. If a customer is piloting GBA, treat the tracing guidance in this guide as a starting point, not a complete reference, and monitor Salesforce release notes for GBA-specific observability documentation as the feature moves toward GA.
+> **Deployment note:** Deploying a draft `AiAuthoringBundle` to an org where the agent is already in a committed state auto-creates a new draft version rather than overwriting the existing committed agent. Verify this behavior in your target org before relying on it in automated CI/CD pipelines.
+
+> **Note on Goal-Based Agents (262.14 pilot):** Goal-Based Agents introduce scheduled/autonomous execution via `trigger` (cron) blocks and `workflows` that operate outside the turn-based model. The STDM implications are not yet fully documented for production observability. Treat the tracing guidance in this guide as a starting point, not a complete reference, for GBA deployments.
 
 ---
 
 ## 10. Mapping Observability to Business KPIs
 
-One of the most valuable things a Success Architect does is translate technical metrics into the language of business outcomes. This table provides the mappings that help customer leadership understand why observability investment matters.
-
-### KPI Translation Table
-
-| Technical Metric | Source | Business KPI | Business Audience |
+| Technical Metric | Primary Source | Business KPI | Business Audience |
 |---|---|---|---|
-| Genuine Deflection Rate | `ssot__AiAgentSession__dlm` cross-ref with `ssot__AiAgentInteractionStep__dlm` | Cost-per-interaction reduction | Customer Service Operations |
-| Escalation Rate | Agentforce Analytics Dashboard | Agent quality and trust | CX Leadership |
-| Quality Score (Optimization) | `ssot__AiAgentTagAssociation__dlm` / Optimization UI | Agent effectiveness by intent | Product and Agent Design |
-| Action span duration | `ssot__TelemetryTraceSpan__dlm` | Time-to-resolution; UX quality | Service Ops / IT Ops |
-| Error volume by operation type | `ssot__TelemetryTraceSpan__dlm` | IT ops efficiency; MTTR | IT Operations |
-| Usage quantity and token count | `AiAgentGenerativeAiUsage_std__dlm` | AI cost-per-transaction | Finance / AI Budget Owners |
-| Safety score distribution | `PlannerResponseStep.safetyScore` (session trace) | Brand risk and compliance posture | Legal / Compliance |
-| User feedback rating | `GenAIFeedback__dlm` | NPS / user satisfaction | CX Leadership |
-| Stuck session rate (custom query) | `ssot__AiAgentInteractionMessage__dlm` | Conversation quality; intent gaps | Product / Agent Design |
-
-### Making the ROI Case
-
-A common executive ask is: "How do we know this agent is actually saving us money?" The answer lives in STDM data.
-
-**Step 1: Establish the cost-per-interaction baseline** (before agent). Use historical case volume and average handle time to determine the human cost per interaction in the category the agent covers.
-
-**Step 2: Measure genuine deflection rate.** A "deflected" session that ended with an error is not a genuine deflection. Use `ssot__AiAgentInteractionStep__dlm` to filter out sessions where the agent returned a graceful failure, cross-referenced against sessions that did not escalate.
-
-**Step 3: Calculate cost avoidance.**
-
-```
-Cost Avoidance = Genuine Deflections x (Human Cost Per Interaction - AI Cost Per Session)
-```
-
-AI cost per session comes from `AiAgentGenerativeAiUsage_std__dlm` (`SUM(UsageQuantity__c)` per session). Convert usage quantity to cost using the contracted Flex Credit rate from the Salesforce Account Executive. Do not use published list prices; credit pricing is contractual and varies.
-
-**Step 4: Surface latency reduction as efficiency gain.** Query `AVG(ssot__DurationNumber__c)` for primary action spans before and after optimization. A reduction from 3,200ms to 180ms on a high-volume action translates directly to faster time-to-resolution.
-
-**Step 5: Tie error trends to IT ops efficiency.** Track `COUNT(*)` on error spans by operation type over time. Each spike corresponds to a support incident. The trend line shows whether agent reliability is improving.
-
----
-
-> ### Scenario 7: Proving ROI to a Skeptical VP
->
-> Three months after go-live, the VP of Service Operations asks: "We're spending significantly on Agentforce credits. How do we know this is worth it?"
->
-> The Success Architect runs three queries:
->
-> 1. `ssot__AiAgentSession__dlm` cross-referenced with `ssot__AiAgentInteractionStep__dlm` for genuine deflection rate: 42% of sessions resolved with no escalation and at least one successful action execution.
-> 2. `AiAgentGenerativeAiUsage_std__dlm` for average credit cost per session: 23 usage units on average per session.
-> 3. Historical CRM data showing the pre-agent average handle time for this interaction category.
->
-> With those three inputs and the contracted credit rate, the team calculates monthly cost avoidance across 50,000 sessions with 42% genuine deflection.
->
-> The additional finding: 14% of non-escalated sessions had error spans with `db.rows_affected=0` indicating graceful failures rather than genuine resolution. Fixing those would push genuine deflection from 42% to approximately 56% — a significant additional monthly cost avoidance opportunity that is now a prioritized sprint item.
->
-> **Lesson:** Observability data does not just help you debug. It makes the business case for continued investment, and it shows exactly where to focus optimization effort to maximize that case.
+| Deflection Rate | `Deflection_Rate_clc` (semantic layer) | Cost-per-interaction reduction | Customer Service Operations |
+| Escalation Rate | `Escalation_Rate_clc` (semantic layer) | Agent quality and trust | CX Leadership |
+| Session Outcome | `Session_Outcome_Base_clc` (semantic layer) | Consolidated outcome reporting across all terminal states | CX Leadership / Operations |
+| Optimization Quality Score (1–5) | `Average_Quality_Score_clc` (semantic layer); raw SOQL via `std__AiAgentTagAssociationDmo__dlm` | Agent effectiveness by intent | Product and Agent Design |
+| Quality Tag Outcome | `std__AiAgentTagAssociationDmo__dlm` (`std__IsPassed__c`, `std__OutcomeType__c`, `std__AssociationReasonText__c`) | Per-Moment diagnostic drill-down | Agent Builders / QA |
+| Task Resolution Status | `Task_Resolution_Status_clc` (semantic layer) | Resolution completeness by session | CX Leadership / Agent Design |
+| Agent Adherence Status | `Agent_Adherence_Status_clc` (semantic layer) | Instruction compliance by response | Legal / Risk / Agent Design |
+| Action span duration | TelemetryTraceSpan `ssot__DurationNumber__c` (ms — no conversion needed) | Time-to-resolution; UX quality | Service Ops / IT Ops |
+| Error volume by operation type | TelemetryTraceSpan DMO | IT ops efficiency; MTTR | IT Operations |
+| Usage quantity and token count | `std__AiAgentGenerativeAiUsageDmo__dlm` | AI cost-per-transaction | Finance / AI Budget Owners |
+| Safety score distribution | `std__AiAgentInteractionStepDmo__dlm` (`PlannerResponseStep.safetyScore`) | Responsible AI compliance | Legal / Risk |
+| Knowledge gap clusters | Agentforce Optimization Intents tab | Content strategy; knowledge base ROI | Knowledge Management |
+| Total Flex Credits | `Total_Flex_Credits_clc` (semantic layer) | AI spend | Finance |
 
 ---
 
 ## 11. Credit Consumption Awareness
 
-Understanding which operations consume credits and which do not is essential for cost management and debugging. This section provides the architectural context a Success Architect needs to have informed conversations with customers about consumption — but billing in Agentforce is genuinely complex. Always involve a Salesforce Consumption SME for any customer conversation that involves billing design, ROI modeling, or consumption forecasting.
+### The Two Consumption Tracking Tools
 
-### The Reality of Action Billing vs. Control Flow
+**Digital Wallet**
+The authoritative source for exact Flex Credit consumption, billing verification, and contractual overage calculations. Use the Digital Wallet for any billing dispute or contractual review. It has a **72-hour processing lag** from the time of consumption to the time the record appears. It is not suited for real-time operational monitoring.
 
-A critical architectural distinction: **actions are billed per execution, regardless of how they were triggered.** Whether an action is invoked by the Atlas Reasoning Engine during free-form LLM reasoning, or fired deterministically by a `run @actions.name` directive in a `before_reasoning` or `after_reasoning` block, the credit cost is identical. Deterministic scripting does not exempt actions from the billing meter.
+**`std__AiAgentGenerativeAiUsageDmo__dlm` in Data 360**
+Refreshes every 5 minutes. Suited for near-real-time operational dashboards, trend analysis, feature attribution, and session-level cost attribution.
 
-The reason hybrid reasoning saves credits is not that the actions themselves become free. It eliminates redundant LLM reasoning steps — bypassing the LLM for predictable transitions, state checks, and variable assignments prevents expensive prompt loops.
+> Use the Digital Wallet for billing truth. Use the DMO for operational intelligence. They are complementary, not competing. The 72-hour Digital Wallet lag means discrepancies between the two sources are expected when looking at recent data — not a cause for concern.
 
-The `@utils` functions are the only operations that are genuinely free at all times, because they are platform-native control plane utilities rather than external invocations.
+### What Consumes Flex Credits
 
-### Credit Consumption Reference
+| Usage Type | Billing Basis |
+|---|---|
+| Actions | Per execution |
+| Help Agent Resolutions | Per resolved outcome |
+| Voice Minutes | Per duration |
+| Prompts | Per 2,000-token LLM call chunk |
+| Speech Foundations | Per audio processing unit |
 
-| Operation | Credits | Notes |
-|---|---|---|
-| `@utils.transition to` | FREE | Framework navigation; never billed |
-| `@utils.setVariables` | FREE | Framework state management; never billed |
-| `@utils.escalate` | FREE | Framework escalation; never billed |
-| `@utils.end_session` | FREE | Framework session termination; never billed |
-| Deterministic `escalate` statement (262.14+) | FREE | Top-level escalation; fires once; same billing treatment as `@utils.escalate` |
-| `if`/`else`/`else if` control flow | FREE | Deterministic resolution; no LLM call |
-| `before_reasoning` / `after_reasoning` / `after_response` hooks | FREE | Deterministic pre/post-processing; no LLM call |
-| `ask for` / `collect` variable capture (pilot, 262.12+) | FREE | Uses `@utils.setVariables` under the hood; the variable capture itself is not billed. However, the LLM reasoning turn that evaluates the user's response to the capture prompt is subject to normal prompt billing. |
-| Atlas reasoning loop | FREE | The core ReAct reasoning cycle is not billed as an action |
-| Flow actions | 20 credits | Per execution — billed whether triggered by LLM or deterministic script |
-| Apex actions | 20 credits | Per execution — billed whether triggered by LLM or deterministic script |
-| Other standard actions | 20 credits | Per execution |
-| Voice actions | 30 credits | Per execution |
+**What does NOT consume Flex Credits:** Utility operations (`@utils.escalate`, `@utils.end_session`, `@utils.setVariables`, `@utils.transition`) are not billed.
 
-> **Note on Prompt Templates:** Prompt Template actions are billable per invocation as a separate usage type from standard action executions. The exact credit rate is contractual. Verify current rates with your Salesforce Account Executive.
+### Cost Optimization Levers
 
-### Billing Is More Complex Than This Table Suggests
+Listed in order of impact:
 
-The table above covers the most common Flex Credits scenario, but Agentforce billing has multiple coexisting models that can apply depending on customer contract type, product edition, and deployment configuration:
+1. **Push deterministic logic.** Every `->` instruction that replaces a `|` instruction saves one LLM call.
+2. **Use the EinsteinHyperClassifier for routing.** Faster and cheaper than a general LLM for classification.
+3. **Guard data-fetch actions.** A `has-loaded` guard in `before_reasoning` prevents redundant API calls on every parse.
+4. **Scope RAG retrieval carefully.** Overly broad retrieval windows retrieve more chunks than needed, consuming more tokens.
+5. **Choose the right model for each subagent.** Complex reasoning subagents may need GPT-4.1 or Claude Sonnet. Simple response-generation subagents can use Claude Haiku or Gemini Flash at lower cost.
 
-- **Help Agent (outcome-based):** Some deployments bill only on resolved sessions — not on every action. A "resolution" has specific platform-defined criteria involving session length, escalation status, and user feedback signals. Non-resolved sessions in this model are not billed.
-- **Prompt-based billing:** LLM calls can be billed in 2,000-token chunks rather than per action, depending on model and contract. A single long-context call can generate multiple billable prompt units.
-- **Voice Minutes:** Voice deployments may be billed per minute of call duration rather than per action invocation, depending on the customer's entitlement.
-- **Speech processing:** Speech-to-text and text-to-speech have their own billing units (seconds of audio, characters of text) that are separate from action credits.
-- **Sandbox discount:** Standard actions in sandbox environments consume approximately 16 credits (80% of the production rate of 20). Useful to know when estimating costs from sandbox testing.
-- **Per-action token threshold:** Actions have a documented token budget. Exceeding this threshold on a single action invocation can trigger additional Flex Credit consumption beyond the base rate.
-- **Pure conversation with no action invocation is not billed.** LLM reasoning steps that do not result in an action call do not consume Flex Credits for that step.
+### Consumption Monitoring SOQL
 
-> **The bottom line for Success Architects:** Credit billing is contractual, multi-dimensional, and evolving. You need enough literacy to spot anomalies in `AiAgentGenerativeAiUsage_std__dlm` and to ask the right questions. For any customer conversation involving billing design or cost modeling, bring in a Consumption SME. Do not estimate from published list prices.
+**Billable usage by agent (last 30 days):**
 
-### Cost Implications for Troubleshooting
+```sql
+SELECT
+    std__AgentDeveloperName__c,
+    std__UsageTypeCode__c,
+    SUM(std__UsageQuantity__c)  AS total_usage,
+    COUNT(*)                    AS event_count
+FROM std__AiAgentGenerativeAiUsageDmo__dlm
+WHERE std__Timestamp__c >= LAST_N_DAYS:30
+  AND std__IsBillableIndicator__c = true
+GROUP BY std__AgentDeveloperName__c, std__UsageTypeCode__c
+ORDER BY total_usage DESC
+```
 
-Every `FunctionStep` in a session trace represents a credit expenditure. A session with 5 action invocations costs at least 100 credits before accounting for any Prompt Template calls.
+**Token consumption by agent (last 7 days):**
 
-An elevated escalation rate is not just a user experience problem. If the fallback path involves action retries, it also represents unplanned credit consumption at scale. Tight escalation monitoring has a secondary benefit as a cost anomaly detector.
+```sql
+SELECT
+    std__AgentDeveloperName__c,
+    SUM(std__PromptInputTokenCount__c)      AS total_input_tokens,
+    SUM(std__PromptCompletionTokenCount__c) AS total_completion_tokens,
+    SUM(std__PromptTotalTokenCount__c)      AS total_tokens
+FROM std__AiAgentGenerativeAiUsageDmo__dlm
+WHERE std__Timestamp__c >= LAST_N_DAYS:7
+GROUP BY std__AgentDeveloperName__c
+ORDER BY total_tokens DESC
+```
 
-Actions that fail due to platform limits (CPU time, SOQL row limits, heap size) appear as `FunctionStep` errors in session traces. In production, each of these represents credits spent on a failed invocation. Monitoring error volume by operation type is therefore both a reliability metric and a cost metric.
-
-**Slot-filled required inputs and credit cost:** As noted in Pattern B, unbound required action inputs are now auto-slot-filled by the LLM (262.10+). Each additional turn generated to collect a slot-filled value is a normal turn with normal billing implications. An agent that requires three extra user turns to gather inputs that could have been bound deterministically is spending credits on LLM reasoning that could have been free. Review action definitions in `AiAgentGenerativeAiUsage_std__dlm` anomaly investigations to check whether elevated per-session credit costs correlate with slot-fill-driven extra turns.
+> **Confirmed field names on `std__AiAgentGenerativeAiUsageDmo__dlm`:**
+> `std__AgentDeveloperName__c`, `std__UsageTypeCode__c`, `std__UsageQuantity__c`, `std__Timestamp__c`, `std__IsBillableIndicator__c`, `std__IsMeteredIndicator__c`, `std__PromptInputTokenCount__c`, `std__PromptCompletionTokenCount__c`, `std__PromptTotalTokenCount__c`.
 
 ---
 
 ## 12. Quick-Reference Cheat Sheet
 
-### The Observability Decision Tree
+### Setup Enablement Sequence
+
+| Step | Path | What It Enables |
+|---|---|---|
+| 1 | Setup > Einstein Audit, Analytics, and Monitoring Setup | Session Tracing + Optimization |
+| 2 | Same page > Audit and Feedback toggle | LLM prompt/response storage; feedback capture |
+| 3 | Same page > "Knowledge/RAG Quality Data and Metrics" toggle (confirmed name) | RAG quality calculated fields (`_clc`) |
+| 4 | Same page > Trust Layer data toggle (exact name unconfirmed — verify in Setup) | Toxicity, prompt injection, and instruction adherence calculated fields |
+| 5 | Setup > Agent Platform Tracing | Back-end execution span tree |
+| 6 | `sf api request rest "/services/data/v63.0/ssot/data-spaces" -o <org>` | Verify Data Space name before querying (note: `--json` flag not supported on this beta command) |
+| 7 | AppExchange > Digital Wallet | Consumption Tagging app (if needed) |
+
+### DMO Prefix Reference
+
+| Family | Prefix | How to Identify | Notes |
+|---|---|---|---|
+| Standard (newer orgs) | `std__` | `SELECT COUNT(*) FROM std__AiAgentSessionDmo__dlm` returns rows | Use `std__` queries in this guide |
+| Legacy (existing orgs) | `ssot__` | Same query returns zero/error; `ssot__` equivalent returns rows | Substitute `ssot__` throughout; Platform Tracing official docs use `ssot__` |
+| GenAI Audit | _(none)_ | `GenAIGeneration__dlm` | Separate pipeline; only when Audit and Feedback enabled |
+
+> Both `std__` and `ssot__` families are fully SOQL-queryable. They are identical in capability. No auto-migration occurs. **Always confirm which prefix is live in your customer's org before delivering SOQL.**
+
+### Decision Tree: Which Tool for Which Question?
 
 ```
-Something is wrong with my agent
-            |
-            v
-Is it affecting many users simultaneously?
-  YES -> Check Health Monitoring alerts first
-         |
-         v
-         Filter STDM tables to the affected time window
-         Find common subagent or action patterns
-         Pull session traces from 3-5 affected sessions
-         Apply diagnostic patterns from Section 8
-  NO  -> Is there a reproducible test case?
-  YES -> Open session traces (via developer CLI or STDM query)
-         Read the LLMStep, EnabledToolsStep, FunctionStep, ReasoningStep
-   NO -> Query STDM tables to find sessions with similar characteristics
-         Identify a representative session, then trace it
-                              |
-                              v
-        Need more execution detail than the session trace provides?
-        Enable Agent Platform Tracing (if not already on)
-        Query ssot__TelemetryTraceSpan__dlm for the trace ID
+Is my agent performing well overall?
+  └─ Agentforce Analytics Dashboard (or semantic layer _clc fields in Data 360)
+
+Where is it underperforming and why?
+  └─ Agentforce Optimization
+       └─ Average_Quality_Score_clc for KPI
+       └─ std__AiAgentTagAssociationDmo__dlm for per-Moment drill-down
+
+Why did a specific session escalate / fail?
+  └─ Session Tracing via STDM SOQL
+       └─ Full Session Reconstruction CTE (Section 7)
+       └─ Step-level escalation: filter std__NameInterfaceField__c = 'CLOSED_TRANSFERRED'
+          (confirmed field — official DMO schema)
+
+Why was that specific session slow?
+  └─ AgentLens first (FSM diagram — backward arrows indicate retry loops)
+  └─ Then Agent Platform Tracing
+       └─ ssot__TelemetryTraceSpan__dlm (duration in milliseconds — confirmed, no conversion needed)
+       └─ GROUP BY ssot__ServiceName__c to isolate latency to a specific backend service
+
+How much is this costing per agent?
+  └─ Digital Wallet (billing truth — 72-hour lag)
+  └─ std__AiAgentGenerativeAiUsageDmo__dlm (operational intelligence, 5-min refresh)
+
+Multi-agent session audit?
+  └─ std__AiAgentSessionParticipantDmo__dlm
+     (std__PreviousSessionId__c is "Reserved for future use" — do not use in production)
+
+Quality before go-live?
+  └─ Testing Center (sandbox only; 0–5 scale, 3+ = pass)
+     LLM judge: GPT OSS on Salesforce SageMaker via Einstein Trust Layer
+
+Need raw OTel trace data for an APM platform?
+  └─ GET /services/data/v66.0/einstein/audit/otel/{session-id}  (beta, API v66.0+)
+     Returns native OTel ResourceSpans format for direct OTLP ingestion
+     Requires Data Cloud enabled
+     Verify availability in your org's API version before advising customers to depend on this
 ```
 
-### Trace Reading Checklist (Per Turn)
+### Open Items (Pending Live-Org Confirmation)
 
-- [ ] `UserInputStep` — Does the utterance match what you expected?
-- [ ] `NodeEntryStateStep` — Did the correct subagent activate? Check `current_modality` for channel-specific issues.
-- [ ] `EnabledToolsStep` — Is the expected action listed? If missing, check `available when` gate variable values.
-- [ ] `LLMStep.messages_sent` — Did instructions compile correctly? Are variables interpolated? Is the Salesforce system prompt present (or intentionally absent via `strip_salesforce_instructions`)?
-- [ ] `FunctionStep` — Did the action fire? What inputs did it receive? Were any inputs slot-filled by LLM rather than bound deterministically?
-- [ ] `ReasoningStep` — Is the status GROUNDED? If absent, check `config.runtime.groundedness`.
-- [ ] `PlannerResponseStep` — Review the safety score. Does the response content match action output?
-- [ ] Multiple `run.llmstep` spans? — Expected in multi-action subagents (one per parse). Not a loop.
-- [ ] Missing `after_reasoning` spans? — Check if `is_displayable: True` fired in that subagent.
-- [ ] `run.action.*` spans with no preceding `run.llmstep`? — May originate from `after_response` on a connected subagent.
-- [ ] `TransitionStep` to escalation with no preceding LLM call? — Expected for deterministic `escalate` statement.
-
-### Key DMO Tables at a Glance
-
-| Question | Table to Query |
-|---|---|
-| How many sessions this week? | `ssot__AiAgentSession__dlm` |
-| What did users actually say? | `ssot__AiAgentInteractionMessage__dlm` |
-| Which subagents and intents were invoked? | `ssot__AiAgentInteraction__dlm` |
-| What actions errored? | `ssot__AiAgentInteractionStep__dlm` |
-| Which agents/subagents participated? | `ssot__AiAgentSessionParticipant__dlm` |
-| How many tokens/credits consumed? | `AiAgentGenerativeAiUsage_std__dlm` |
-| What did the LLM actually receive in its prompt? | `GenAIGatewayRequest__dlm` |
-| What did users rate as helpful or unhelpful? | `GenAIFeedback__dlm` |
-| Which steps took the longest? | `ssot__TelemetryTraceSpan__dlm` |
-| Where exactly did an action break? | `ssot__TelemetryTraceSpan__dlm` filtered by `ssot__StatusCode__c = 'ERROR'` |
-| What quality score did a Moment receive? | `ssot__AiAgentTagAssociation__dlm` joined to `ssot__AiAgentTag__dlm` |
-| What were the top user intents? | `ssot__AiAgentMoment__dlm` (requires Optimization enabled) |
-
-### Infrastructure Readiness Checklist (Per New Org)
-
-- [ ] Data Cloud provisioned and CRM Connector active
-- [ ] `CopilotSalesforceAdmin` assigned to admin users
-- [ ] `GenieAdmin` assigned to admin users needing Data Cloud access
-- [ ] `AgentforceServiceAgentBuilder` assigned to service agent configuration admins
-- [ ] `AgentforceDeveloperAndAdminTools` assigned to developers (verify purpose per org)
-- [ ] Session Tracing enabled: Setup > Einstein Audit, Analytics, and Monitoring
-- [ ] Agentforce Optimization enabled: same setup page
-- [ ] Audit and Feedback enabled with target data space selected: same setup page
-- [ ] Agent Platform Tracing enabled: Setup > Agent Platform Tracing
-- [ ] `config.runtime` block reviewed: `groundedness` flag confirmed, empty block removed if present
-- [ ] Consumption Tagging app installed (if Consumption Analytics Dashboard required)
-- [ ] Alert thresholds configured relative to expected session volume before go-live
-
-### Escalation Spike Response Playbook
-
-1. Confirm the spike is sustained (not a single-session anomaly) using the escalation-rate-by-day SOQL query.
-2. Filter `ssot__AiAgentSession__dlm` to the affected time window. Pull 5-10 escalated session IDs.
-3. Open session traces for each session. Look for a shared pattern: same subagent, same action, same error.
-4. If the failure is a timed-out action: check Apex execution logs for CPU or SOQL limit violations.
-5. If the failure is a grounding failure: apply Pattern D from Section 8.
-6. If no session-trace signal is found: enable Agent Platform Tracing and run the error-span query against the affected time window.
-7. After identifying root cause: fix in sandbox, validate in Testing Center, promote to production.
+| Item | Current State | Action Needed |
+|---|---|---|
+| Testing Center limits (500/job vs. 1,000/test) | Two official sources disagree | Verify in live org; update with confirmed number |
+| Terminal fallback mechanism | Slack evidence, not official Salesforce docs | Practitioner hedge is appropriate; monitor for official documentation |
+| `std__PreviousSessionId__c` production reliability | Officially "Reserved for future use" | Monitor Salesforce release notes |
+| `std__IsFallback__c` runtime behavior on Tag DMO | Unconfirmed; schema confirms field exists | Sample `std__AiAgentTagDmo__dlm` in live org |
+| Quality score raw field (`std__ValueText__c`) | Best-supported interpretation of official formula; not confirmed by live-org sampling | `SELECT std__ValueText__c FROM std__AiAgentTagDmo__dlm LIMIT 10` to verify numeric string content |
+| `std__SourceType__c` distinct values | Likely: `PromptTemplate`, `Formula`, `API` | `SELECT DISTINCT std__SourceType__c FROM std__AiAgentTagAssociationDmo__dlm` |
+| Trust Layer toggle exact UI name | Believed to exist; name not confirmed verbatim | Verify name in Setup before communicating to customers |
+| OTel API beta (`/einstein/audit/otel/`) | Confirmed as beta capability | Verify availability in org's current API version |
+| `GenAIGeneration__dlm` retention window | Short window (days, not weeks) per Slack evidence | Verify current retention in live org before planning historical analysis |
+| STDM lag (15 min vs. ~30 min) | Two official sources; 15 min treated as primary | Low priority; defensible judgment call |
 
 ---

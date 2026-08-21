@@ -1,5 +1,8 @@
 # Multi-Agent Architecture in Agentforce
 
+*Updated August 20, 2026*
+*This guide was generated using AI with grounding in official Salesforce documentation. Review for accuracy before using.*
+
 ---
 
 ## Table of Contents

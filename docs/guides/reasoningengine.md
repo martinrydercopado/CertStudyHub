@@ -1,8 +1,7 @@
 # Inside the Atlas Reasoning Engine: The Complete Agentforce Guide
 
-**How Agentforce Thinks — Turn-by-Turn Mechanics, Determinism, and LLM Probabilism**
-
-*Audience: Success Architects | Version 4 | August 2026*
+*Updated August 20, 2026*
+*This guide was generated using AI with grounding in official Salesforce documentation. Review for accuracy before using.*
 
 ---
 

@@ -1,6 +1,7 @@
 # Agentforce Coworker: A Success Architect's Guide
 
-*For Success Architects helping customers design, build, troubleshoot, and improve Agentforce agents.*
+*Updated August 20, 2026*
+*This guide was generated using AI with grounding in official Salesforce documentation. Review for accuracy before using.*
 
 ---
 
@@ -764,5 +765,3 @@ These are items that were open or unconfirmed as of August 2026. Do not make com
 - **100:** Maximum active/committed agents per org.
 
 ---
-
-*This guide reflects information available as of August 20, 2026. Always verify GA status and pricing with official Salesforce documentation before making customer commitments.*
