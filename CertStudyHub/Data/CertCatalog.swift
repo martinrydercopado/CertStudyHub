@@ -3,6 +3,7 @@ import SwiftUI
 enum CertCatalog {
     // ── Deep Dives ──
     static let deepDives: [CertConfig] = [
+        hybridReasoning,
         agentforceArchitect,
         reasoningEngine,
         rag,
@@ -34,6 +35,27 @@ enum CertCatalog {
     static let all: [CertConfig] = deepDives + certifications
 
     // ── Deep Dive Definitions ──
+
+    static let hybridReasoning = CertConfig(
+        id: "hybridreasoning",
+        name: "The Hybrid Reasoning Chronicles (an Agent Script Story)",
+        shortName: "Hybrid Reasoning",
+        icon: "book.fill",
+        primaryColor: Color(red: 0.49, green: 0.23, blue: 0.93),
+        secondaryColor: Color(red: 0.55, green: 0.36, blue: 0.96),
+        headerGradient: [
+            Color(red: 0.30, green: 0.11, blue: 0.58),
+            Color(red: 0.36, green: 0.13, blue: 0.71),
+            Color(red: 0.49, green: 0.23, blue: 0.93)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "hybridreasoning",
+        isBonusTopic: true,
+        guideFile: "hybridreasoning"
+    )
 
     static let agentforceArchitect = CertConfig(
         id: "agentforcearchitect",

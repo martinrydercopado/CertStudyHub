@@ -1,5 +1,25 @@
 [
   {
+    "id": "hybridreasoning",
+    "name": "The Hybrid Reasoning Chronicles (an Agent Script Story)",
+    "shortName": "Hybrid Reasoning",
+    "icon": "\ud83d\udcd6",
+    "primaryColor": "#7C3AED",
+    "secondaryColor": "#8B5CF6",
+    "headerGradient": [
+      "#4C1D95",
+      "#5B21B6",
+      "#7C3AED"
+    ],
+    "passingScore": 70,
+    "questionBank": "hybridreasoning",
+    "storageKeyPrefix": "hybridreasoning",
+    "isBonusTopic": true,
+    "subtitle": null,
+    "guideFile": "hybridreasoning",
+    "quizLengths": []
+  },
+  {
     "id": "agentforcearchitect",
     "name": "The Agentforce Architect: A Design and Planning Guide",
     "shortName": "Agentforce Architect",
