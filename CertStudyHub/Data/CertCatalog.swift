@@ -53,7 +53,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "agentforcearchitect",
         isBonusTopic: true,
-        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcearchitect")
+        guideFile: "agentforcearchitect"
     )
 
     static let customLWC = CertConfig(
@@ -74,7 +74,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "customlwc",
         isBonusTopic: true,
-        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=customlwc")
+        guideFile: "customlwc"
     )
 
     static let agentforceCoworker = CertConfig(
@@ -95,7 +95,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "agentforcecoworker",
         isBonusTopic: true,
-        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcecoworker")
+        guideFile: "agentforcecoworker"
     )
 
     static let dc360DevOps = CertConfig(
@@ -116,7 +116,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "dc360devops",
         isBonusTopic: true,
-        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=dc360devops")
+        guideFile: "dc360devops"
     )
 
     // ── Certification Definitions ──
@@ -167,7 +167,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "agentops",
         isBonusTopic: true,
-        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentops")
+        guideFile: "agentops"
     )
 
     static let dataCloud360 = CertConfig(
@@ -216,7 +216,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "reasoningengine",
         isBonusTopic: true,
-        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=reasoningengine")
+        guideFile: "reasoningengine"
     )
 
     static let rag = CertConfig(
@@ -242,7 +242,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "rag",
         isBonusTopic: true,
-        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=rag")
+        guideFile: "rag"
     )
 
     static let agentforceSales = CertConfig(
@@ -507,7 +507,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "multiagent",
         isBonusTopic: true,
-        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=multiagent")
+        guideFile: "multiagent"
     )
 
     static let tracinganalytics = CertConfig(
@@ -532,7 +532,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "tracinganalytics",
         isBonusTopic: true,
-        guideURL: URL(string: "https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=tracinganalytics")
+        guideFile: "tracinganalytics"
     )
 
     static let uxDesigner = CertConfig(

@@ -40,15 +40,15 @@ struct CertConfig: Identifiable {
     let isBonusTopic: Bool
     /// Optional subtitle shown on the cert card (e.g. "Bonus Topic").
     let subtitle: String?
-    /// Optional URL to an online reference guide for this cert.
-    let guideURL: URL?
+    /// Optional bundle resource name (without extension) for a local markdown reference guide.
+    let guideFile: String?
 
     init(id: String, name: String, shortName: String, icon: String,
          primaryColor: Color, secondaryColor: Color, headerGradient: [Color],
          passingScore: Int, quizLengths: [QuizLength], questions: [Question],
          studySections: [StudySection], storageKeyPrefix: String,
          isBonusTopic: Bool = false, subtitle: String? = nil,
-         guideURL: URL? = nil) {
+         guideFile: String? = nil) {
         self.id = id
         self.name = name
         self.shortName = shortName
@@ -63,7 +63,7 @@ struct CertConfig: Identifiable {
         self.storageKeyPrefix = storageKeyPrefix
         self.isBonusTopic = isBonusTopic
         self.subtitle = subtitle
-        self.guideURL = guideURL
+        self.guideFile = guideFile
     }
 
     var questionCount: Int { questions.count }

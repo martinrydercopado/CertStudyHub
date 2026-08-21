@@ -135,6 +135,26 @@
 		C10000000000000000000084 /* MultiAgentStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000047 /* MultiAgentStudyBank.swift */; };
 		C10000000000000000000085 /* TracingAnalyticsStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000048 /* TracingAnalyticsStudyBank.swift */; };
 		C10000000000000000000086 /* TracingAnalyticsStudyBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000048 /* TracingAnalyticsStudyBank.swift */; };
+		C10000000000000000000090 /* agentforcearchitect.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000050 /* agentforcearchitect.md */; };
+		C10000000000000000000091 /* agentforcearchitect.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000050 /* agentforcearchitect.md */; };
+		C10000000000000000000092 /* agentforcecoworker.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000051 /* agentforcecoworker.md */; };
+		C10000000000000000000093 /* agentforcecoworker.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000051 /* agentforcecoworker.md */; };
+		C10000000000000000000094 /* agentops.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000052 /* agentops.md */; };
+		C10000000000000000000095 /* agentops.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000052 /* agentops.md */; };
+		C10000000000000000000096 /* customlwc.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000053 /* customlwc.md */; };
+		C10000000000000000000097 /* customlwc.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000053 /* customlwc.md */; };
+		C10000000000000000000098 /* dc360devops.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000054 /* dc360devops.md */; };
+		C10000000000000000000099 /* dc360devops.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000054 /* dc360devops.md */; };
+		C1000000000000000000009A /* multiagent.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000055 /* multiagent.md */; };
+		C1000000000000000000009B /* multiagent.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000055 /* multiagent.md */; };
+		C1000000000000000000009C /* rag.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000056 /* rag.md */; };
+		C1000000000000000000009D /* rag.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000056 /* rag.md */; };
+		C1000000000000000000009E /* reasoningengine.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000057 /* reasoningengine.md */; };
+		C1000000000000000000009F /* reasoningengine.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000057 /* reasoningengine.md */; };
+		C100000000000000000000A0 /* tracinganalytics.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000058 /* tracinganalytics.md */; };
+		C100000000000000000000A1 /* tracinganalytics.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000058 /* tracinganalytics.md */; };
+		C100000000000000000000A2 /* marked.min.js in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000059 /* marked.min.js */; };
+		C100000000000000000000A3 /* marked.min.js in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000059 /* marked.min.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -202,6 +222,16 @@
 		C1F000000000000000000046 /* TracingAnalyticsQuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TracingAnalyticsQuestionBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000047 /* MultiAgentStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiAgentStudyBank.swift; sourceTree = "<group>"; };
 		C1F000000000000000000048 /* TracingAnalyticsStudyBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TracingAnalyticsStudyBank.swift; sourceTree = "<group>"; };
+		C1F000000000000000000050 /* agentforcearchitect.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = agentforcearchitect.md; sourceTree = "<group>"; };
+		C1F000000000000000000051 /* agentforcecoworker.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = agentforcecoworker.md; sourceTree = "<group>"; };
+		C1F000000000000000000052 /* agentops.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = agentops.md; sourceTree = "<group>"; };
+		C1F000000000000000000053 /* customlwc.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = customlwc.md; sourceTree = "<group>"; };
+		C1F000000000000000000054 /* dc360devops.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = dc360devops.md; sourceTree = "<group>"; };
+		C1F000000000000000000055 /* multiagent.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = multiagent.md; sourceTree = "<group>"; };
+		C1F000000000000000000056 /* rag.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = rag.md; sourceTree = "<group>"; };
+		C1F000000000000000000057 /* reasoningengine.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = reasoningengine.md; sourceTree = "<group>"; };
+		C1F000000000000000000058 /* tracinganalytics.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = tracinganalytics.md; sourceTree = "<group>"; };
+		C1F000000000000000000059 /* marked.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = marked.min.js; sourceTree = "<group>"; };
 		C1P000000000000000000001 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1P000000000000000000002 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -245,6 +275,7 @@
 				C1G000000000000000000006 /* Helpers */,
 				C1G00000000000000000000C /* Utilities */,
 				C1G000000000000000000007 /* Views */,
+				C1G00000000000000000000D /* Guides */,
 			);
 			path = CertStudyHub;
 			sourceTree = "<group>";
@@ -376,6 +407,23 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
+		C1G00000000000000000000D /* Guides */ = {
+			isa = PBXGroup;
+			children = (
+				C1F000000000000000000050 /* agentforcearchitect.md */,
+				C1F000000000000000000051 /* agentforcecoworker.md */,
+				C1F000000000000000000052 /* agentops.md */,
+				C1F000000000000000000053 /* customlwc.md */,
+				C1F000000000000000000054 /* dc360devops.md */,
+				C1F000000000000000000055 /* multiagent.md */,
+				C1F000000000000000000056 /* rag.md */,
+				C1F000000000000000000057 /* reasoningengine.md */,
+				C1F000000000000000000058 /* tracinganalytics.md */,
+				C1F000000000000000000059 /* marked.min.js */,
+			);
+			path = Guides;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -456,6 +504,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				C10000000000000000000039 /* Assets.xcassets in Resources */,
+				C10000000000000000000090 /* agentforcearchitect.md in Resources */,
+				C10000000000000000000092 /* agentforcecoworker.md in Resources */,
+				C10000000000000000000094 /* agentops.md in Resources */,
+				C10000000000000000000096 /* customlwc.md in Resources */,
+				C10000000000000000000098 /* dc360devops.md in Resources */,
+				C1000000000000000000009A /* multiagent.md in Resources */,
+				C1000000000000000000009C /* rag.md in Resources */,
+				C1000000000000000000009E /* reasoningengine.md in Resources */,
+				C100000000000000000000A0 /* tracinganalytics.md in Resources */,
+				C100000000000000000000A2 /* marked.min.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,6 +522,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1000000000000000000003A /* Assets.xcassets in Resources */,
+				C10000000000000000000091 /* agentforcearchitect.md in Resources */,
+				C10000000000000000000093 /* agentforcecoworker.md in Resources */,
+				C10000000000000000000095 /* agentops.md in Resources */,
+				C10000000000000000000097 /* customlwc.md in Resources */,
+				C10000000000000000000099 /* dc360devops.md in Resources */,
+				C1000000000000000000009B /* multiagent.md in Resources */,
+				C1000000000000000000009D /* rag.md in Resources */,
+				C1000000000000000000009F /* reasoningengine.md in Resources */,
+				C100000000000000000000A1 /* tracinganalytics.md in Resources */,
+				C100000000000000000000A3 /* marked.min.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

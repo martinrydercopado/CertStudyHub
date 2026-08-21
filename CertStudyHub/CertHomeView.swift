@@ -9,7 +9,7 @@ struct CertHomeView: View {
 
     private var hasQuiz: Bool { !certConfig.questions.isEmpty }
     private var hasStudy: Bool { !certConfig.studySections.isEmpty }
-    private var hasGuide: Bool { certConfig.guideURL != nil }
+    private var hasGuide: Bool { certConfig.guideFile != nil }
 
     /// Number of available content tabs
     private var tabCount: Int {
@@ -40,8 +40,8 @@ struct CertHomeView: View {
                     StudyGuideView(viewModel: studyVM, certConfig: certConfig)
                 } else if hasQuiz {
                     QuizView(viewModel: quizVM, certConfig: certConfig)
-                } else if let guideURL = certConfig.guideURL {
-                    ReferenceGuideView(url: guideURL, certConfig: certConfig)
+                } else if let guideFile = certConfig.guideFile {
+                    ReferenceGuideView(guideFile: guideFile, certConfig: certConfig)
                 }
             } else {
                 TabView(selection: $selectedTab) {
@@ -61,8 +61,8 @@ struct CertHomeView: View {
                             .tag(hasStudy ? 1 : 0)
                     }
 
-                    if let guideURL = certConfig.guideURL {
-                        ReferenceGuideView(url: guideURL, certConfig: certConfig)
+                    if let guideFile = certConfig.guideFile {
+                        ReferenceGuideView(guideFile: guideFile, certConfig: certConfig)
                             .tabItem {
                                 Label("Reference", systemImage: "doc.richtext")
                             }
