@@ -1,6 +1,6 @@
 # Tracing and Analytics in Agentforce
 
-*Updated August 20, 2026*
+*Updated August 21, 2026*
 *This guide was generated using AI with grounding in official Salesforce documentation. Review for accuracy before using.*
 
 ---
@@ -15,10 +15,16 @@
 6. [Agent Platform Tracing: Service-Level Visibility](#6-agent-platform-tracing-service-level-visibility)
 7. [Dashboards and the Data Model](#7-dashboards-and-the-data-model)
 8. [Common Diagnostic Patterns](#8-common-diagnostic-patterns)
-9. [Sandbox vs. Production Tracing](#9-sandbox-vs-production-tracing)
-10. [Mapping Observability to Business KPIs](#10-mapping-observability-to-business-kpis)
-11. [Credit Consumption Awareness](#11-credit-consumption-awareness)
-12. [Quick-Reference Cheat Sheet](#12-quick-reference-cheat-sheet)
+9. [Triage Before You Trace](#9-triage-before-you-trace)
+10. [Choosing the Right Control](#10-choosing-the-right-control)
+11. [Pattern H: Unexpected Agent Behavior](#11-pattern-h-unexpected-agent-behavior)
+12. [Pattern I: Latency Diagnosis](#12-pattern-i-latency-diagnosis)
+13. [Validating Your Change](#13-validating-your-change)
+14. [When to Contact Support](#14-when-to-contact-support)
+15. [Sandbox vs. Production Tracing](#15-sandbox-vs-production-tracing)
+16. [Mapping Observability to Business KPIs](#16-mapping-observability-to-business-kpis)
+17. [Credit Consumption Awareness](#17-credit-consumption-awareness)
+18. [Quick-Reference Cheat Sheet](#18-quick-reference-cheat-sheet)
 
 ---
 
@@ -45,7 +51,6 @@ For a Success Architect, observability is also a trust-building tool. Customers 
 Agentforce observability depends on a stack of capabilities that must be explicitly enabled. None of them are on by default. Before advising a customer on tracing or analytics, confirm this infrastructure is in place.
 
 ### Required Foundation
-
 - [ ] Data Cloud provisioned and CRM Connector active
 - [ ] `CopilotSalesforceAdmin` assigned to admin users
 - [ ] `GenieAdmin` assigned to admin users needing Data Cloud access
@@ -122,31 +127,6 @@ Agentforce observability is not a single feature. It is a stack of three complem
 ---
 
 ### Pillar I: Agentforce Analytics
-
-**What it is:** Real-time and historical dashboards that surface aggregate metrics across all agent sessions. Powered by Tableau Next, built on the Session Tracing Data Model (STDM) in Data Cloud.
-
-**The business framing:** "Is the agent performing well overall?" Analytics is your command center. It tells you the shape of the situation: how many sessions, what escalation rate, which subagents are invoked most, where volume is trending.
-
-**Key metrics surfaced:**
-
-- Session volume (daily, weekly, trending)
-- Escalation rate (the primary quality signal in the first weeks after go-live)
-- Deflection rate (the headline ROI metric)
-- Subagent invocation distribution
-- Average session duration and turn count
-- Agent latency
-
-**When to rely on it:** Daily health monitoring, early-warning detection, executive reporting, and ROI calculation. Analytics answers the "what." It does not answer the "why."
-
-**Limitation to communicate:** Analytics dashboards show aggregate trends. They cannot tell you why a specific session escalated, which instruction caused a misrouted topic, or where an action broke. For those questions, you need Pillar II or III.
-
-### The Analytics Semantic Layer
-
-Salesforce provides a pre-built **Analytics Semantic Layer** called Agentforce Analytics Foundations inside Data 360. It exposes calculated fields (`_clc` suffix) for every standard KPI. These fields are the recommended query target for standard metrics. Raw SOQL against the underlying DMOs is appropriate for advanced, custom, or cross-DMO use cases only.
-
-Confirmed calculated field names:
-
-**Measures**
 
 | Label | Field Name | Notes |
 |---|---|---|
@@ -255,44 +235,7 @@ Use the numeric quality score for trend analysis and bucketed dashboard reportin
 
 #### Optimization DMOs
 
-Optimization extends the core STDM with four additional DMOs:
-
-| DMO | API Name (`std__`) | What It Contains |
-|---|---|---|
-| Moment | `std__AiAgentMomentDmo__dlm` | One record per Moment; LLM-generated request and response summaries, timing |
-| Moment-Interaction Junction | `std__AiAgentMomentInteractionDmo__dlm` | Links Moments to their constituent interaction turns |
-| Tag Association | `std__AiAgentTagAssociationDmo__dlm` | Links each Moment to its quality data and outcome tags |
-| Tag | `std__AiAgentTagDmo__dlm` | The intent tag record (clustering category label and numeric score) |
-
-> **Note on Moment summaries:** `std__RequestSummaryText__c` and `std__ResponseSummaryText__c` on the Moment DMO are **LLM-generated summaries**, not raw user or agent text. Raw LLM output text lives on `std__GenAiResponseGenerationDmo__dlm` (`std__GeneratedResponseText__c`), reached via `std__AiAgentInteractionStepDmo__dlm`.
-
-#### The AgentforceOptimizeService Apex Class
-
-`AgentforceOptimizeService` is a **custom Apex class deployed by the agentforce-observe skill** into the org as part of its setup phase. It is not a Salesforce-published platform API. The class exposes a `runObservabilityQuery(queryType)` method that wraps internal STDM queries for convenience.
-
-Confirmed `queryType` values (sourced directly from the skill file):
-
-| Query Type | What It Surfaces |
-|---|---|
-| `KnowledgeGap` | Subagents with lowest average context precision; fast knowledge gap identification |
-| `Hallucination` | Moments where agent assertions diverged from retrieved context |
-| `RetrievalQuality` | Retrieval quality distribution across Moments |
-| `AnswerRelevancy` | Answer relevance scores across Moments |
-| `Leaderboard` | Ranked subagent performance across quality dimensions |
-
-Do not present `runObservabilityQuery()` as a native Salesforce API in customer-facing deliverables. Reference the equivalent semantic layer fields or raw SOQL patterns documented in this guide for org-agnostic implementations.
-
----
-
-### Pillar III: Agent Platform Tracing
-
-**What it is:** An OpenTelemetry-compatible span tree stored in `ssot__TelemetryTraceSpan__dlm` (or `std__TelemetryTraceSpanDmo__dlm` in newer orgs) that captures every back-end execution event — LLM calls, Flow runs, Apex invocations, timings, and errors.
-
-**The business framing:** "Why did that take 4 seconds? Where exactly did it break?" Platform Tracing is the tool for questions that Analytics and Optimization cannot answer.
-
-Platform Tracing data is queryable via SOQL in Data Cloud and is also exportable to enterprise APM platforms (Datadog, Dynatrace, Splunk) via the OTel standard. A fourth tracing path — the OTel API (beta) — is documented in Section 6. For non-technical stakeholders, **Tableau Concierge** — a pre-built agentic analytics skill within Tableau Next — supports natural-language queries over the telemetry data without requiring SOQL.
-
-Full detail is in Section 6.
+Optimization extends the core STDM with four additional DMOs.
 
 ---
 
@@ -309,6 +252,10 @@ Two separate tracing systems operate at different layers of the Agentforce stack
 | **OTel export** | No | Yes — SOQL, APM integration, and OTel API beta (Section 6) |
 
 **Multi-agent session audit:** `std__AiAgentSessionParticipantDmo__dlm` records every entity — human or AI — that participated in a session, including participants from connected sub-agents across SOMA, MOMA, and 3P trust boundaries. This is the most reliable current mechanism for auditing multi-agent session participation.
+
+---
+
+## 5. Reading Session Traces
 
 ### Understanding the Parse: Why One Turn Produces Multiple Spans
 
@@ -364,48 +311,6 @@ Grounding failures are almost always fixable. The `FunctionStep` output contains
 
 ---
 
-> ### Scenario 1: Wrong Subagent Invoked for a Known Intent
->
-> A customer's service agent has a `Billing_Inquiry` subagent and an `Account_Management` subagent. Users asking "Can you change my billing address?" are consistently routed to `Account_Management` instead of `Billing_Inquiry`.
->
-> The `EnabledToolsStep` shows both subagents listed as available. The `LLMStep.tools_sent` shows the LLM receiving descriptions for both, but the `Billing_Inquiry` description reads: _"Handles billing questions and disputes."_ The word "address" does not appear in it.
->
-> The fix: Update the `Billing_Inquiry` description to include _"billing address changes, payment method updates."_ After redeployment, routing accuracy for this utterance type improves to 100%.
->
-> **Lesson:** Subagent routing is purely semantic. If the description does not cover the user's vocabulary, routing fails.
-
----
-
-> ### Scenario 2: Systemic Escalation Spike at Peak Hours
->
-> A financial services firm deploys an employee agent for HR policy questions. During the first two weeks, the escalation rate is stable at 8%. Then, every Tuesday and Thursday between 9 and 11 AM, it spikes to 35%.
->
-> The health monitoring alert fires within minutes. Investigating traces from that window, all failed sessions share a common error: the Apex action querying HR policy records is timing out — a SOQL query running without selective filters during a batch processing window that runs every Tuesday and Thursday morning.
->
-> **Lesson:** Health monitoring tells you when to start trace analysis. Without it, this would have been discovered only after users complained.
-
----
-
-> ### Scenario 3: Grounding Failure Causing "Unexpected Error" Responses
->
-> A retail agent handles product availability questions. Users intermittently receive _"I apologize, but I encountered an unexpected error"_ responses, but only for specific product categories.
->
-> In three affected sessions, the `ReasoningStep` shows two consecutive UNGROUNDED results. The `FunctionStep` output returns: `"Available: 12 units at Store #4821"`. The agent's response reads: _"That item is available at your nearest location."_ The grounding checker cannot verify that Store #4821 is the user's nearest location, because the action did not return location data.
->
-> The fix: Update agent instructions to quote the store number and unit count verbatim from the action output, without inferring proximity.
->
-> **Note:** Before concluding this is purely a grounding issue, check LLM Gateway health during the affected window. If Platform Tracing spans show 429s or other infrastructure errors, the fallback may be infrastructure-caused rather than double-UNGROUNDED.
->
-> **Lesson:** Grounding failures are almost always fixable with a targeted instruction change.
-
----
-
-## 5. Reading Session Traces
-
-_(Full section content preserved from v5 — no changes to this section.)_
-
----
-
 ## 6. Agent Platform Tracing: Service-Level Visibility
 
 | Operation Name Pattern | What It Represents |
@@ -437,7 +342,7 @@ Key fields on `ssot__TelemetryTraceSpan__dlm` (substitute `std__` prefix for new
 | Telemetry Parent Span Id | `ssot__TelemetryParentSpanId__c` | TEXT | Parent span identifier; enables nested span hierarchies |
 | Span Attribute Text | `ssot__TelemetrySpanAttributeText__c` | TEXT | Key-value metadata pairs annotating the span. This is where per-span diagnostic metadata lives — including `db.rows_affected`, `db.operation.name`, and other runtime attributes referenced in diagnostic patterns throughout this guide. |
 | Span Event Text | `ssot__TelemetrySpanEventText__c` | TEXT | Structured log annotation at a singular point in time during the span. Useful for capturing discrete events (errors, retries) within a longer-running span. |
-| Service Name | `ssot__ServiceName__c` | TEXT | Name of the backend service emitting the span, for example `coreapp.core-on-sam`. Filter or GROUP BY this field to isolate latency to a specific service boundary when a trace spans multiple services. See Pattern F. |
+| Service Name | `ssot__ServiceName__c` | TEXT | Name of the backend service emitting the span, for example `coreapp.core-on-sam`. Filter or GROUP BY this field to isolate latency to a specific service boundary when a trace spans multiple services. See Pattern I. |
 
 ### Conversational Observability with Slackbot
 
@@ -460,18 +365,6 @@ Slackbot: I queried all spans for trace b9e8f7b4. Total duration: 2,690ms.
           The bottleneck is the final LLM reasoning step after the action.
           The action itself was fast at 327ms.
 ```
-
----
-
-> ### Scenario 4: Latency Complaint with No Obvious Cause
->
-> A customer reports their claims-processing agent "takes forever to respond." The OOTB dashboard shows elevated average session duration but no escalation spike and no error alerts. Session traces show `Get_Policy_Details` completed successfully.
->
-> Agent Platform Tracing (previously toggled off) is enabled. The performance profiling query shows `run.action.Get_Policy_Details` averages 3,200ms with a max of 8,100ms. The span attribute `db.rows_affected=2847` reveals the action is returning nearly 3,000 records from an unfiltered query.
->
-> The fix: Adding a `LIMIT` clause and a selective `WHERE` filter reduces average action duration from 3,200ms to 180ms.
->
-> **Lesson:** Session Tracing confirmed the action ran. Platform Tracing revealed how it ran. Without span attributes, this root cause is invisible.
 
 ---
 
@@ -689,64 +582,7 @@ Use `Average_Quality_Score_clc` from Agentforce Analytics Foundations in Data 36
 
 **Raw SOQL fallback (advanced use only):**
 
-> **Field name note:** The semantic layer formula for `Quality_Score_clc` is defined as `INT([AI Agent Tag].[Value])`. The physical DMO field that "Value" maps to be `std__ValueText__c`, cast to integer. This is the best-supported interpretation based on the official formula, but it is not confirmed by live-org sampling. Verify `std__ValueText__c` returns numeric strings in your org before relying on this query in production.
-
-```sql
-SELECT
-    a.std__AiAgentMomentId__c,
-    a.std__AiAgentInteractionId__c,
-    a.std__OutcomeType__c,
-    a.std__IsPassed__c,
-    a.std__AssociationReasonText__c,
-    CAST(t.std__ValueText__c AS INTEGER) AS score_numeric,
-    m.std__AiAgentApiName__c            AS agent_api_name
-FROM std__AiAgentTagAssociationDmo__dlm a
-JOIN std__AiAgentTagDmo__dlm t
-    ON a.std__AiAgentTagId__c = t.std__Id__c
-JOIN std__AiAgentMomentDmo__dlm m
-    ON a.std__AiAgentMomentId__c = m.std__Id__c
-WHERE t.std__IsFallback__c = false
-  AND t.std__ValueText__c != 'NOT_SET'
-```
-
-> **Field notes:**
-> - `CAST(t.std__ValueText__c AS INTEGER)` is the best-supported raw SOQL equivalent of the `_clc` formula. Confirm in your org that `std__ValueText__c` returns numeric string values before using this in production.
-> - `std__IsFallback__c = false` filters out default/catch-all tag records. Runtime behavior of this flag is unconfirmed in live-org data; treat as a best-practice filter and verify in your org.
-> - All fields on `std__AiAgentTagAssociationDmo__dlm` use the `std__` prefix.
-
-**Platform Tracing span tree by trace ID:**
-
-```sql
-SELECT
-    ssot__OperationName__c,
-    ssot__DurationNumber__c AS duration_ms,
-    ssot__TelemetrySpanAttributeText__c,
-    ssot__StatusCode__c
-FROM ssot__TelemetryTraceSpan__dlm
-WHERE ssot__TelemetryTrace__c = '<trace_id>'
-ORDER BY ssot__DurationNumber__c DESC
-```
-
-**Average action duration by operation (last 7 days):**
-
-```sql
-SELECT
-    ssot__OperationName__c,
-    AVG(ssot__DurationNumber__c) AS avg_duration_ms,
-    MAX(ssot__DurationNumber__c) AS max_duration_ms,
-    COUNT(*)                     AS span_count
-FROM ssot__TelemetryTraceSpan__dlm
-WHERE ssot__OperationName__c LIKE 'run.action.%'
-  AND ssot__StartDateTime__c >= LAST_N_DAYS:7
-GROUP BY ssot__OperationName__c
-ORDER BY avg_duration_ms DESC
-```
-
-> `ssot__DurationNumber__c` is in milliseconds (confirmed via Salesforce Platform Tracing blog). No conversion is needed. Label your output columns accordingly.
-
-#### Full Session Reconstruction
-
-**All messages and steps for a session in chronological order:**
+> **Field name note:** The semantic layer formula for `Quality_Score_clc` is defined as `INT([AI Agent Tag].[Value])`. The physical DMO field that "Value" maps to is `std__ValueText__c`, cast to integer. This is the best-supported interpretation based on the official formula, but it is not confirmed by live-org sampling. Verify `std__ValueText__c` returns numeric strings in your org before relying on this query in production.
 
 ```sql
 WITH params AS (
@@ -787,6 +623,18 @@ SELECT * FROM (
 ) combined
 ORDER BY event_time ASC
 ```
+
+---
+
+> ### Scenario 4: Latency Complaint with No Obvious Cause
+>
+> A customer reports their claims-processing agent "takes forever to respond." The OOTB dashboard shows elevated average session duration but no escalation spike and no error alerts. Session traces show `Get_Policy_Details` completed successfully.
+>
+> Agent Platform Tracing (previously toggled off) is enabled. The performance profiling query shows `run.action.Get_Policy_Details` averages 3,200ms with a max of 8,100ms. The span attribute `db.rows_affected=2847` reveals the action is returning nearly 3,000 records from an unfiltered query.
+>
+> The fix: Adding a `LIMIT` clause and a selective `WHERE` filter reduces average action duration from 3,200ms to 180ms.
+>
+> **Lesson:** Session Tracing confirmed the action ran. Platform Tracing revealed how it ran. Without span attributes, this root cause is invisible.
 
 ---
 
@@ -872,11 +720,11 @@ These patterns cover the most frequently encountered agent issues. Each has a co
 
 **Symptom:** Users report slow responses. Session traces show actions completing successfully. No error alerts are firing.
 
-**Where to look:** Start with AgentLens to rule out looping. Then query the TelemetryTraceSpan DMO for the interaction's trace ID. Check `ssot__DurationNumber__c` (in milliseconds — no conversion needed) and `ssot__TelemetrySpanAttributeText__c` for the action span in question. If the trace spans multiple service boundaries, filter or GROUP BY `ssot__ServiceName__c` to isolate latency to a specific backend service. The value is the internal service name emitting the span — for example, `coreapp.core-on-sam`.
+**Where to look:** Start with Agens to rule out looping. Then query the TelemetryTraceSpan DMO for the interaction's trace ID. Check `ssot__DurationNumber__c` (in milliseconds — no conversion needed) and `ssot__TelemetrySpanAttributeText__c` for the action span in question. If the trace spans multiple service boundaries, filter or GROUP BY `ssot__ServiceName__c` to isolate latency to a specific backend service. The value is the internal service name emitting the span — for example, `coreapp.core-on-sam`.
 
 **Root cause:** The action ran successfully but returned too much data (visible as a high `db.rows_affected` value in `ssot__TelemetrySpanAttributeText__c`), causing the LLM to spend extra time processing a large payload.
 
-**Fix direction:** Add `LIMIT` clauses and selective `WHERE` filters to the backing Apex or Flow query.
+**Fix direction:** Add `LIMIT` clauses and selective `WHERE` filters to the backing Apex or Flow query. For a full latency diagnostic framework — including how to isolate which pipeline step is slow before querying spans — see [Pattern I: Latency Diagnosis](#12-pattern-i-latency-diagnosis).
 
 ---
 
@@ -886,43 +734,9 @@ These patterns cover the most frequently encountered agent issues. Each has a co
 
 **Where to look:** Check whether the action that preceded the missing block has `is_displayable: True` set.
 
-**Root cause:** Expected platform behavior. When `is_displayable: True` is set on an action, the platform exits the reasoning loop immediately when the LLM decides to surface that output. `after_reasoning` never executes and no error is raised.
-
-**Fix direction:** If logic in `after_reasoning` must execute reliably, move it into the `before_reasoning` block of the subsequent subagent.
-
-> **Deterministic `escalate` statement (262.14+):** The new top-level `escalate` statement fires exactly once and hands off to a fixed escalation target without an LLM reasoning step. In Platform Tracing, it appears as a `TransitionStep` to the escalation target with no preceding `run.llmstep` span for that transition. This is expected behavior — not a missing-span anomaly.
-
 ---
 
-### Pattern H: `before_reasoning` Counter Shows Inflated Count
-
-**Symptom:** A variable used to track conversation turn count returns values higher than the number of actual user messages in the session.
-
-**Where to look:** Check where the counter variable is incremented in the Agent Script. If the increment is in `before_reasoning`, the variable is counting parses, not turns.
-
-**Root cause:** `before_reasoning` executes on every parse, including re-entry after each action call within a turn. In a subagent that fires two actions per user turn, `before_reasoning` runs three times per user turn.
-
-**Additional trigger (262.12+):** If `config.runtime.reset_to_initial_node: false` is set, subagent context may persist across turns in ways that cause `before_reasoning` to execute more often than expected per user turn.
-
-**Fix direction:** Move the counter increment to `after_reasoning`, or use an action-based incrementor that fires explicitly once per intended measurement unit.
-
----
-
-### Diagnostic Quick-Reference
-
-| Dimension | Sandbox / Development | Production |
-|---|---|---|
-| **Primary tracing tool** | Session traces via `sf agent preview` CLI | Data Cloud STDM tables and Agent Platform Tracing DMOs |
-| **Session Tracing toggle** | Must be enabled per org — does not inherit | Must be enabled separately before go-live |
-| **Agent Platform Tracing toggle** | Must be enabled per org | Must be enabled separately before go-live |
-| **Data retention** | Preview trace files are local and ephemeral | STDM and Platform Tracing data persists in Data Cloud for the configured retention window |
-| **Utterance quality** | Controlled test utterances | Full diversity of real-user phrasing |
-| **Alert thresholds** | Not typically configured | Configure all thresholds before go-live |
-| **Data volume** | Low; manual trace review is practical | High; aggregate dashboards and SOQL queries are the primary diagnostic surface |
-
-### The Two Quality Scoring Systems
-
-Agentforce has two distinct quality scoring instruments. Both use numeric scales, which causes frequent confusion. The key distinction is when each is used and what it measures.
+### Testing Center vs. Optimization: Choosing the Right Quality Signal
 
 | Dimension | Testing Center LLM Judge | Agentforce Optimization Quality Score |
 |---|---|---|
@@ -983,6 +797,322 @@ Test cases can be created by uploading a CSV, using AI-generated suggestions, im
 
 Each stage uses the same underlying session tracing data. The tools scale from a single developer reviewing one trace to an org-wide automated evaluation of hundreds of sessions.
 
+---
+
+## 9. Triage Before You Trace
+
+> **New content — sourced from Salesforce Knowledge Article 005391239 (Aug 20, 2026)**
+
+Before opening a trace or changing a single instruction, run these quick checks. Many issues resolve here in minutes, before any deeper investigation is needed.
+
+**Why this matters for your customers:** Agentforce uses an LLM reasoning engine to generate responses. The instinctive fix when something goes wrong — "add another instruction telling it not to do that" — is not always the right approach, and can make the agent harder to manage over time. These checks help establish whether you are dealing with a repeatable configuration problem, normal model variability, or a runtime issue — before deciding how to respond.
+
+### The Quick-Check Sequence
+
+Run through these in order before doing anything else:
+
+1. **Run the same input multiple times.** Agentforce uses an LLM and its behavior can be probabilistic. Repeating the same input helps determine whether the behavior is consistent or intermittent. A behavior that only appears once may be normal variability.
+
+2. **Try a few different phrasings of the same request.** A fix that works only for one exact wording may not address the underlying issue.
+
+3. **Reproduce the behavior in a minimal test configuration** — with as few custom subagents, actions, and instructions as possible. If the behavior still occurs, that points away from the specific customization and toward a broader configuration, data, or runtime issue.
+
+4. **Check activation and permissions.** Verify that the agent, relevant subagents, actions, and required permissions are configured correctly.
+
+5. **Use Plan Tracer when testing in Agent Builder.** It allows you to inspect the execution plan, including subagent selection and action selection, without needing full session tracing infrastructure.
+
+6. **Use Agentforce Session Tracing when available.** Session Tracing provides structured telemetry — including interactions, reasoning-engine executions, actions, prompt and gateway inputs/outputs, errors, and final responses — that can identify exactly where a session behaved unexpectedly.
+
+7. **If you have already made a change, verify that it was actually applied.** Confirm the configuration was saved, published or activated as required, and that you are testing the updated version. This is a common cause of apparent "my fix did nothing" situations.
+
+### Reading the Failure Pattern
+
+Once you have run the input multiple times, use this table to decide where to look next:
+
+| What you observe | What it suggests | What to do |
+|---|---|---|
+| Fails the same way every time | A repeatable configuration, data, action, setup, or runtime issue | Locate the failing layer and address that layer directly |
+| Sometimes succeeds and sometimes fails on similar requests | Ambiguous configuration or instructions, or normal LLM variability | Inspect the relevant control and test multiple variations |
+| Only fails for one specific input or phrasing | An edge case, missing data, or ambiguous instruction | Add a targeted rule or fix the underlying data or action |
+| Wording changes but the outcome remains correct | Normal variation in generated language | Focus on whether the required outcome is correct rather than identical wording |
+
+---
+
+## 10. Choosing the Right Control
+
+> **New content — sourced from Salesforce Knowledge Article 005391239 (Aug 20, 2026)**
+
+Not every agent problem is an instructions problem. Before troubleshooting, understand the full set of controls available — choosing the wrong one means repeatedly rewriting instructions without addressing the underlying cause.
+
+**The business framing:** If something must happen the same way every time, do not rely solely on natural-language instructions to enforce it. Instructions are guidance to a probabilistic model. Business-critical behavior needs a deterministic control.
+
+### The Six Controls
+
+| # | Control | What it does | When to reach for it | Do not use it for |
+|---|---|---|---|---|
+| 1 | **Instruction-free subagent and prompt action selection** | Allows the agent to select the appropriate subagent and prompt action without custom instructions | Simple, low-stakes choices where flexibility is acceptable | Business-critical behavior where a specific outcome must always occur |
+| 2 | **Instructions** | Provides natural-language guidance to a subagent or action | Judgment calls, tone, preferences, and general behavioral guidance | Critical validation, sensitive business rules, behavior that must happen the same way every time, or fixing subagent routing problems (instructions do not affect selection — see below) |
+| 3 | **Data grounding** | Provides information from Knowledge, Data Cloud, or other sources the agent can use to answer a request | When the agent needs accurate, supported facts or records | Decisions that do not depend on retrieving specific information |
+| 4 | **Variables** | Passes data explicitly through context or action outputs instead of relying on the model to infer values from conversation text | Values that must reliably control filters, actions, or subsequent steps | Simple conversational guidance that belongs in instructions |
+| 5 | **Deterministic Actions** | Uses Apex, APIs, or Flow to perform defined operations | Business-critical logic, validation, calculations, integrations, or processes that must execute reliably | Simple conversational guidance where some variation is acceptable |
+| 6 | **Agent Script** | Provides deterministic authoring: ordered logic, conditional behavior, and controlled transitions | When you need deterministic behavior around transitions, reasoning steps, or business rules | Problems that can be reliably handled by simpler controls above |
+
+**Practical rule of thumb:** If you have repeatedly rewritten the same instruction and the behavior remains inconsistent, consider whether the problem actually needs a different control — such as grounding, variables, a deterministic action, or Agent Script.
+
+### The Critical Routing Distinction
+
+This is the single most common misconception in Agentforce troubleshooting, and it is worth calling out explicitly.
+
+> **A subagent's routing and selection is driven only by its name and classification description — never by its scope or instructions.** Both scope and instructions are only read after a subagent has already been selected.
+
+If the wrong subagent is being selected, editing that subagent's scope or instructions will not fix it. Rewrite the **classification description** instead. Make it specific and distinct in natural language, cover the trigger phrases you expect, and ensure it does not overlap with other subagents' descriptions.
+
+Salesforce recommends limiting an agent to roughly **10–15 subagents** and assigning no more than **15 actions to a subagent** to help reduce inconsistency and improve routing performance. More choices make selection harder for the routing model.
+
+### Symptom-to-Control Mapping
+
+Use these tables to match what you are observing to where the problem is most likely occurring.
+
+#### A. Agent behavior, instructions, and subagent/action selection
+
+| What you're seeing | What's likely happening | Where to check | What to change |
+|---|---|---|---|
+| Agent is slow, inconsistent, or appears to make unsupported decisions | Instructions may be overly long, complex, or ambiguous | Review the subagent and action instructions | Make instructions concise, direct, and specific. Remove unnecessary context and contradictory rules. |
+| Wrong subagent is selected | Subagent classification descriptions may overlap or be too vague — subagent instructions and scope have no effect on selection | Compare classification descriptions and names across subagents | Rewrite the classification description to be specific and distinct. Do not edit the subagent's instructions or scope to try to fix this. |
+| Wrong action is selected within a subagent | Action descriptions may have overlapping or unclear boundaries | Compare action names and descriptions | Make each action description specific and clearly distinguish what belongs and does not belong to that action. |
+| Agent becomes harder to manage as more subagents or actions are added | More choices can make routing and action selection harder | Review the number of subagents and actions assigned to the affected subagent | Limit an agent to roughly 10–15 subagents and no more than 15 actions per subagent. |
+| Multi-step process happens out of order or a step is skipped | The sequence is expressed as natural-language instructions rather than deterministic logic | Review whether the sequence is business-critical | For critical sequences, move the logic into Flow, Apex, API-based actions, or Agent Script. |
+| Action receives the wrong, missing, or malformed input | The input may not be clearly defined, validated, or mapped | Check the action input configuration, instructions, mappings, and underlying action logic | Define the input's purpose and format clearly. Prefer validation and formatting in deterministic logic and use variable mapping when the value can be passed deterministically. |
+| Agent escalates unexpectedly or repeats an action | The action may be failing, instructions may trigger escalation, or the agent may be unable to complete the user's intent | Review action execution, errors, escalation instructions, and the execution trace | Fix the underlying action failure, refine escalation behavior, or simplify the execution path. |
+
+#### B. Grounding, data, and response validation
+
+Before the final response is delivered, Agentforce performs a grounding check to verify the response is based on accurate information from actions or instructions, follows the relevant subagent instructions, and stays within the subagent's scope. This can result in a response being revised before it is shown to the user.
+
+| What you're seeing | What's likely happening | Where to check | What to change |
+|---|---|---|---|
+| Agent gives an answer and then visibly retracts or rewrites it | The generated response may not have satisfied the grounding check | Review the subagent scope, instructions, and data or action outputs | Narrow the scope and ensure the response is based on the correct data or action output. |
+| Conversations feel slower, especially when responses are long | Additional context, action execution, and response validation can increase processing time | Review the amount of context and data being passed to the agent | Reduce unnecessary context, narrow scope, and avoid returning large amounts of unnecessary data. |
+| Answer is incorrect or unsupported even though the agent used Knowledge | Retrieved information may be incomplete, incorrect, or not the information needed for the request | Review Knowledge retrieval, grounding configuration, and returned content | Improve the source content, retrieval configuration, or grounding strategy. |
+| No citations are shown even though Knowledge was used | Citation behavior depends on the Knowledge or action configuration and response path | Review the Knowledge or action citation configuration | Enable citations where supported and appropriate. |
+| Response or generated content is cut off | The response or action output may have exceeded an applicable limit | Check the size of the generated response and action output | Avoid unnecessarily large outputs and return only the information the agent needs. |
+| A fixed message is altered or not delivered as expected | The message may be generated by the agent rather than delivered deterministically | Check how the message is generated | For content that must remain exact, deliver it through a deterministic mechanism such as Flow or Agent Script. |
+
+#### C. Setup, permissions, and availability
+
+| What you're seeing | What's likely happening | Where to check | What to change |
+|---|---|---|---|
+| Agent is completely unresponsive or repeatedly shows "Something went wrong, refresh the conversation" | Agentforce may not be fully activated or required configuration may be missing | Review the relevant Agentforce activation and configuration and confirm the required agent exists | Correct the activation or configuration and retest. |
+| Subagent or action is unavailable even though it should apply | A filter may exclude it, or the running user or service user may lack permission | Check filter conditions and relevant permission assignments | Correct the filter or work with your org administrator to provide the required permissions. |
+| Feature works live but not in Agent Builder, or vice versa | The testing environment may not have the same conversation context or variable values | Check whether filters depend on context variables | Provide appropriate test or default values when testing. |
+| Subagent or action is selected correctly only sometimes | A filter variable may be populated through nondeterministic instructions rather than deterministic mapping | Check how the variable is populated | Map the variable directly from an action output or another deterministic source. |
+| A Flow interview fails during agent execution | The Agentforce service user or running context may be missing required permissions, or the Flow itself may have an error | Review Flow errors, permissions, and the running context | Fix the Flow or provide the required permissions according to your Salesforce configuration. |
+| Escalations are routed somewhere unexpected | Escalation, fallback, channel, or routing configuration may not match the intended behavior | Review escalation configuration and channel or routing setup | Correct the relevant escalation or routing configuration. |
+| Agent responds in the wrong language | Agent language, locale, channel, or instruction language may not align | Review the agent language configuration, locale, channel or session settings, and language used in instructions | Correct the relevant language or locale configuration and keep instructions language-consistent. |
+| Links are missing from responses | A URL may be filtered, unavailable to the response path, or restricted by security configuration | Review the relevant URL or trusted URL configuration and the action that produces the link | Correct the applicable URL or security configuration where supported. |
+
+---
+
+## 11. Pattern H: Unexpected Agent Behavior
+
+> **New content — sourced from Salesforce Knowledge Article 005391239 (Aug 20, 2026)**
+
+**Symptom:** The agent is doing something you did not expect — wrong routing, wrong response, wrong action, skipped step — and repeated instruction rewrites have not fixed it.
+
+**Business impact:** Repeated instruction edits without a structured diagnosis cause agent configurations to accumulate contradictory rules over time. This makes the agent progressively less predictable and harder to maintain. The right approach is to isolate which layer of the execution path produced the unexpected behavior, then apply the control that operates at that layer.
+
+### Diagnostic Sequence
+
+Work through these layers in order. Stop at the first layer that explains the behavior and apply the fix at that layer rather than reaching for instructions.
+
+**1. Subagent selection**
+
+Check the classification description, not the instructions or scope. Run the same input multiple times. If routing is inconsistent, the descriptions of two or more subagents likely overlap in vocabulary. Rewrite the classification description of the intended subagent to be more specific and distinct.
+
+**2. Action selection and execution**
+
+Check whether the expected action appears in `EnabledToolsStep`. If it does not, an `available when` gate evaluated to false — inspect the gate variable values in `NodeEntryStateStep`. If the action does appear but the inputs are wrong, check whether the action has required inputs with no bound `with` clause.
+
+**3. Data and Knowledge output**
+
+Check `FunctionStep` output. Did the action return data? Was it the right data? If Knowledge was used, was the retrieved content accurate and complete? An incorrect response despite a successful action call usually means the LLM was not explicitly instructed to reference specific output fields.
+
+**4. Instructions and prompting**
+
+Only reach for instructions after confirming the problem is not in routing, action selection, or data. When editing instructions, make them concise, direct, and specific. Remove contradictory rules and unnecessary context. Long, paragraph-style instructions increase processing time and reduce reliability.
+
+**5. Configuration and system constraints**
+
+Check activation status, service user permissions, filter conditions, and channel configuration. A subagent or action that is unavailable in production but works in Agent Builder often indicates a filter variable that depends on conversation context not present in the testing environment.
+
+> ### Scenario 6: Instruction Rewrites That Never Stick
+>
+> A financial services customer has rewritten their claims subagent's instructions four times in two weeks. Each rewrite helps briefly, then the behavior drifts back. Escalation rate on that subagent is 22% above average.
+>
+> Working through the diagnostic sequence: subagent routing is correct (confirmed via Plan Tracer). Action selection is consistent. Data is being retrieved. The actual problem is a multi-step claims verification process being expressed entirely in natural-language instructions — "always check claim status before providing settlement details, then verify the policy is active before discussing options."
+>
+> The sequence is business-critical. Moving it into a deterministic Flow action immediately stabilizes behavior. The instruction rewrites were the wrong control for the problem.
+>
+> **Lesson:** When instructions are being rewritten repeatedly without lasting effect, evaluate whether the problem requires a deterministic control — grounding, variables, a deterministic action, or Agent Script.
+
+---
+
+## 12. Pattern I: Latency Diagnosis
+
+> **New content — sourced from Salesforce Knowledge Article 005391243 (Aug 20, 2026)**
+
+**Symptom:** Users report the agent feels slow. Dashboard shows elevated session duration or interaction latency. No error alerts are firing and actions are completing successfully.
+
+**Business impact:** Perceived latency is a primary driver of user abandonment and low satisfaction scores. A slow-feeling agent is rarely caused by one thing running slowly — a response passes through a sequence of steps before it reaches the user, and any one of them can add noticeable time. The diagnostic approach is to identify which step is slow, then apply the fix that targets that step directly.
+
+### Step 1: Know What You Are Measuring
+
+Three metrics tell you different things and are available from the Analytics Semantic Layer via `Time_To_First_Agent_Token_clc` and `Time_To_Last_Agent_Token_clc`:
+
+| Metric | What it measures | Why it matters |
+|---|---|---|
+| **Time to First Token (TTFT)** | How long before the response starts appearing | Drives how responsive the agent feels — this is what a user notices while waiting |
+| **Time to Last Token (TTLT)** | How long until the full response finishes | Matters most for longer answers and for anything downstream that waits on the complete response |
+| **End-to-end latency** | Total time from the user's message to a fully delivered response, including everything the platform does around the model call | The number that best reflects the user's actual experience |
+
+**Reference thresholds (text/chat):** Under approximately 5 seconds generally feels fine. 6–10 seconds is usually acceptable for a more complex request. 10–20 seconds starts to feel slow. Beyond approximately 20 seconds, most users assume something is wrong.
+
+**Voice is much less forgiving.** Anything much past approximately 5 seconds breaks the feel of a real-time conversation. Voice has additional latency components that text does not — see the Voice section below.
+
+These are general guidelines, not a guaranteed response-time SLA. Complex, multi-step requests will legitimately take longer than simple ones.
+
+### Step 2: Understand the Pipeline
+
+A single turn passes through this sequence before the user sees anything. Diagnosing slowness means finding which step is taking longer than expected — not assuming it is the model.
+
+| Step | What happens |
+|---|---|
+| 1. Channel delivery | The message reaches Agentforce from its origin channel (web chat, Messaging, voice, Slack, etc.) |
+| 2. Session routing | The platform sets up or resumes the conversation session |
+| 3. Trust Layer safety check | An input-side safety and policy check runs before reasoning begins |
+| 4. Topic/agent routing | The request is classified to the right subagent |
+| 5. Reasoning and planning | The agent decides what to do, including which actions to call |
+| 6. Action execution | Any Flow, Apex, or API actions run, including calls to external systems |
+| 7. Response generation | The model generates the response text |
+| 8. Grounding/accuracy validation | The response is checked against data and instructions before delivery |
+| 9. Delivery | The response is sent back through the originating channel |
+
+### Step 3: Find Where the Time Is Going
+
+Enable Agentforce Observability via Setup, then search "Einstein Generative AI" and open Einstein Audit, Analytics, and Monitoring Setup. Confirm Audit and Feedback and Agentforce Session Tracing are both on. Once enabled, session data including step and turn duration becomes queryable via the STDM, and the built-in Agent Analytics dashboards surface agent-level performance metrics.
+
+For span-level breakdown, query the `TelemetryTraceSpan` DMO as described in Section 6. Check `ssot__DurationNumber__c` (in milliseconds, no conversion needed) and filter or GROUP BY `ssot__ServiceName__c` to isolate latency to a specific backend service.
+
+**Reading the signal:**
+
+| What you observe | What it usually points to | Fix |
+|---|---|---|
+| TTFT is slow and consistent across most requests | Model choice, instruction length, or subagent/action count | Fixes 1 and 2 |
+| TTFT is fast but the full response takes a long time | Response length, model choice, or streaming not enabled | Fixes 1 and 3 |
+| Slowness is concentrated around specific action calls | That action's underlying Flow or Apex logic, or the external system or API it calls | Fix 4 |
+| Slowness is concentrated around Knowledge or data retrieval steps | Knowledge base size, chunking, or an overly broad grounding scope | Fix 5 |
+| Slowness appears mainly when a request crosses between subagents | Handoff overhead between subagents | Fix 6 |
+| Slowness only shows up on one channel (e.g., voice but not web chat) | Channel-specific overhead, not the agent's reasoning | Fix 7 and the Voice section below |
+| Slowness is broad, not tied to a specific subagent or action | Worth raising with Support | Fix 8 |
+
+### Step 4: Match the Fix to What You Found
+
+| # | Fix | When it applies |
+|---|---|---|
+| 1 | **Match the model to the task** | If a subagent only needs simple lookups or short factual answers, a faster or lighter model is often enough. Reserve the most capable model for genuinely complex reasoning. |
+| 2 | **Shorten and simplify instructions** | Long, paragraph-style instructions take longer for the model to process on every single turn. Instead of "Please make sure to always check with the customer about their device type before helping with any troubleshooting steps, since this affects what advice is relevant," try "Before troubleshooting, identify the device type (iOS or Android) and include it in the search query." Shorter, direct instructions are both faster and more reliable. |
+| 3 | **Turn on streaming where supported** | Streaming does not reduce total processing time, but it gets the first part of the response in front of the user much sooner, which significantly improves how fast the interaction feels. Streaming is generally not available for voice, where the full response is usually needed before it can be spoken. |
+| 4 | **Reduce and parallelize action calls** | If a turn depends on multiple sequential actions, check whether any can run in parallel instead of one-after-another. Also check the response time of any external system or API an action calls — a slow downstream integration will make the agent look slow even when the agent itself is fine. |
+| 5 | **Optimize knowledge retrieval** | Narrow the grounding scope for a subagent to what is actually relevant, and check that knowledge content is chunked into reasonably sized, well-structured pieces rather than a few very large documents. |
+| 6 | **Minimize multi-agent and subagent handoffs** | Each handoff between subagents adds a processing step. Keep the structure as shallow as the use case allows rather than routing through several layers by default. |
+| 7 | **Tune and test per channel** | Voice, chat, and messaging channels have different overhead. Benchmark each channel separately rather than assuming a fast web chat experience means voice will also be fast. |
+| 8 | **Escalate infrastructure or region concerns to Support** | If none of the above explains broad, consistent slowness, this is worth bringing to Support rather than continuing to tune configuration. |
+
+> **Common misconception:** Dynamic Voice Routing (DVR) simplifies how voice channels are configured and integrated, but it is not a latency fix. Do not expect enabling DVR to resolve a slow-voice-agent problem on its own.
+
+### Voice Latency: A Separate Pass
+
+Voice conversations feel slower than the same delay would feel in text. Real-time spoken conversation has much less tolerance for pauses. Voice requires its own dedicated assessment, separate from chat performance.
+
+**Why voice is different:** Voice latency includes components that text does not — telephony or call setup, speech-to-text, routing, agent processing, text-to-speech, and the return path back to the caller. A delay can originate in any of these, not just in agent reasoning. A fast web chat agent does not automatically translate to a fast voice agent.
+
+**Practical guidance for voice:**
+
+- Target end-to-end response time well under 5 seconds where possible.
+- Keep voice-specific subagent instructions especially lean. Long instructions that work acceptably in chat increase latency noticeably in voice.
+- Keep spoken responses reasonably short. A response that reads fine in chat can feel long when spoken aloud.
+- Test and benchmark voice as its own channel. Do not assume chat performance transfers.
+
+> ### Scenario 7: Voice Agent Latency Complaint After Go-Live
+>
+> A retail customer's Agentforce voice agent receives strong marks in chat-channel testing but generates customer complaints about slow responses on voice two weeks after go-live. The OOTB dashboard shows average interaction latency of 8.2 seconds — acceptable for chat, but well past the voice threshold.
+>
+> Session Tracing is already enabled. Step duration data shows the slowness is not concentrated in any single action. Span-level analysis shows `run.llmstep` averaging 5.1 seconds, with the bottleneck in response generation. The voice subagent has the same lengthy instructions as the chat subagent — they were copied directly.
+>
+> Two targeted changes: instructions are shortened from 340 words to 80 words (Fix 2), and responses are constrained to two sentences for voice-specific subagents. Average interaction latency drops to 3.4 seconds.
+>
+> **Lesson:** Voice latency is a separate problem from chat latency, even on the same agent. Benchmark and tune each channel independently. Instructions that are acceptable for chat are often too long for voice.
+
+---
+
+## 13. Validating Your Change
+
+> **New content — sourced from Salesforce Knowledge Article 005391239 (Aug 20, 2026)**
+
+Do not make a change and assume it worked. Do not rely on a single conversation to prove it. Testing whether an action's logic works and testing whether the agent chooses and uses the action correctly are different questions and require different tools.
+
+| What you're testing | The question | Where to check |
+|---|---|---|
+| **Action logic** | Does the Flow, Apex, or API actually do the right thing for known inputs? | Flow Debugger, Apex debug logs, or direct action testing |
+| **Agent behavior** | Does the agent select the right subagent and action and follow the intended instructions? | Agent Builder testing or preview and Plan Tracer |
+| **Production behavior** | Does the change work across varied real sessions? | Session Tracing and review across multiple sessions |
+
+### A Practical Validation Pattern
+
+1. **Record the baseline** — capture what happened before the change using the original input.
+2. **Make one targeted change at a time** so you can identify which change affected the outcome.
+3. **Re-run the original input plus 2–3 variations** of the same request.
+4. **Check neighboring behavior** after changes to routing, scope, instructions, or filters.
+5. **Validate both positive and negative cases** — confirm the agent does the intended thing and does not incorrectly apply the change to unrelated requests.
+6. **Keep the change only if it improves the intended behavior without introducing a regression.**
+7. **Record a short before-and-after note** so the investigation can be understood if the behavior resurfaces later.
+
+---
+
+## 14. When to Contact Support
+
+> **New content — sourced from Salesforce Knowledge Articles 005391239 and 005391243 (Aug 20, 2026)**
+
+Contact Salesforce Support when:
+
+- The agent is completely unresponsive and there is no indication that a conversation ever started.
+- You have worked through the relevant troubleshooting steps, applied the appropriate fix, and confirmed through testing that the behavior remains unchanged.
+- The issue appears to be a platform or runtime problem rather than an issue with your configuration.
+- Slowness is broad, consistent, not tied to a specific subagent or action, and does not match any of the signal patterns in Pattern I.
+
+**A well-described case reaches the right team faster.** Where available, include:
+
+- A concise description of what you expected versus what actually happened.
+- One or more representative user inputs, not just a paraphrase.
+- Whether the issue is consistent or intermittent, and approximately how often it reproduces.
+- Session ID(s) or relevant Session Tracing data for a few representative sessions.
+- The subagent and action you believe were selected, if known.
+- Relevant Plan Tracer output.
+- What you already tried and the before-and-after result.
+- Specific error text, permission errors, or truncation symptoms.
+- The agent or configuration version or deployment time, if relevant.
+
+**For latency cases, additionally include:**
+
+- Whether the slowness is broad or isolated to a specific subagent, action, or channel.
+- Which channel or channels you tested (chat, voice, messaging, etc.) and whether behavior differs between them.
+- The approximate timeframe when you observed the slowness.
+- Which fixes from Pattern I you already attempted and the before-and-after result.
+
+---
+
+## 15. Sandbox vs. Production Tracing
+
 ### Transition from Sandbox to Production
 
 When a customer promotes an agent from sandbox to production:
@@ -997,11 +1127,11 @@ When a customer promotes an agent from sandbox to production:
 
 > **Deployment note:** Deploying a draft `AiAuthoringBundle` to an org where the agent is already in a committed state auto-creates a new draft version rather than overwriting the existing committed agent. Verify this behavior in your target org before relying on it in automated CI/CD pipelines.
 
-> **Note on Goal-Based Agents (262.14 pilot):** Goal-Based Agents introduce scheduled/autonomous execution via `trigger` (cron) blocks and `workflows` that operate outside the turn-based model. The STDM implications are not yet fully documented for production observability. Treat the tracing guidance in this guide as a starting point, not a complete reference, for GBA deployments.
+> **Note on Goal-Based Agents (262.14 pilot):** Goal-Based Agents introduce scheduled and autonomous execution via `trigger` (cron) blocks and `workflows` that operate outside the turn-based model. The STDM implications are not yet fully documented for production observability. Treat the tracing guidance in this guide as a starting point, not a complete reference, for GBA deployments.
 
 ---
 
-## 10. Mapping Observability to Business KPIs
+## 16. Mapping Observability to Business KPIs
 
 | Technical Metric | Primary Source | Business KPI | Business Audience |
 |---|---|---|---|
@@ -1012,6 +1142,8 @@ When a customer promotes an agent from sandbox to production:
 | Quality Tag Outcome | `std__AiAgentTagAssociationDmo__dlm` (`std__IsPassed__c`, `std__OutcomeType__c`, `std__AssociationReasonText__c`) | Per-Moment diagnostic drill-down | Agent Builders / QA |
 | Task Resolution Status | `Task_Resolution_Status_clc` (semantic layer) | Resolution completeness by session | CX Leadership / Agent Design |
 | Agent Adherence Status | `Agent_Adherence_Status_clc` (semantic layer) | Instruction compliance by response | Legal / Risk / Agent Design |
+| Time to First Agent Token | `Time_To_First_Agent_Token_clc` (semantic layer) | Perceived responsiveness; user experience quality | CX Leadership / Service Ops |
+| Time to Last Agent Token | `Time_To_Last_Agent_Token_clc` (semantic layer) | End-to-end response completion time | Service Ops / IT Ops |
 | Action span duration | TelemetryTraceSpan `ssot__DurationNumber__c` (ms — no conversion needed) | Time-to-resolution; UX quality | Service Ops / IT Ops |
 | Error volume by operation type | TelemetryTraceSpan DMO | IT ops efficiency; MTTR | IT Operations |
 | Usage quantity and token count | `std__AiAgentGenerativeAiUsageDmo__dlm` | AI cost-per-transaction | Finance / AI Budget Owners |
@@ -1021,7 +1153,7 @@ When a customer promotes an agent from sandbox to production:
 
 ---
 
-## 11. Credit Consumption Awareness
+## 17. Credit Consumption Awareness
 
 ### The Two Consumption Tracking Tools
 
@@ -1086,90 +1218,71 @@ GROUP BY std__AgentDeveloperName__c
 ORDER BY total_tokens DESC
 ```
 
-> **Confirmed field names on `std__AiAgentGenerativeAiUsageDmo__dlm`:**
-> `std__AgentDeveloperName__c`, `std__UsageTypeCode__c`, `std__UsageQuantity__c`, `std__Timestamp__c`, `std__IsBillableIndicator__c`, `std__IsMeteredIndicator__c`, `std__PromptInputTokenCount__c`, `std__PromptCompletionTokenCount__c`, `std__PromptTotalTokenCount__c`.
-
 ---
 
-## 12. Quick-Reference Cheat Sheet
+## 18. Quick-Reference Cheat Sheet
 
-### Setup Enablement Sequence
+### Triage Sequence (Run Before Opening a Trace)
 
-| Step | Path | What It Enables |
-|---|---|---|
-| 1 | Setup > Einstein Audit, Analytics, and Monitoring Setup | Session Tracing + Optimization |
-| 2 | Same page > Audit and Feedback toggle | LLM prompt/response storage; feedback capture |
-| 3 | Same page > "Knowledge/RAG Quality Data and Metrics" toggle (confirmed name) | RAG quality calculated fields (`_clc`) |
-| 4 | Same page > Trust Layer data toggle (exact name unconfirmed — verify in Setup) | Toxicity, prompt injection, and instruction adherence calculated fields |
-| 5 | Setup > Agent Platform Tracing | Back-end execution span tree |
-| 6 | `sf api request rest "/services/data/v63.0/ssot/data-spaces" -o <org>` | Verify Data Space name before querying (note: `--json` flag not supported on this beta command) |
-| 7 | AppExchange > Digital Wallet | Consumption Tagging app (if needed) |
+1. Run the same input multiple times — is the behavior consistent or intermittent?
+2. Try different phrasings — does phrasing affect the outcome?
+3. Reproduce in a minimal configuration — is it your customization or a platform issue?
+4. Check activation and permissions.
+5. Use Plan Tracer in Agent Builder.
+6. Use Session Tracing if enabled.
+7. Confirm your last change was actually saved and published.
 
-### DMO Prefix Reference
+### Control Selection
 
-| Family | Prefix | How to Identify | Notes |
-|---|---|---|---|
-| Standard (newer orgs) | `std__` | `SELECT COUNT(*) FROM std__AiAgentSessionDmo__dlm` returns rows | Use `std__` queries in this guide |
-| Legacy (existing orgs) | `ssot__` | Same query returns zero/error; `ssot__` equivalent returns rows | Substitute `ssot__` throughout; Platform Tracing official docs use `ssot__` |
-| GenAI Audit | _(none)_ | `GenAIGeneration__dlm` | Separate pipeline; only when Audit and Feedback enabled |
+| Problem type | Right control |
+|---|---|
+| Wrong subagent selected | Rewrite the classification description — not the instructions or scope |
+| Step must always happen in exact order | Deterministic action (Flow, Apex) or Agent Script |
+| Agent needs accurate facts or records | Data grounding |
+| Value must reliably flow between steps | Variables |
+| Judgment, tone, or preference guidance | Instructions |
+| Business-critical conditional logic | Agent Script |
 
-> Both `std__` and `ssot__` families are fully SOQL-queryable. They are identical in capability. No auto-migration occurs. **Always confirm which prefix is live in your customer's org before delivering SOQL.**
+### Latency Signal Map
 
-### Decision Tree: Which Tool for Which Question?
+| Observation | Points to |
+|---|---|
+| Slow TTFT, consistent across requests | Model choice, instruction length, or subagent count |
+| Fast TTFT, slow TTLT | Response length, model choice, or streaming off |
+| Slow on specific action calls | Action logic or external API |
+| Slow on Knowledge retrieval | Chunking orerly broad grounding scope |
+| Slow on subagent handoffs | Too many routing layers |
+| Slow on voice only | Channel-specific overhead; benchmark separately |
+| Broadly slow, no clear cause | Escalate to Support |
 
-```
-Is my agent performing well overall?
-  └─ Agentforce Analytics Dashboard (or semantic layer _clc fields in Data 360)
+### Key Toggles and Where to Find Them
 
-Where is it underperforming and why?
-  └─ Agentforce Optimization
-       └─ Average_Quality_Score_clc for KPI
-       └─ std__AiAgentTagAssociationDmo__dlm for per-Moment drill-down
+| Toggle | Where |
+|---|---|
+| Session Tracing | Setup > Einstein Audit, Analytics, and Monitoring Setup |
+| Agentforce Optimization | Same setup page |
+| Audit and Feedback | Same setup page |
+| Agent Platform Tracing | Setup > Agent Platform Tracing |
+| Knowledge/RAG Quality Data and Metrics | Same Audit and Feedback setup area |
 
-Why did a specific session escalate / fail?
-  └─ Session Tracing via STDM SOQL
-       └─ Full Session Reconstruction CTE (Section 7)
-       └─ Step-level escalation: filter std__NameInterfaceField__c = 'CLOSED_TRANSFERRED'
-          (confirmed field — official DMO schema)
+### DMO Prefix Check
 
-Why was that specific session slow?
-  └─ AgentLens first (FSM diagram — backward arrows indicate retry loops)
-  └─ Then Agent Platform Tracing
-       └─ ssot__TelemetryTraceSpan__dlm (duration in milliseconds — confirmed, no conversion needed)
-       └─ GROUP BY ssot__ServiceName__c to isolate latency to a specific backend service
-
-How much is this costing per agent?
-  └─ Digital Wallet (billing truth — 72-hour lag)
-  └─ std__AiAgentGenerativeAiUsageDmo__dlm (operational intelligence, 5-min refresh)
-
-Multi-agent session audit?
-  └─ std__AiAgentSessionParticipantDmo__dlm
-     (std__PreviousSessionId__c is "Reserved for future use" — do not use in production)
-
-Quality before go-live?
-  └─ Testing Center (sandbox only; 0–5 scale, 3+ = pass)
-     LLM judge: GPT OSS on Salesforce SageMaker via Einstein Trust Layer
-
-Need raw OTel trace data for an APM platform?
-  └─ GET /services/data/v66.0/einstein/audit/otel/{session-id}  (beta, API v66.0+)
-     Returns native OTel ResourceSpans format for direct OTLP ingestion
-     Requires Data Cloud enabled
-     Verify availability in your org's API version before advising customers to depend on this
+```sql
+SELECT COUNT(*) FROM std__AiAgentSessionDmo__dlm
+-- Zero rows or error: use ssot__ prefix throughout
+-- Returns rows: use std__ prefix throughout
 ```
 
-### Open Items (Pending Live-Org Confirmation)
+### Pattern Index
 
-| Item | Current State | Action Needed |
-|---|---|---|
-| Testing Center limits (500/job vs. 1,000/test) | Two official sources disagree | Verify in live org; update with confirmed number |
-| Terminal fallback mechanism | Slack evidence, not official Salesforce docs | Practitioner hedge is appropriate; monitor for official documentation |
-| `std__PreviousSessionId__c` production reliability | Officially "Reserved for future use" | Monitor Salesforce release notes |
-| `std__IsFallback__c` runtime behavior on Tag DMO | Unconfirmed; schema confirms field exists | Sample `std__AiAgentTagDmo__dlm` in live org |
-| Quality score raw field (`std__ValueText__c`) | Best-supported interpretation of official formula; not confirmed by live-org sampling | `SELECT std__ValueText__c FROM std__AiAgentTagDmo__dlm LIMIT 10` to verify numeric string content |
-| `std__SourceType__c` distinct values | Likely: `PromptTemplate`, `Formula`, `API` | `SELECT DISTINCT std__SourceType__c FROM std__AiAgentTagAssociationDmo__dlm` |
-| Trust Layer toggle exact UI name | Believed to exist; name not confirmed verbatim | Verify name in Setup before communicating to customers |
-| OTel API beta (`/einstein/audit/otel/`) | Confirmed as beta capability | Verify availability in org's current API version |
-| `GenAIGeneration__dlm` retention window | Short window (days, not weeks) per Slack evidence | Verify current retention in live org before planning historical analysis |
-| STDM lag (15 min vs. ~30 min) | Two official sources; 15 min treated as primary | Low priority; defensible judgment call |
-
----
+| Pattern | Symptom |
+|---|---|
+| A | Wrong subagent invoked |
+| B | Action not invoked |
+| C | Action invoked but output ignored |
+| D | Unexpected error response (fallback message) |
+| E | Escalation spike with no surface error |
+| F | Latency with no surface error (action-level) |
+| G | Missing `after_reasoning` spans |
+| H | Unexpected agent behavior / repeated instruction rewrites |
+| I | Latency diagnosis (full pipeline) |

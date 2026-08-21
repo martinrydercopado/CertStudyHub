@@ -1,6 +1,6 @@
 # AgentOps: A Success Architect's Guide to Agentforce
 
-*Updated August 20, 2026*
+*Updated August 21, 2026*
 *This guide was generated using AI with grounding in official Salesforce documentation. Review for accuracy before using.*
 
 ---
@@ -278,6 +278,8 @@ start_agent agent_router:
 
 The `available when` clause is a hard platform-level gate, not a prompt instruction. When the condition evaluates to false, the transition is removed from the LLM's tool list entirely. The LLM cannot route to a destination it cannot see.
 
+> **Critical distinction on routing:** A subagent's selection is driven **only** by its name and its classification description. Its scope and its instructions have no effect on whether it gets selected — they are only read *after* the subagent has already been chosen. If you are seeing wrong-subagent routing, rewriting the subagent's instructions or scope will not fix it. Rewrite the **classification description** instead, using natural language that is specific, distinct, and does not overlap with other subagents' descriptions.
+
 **Note:** If this `agent_router` uses the EinsteinHyperClassifier model, it cannot have `before_reasoning` or `after_reasoning` blocks, and it can only use `@utils.transition` as a tool. See Section 3 for the full EinsteinHyperClassifier constraint summary.
 
 ### subagent Block
@@ -465,6 +467,23 @@ Variables are the memory of an agent session. They persist across turns and acro
 
 Every instruction in an agent is either deterministic (code) or probabilistic (LLM). The placement of the `->` / `|` boundary is the single most consequential design decision in any Agentforce implementation. Getting it wrong is the primary source of flaky, expensive, and hard-to-debug agents.
 
+### The Six Levels of Agentic Control
+
+Before reaching for a new instruction, architects should understand that instructions are just one of six controls available to influence agent behavior. Choosing the right control for the right problem is the discipline that separates reliable agents from fragile ones.
+
+Salesforce documents this as the **six levels of agentic control**, each progressively more deterministic:
+
+| Level | Control | Best for | Not for |
+|---|---|---|---|
+| 1 | **Instruction-free subagent and prompt action selection** | Simple, low-stakes choices where flexibility is acceptable | Business-critical behavior that must always produce the same outcome |
+| 2 | **Instructions** | Judgment calls, tone, preferences, and general behavioral guidance | Critical validation, sensitive business rules, or fixing routing problems — instructions don't affect subagent selection |
+| 3 | **Data grounding** | When the agent needs accurate, supported facts from Knowledge, Data Cloud, or other sources | Decisions that don't depend on retrieving specific information |
+| 4 | **Variables** | Passing data explicitly through context or action outputs instead of relying on the model to infer values | Simple conversational guidance that belongs in instructions |
+| 5 | **Deterministic Actions** | Business-critical logic, validation, calculations, integrations, or processes that must execute reliably | Simple conversational guidance where some variation is acceptable |
+| 6 | **Agent Script** | Deterministic authoring, ordered logic, conditional behavior, and controlled transitions | Problems that can be reliably handled by simpler controls above |
+
+> **Practical rule of thumb:** If you have repeatedly rewritten the same instruction and the behavior remains inconsistent, the problem almost certainly needs a different control — not more instruction text. This is particularly true for business-critical behavior: if something **must** happen the same way every time, do not rely solely on natural-language instructions to enforce it.
+
 ### When to Use Deterministic Logic (`->`)
 
 Use `->` when:
@@ -544,10 +563,14 @@ The primary agent (supervisor) receives all user input. It never handles domain 
 
 > **Architecture warning:** A `connected_subagent` calling another `connected_subagent` is not a supported pattern. If you find your architecture requiring this, it is a signal that the agent boundaries need to be redesigned. Flatten the chain or introduce a proper supervisor layer.
 
+**SOMA Scale Consideration**
+
+As an agent grows in complexity, routing and action selection become harder. Salesforce recommends limiting an agent to roughly **10 to 15 subagents** and assigning **no more than 15 actions to any single subagent**. Exceeding these thresholds can cause routing inconsistency and degraded performance, which is one of the primary drivers of the SOMA migration pattern described in Section 9.
+
 **Session Linking in SOMA**
 When the supervisor delegates to a sub-agent, Agentforce creates a new session for the sub-agent. The two sessions are intended to be linked at the Data 360 layer via the `AiAgentSession` DMO, but the specific linking mechanism is not yet production-reliable:
 
-- **Backward lookup (sub-agent to primary agent):** The `PreviousSessionId` field on `AiAgentSessionDmo` is the intended mechanism for backward-linking a sub-agent session to its supervising primary agent session. However, the official Salesforce data model documentation explicitly labels this field: **"Reserved for future use. Reference to the previous AI agent session. Applies in a multi-agent session scenario."** Do not build production query logic on top of this field. It is documented as the intended SOMA backward-linking mechanism, but it is not yet production-reliable. Treat it as a watch field — worth testing in your org, but not a foundation for operational dashboards until Salesforce removes the "reserved for future use" designation.
+- **Backward lookup (sub-agent to primary agent):** The `PreviousSessionId` field on `AiAgentSessionDmo` is the intended mechanism for backward-linking a sub-agent session to its supervising primary agent session. However, the official Salesforce data model documentation explicitly labels this field: **"Reserved for future use. Reference to the previous AI agent session. Applies in a multi-agent session scenario."** Do not build production query logic on top of this field. Treat it as a watch field — worth testing in your org, but not a foundation for operational dashboards until Salesforce removes the "reserved for future use" designation.
 - **Forward lookup (primary agent to sub-agent):** A confirmed forward pointer mechanism does not yet exist. Treat forward-lookup join logic as pending.
 
 **Variable Passing**
@@ -808,8 +831,26 @@ Test cases should be written with specific, verifiable Acceptance Criteria. Vagu
 - **Cover the happy path, then the edges.** Start with the most common successful scenario. Add edge cases: empty inputs, boundary conditions, ambiguous requests.
 - **Test for security scenarios explicitly.** Include test cases that attempt ForcedLeak injection patterns. Verify the agent deflects without revealing system instructions or variable contents.
 - **Test subagent routing accuracy.** Write test cases that should and should not trigger each subagent. Verify the classifier sends them to the right destination.
-- **Test `available when` gates.** Write test cases that attempt to access gated capabilitiese.g., a refund action before identity verification). Verify the action is not offered.
+- **Test `available when` gates.** Write test cases that attempt to access gated capabilities (e.g., a refund action before identity verification). Verify the action is not offered.
 - **Test escalation paths.** Verify the agent escalates correctly when it cannot resolve the user's request.
+
+### A Structured Validation Pattern whether an action's **logic** works and testing whether the **agent** chooses and uses the action correctly are different questions. Use a distinct tool for each, then validate end-to-end in production.
+
+| What you're testing | The question | Where to check |
+|---|---|---|
+| **Action logic** | Does the Flow/Apex/API actually do the right thing for known inputs? | Flow Debugger, Apex debug logs, or direct action testing |
+| **Agent behavior** | Does the agent select the right subagent/action and follow the intended instructions? | Agent Builder testing/preview and Plan Tracer |
+| **Production behavior** | Does the change work across varied real sessions? | Session Tracing, where available, and review across multiple sessions |
+
+When validating a change, follow this sequence:
+
+1. **Record the baseline** — capture what the agent did before the change using the original input.
+2. **Make one targeted change at a time** so you can isolate which change affected the outcome.
+3. **Re-run the original input plus 2 to 3 variations** of the same request.
+4. **Check neighboring behavior** after changes to routing, scope, instructions, or filters — confirm you have not introduced a regression in adjacent subagents.
+5. **Validate both positive and negative cases** — confirm the agent does the intended thing and does not incorrectly apply the change to unrelated requests.
+6. **Keep the change only if it improves the intended behavior without introducing a regression.**
+7. **Record a short before/after note** so the investigation can be understood if the behavior resurfaces later.
 
 ### Retesting After Publication
 
@@ -988,6 +1029,16 @@ The STDM comprises five Data Model Objects (DMOs):
 
 > **Object naming:** The `std__` namespace prefix applies to the DMO object names above. **Field-level API names** within these DMOs are listed in the official Salesforce data model reference without namespace prefixes (e.g., `Id`, `StartTimestamp`, `ContentText`). Whether individual fields are queried with or without the `std__` prefix depends on how the Data Space surfaces them in your org. **Verify field name syntax against your live org schema before writing production queries.** The field names in the Key Fields section below use the `std__` prefix pattern consistent with live-org verification, but treat this as a starting point rather than a guarantee.
 
+### Enabling Agentforce Observability
+
+Before the STDM is populated and before built-in Agent Analytics dashboards are available, Agentforce Observability must be turned on explicitly:
+
+**Setup path:** Setup > search "Einstein Generative AI" > open **Einstein Audit, Analytics, and Monitoring Setup** > enable **Audit and Feedback** and **Agentforce Session Tracing**.
+
+Once enabled, session data — including step duration and turn duration — becomes queryable. Step duration and turn duration data specifically are what you want for performance investigations; they tell you how long each part of a session actually took, rather than leaving you to infer it from how long a conversation felt. The built-in Agent Analytics dashboards also surface agent-level performance and effectiveness metrics.
+
+> **Note on environment:** `enable_enhanced_event_logs: True` in the agent's `config` block enables conversation logging for individual agent debugging. Agentforce Observability (the Setup path above) is the org-level control that enables the full STDM and Analytics surface. Both must be configured.
+
 ### Key Fields by DMO
 
 **`AIAgentSession` (`std__AiAgentSessionDmo__dlm`)**
@@ -996,7 +1047,7 @@ The STDM comprises five Data Model Objects (DMOs):
 - `std__AiAgentChannelType__c` — Channel (messaging, voice, API, etc.)
 - `std__AiAgentSessionEndType__c` — How the session ended: `USER_ENDED`, `AGENT_ENDED`, or null
 - `std__VariableText__c` — Final variable snapshot for the session; useful for post-session state inspection
-- `PreviousSessionId` — **Intended SOMA backward-lookup field, but documented as "Reserved for future use."** The official Salesforce data model documentation labels this field: *"Reserved for future use. Reference to the previous AI agent session. Applies in a multi-agent session scenario."* Do not build production query logic on top of this field. It is the intended mechanism for linking a sub-agent session back to its supervising primary agent session, but it is not yet production-reliable. Treat it as a watch field and verify its behavior in your specific org.
+- `PreviousSessionId` — **Intended SOMA backward-lookup field, but documented as "Reserved for future use."** Do not build production query logic on top of this field. Treat it as a watch field and verify its behavior in your specific org.
 
 **`AIAgentSessionParticipant` (`std__AiAgentSessionParticipantDmo__dlm`)**
 - `std__AiAgentSessionId__c` — Session this participant belongs to
@@ -1034,7 +1085,7 @@ AiAgentSession (1)
   |   +-- AiAgentInteractionStep (N)    -- internal steps (LLM calls, actions)
   +-- AiAgentMoment (N)                 -- one per intent/moment (Optimization layer)
       +-- AiAgentMomentInteraction (N)  -- junction: moments to interactions (narrow link)
-      +-- AiAgentTagAssociation (N)     -- junction: moments/interactions/sessions to quality tags (richer tagging junction)
+      +-- AiAgentTagAssociation (N)     -- junction: moments/interactions/sessions to quality tags
           +-- AiAgentTag (1)            -- quality tag record
 ```
 
@@ -1054,9 +1105,13 @@ Used for post-deployment production monitoring via the Agentforce Optimization l
 
 > **Note:** There is no numeric 1-5 bucket scale on `AiAgentTagAssociation`. The scoring system is categorical (pass/fail/NA), not ordinal. Do not build monitoring dashboards expecting numeric bucket values from this DMO.
 
-### Debugging with AgentLens
+### Debugging Tools
 
-**AgentLens** is a Salesforce debugging tool that visualizes agent execution as a finite state machine (FSM) diagram. It is particularly useful for diagnosing routing issues and execution loops: backward arrows in the FSM diagram indicate retry loops, which are a common symptom of subagent classification failures or misconfigured transitions. Use AgentLens alongside the STDM Step query patterns in Section 16 for loop diagnosis.
+**AgentLens**
+AgentLens is a Salesforce debugging tool that visualizes agent execution as a finite state machine (FSM) diagram. It is particularly useful for diagnosing routing issues and execution loops: backward arrows in the FSM diagram indicate retry loops, which are a common symptom of subagent classification failures or misconfigured transitions. Use AgentLens alongside the STDM Step query patterns in Section 16 for loop diagnosis.
+
+**Plan Tracer**
+Plan Tracer is available within Agent Builder during test runs. It inspects the agent's execution plan — including subagent selection, action selection, and the reasoning path used during the test — without requiring a full session trace. Use Plan Tracer for fast authoring-time iteration. Use AgentLens and STDM queries for post-session production analysis.
 
 ### Key STDM Queries
 
@@ -1120,97 +1175,146 @@ LIMIT 100
 
 > **Note:** The `GenAIGeneration__dlm` DMO retains data for a short window (days, not weeks). Use this query for spot-checks and recent sessions. `responseText__c` is HTML-entity-encoded — decode before display.
 
-**SOMA delegation chain (PreviousSessionId — reserved for future use):**
-
-```sql
--- NOTE: PreviousSessionId is documented by Salesforce as "Reserved for future use."
--- This query is provided for reference and exploratory testing only.
--- Do not rely on it in production monitoring until Salesforce removes the reservation.
-SELECT
-    sub.std__Id__c              AS sub_agent_session_id,
-    sub.PreviousSessionId       AS primary_agent_session_id,
-    sub.std__StartTimestamp__c  AS sub_session_start,
-    primary.std__StartTimestamp__c AS primary_session_start
-FROM std__AiAgentSessionDmo__dlm sub
-JOIN std__AiAgentSessionDmo__dlm primary
-    ON sub.PreviousSessionId = primary.std__Id__c
-WHERE sub.PreviousSessionId IS NOT NULL
-ORDER BY sub.std__StartTimestamp__c DESC
-LIMIT 50
-```
-
-### The AiAgentGenerativeAiUsage DMO
-
-For consumption monitoring, join STDM session data to the `AiAgentGenerativeAiUsage_std__dlm` DMO. This DMO records every generative AI interaction with billing decisions, token metrics, and audit identifiers.
-
-Key fields include: agent ID, session ID, model used, prompt token count, completion token count, total token count, billable flag, and timestamp. The DMO refreshes every 5 minutes and supports full SQL querying.
-
-Join pattern (session to usage):
-
-```sql
-SELECT
-    s.std__Id__c           AS session_id,
-    u.model__c             AS model,
-    SUM(CAST(u.totalTokens__c AS INTEGER)) AS total_tokens,
-    COUNT(*)               AS llm_calls
-FROM std__AiAgentSessionDmo__dlm s
-JOIN AiAgentGenerativeAiUsage_std__dlm u
-    ON u.AiAgentSessionId__c = s.std__Id__c
-GROUP BY s.std__Id__c, u.model__c
-ORDER BY total_tokens DESC
-LIMIT 50
-```
-
-### Data Space Discovery
-
-Always run Data Space discovery before executing STDM queries in a new org. Do not assume `'default'` is the correct Data Space name.
-
-```bash
-sf api request rest "/services/data/v63.0/ssot/data-spaces" -o <org>
-```
-
-Note: The `--json` flag is not supported on this beta command. Run without it and parse the response manually.
-
 ---
 
 ## 16. Architect Patterns and Troubleshooting Reference
 
-### Pattern Library
+### Latency: What Architects Need to Know
 
-The following patterns address the most common Agentforce architecture challenges. Each pattern is a proven solution to a recurring problem.
+#### The Three Latency Metrics
+
+Architects discussing agent performance with stakeholders should work from three specific metrics rather than general "slow" or "fast" characterizations. Each metric points to a different part of the pipeline.
+
+| Metric | What it measures | Why it matters |
+|---|---|---|
+| **Time to First Token (TTFT)** | How long before the response starts appearing | Drives how responsive the agent feels — this is what a user notices while waiting |
+| **Time to Last Token (TTLT)** | How long until the full response finishes | Matters most for longer answers and for anything downstream that waits on the complete response |
+| **End-to-end latency** | Total time from the user's message to a fully delivered response, including everything the platform does around the model call | The number that best reflects the user's actual experience |
+
+As a rough rule of thumb for text and chat experiences: under approximately 5 seconds generally feels fine, 6 to 10 seconds is usually acceptable for a more complex request, 10 to 20 seconds starts to feel slow, and beyond approximately 20 seconds most users assume something is wrong. **Voice is much less forgiving** — anything much past approximately 5 seconds breaks the feel of a real-time conversation. These are general guidelines, not a guaranteed response-time SLA, and complex multi-step requests will legitimately take longer than simple ones.
+
+#### The Nine-Step Message Pipeline
+
+A single agent turn passes through a sequence of steps before the user sees a response. Understanding this pipeline is the foundation of latency diagnosis: slowness is rarely "the model" — it is almost always one specific step taking longer than expected.
+
+1. **Channel delivery** — the message reaches Agentforce from wherever it originated (web chat, Messaging, voice, Slack, etc.)
+2. **Session routing** — the platform sets up or resumes the conversation session
+3. **Trust Layer safety check** — an input-side safety/policy check runs before reasoning begins
+4. **Topic/agent routing** — the request is classified to the right topic or subagent
+5. **Reasoning and planning** — the agent decides what to do, including which action(s), if any, to call
+6. **Action execution** — any Flow/Apex/API actions run, including calls to external systems
+7. **Response generation** — the model generates the response text
+8. **Grounding/accuracy validation** — the response is checked against your data and instructions before delivery
+9. **Delivery** — the response is sent back through the originating channel
+
+> **Architect implication:** When a customer reports that an agent "feels slow," the first job is to find which step is taking the time — not to tune the model. Enable Agentforce Observability and use step duration data from the STDM to identify the bottleneck before making any changes.
+
+#### Latency Signal-to-Fix Mapping
+
+Once you have observability data, use this table to match the signal to the right fix.
+
+| What you observe in session data | What it usually points to | Fix |
+|---|---|---|
+| TTFT is slow and consistent across most requests | Model choice, instruction length, or topic/action count | Match model to task; shorten instructions |
+| TTFT is fast but full response takes a while to complete | Response length, model choice, or lack of streaming | Enable streaming where supported; consider a faster model |
+| Slowness is concentrated around specific action calls | That action's underlying Flow/Apex logic or the external system/API it calls | Optimize or parallelize the action; investigate the downstream integration |
+| Slowness is concentrated around knowledge/data retrieval steps | Knowledge base size, chunking, or an overly broad grounding scope | Narrow grounding scope; improve content chunking |
+| Slowness appears mainly when a request crosses between topics/subagents | Handoff overhead between subagents | Minimize handoff layers; keep agent structure as shallow as the use case allows |
+| Slowness only shows up on one channel (e.g., voice, not web chat) | Channel-specific overhead rather than the agent's reasoning | Tune and benchmark that channel separately |
+| Slowness is broad, not tied to a specific topic or action | Possible infrastructure or region issue | Escalate to Salesforce Support with session IDs and a description of the affected timeframe |
+
+**On streaming:** Enabling streaming does not reduce total processing time, but it delivers the first part of the response to the user much sooner, which significantly improves how fast the interaction feels. Note that streaming is generally not available for voice, where the full response is usually needed before it can be spoken.
+
+**On Dynamic Voice Routing (DVR):** DVR simplifies how voice channels are configured and integrated, but it is not a latency fix. Do not expect enabling DVR to resolve a slow-voice-agent problem.
+
+#### Voice Latency Requires Separate Treatment
+
+Voice conversations have a much tighter latency budget than text. Real-time spoken conversation has far less tolerance for pauses than a chat interface does. Architects designing or troubleshooting voice-enabled agents should treat voice as its own workstream, not an extension of chat performance.
+
+Specific considerations for voice:
+
+- Voice latency includes components that text does not: telephony and call setup, speech-to-text (STT), routing, agent reasoning, text-to-speech (TTS), and the return path to the caller. A delay can originate in any of these — not just in agent reasoning.
+- The target end-to-end response time for voice is meaningfully tighter than for chat — aim for well under 5 seconds where possible.
+- Keep voice-specific subagents and instructions especially lean. A response that reads well in chat can feel long when spoken aloud.
+- Test and benchmark voice as its own channel. Do not assume chat performance transfers.
 
 ---
 
-**Pattern: Has-Loaded Guard**
-*Problem:* An initialization action in `before_reasoning` fires on every parse, not just the first.
-*Solution:*
-```
-before_reasoning:
-    if @variables.account_loaded == False:
-        run @actions.FetchAccountRecord
-            with account_id=@variables.account_id
-            set @variables.account_name=@outputs.account_name
-        set @variables.account_loaded = True
-```
+### Behavior Troubleshooting: A Diagnostic Framework
+
+Unexpected agent behavior is rarely fixed by writing more instructions. Before changing anything, locate which layer of the execution path contains the problem.
+
+#### Diagnosing the Pattern First
+
+| What you observe | What it suggests | What to do |
+|---|---|---|
+| Fails the same way every time | A repeatable configuration, data, action, setup, or runtime issue | Locate the failing layer and address it directly |
+| Sometimes succeeds and sometimes fails on similar requests | Ambiguous configuration/instructions or normal LLM variability | Inspect the relevant control and test multiple variations |
+| Only fails for one specific input or phrasing | An edge case, missing data, or ambiguous instruction | Add a targeted rule or fix the underlying data/action |
+| Wording changes but the outcome remains correct | Normal variation in generated language | Focus on whether the required outcome is correct rather than identical wording |
+
+Use session tracing (via the STDM) to investigate rather than relying on the conversation transcript alone. Session tracing captures interactions, reasoning-engine executions, actions, prompt and gateway inputs/outputs, errors, and final responses. When testing in Agent Builder, use Plan Tracer to inspect the execution plan — including subagent selection, action selection, and the reasoning path.
+
+#### Behavior, Routing, and Action Selection Issues
+
+| What you're seeing | What's likely happening | What to change |
+|---|---|---|
+| Wrong subagent is selected | Subagent classification descriptions overlap or are too vague — **subagent instructions and scope have no effect on selection; only the name and classification description do** | Rewrite the classification description to be specific and distinct; do not edit the subagent's instructions or scope to try to fix routing |
+| Wrong action is selected within a subagent | Action descriptions have overlapping or unclear boundaries | Make each action description specific; clearly distinguish what belongs — and does not belong — to that action |
+| Agent is slow, inconsistent, or makes unsupported decisions | Instructions may be overly long, complex, or ambiguous | Make instructions concise, direct, and specific; remove unnecessary context and contradictory rules |
+| Multi-step process happens out of order or a step is skipped | The sequence is expressed as natural-language instructions rather than deterministic logic | For critical sequences, move the logic into Flow, Apex, API-based actions, or Agent Script |
+| Action receives wrong, missing, or malformed input | Input may not be clearly defined, validated, or mapped | Define the input's purpose and format clearly; prefer validation in deterministic logic and use variable mapping where the value can be passed deterministically |
+| Agent escalates unexpectedly or repeats an action | The action may be failing, instructions may trigger escalation, or the agent cannot complete the user's intent | Fix the underlying action failure, refine escalation behavior, or simplify the execution path |
+
+#### Grounding, Data, and Response Validation Issues
+
+Before the final response is delivered, Agentforce performs a grounding check to verify that the response is based on accurate information from actions or instructions, follows the relevant subagent instructions, and stays within the subagent's scope. This can sometimes result in a response being revised before it is shown to the user.
+
+| What you're seeing | What's likely happening | What to change |
+|---|---|---|
+| Agent gives an answer and then visibly retracts or rewrites it | The generated response may not have satisfied the grounding check | Narrow the subagent scope; ensure the response is based on the correct data or action output |
+| Answer is incorrect or unsupported even though the agent used Knowledge | Retrieved information may be incomplete, incorrect, or not the information needed | Improve the source content, retrieval configuration, or grounding strategy |
+| Response or generated content is cut off | The response or action output may have exceeded an applicable limit | Avoid unnecessarily large outputs; return only the information the agent needs |
+| A fixed message is altered or not delivered as expected | The message may be generated by the agent rather than delivered deterministically | For content that must remain exact, deliver it through a deterministic mechanism such as Flow or Agent Script |
+
+#### Setup, Permissions, and Availability Issues
+
+| What you're seeing | What's likely happening | What to change |
+|---|---|---|
+| Subagent or action is unavailable even though it should apply | A filter may exclude it, or the running user/service user may lack permission | Check filter conditions and relevant permission assignments |
+| Feature works live but not in Agent Builder, or vice versa | The testing environment may not have the same conversation context or variable values | Provide appropriate test or default values when testing |
+| Subagent/action is selected correctly only sometimes | A filter variable may be populated through nondeterministic instructions rather than deterministic mapping | Map the variable directly from an action output or another deterministic source |
+| A Flow interview fails during agent execution | The Agentforce service user or running context may be missing required permissions, or the Flow itself may have an error | Fix the Flow or provide the required permissions |
+
+---
+
+### Architecture Patterns
 
 ---
 
 **Pattern: Required Flow Enforcement**
+
 *Problem:* Users bypass a required step (e.g., identity verification) by asking for something else.
+
 *Solution:* Use a conditional transition at the top of the router's instructions, before any other routing logic:
+
 ```
 reasoning:
     instructions: ->
         if @variables.verified == False:
             transition to @subagents.Identity_Verification
 ```
+
 This fires deterministically before the LLM sees the user's request. The LLM cannot route around it.
 
 ---
 
 **Pattern: Action Chaining**
+
 *Problem:* A multi-step workflow requires guaranteed sequential execution. LLM memory between steps is unreliable.
+
 *Solution:* Chain deterministic actions in sequence within a single `->` block, passing outputs as inputs:
+
 ```
 -> run @actions.validate_eligibility
        with customer_id=@variables.customer_id
@@ -1224,8 +1328,11 @@ This fires deterministically before the LLM sees the user's request. The LLM can
 ---
 
 **Pattern: Terminology Grounding**
+
 *Problem:* RAG retrieval fails because users use jargon or product names that differ from indexed content.
+
 *Solution:* Maintain a terminology map in Salesforce Knowledge. Fetch it once per session in `before_reasoning` and use it to translate user queries before retrieval.
+
 ```
 before_reasoning:
     if @variables.terminology_loaded == False:
@@ -1237,93 +1344,54 @@ before_reasoning:
 ---
 
 **Pattern: Single-Retriever Ensemble**
+
 *Problem:* An agent with multiple knowledge sources routes retrieval across multiple LLM-selected retrievers, producing inconsistent results.
-*Solution:* Configure a single retriever that spans all relevant knowledge sources using ensemble ranking. Remove LLM-driven retriever selection from the architecture entirely. The retriever blends results by ranking weight rather than by LLM judgment.
 
-> This pattern is Salesforce's recommended approach for multi-source RAG. LLM-driven retriever selection cannot be reliably controlled and introduces a non-deterministic decision point on the retrieval critical path.
-
----
-
-**Pattern: Step Variable Multi-Turn Sequencing**
-*Problem:* A required workflow has multiple steps that must occur in a fixed order across multiple conversation turns.
-*Solution:* Use an integer step variable. The router reads it to determine which subagent to send the user to next. Each subagent increments the step variable when its work is complete.
-```
-start_agent router:
-    reasoning:
-        actions:
-            go_step_1: @utils.transition to @subagents.Step_1
-                available when @variables.step == 1
-            go_step_2: @utils.transition to @subagents.Step_2
-                available when @variables.step == 2
-            go_step_3: @utils.transition to @subagents.Step_3
-                available when @variables.step == 3
-```
+*Solution:* Use a single retriever with ensemble ranking across all relevant knowledge sources. Configure the retriever to blend results from multiple sources using ranking weights rather than delegating source selection to the LLM. This eliminates a non-deterministic decision point from the critical path.
 
 ---
 
-**Pattern: Subagent System Instruction Override**
-*Problem:* A single agent needs to adopt different tones or personas in different subagents, but the global `system.instructions` creates conflicting directives.
-*Solution:* Override system instructions at the subagent level. The subagent-level instructions completely replace the global instructions for that subagent's execution.
+**Pattern: Session Initialization Guard**
+
+*Problem:* Context-loading actions in `before_reasoning` fire on every parse, causing redundant API calls and unexpected behavior.
+
+*Solution:* Guard all session initialization behind a boolean flag:
+
 ```
-subagent Formal_Billing:
-    system:
-        instructions: |
-            You are a precise billing specialist.
-            Use formal language. Do not use contractions.
-            Reference invoice numbers exactly as provided.
+before_reasoning:
+    if @variables.sessionInitialized == False:
+        run @actions.LoadCustomerContext
+            with user_id=@variables.userId
+            set @variables.customerTier=@outputs.tier
+        set @variables.sessionInitialized = True
 ```
 
 ---
 
-### Troubleshooting Reference
+**Pattern: Capability Gating with `available when`**
 
-**Agent gives inconsistent responses to the same question**
-- Check whether the subagent contains prompt instructions (`|`) where deterministic logic (`->`) would suffice.
-- Check whether the subagent's system instructions are conflicting with global instructions. Use a subagent-level override.
-- Check the LLM model assigned to the subagent. Smaller, faster models have higher variability on complex tasks.
+*Problem:* Sensitive actions (refunds, escalations, account changes) must not be offered until prerequisites are met.
 
-**Subagent classification is routing incorrectly**
-- Review subagent `description` fields. They must be specific and non-overlapping.
-- Check for subagent descriptions that contain negative instructions ("does not handle X"). The EinsteinHyperClassifier handles these better than a general LLM.
-- Add explicit test cases for the misrouted inputs in Testing Center. Review pass rate trends.
-- Use **AgentLens** to visualize the FSM diagram. Backward arrows indicate retry loops that may signal misclassification causing re-routing.
+*Solution:* Use `available when` clauses as hard platform-level gates. A tool with a false `available when` condition is removed from the LLM's tool list entirely for that parse. The LLM cannot select a tool it cannot see.
 
-**`before_reasoning` action is firing multiple times per user turn**
-- You are missing a has-loaded guard. See the Has-Loaded Guard pattern above.
-- Verify whether the subagent is receiving multiple parses per turn (check Step DMO — count `LLM_STEP` entries per interaction).
-
-**Action is not being called when expected**
-- If the action is in `reasoning.actions`, the LLM is deciding whether to call it. The LLM may not recognize it as relevant. Improve the action's `description` or use a deterministic `run` in `before_reasoning` or a logic instruction block.
-- Check whether an `available when` clause is evaluating to false unexpectedly. Log the relevant variable before the action call.
-
-**RAG is returning irrelevant results**
-- Check retrieval chunk size. Chunks that are too large dilute relevance scores; chunks that are too small lose context.
-- Check the query being sent to retrieval. If it contains conversation history, it may be diluting the semantic signal. Isolate the current user intent before retrieval.
-- Apply the Terminology Grounding pattern if users are using different terminology than indexed content.
-- If you are using multiple retrievers with LLM-driven selection, migrate to the Single-Retriever Ensemble pattern. LLM retriever selection is not reliable.
-
-**"We couldn't find your data space" error**
-- Missing Data Space permissions. Resolution: In Setup, navigate to Permission Sets, select **Data 360 Architect**, go to Apps > **Data 360 Data Space Management**, click Edit on Data Space Scopes, enable the **Default Data Space**, and save. Add this step to every environment provisioning checklist.
-
-**Deployment fails or produces incomplete results**
-- For committed agents: verify all three required metadata types are in the `package.xml`: `AiAuthoringBundle`, `Bot`/`BotVersion`, and `GenAiPlannerBundle`. All three are required.
-- Verify the full agent (`Bot` + `AiAuthoringBundle` + `GenAiPlannerBundle`) has been deployed to the target org before attempting to deploy a specific `BotVersion`.
-- Verify your `package.xml` uses `<version>66.0</version>` or later.
-
-**STDM queries returning no results**
-- Verify `enable_enhanced_event_logs: True` is set in the agent's `config` block.
-- Run Data Space discovery to confirm the correct Data Space name for the org. Do not assume `'default'`.
-- Verify the `GenieDataPlatformStarterPsl` PSL and `GenieUserEnhancedSecurity` permission set are both assigned to the querying user — the PSL must be assigned before the permission set.
-- Verify field name prefixes against your live org schema. The official Salesforce data model reference lists field API names without the `std__` prefix; confirm whether your Data Space requires it at the field level before debugging further.
-
-**SOMA sub-agent session not linking correctly in STDM**
-- `PreviousSessionId` is the intended SOMA backward-linking field, but Salesforce officially documents it as **"Reserved for future use."** If it is returning null or not linking correctly, this is expected behavior at this time — not a configuration error. Monitor Salesforce release notes for when this field becomes production-supported.
-- Verify the `connected_subagent` block in the supervisor's Agent Script has correct input/output mapping.
-- Verify that the orchestrator and sub-agent are the same agent type (ASA/ASA or AEA/AEA). A type mismatch may prevent the session link from forming correctly.
-
-**Execution loop suspected (agent repeatedly re-routing or retrying)**
-- Open **AgentLens** and examine the FSM diagram for backward arrows. Each backward arrow represents a retry loop in the execution graph.
-- Cross-reference with the Step DMO: count `std__AiAgentInteractionStepType__c = 'LLMExecutionStep'` entries per interaction. A higher-than-expected count confirms repeated LLM calls within a single turn.
-- Check `before_reasoning` for missing has-loaded guards that may be reinitializing state and triggering re-classification.
+```
+reasoning:
+    actions:
+        process_refund: @actions.ProcessRefund
+            description: "Process a refund for the current order."
+            available when @variables.verified == True
+                and @variables.order_id != ""
+```
 
 ---
+
+**Pattern: SOMA Monolith Extraction**
+
+*Problem:* A growing single agent is developing routing accuracy problems, release coupling, and unclear ownership.
+
+*Solution:* Extract high-change, clearly owned subagents into separate specialized agents connected via `connected_subagent` blocks. Extract one agent at a time, stabilize for at least two weeks in production, then proceed. See Section 9 for the full migration playbook.
+
+*Architect check before extraction:*
+- Confirm the subagent's type (ASA or AEA) matches the supervisor. Mismatched types cause a platform error at configuration time.
+- Confirm the subagent is fully stabilized in the monolith — do not extract a subagent that is still under active development.
+- Explicitly declare all variable inputs and outputs on the `connected_subagent` block. Variables do not transfer automatically.
