@@ -25,7 +25,7 @@ The conference room on the fourteenth floor had a panoramic view of the Bay. Sar
 
 Marcus settled into a chair and opened his laptop. He had seen this meeting coming. "It's the same problem it's been for three months," he said. "The agent is trying to be everything to everyone."
 
-He was right. Their current agent handled general product questions, order lookups, supply chain queries, and loyalty program inquiries, all in a single, undifferentiated block of natural language instructions. The instructions had grown so long that the LLM had started doing something Sharda from the Salesforce AI product team had a name for: intent collision. When a prompt contains too many overlapping responsibilities, the model begins to blur the lines between them. Sometimes it answered an order question with product knowledge. Sometimes it skipped verification steps entirely because a prior conversation had left a verification flag in a corrupted state. Sometimes it simply made things up with full confidence.
+He was right. Their current agent handled general product questions, order lookups, supply chain queries, and loyalty program inquiries, all in a single, undifferentiated block of natural language instructions. The instructions had grown so long that the LLM had started doing something the Salesforce documentation had a name for: intent collision. When a prompt contains too many overlapping responsibilities, the model begins to blur the lines between them. Sometimes it answered an order question with product knowledge. Sometimes it skipped verification steps entirely because a prior conversation had left a verification flag in a corrupted state. Sometimes it simply made things up with full confidence.
 
 "What about the maze?" Sarah asked, drawing a grid of small boxes on the whiteboard. "You proposed that last quarter. Twelve separate specialized agents."
 
@@ -49,9 +49,7 @@ Marcus leaned forward, studying the diagram. "What's the glue that holds the sta
 
 ## Act II: How the Engine Actually Thinks
 
-Before they wrote a single line of code, Sarah insisted they spend an afternoon studying the reasoning engine. She had attended all three parts of Sharda's "Agent Script Deep Dive" series and had been taking careful notes.
-
-She pulled up her notes on the projector and walked Marcus through the architecture.
+Before they wrote a single line of code, Sarah insisted they spend an afternoon going through Salesforce's Agent Script documentation. She had been reading it for the past week and had been taking careful notes. She pulled them up on the projector and walked Marcus through the architecture.
 
 "Here's the mental model," she said. "Every time a user sends a message, that's a **turn**. One turn. The moment that turn arrives, it goes into the agent. The agent routes it to the Agent Router sub-agent. The Agent Router then decides where the conversation belongs. Once it picks a sub-agent, what happens inside that sub-agent is called a **reasoning loop**."
 
@@ -63,7 +61,7 @@ Marcus stopped her. "So in one user message, the agent could actually traverse m
 
 "Exactly. That's the power of the new builder. In the old builder, the router picked a topic and the agent responded. Done. Now the agent can transition mid-reasoning from sub-agent to sub-agent, collect everything it needs, and then surface a single, coherent response."
 
-She pulled up the execution diagram Sharda had drawn during Part 1 of the webinar and traced through it.
+She pulled up an execution diagram from the Salesforce developer documentation and traced through it.
 
 "The anatomy of every sub-agent is the same," she continued. "At the top level, you define the sub-agent's name and description. The description matters enormously. If you're relying on the LLM to choose between sub-agents, it's reading those descriptions. Garbage in, garbage routing. Good descriptions become even more important later on if you want to move toward multi-agent patterns, because orchestration relies on those exact same names and descriptions."
 
@@ -111,13 +109,13 @@ Marcus turned back to the whiteboard diagram. He studied the four boxes for a lo
 
 Sarah held up a hand. "Not yet."
 
-She was already pulling up a blank document. It was a template she had downloaded from the build session GitHub site: the Agentforce Agent Spec.
+She was already pulling up a blank document.
 
 "Before we write a single line of Agent Script," she said, "we write the use case. Not the code. The use case. In plain English. With a table."
 
 Marcus looked skeptical. He was ready to open VS Code.
 
-"Think of an LLM like a very smart five-year-old," Sarah said, echoing something Sharda had said in Part 1 that had stuck with her. "A five-year-old that has been trained on the entire internet has a lot of basic information, but it knows nothing about our Salesforce instance, our processes, or our customers' expectations. When you write instructions, you have to be crystal clear. The best way to get crystal clear is to write down what the agent should do, in order, before you decide how."
+"Think of an LLM like a very smart five-year-old," Sarah said. "A five-year-old that has been trained on the entire internet has a lot of basic information, but it knows nothing about our Salesforce instance, our processes, or our customers' expectations. When you write instructions, you have to be crystal clear. The best way to get crystal clear is to write down what the agent should do, in order, before you decide how."
 
 She titled the document **Order Details Agent — Use Case Spec** and began filling in the table. The left column held the user intent. Not every possible question, just the intent, because the LLM is very capable of interpreting variations of intent from natural language. The right columns held what the agent does, and what the agent says.
 
@@ -177,7 +175,7 @@ Marcus stared at the table. "So the variables section writes itself from this."
 
 ## Act IV: Sub-Agent Anatomy — Four Jobs, Four Sub-Agents
 
-With the spec complete, they mapped out the four sub-agents. The rule Sharda had emphasized in Part 3 guided their thinking: start from **jobs to be done**. Think of each sub-agent as a self-contained finite state machine: one job only, a clear entry condition, ownership of its own data and reasoning, and a clear exit condition.
+With the spec complete, they mapped out the four sub-agents. A core principle from the Salesforce documentation guided their thinking: start from **jobs to be done**. Think of each sub-agent as a self-contained finite state machine: one job only, a clear entry condition, ownership of its own data and reasoning, and a clear exit condition.
 
 The agent's three jobs were clear: verify identity, look up orders, manage cases. Plus the routing job that was always there. So four sub-agents:
 
@@ -212,7 +210,7 @@ One job: create a support case, confirm it to the user, and reset all variables.
 
 "Notice what we did," Sarah said. "Order_Status and Case_Management never appear in the agent_router's reasoning actions. The LLM in the router cannot decide to go there. A user cannot talk their way into Order_Status without passing through user_verification first. That's not a guideline. It's architecture."
 
-She also addressed something Marcus had asked the day before about how sub-agents relate to each other structurally. All sub-agents in an agent exist at the same level of the graph — there is no deep nesting where one sub-agent sits inside another. What you can do is chain them. Sub-agent A transitions to Sub-agent B, which can then transition to Sub-agent C. But here is the critical thing to understand: `@utils.transition to` is strictly one-way. Control does not return to the calling sub-agent. The docs are explicit on this: when a transition occurs, Agentforce discards any prompt from the current sub-agent and processes the new one from top to bottom. After the second sub-agent completes, control goes back to the `start_agent` on the next turn — not back to wherever the transition originated.
+She also addressed something Marcus had asked the day before about how sub-agents relate to each other structurally. All sub-agents in an agent exist at the same level of the graph — there is no deep nesting where one sub-agent sits inside another. What you can do is chain them. Sub-agent A transitions to Sub-agent B, which can then transition to Sub-agent C. But here is the critical thing to understand: `@utils.transition to` is strictly one-way. Control does not return to the calling sub-agent. The documentation is explicit on this: when a transition occurs, Agentforce discards any prompt from the current sub-agent and processes the new one from top to bottom. After the second sub-agent completes, control goes back to `start_agent` on the next turn — not back to wherever the transition originated.
 
 "So if you need what feels like a round-trip," Sarah said, "you have to explicitly define a transition back in the destination sub-agent. And when control returns, the sub-agent starts from the beginning, not from where it left off. That's why we stamp the `workflow_step` variable — so the router knows where to send the next turn."
 
@@ -230,7 +228,7 @@ Marcus had the sub-agent diagram open and was about to start wiring the agent_ro
 
 Marcus looked up. "I assumed we just use whatever the org default is."
 
-"We could. But there's another option worth knowing about." She pulled up the `ascript-model.md` doc on screen. "Salesforce built their own model called EinsteinHyperClassifier specifically for sub-agent classification in the router. It's faster than a general-purpose LLM and more accurate for the specific job of picking which sub-agent to go to."
+"We could. But there's another option worth knowing about." She pulled up the model configuration section of the Salesforce documentation. "Salesforce built their own model called EinsteinHyperClassifier specifically for sub-agent classification in the router. It's faster than a general-purpose LLM and more accurate for the specific job of picking which sub-agent to go to."
 
 Marcus leaned in. "So why wouldn't we always use it?"
 
@@ -280,7 +278,7 @@ Then they drew the boundary.
 
 **Asking for the email:** *LLM*. The agent needs to phrase the request naturally, acknowledge the user's prior message, adapt to tone. The LLM handles this beautifully.
 
-**Capturing what the user says and storing it in UserEmail:** *LLM-driven via utility action*. The LLM extracts the email from the user's message. It's trained on enough data to recognize that "my email is sarah@corning.com" contains an email address and to extract it cleanly, without any regex or parsing code on the developer's part. But critically, it cannot update the variable unless a `setVariables` utility action is defined. Without that utility action, the email simply vanishes after the reasoning loop. This was a common gotcha Sharda had flagged in Part 1 and repeated in Part 2.
+**Capturing what the user says and storing it in UserEmail:** *LLM-driven via utility action*. The LLM extracts the email from the user's message. It's trained on enough data to recognize that "my email is sarah@corning.com" contains an email address and to extract it cleanly, without any regex or parsing code on the developer's part. But critically, it cannot update the variable unless a `setVariables` utility action is defined. Without that utility action, the email simply vanishes after the reasoning loop. The documentation flags this explicitly as one of the most common early mistakes.
 
 **Step 2: Running the verification check:** *deterministic*. This must fire exactly once, exactly when UserEmail is populated and Verification_Run is false. The LLM is not consulted. An `if` condition triggers `OrderDetails_Verify_User` with UserEmail as input, and sets isVerified and Verification_Run = true as outputs.
 
@@ -338,7 +336,7 @@ Next, he created the utility actions for the LLM to use:
 
 She added: "And transitions work the same way. You cannot tell the LLM 'go to Case_Management' in your prompt instructions and expect it to work. You need a transition utility action. The LLM calls the action; the action moves the session. That distinction matters."
 
-She also made a point about something Sharda had emphasized during Part 2 regarding deterministic action outputs specifically. Even when you run an action deterministically inside an if block, the reasoning engine does not automatically expose the output to the LLM instructions that follow. If you want to reference the result of a deterministically-called action in the LLM prompt that follows, you must store that output in a variable first. The LLM can then read it from the variable. Without that explicit storage step, the LLM has no way to see what the action returned.
+She also made a point the documentation had been clear about regarding deterministic action outputs specifically. Even when you run an action deterministically inside an if block, the reasoning engine does not automatically expose the output to the LLM instructions that follow. If you want to reference the result of a deterministically-called action in the LLM prompt that follows, you must store that output in a variable first. The LLM can then read it from the variable. Without that explicit storage step, the LLM has no way to see what the action returned.
 
 For Order_Status, Marcus did the same analysis. The LLM-callable reasoning actions were:
 
@@ -485,7 +483,7 @@ She tapped the screen. "If `OrderDetails` is already populated and the user asks
 
 ## Act IX: The Topic Selector
 
-With user_verification and Order_Status built, they turned to the most architecturally important sub-agent: the agent_router, which Sharda had called the Topic Selector in the webinar.
+With user_verification and Order_Status built, they turned to the most architecturally important sub-agent: the agent_router, which the documentation called the Topic Selector.
 
 "The topic selector runs on every single turn," Sarah reminded Marcus. "It's the first thing that receives every message. It has to do two things: resume interrupted sessions first, and only route new intents second."
 
@@ -537,7 +535,7 @@ reasoning:
 
 Notice what was absent from the LLM routing instructions: Order_Status and Case_Management. Those sub-agents didn't exist as far as the LLM was concerned. They were only reachable through deterministic transitions. No user could phrase a message cleverly enough to skip identity verification and land directly in Order_Status. The architecture prevented it.
 
-Sarah pointed to an additional pattern worth understanding. The LLM routing instructions listed only three tools: go_to_user_verification, go_to_general_questions, and go_to_off_topic. Even though the agent had four sub-agents total, the LLM only had three paths to choose between. The official guidance on this is qualitative: limit and filter the sub-agents available to the LLM so it can route effectively, and keep reasoning instructions as short and specific as possible, because long instruction sets confuse the reasoning engine. The fewer choices the LLM has to evaluate at once, the more reliably it classifies intent. In a hybrid routing design like this one, where most transitions are deterministic anyway, the LLM's classification job is small and focused.
+Sarah pointed to an additional pattern worth understanding. The LLM routing instructions listed only three tools: go_to_user_verification, go_to_general_questions, and go_to_off_topic. Even though the agent had four sub-agents total, the LLM only had three paths to choose between. The official Salesforce guidance on this is qualitative: limit and filter the sub-agents available to the LLM so it can route effectively, and keep reasoning instructions as short and specific as possible, because long instruction sets confuse the reasoning engine. The fewer choices the LLM has to evaluate at once, the more reliably it classifies intent. In a hybrid routing design like this one, where most transitions are deterministic anyway, the LLM's classification job is small and focused.
 
 ---
 
@@ -549,7 +547,7 @@ Marcus had the Agentforce testing window open on his left monitor and the Agent 
 
 He typed the opening message: **"I need to check on an order."**
 
-The debug panel lit up. The tracer showed the execution path in real time — something Sharda had called her favorite feature in the entire builder, because it shows you exactly what is happening at every step, what prompt is being sent to the LLM, what response comes back, what variables look like before and after, and why the reasoning loop ran the number of times it did.
+The debug panel lit up. The tracer showed the execution path in real time — every step visible, what prompt was being sent to the LLM, what response came back, what variables looked like before and after, and why the reasoning loop ran the number of times it did. It was exactly the kind of transparency the documentation had promised, and seeing it live made everything they had read concrete.
 
 The turn hit the agent_router. The before_reasoning block evaluated: workflow_step was empty, so no resume logic fired. The LLM read the routing instructions and identified order-related intent. It called the `go_to_user_verification` transition tool. The system executed the transition.
 
@@ -579,7 +577,7 @@ The reasoning loop restarted. The LLM had used `set_InputOrderNumber` to store t
 
 Immediately, without another user turn, the next condition evaluated: `ExactOrderNumber != "" and ExactOrderNumber != "Order Does Not Exist" and OrderDetails == ""` was true. `OrderDetails_GetOrderDetails` fired with the confirmed ID. It returned the full order object: Optical Fiber Cable, 500 units, estimated delivery April 22, billing confirmed.
 
-The reasoning loop found no more conditions to evaluate. It exited. The LLM received the full `OrderDetails` variable and composed a natural, well-formatted summary. The tracer showed two reasoning loops on that turn: one that ran GetExactOrderNumber, and one that ran GetOrderDetails. This was exactly what Sharda had shown in the webinar — the reasoning engine keeps looping and checking until there are no more actions to run.
+The reasoning loop found no more conditions to evaluate. It exited. The LLM received the full `OrderDetails` variable and composed a natural, well-formatted summary. The tracer showed two reasoning loops on that turn: one that ran GetExactOrderNumber, and one that ran GetOrderDetails. The reasoning engine kept looping and checking until there were no more actions to run — exactly what the documentation had described.
 
 Marcus typed: **"What's the expected delivery date?"**
 
@@ -624,19 +622,19 @@ Before_reasoning and after_reasoning do not appear in Canvas view. You will not 
 Global system instructions apply across all sub-agents. Sub-agent instructions apply within that sub-agent. If they contradict each other, the LLM gets confused and produces unpredictable behavior. Review global instructions whenever you add a sub-agent whose instructions might conflict with them.
 
 **Gotcha #7: The Long Sub-Agent**
-The official guidance is clear: shorter reasoning instructions result in more accurate and reliable results. If a sub-agent has too many if conditions, too many LLM instructions, and too many actions all in one place, the reasoning engine's accuracy suffers. If you notice a sub-agent getting complex, consider splitting it by job. If you're thinking "this is getting long," it's already too long. Bite-sized sub-agents with minimal instructions produce better outcomes.
+The official Salesforce guidance is clear: shorter reasoning instructions result in more accurate and reliable results. If a sub-agent has too many if conditions, too many LLM instructions, and too many actions all in one place, the reasoning engine's accuracy suffers. If you notice a sub-agent getting complex, consider splitting it by job. If you're thinking "this is getting long," it's already too long. Bite-sized sub-agents with minimal instructions produce better outcomes.
 
 **Gotcha #8: The Forgotten Output**
 When you run an action deterministically, the reasoning engine does not automatically expose the output to the LLM instructions. If you need to reference the result of a deterministic action later in the same reasoning block, you must have stored it in a variable via the action's output mapping. Otherwise the LLM has no way to read it.
 
 **Gotcha #9: The Infinite Router Loop**
-If the topic selector's before_reasoning always matches a workflow_step even after the workflow is complete, the user will be stuck in a permanent redirect loop. Clear workflow_step (set it to `""`) when a workflow completes cleanly so that the next fresh turn starts with LLM routing instead of deterministic resume. The docs flag this explicitly: avoid logic that causes a transition from sub-agent A to sub-agent B and then back to A, repeating indefinitely.
+If the topic selector's before_reasoning always matches a workflow_step even after the workflow is complete, the user will be stuck in a permanent redirect loop. Clear workflow_step (set it to `""`) when a workflow completes cleanly so that the next fresh turn starts with LLM routing instead of deterministic resume. The documentation flags this explicitly: avoid logic that causes a transition from sub-agent A to sub-agent B and then back to A, repeating indefinitely.
 
 **Gotcha #10: The EinsteinHyperClassifier Swap**
 Some teams start from the Agentforce Service Agent template, which uses EinsteinHyperClassifier in the router by default. It is faster and more accurate for pure intent classification. But it cannot use `before_reasoning` or `after_reasoning`, and it can only call `@utils.transition` — no other tools. If your router design depends on before_reasoning for session resumption or variable initialization, you must switch to a general LLM model in the router. Understand the trade-off before you start. Swapping it out after the router is fully built is a painful afternoon.
 
 **Gotcha #11: Build One From Scratch First**
-This was the one Marcus had tried to skip and had regretted most. Sharda had said it in Part 2 and again in Part 3: before you use Claude Code, Claude, or any AI coding assistant to help you generate Agent Script, you need to have written at least one complete agent by hand. Not because the tools are bad. The tools are very good. But if the generated code produces unexpected behavior, you need to be able to read it, diagnose it, and fix it. If you haven't internalized how the reasoning loop thinks, how before and after reasoning interact with the main loop, and where the LLM boundary lives, debugging generated code will be impossible. Build one simple agent yourself first. It can be completely hypothetical. Then use the tools.
+This was the one Marcus had tried to skip and had regretted most. Before you use Claude Code, Claude, or any AI coding assistant to help you generate Agent Script, you need to have written at least one complete agent by hand. Not because the tools are bad. The tools are very good. But if the generated code produces unexpected behavior, you need to be able to read it, diagnose it, and fix it. If you haven't internalized how the reasoning loop thinks, how before and after reasoning interact with the main loop, and where the LLM boundary lives, debugging generated code will be impossible. Build one simple agent yourself first. It can be completely hypothetical. Then use the tools.
 
 ---
 
@@ -685,11 +683,13 @@ She opened her notes document and typed a heading: **Phase 2 — The Superagent*
 
 The Order Details Agent was sub-agent zero. One agent, handling one domain. But the architecture she had built for it was designed to scale. The same workflow_step breadcrumb pattern, the same hybrid routing approach, the same deterministic action chain philosophy — all of it could be replicated across other agents that Corning needed to build.
 
-A Returns Agent. A Loyalty Program Agent. A Supply Chain Visibility Agent. Superagent pattern, which Sharda had mentioned in Part 3 as something to think about for multi-agent scenarios, was the next frontier. Instead of one agent handling everything, you could have multiple specialized agents, each with their own sub-agents and workflows, and a top-level orchestrator that delegated to them based on intent. The orchestrator wouldn't need to know how any individual agent worked. It would read each agent's name and description, just as the topic selector read sub-agent names and descriptions, and route accordingly.
+A Returns Agent. A Loyalty Program Agent. A Supply Chain Visibility Agent.
 
-The agent-level name and description fields that she had filled in almost as an afterthought at the beginning of this project were, it turned out, the API contract for that future orchestration layer. Good descriptions now meant easy orchestration later. She made a note to go back and polish them.
+The Superagent pattern was the next frontier. Instead of one agent handling everything, you could have multiple specialized agents, each with their own sub-agents and workflows, and a top-level orchestrator that delegated to them based on intent. The orchestrator wouldn't need to know how any individual agent worked. It would read each agent's name and description, just as the topic selector read sub-agent names and descriptions, and route accordingly.
 
-She thought about Sharda's parting advice from Part 3: plan before you build, map the jobs before the sub-agents, draw the flow before the script. The technical implementation had turned out to be the easy part, once the thinking was done. The hard work had been the spec table, the boundary analysis, the variable category diagram, and the honest accounting of which decisions belonged to code and which belonged to the model.
+The agent-level name and that she had filled in almost as an afterthought at the beginning of this project were, it turned out, the API contract for that future orchestration layer. Good descriptions now meant easy orchestration later. She made a note to go back and polish them.
+
+She thought about a principle she had taken from the Salesforce documentation early on and returned to again and again: plan before you build, map the jobs before the sub-agents, draw the flow before the script. The technical implementation had turned out to be the easy part, once the thinking was done. The hard work had been the spec table, the boundary analysis, the variable category diagram, and the honest accounting of which decisions belonged to code and which belonged to the model.
 
 The hard work had been thinking clearly.
 
