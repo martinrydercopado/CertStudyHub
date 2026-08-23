@@ -3,6 +3,7 @@ import SwiftUI
 enum CertCatalog {
     // ── Deep Dives ──
     static let deepDives: [CertConfig] = [
+        dc360GroundUp,
         hybridReasoning,
         agentforceArchitect,
         reasoningEngine,
@@ -35,6 +36,27 @@ enum CertCatalog {
     static let all: [CertConfig] = deepDives + certifications
 
     // ── Deep Dive Definitions ──
+
+    static let dc360GroundUp = CertConfig(
+        id: "dc360groundup",
+        name: "Data 360 from the Ground Up: The NTO Story",
+        shortName: "NTO Story",
+        icon: "globe.americas.fill",
+        primaryColor: Color(red: 0.02, green: 0.53, blue: 0.62),
+        secondaryColor: Color(red: 0.13, green: 0.73, blue: 0.83),
+        headerGradient: [
+            Color(red: 0.01, green: 0.30, blue: 0.36),
+            Color(red: 0.02, green: 0.36, blue: 0.43),
+            Color(red: 0.02, green: 0.53, blue: 0.62)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "dc360groundup",
+        isBonusTopic: true,
+        guideFile: "dc360groundup"
+    )
 
     static let hybridReasoning = CertConfig(
         id: "hybridreasoning",

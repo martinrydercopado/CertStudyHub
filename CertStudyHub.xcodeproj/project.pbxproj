@@ -157,6 +157,8 @@
 		C100000000000000000000A3 /* marked.min.js in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000059 /* marked.min.js */; };
 		C100000000000000000000A4 /* hybridreasoning.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000005A /* hybridreasoning.md */; };
 		C100000000000000000000A5 /* hybridreasoning.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000005A /* hybridreasoning.md */; };
+		C100000000000000000000A6 /* dc360groundup.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000005B /* dc360groundup.md */; };
+		C100000000000000000000A7 /* dc360groundup.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000005B /* dc360groundup.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -235,6 +237,7 @@
 		C1F000000000000000000058 /* tracinganalytics.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = tracinganalytics.md; sourceTree = "<group>"; };
 		C1F000000000000000000059 /* marked.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = marked.min.js; sourceTree = "<group>"; };
 		C1F00000000000000000005A /* hybridreasoning.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = hybridreasoning.md; sourceTree = "<group>"; };
+		C1F00000000000000000005B /* dc360groundup.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = dc360groundup.md; sourceTree = "<group>"; };
 		C1P000000000000000000001 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1P000000000000000000002 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -413,6 +416,7 @@
 		C1G00000000000000000000D /* Guides */ = {
 			isa = PBXGroup;
 			children = (
+				C1F00000000000000000005B /* dc360groundup.md */,
 				C1F00000000000000000005A /* hybridreasoning.md */,
 				C1F000000000000000000050 /* agentforcearchitect.md */,
 				C1F000000000000000000051 /* agentforcecoworker.md */,
@@ -519,6 +523,7 @@
 				C100000000000000000000A0 /* tracinganalytics.md in Resources */,
 				C100000000000000000000A2 /* marked.min.js in Resources */,
 				C100000000000000000000A4 /* hybridreasoning.md in Resources */,
+				C100000000000000000000A6 /* dc360groundup.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -538,6 +543,7 @@
 				C100000000000000000000A1 /* tracinganalytics.md in Resources */,
 				C100000000000000000000A3 /* marked.min.js in Resources */,
 				C100000000000000000000A5 /* hybridreasoning.md in Resources */,
+				C100000000000000000000A7 /* dc360groundup.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,5 +1,25 @@
 [
   {
+    "id": "dc360groundup",
+    "name": "Data 360 from the Ground Up: The NTO Story",
+    "shortName": "NTO Story",
+    "icon": "\ud83c\udf0e",
+    "primaryColor": "#0D879E",
+    "secondaryColor": "#21BAD4",
+    "headerGradient": [
+      "#024D5C",
+      "#055C6E",
+      "#0D879E"
+    ],
+    "passingScore": 70,
+    "questionBank": "dc360groundup",
+    "storageKeyPrefix": "dc360groundup",
+    "isBonusTopic": true,
+    "subtitle": null,
+    "guideFile": "dc360groundup",
+    "quizLengths": []
+  },
+  {
     "id": "hybridreasoning",
     "name": "The Hybrid Reasoning Chronicles (an Agent Script Story)",
     "shortName": "Hybrid Reasoning",
