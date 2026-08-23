@@ -1,12 +1,11 @@
 # Agentforce Coworker: A Success Architect's Guide
 
-*Updated August 20, 2026*
+*Updated August 23, 2026*
 *This guide was generated using AI with grounding in official Salesforce documentation. Review for accuracy before using.*
 
 ---
 
 ## Table of Contents
-
 - [Section 0: How to Use This Guide](#section-0-how-to-use-this-guide)
 - [Section 1: What Is Agentforce Coworker?](#section-1-what-is-agentforce-coworker)
   - [The Origin Story](#the-origin-story)
@@ -71,7 +70,7 @@ A note on honesty: this guide distinguishes confirmed behavior from roadmap targ
 
 Agentforce Coworker was formerly called "Ask Agentforce." The rename reflects a more ambitious vision: not just a search tool, but an autonomous AI teammate that works alongside your employees across multiple surfaces.
 
-It went generally available on **August 4-7, 2026**, with auto-activation confirmed for A1E and A4X orgs by August 7. Since beta, it has been adopted by approximately 30,000 users across 2,000 orgs. Customer wins include Purolator, Bureau Veritas France, Zurich North America, Southwest Airlines, and ADP, among others.
+It went generally available on **August 4-7, 2026**, with auto-activation confirmed for A1E and A4X orgs by August 7. Since beta, it has been adopted by approximately 30,000 users across 2,000 orgs. Customer wins span industries including logistics, global inspection and certification, insurance, airlines, and payroll and HR services, among others.
 
 **Business-level summary:** Coworker is an AI teammate embedded directly in Salesforce. Employees talk to it naturally, and it finds information, summarizes situations, and takes action on their behalf -- all without leaving the tool they are already using.
 
@@ -167,11 +166,11 @@ This is enterprise-grade governance out of the box, and it is a strong answer to
 
 ### Scenario: A Day in the Life with Coworker
 
-**Context:** Maria is an Account Executive at a B2B software company. She is preparing for a renewal call with Edge Communications.
+**Context:** Maria is an Account Executive at a B2B software company. She is preparing for a renewal call with one of her key accounts.
 
-**Find in action:** Maria types "What's going on with Edge Communications?" into Coworker from the Global Search bar. Coworker returns a synthesized summary: the renewal is at risk due to pricing concerns raised in a recent call, a competitor was mentioned, and an inside sales rep has a follow-up meeting scheduled for next week.
+**Find in action:** Maria types "What's going on with [this account]?" into Coworker from the Global Search bar. Coworker returns a synthesized summary: the renewal is at risk due to pricing concerns raised in a recent call, a competitor was mentioned, and an inside sales rep has a follow-up meeting scheduled for next week.
 
-**Catch Up in action:** Maria asks "What did our team discuss with Edge Communications in Slack last month?" Coworker searches the connected Slack workspace and returns a threaded summary of relevant conversations, including a note that the customer flagged a training cost concern in a direct message to a Customer Success Manager.
+**Catch Up in action:** Maria asks "What did our team discuss with this account in Slack last month?" Coworker searches the connected Slack workspace and returns a threaded summary of relevant conversations, including a note that the customer flagged a training cost concern in a direct message to a Customer Success Manager.
 
 **Act in action:** Maria says "Give me coaching on how to handle their pricing objection before the renewal call." Coworker recognizes this as a task for the Sales Coach Agent, delegates to it automatically, and returns personalized coaching advice -- all in the same conversation thread. Maria never left Coworker.
 
@@ -291,7 +290,7 @@ This means a well-built bespoke agent does not become less valuable when Coworke
 
 Coworker does not require a separate integration step to connect to bespoke agents. It automatically discovers all active Agentforce agents in the org. At startup, Coworker reads each agent's metadata -- name, description, and topic descriptions -- and uses that to build an internal understanding of what each agent can do.
 
-This was confirmed directly by Ghislain Brun, Coworker Senior Director of Engineering.
+This was confirmed directly by the Coworker engineering leadership team.
 
 **Business implication:** A customer who already has Agentforce agents deployed does not need to re-architect anything to benefit from Coworker. The agents they already have become discoverable entry points the moment Coworker is turned on.
 
@@ -367,9 +366,9 @@ Set customer expectations accordingly. For workflows that require guaranteed mul
 
 ### Scenario: Coworker Delegates to a Quoting Agent
 
-This scenario is drawn directly from the Proofpoint demo script used in field engagements.
+This scenario is drawn from a demo script used in field engagements with a cybersecurity software customer.
 
-**Setup:** Proofpoint has deployed a Quoting Agent as an Employee Agent in their Salesforce org. Coworker is enabled. A sales rep is inside Coworker.
+**Setup:** A cybersecurity software company has deployed a Quoting Agent as an Employee Agent in their Salesforce org. Coworker is enabled. A sales rep is inside Coworker.
 
 **The rep says:** "I want to create a new quote for this opportunity. Add 500 Cloud Security Monitoring and add a 10% discount."
 
@@ -540,7 +539,7 @@ Does an existing automation do open-ended Q&A with heavy custom code?
 
 A regional sales team wants their reps to quickly understand account health, pipeline risk, and activity history before customer calls -- without needing to run reports. There is no workflow to execute, no records to create. The ask is information retrieval and synthesis.
 
-Recommendation: Coworker. Enable it, connect Slack, and let reps prompt their own data live. An account from the field (ABM) went from 25 to 200+ seats after doing exactly this -- letting the customer self-prompt rather than running a demo at them.
+Recommendation: Coworker. Enable it, connect Slack, and let reps prompt their own data live. One field account went from 25 to 200+ seats after doing exactly this -- letting the customer self-prompt rather than running a demo at them.
 
 **Scenario B: Bespoke Agent Only**
 
@@ -643,7 +642,7 @@ Setup follows three logical phases.
 | Administrator configuring Coworker | Salesforce Admin Role and Agentforce Coworker Admin Permission Set |
 | End users accessing Coworker | `Access_Ai_Search` (API name) Permission Set Group |
 
-**Known field friction point:** The `Access_Ai_Search` Permission Set Group requires the "API Enabled" permission for users. Some customer security teams reject this permission as a blanket policy. If this comes up, escalate to the product team -- this is a known friction point raised in at least one EMEA production support case (Bouygues Telecom).
+**Known field friction point:** The `Access_Ai_Search` Permission Set Group requires the "API Enabled" permission for users. Some customer security teams reject this permission as a blanket policy. If this comes up, escalate to the product team -- this is a known friction point raised in at least one EMEA production support case involving a telecommunications customer.
 
 ---
 
@@ -680,7 +679,7 @@ These are real issues raised in customer support cases and internal field discus
 
 **"API Enabled" permission conflict.** The `Access_Ai_Search` Permission Set Group requires "API Enabled" for end users. Security-conscious customers may push back on this. There is no current workaround. Escalate to the product team.
 
-**Built-in Search Agent cannot be hidden.** The default Search Agent that comes with Coworker is not hideable or reorderable in the Employee Agent list. This was raised as a limitation by at least one EMEA customer (Bouygues Telecom).
+**Built-in Search Agent cannot be hidden.** The default Search Agent that comes with Coworker is not hideable or reorderable in the Employee Agent list. This was raised as a limitation by at least one EMEA telecommunications customer.
 
 **Employee Agent list cannot be reordered.** Admins cannot currently control the order in which Employee Agents appear to users in the Coworker experience.
 
@@ -692,7 +691,7 @@ These are real issues raised in customer support cases and internal field discus
 
 ## Section 8: Open Questions to Track
 
-These are items that were open or unconfirmed as of August 2026. Do not make commitments to customers on any of these. Check official Salesforce release notes for updates.
+These are items that were open or unconfirmed as of August 2026. Do not make commitments to customers on any of these. Check officialforce release notes for updates.
 
 **A2A Inbound native GA:** Targeted Summer 2026; not yet confirmed as complete. Customers who need this capability today should use Agent API (GA) plus MuleSoft Flex Gateway.
 
@@ -761,7 +760,5 @@ These are items that were open or unconfirmed as of August 2026. Do not make com
 - **2 clicks:** Approximate setup effort for org-level activation.
 - **Unmetered:** Cost of Coworker for A1E and A4X customers.
 - **August 4-7, 2026:** General availability date.
-- **3,000+ orgs:** Beta adoption benchmark (approximately 2,000 orgs, 30,000 users confirmed).
+- **~2,000 orgs, ~30,000 users:** Beta adoption benchmark.
 - **100:** Maximum active/committed agents per org.
-
----

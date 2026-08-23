@@ -3,17 +3,19 @@ import SwiftUI
 enum CertCatalog {
     // ── Deep Dives ──
     static let deepDives: [CertConfig] = [
-        dc360GroundUp,
-        hybridReasoning,
-        agentforceArchitect,
-        reasoningEngine,
-        rag,
-        tracinganalytics,
-        multiagent,
-        customLWC,
-        agentOps,
+        agentSurfaces,
         agentforceCoworker,
-        dc360DevOps
+        tracinganalytics,
+        agentOps,
+        customLWC,
+        dc360DevOps,
+        dc360GroundUp,
+        humanInTheLoop,
+        reasoningEngine,
+        multiagent,
+        rag,
+        agentforceArchitect,
+        hybridReasoning
     ]
 
     // ── Certifications ──
@@ -36,6 +38,27 @@ enum CertCatalog {
     static let all: [CertConfig] = deepDives + certifications
 
     // ── Deep Dive Definitions ──
+
+    static let agentSurfaces = CertConfig(
+        id: "agentsurfaces",
+        name: "Agentforce Agent Surfaces",
+        shortName: "Agent Surfaces",
+        icon: "rectangle.stack.fill",
+        primaryColor: Color(red: 0.15, green: 0.55, blue: 0.82),
+        secondaryColor: Color(red: 0.25, green: 0.70, blue: 0.95),
+        headerGradient: [
+            Color(red: 0.08, green: 0.32, blue: 0.52),
+            Color(red: 0.10, green: 0.38, blue: 0.62),
+            Color(red: 0.15, green: 0.55, blue: 0.82)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "agentsurfaces",
+        isBonusTopic: true,
+        guideFile: "agentsurfaces"
+    )
 
     static let dc360GroundUp = CertConfig(
         id: "dc360groundup",
@@ -163,6 +186,27 @@ enum CertCatalog {
         guideFile: "dc360devops"
     )
 
+    static let humanInTheLoop = CertConfig(
+        id: "humanintheloop",
+        name: "Human-in-the-Loop Patterns for Agentforce Agents",
+        shortName: "Human-in-the-Loop",
+        icon: "person.crop.circle.badge.checkmark",
+        primaryColor: Color(red: 0.70, green: 0.30, blue: 0.55),
+        secondaryColor: Color(red: 0.85, green: 0.45, blue: 0.70),
+        headerGradient: [
+            Color(red: 0.42, green: 0.15, blue: 0.33),
+            Color(red: 0.50, green: 0.20, blue: 0.40),
+            Color(red: 0.70, green: 0.30, blue: 0.55)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "humanintheloop",
+        isBonusTopic: true,
+        guideFile: "humanintheloop"
+    )
+
     // ── Certification Definitions ──
 
     static let agentforce = CertConfig(
@@ -202,12 +246,8 @@ enum CertCatalog {
             Color(red: 0.50, green: 0.30, blue: 0.16)
         ],
         passingScore: 70,
-        quizLengths: [
-            QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
-            QuizLength(id: 25, label: "25 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
-            QuizLength(id: 50, label: "All 50 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~30 min")
-        ],
-        questions: AgentOpsQuestionBank.all,
+        quizLengths: [],
+        questions: [],
         studySections: [],
         storageKeyPrefix: "agentops",
         isBonusTopic: true,
@@ -251,12 +291,8 @@ enum CertCatalog {
             Color(red: 0.36, green: 0.18, blue: 0.56)
         ],
         passingScore: 70,
-        quizLengths: [
-            QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
-            QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
-            QuizLength(id: 44, label: "All 44 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~22 min")
-        ],
-        questions: ReasoningEngineQuestionBank.all,
+        quizLengths: [],
+        questions: [],
         studySections: [],
         storageKeyPrefix: "reasoningengine",
         isBonusTopic: true,
@@ -276,13 +312,8 @@ enum CertCatalog {
             Color(red: 0.20, green: 0.38, blue: 0.60)
         ],
         passingScore: 70,
-        quizLengths: [
-            QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
-            QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
-            QuizLength(id: 60, label: "60 Questions", icon: "trophy.fill", subtitle: "Exam Simulation", duration: "~30 min"),
-            QuizLength(id: 77, label: "All 77 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~39 min")
-        ],
-        questions: RAGQuestionBank.all,
+        quizLengths: [],
+        questions: [],
         studySections: [],
         storageKeyPrefix: "rag",
         isBonusTopic: true,
@@ -542,12 +573,8 @@ enum CertCatalog {
             Color(red: 0.18, green: 0.36, blue: 0.60)
         ],
         passingScore: 70,
-        quizLengths: [
-            QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
-            QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
-            QuizLength(id: 70, label: "All 70 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~35 min")
-        ],
-        questions: MultiAgentQuestionBank.all,
+        quizLengths: [],
+        questions: [],
         studySections: [],
         storageKeyPrefix: "multiagent",
         isBonusTopic: true,
@@ -567,12 +594,8 @@ enum CertCatalog {
             Color(red: 0.10, green: 0.42, blue: 0.46)
         ],
         passingScore: 70,
-        quizLengths: [
-            QuizLength(id: 15, label: "15 Questions", icon: "bolt.fill", subtitle: "Quick Review", duration: "~8 min"),
-            QuizLength(id: 30, label: "30 Questions", icon: "flame.fill", subtitle: "Standard Practice", duration: "~15 min"),
-            QuizLength(id: 77, label: "All 77 Questions", icon: "star.fill", subtitle: "Full Question Bank", duration: "~39 min")
-        ],
-        questions: TracingAnalyticsQuestionBank.all,
+        quizLengths: [],
+        questions: [],
         studySections: [],
         storageKeyPrefix: "tracinganalytics",
         isBonusTopic: true,
