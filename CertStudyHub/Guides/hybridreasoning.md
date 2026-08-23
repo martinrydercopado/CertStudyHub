@@ -97,7 +97,7 @@ She added the last piece: "And wrapping all of this are two optional but extreme
 
 "One more thing," she added. "These blocks are optional. Not every sub-agent needs them. You only add them when your use case actually requires it. The before and after reasoning blocks are what add the determinism component of hybrid reasoning. Without them, you can still have a perfectly functional sub-agent. With them, you have precise control over what happens at the edges of every reasoning cycle."
 
-She also added a note Marcus would remember for the rest of his career. In the Canvas view of Agentforce Builder, the before_reasoning and after_reasoning blocks are not visible. You only see them when you flip to Script mode. And to add them, you write the keyword `before_reasoning:` or `after_reasoning:` at the same indentation level as `reasoning:`. The indentation is not optional. Agent Script is whitespace-sensitive.
+She added a practical note worth knowing. Before_reasoning and after_reasoning blocks are created in Script mode — you write the keyword at the same indentation level as `reasoning:` and the platform compiles them. Once created that way, they do become visible in Canvas view as well. But if you are working purely in Canvas and have not yet created these blocks in Script mode, you will not see them or be prompted for them. The indentation is not optional. Agent Script is whitespace-sensitive.
 
 Marcus turned back to the whiteboard diagram. He studied the four boxes for a long moment.
 
@@ -119,27 +119,58 @@ Marcus looked skeptical. He was ready to open VS Code.
 
 She titled the document **Order Details Agent — Use Case Spec** and began filling in the table. The left column held the user intent. Not every possible question, just the intent, because the LLM is very capable of interpreting variations of intent from natural language. The right columns held what the agent does, and what the agent says.
 
-| User says... | Agent does... | Agent responds... |
-|---|---|---|
-| "What is Gorilla Glass?" | No action called. Reason over built-in knowledge. | Answers from product knowledge. |
-| "What's the weather?" | No action called. Classifies as off topic. | Politely redirects. Never reveals system config. |
-| "I need to check on an order" | Collect email first. Set: UserEmail. | "To access order details I need to verify your identity. Could you provide your email?" |
-| User provides their email | Call verification flow. Call: OrderDetails_Verify_User. With: UserEmail. Set: isVerified, Verification_Run = true. | Verified: "Identity confirmed!" then moves to order lookup. Not verified: "I wasn't able to verify you. Try again or raise a case?" |
-| "I can't be verified — create a case" | Call case creation flow. Call: CreateVerificationCase. With: UserEmail. Set: Case creation status and ID. | "Your case has been created. Case number [X]. Our support team will reach out shortly." |
-| User provides an order number | Resolve exact ID, then fetch full order. Call: GetExactOrderNumber, then GetOrderDetails. | Displays full order details: status, line items, shipping, billing. |
-| "What's the delivery date?" | No action called. Read from: OrderDetails variable. No re-fetch. | Answers directly from stored order data. |
-| "I need to expedite this" | Call expedite case flow. Call: CreateExpediteCase. With: ExactOrderNumber, UserEmail, Reason. Set: Case ID. | "Your request has been submitted. Case [X]. Our team will follow up shortly." |
-| "Can you look up another order?" | Reset order variables only. Reset: InputOrderNumber, ExactOrderNumber, OrderDetails. | "Sure — please provide the next order number." |
-| "That's all I need, thanks" | Reset all variables. | "Let me know if there's anything else I can help with." |
+---
 
-Sarah sat back. "See the pattern? Every row in the 'Agent does' column becomes either an action with explicit inputs and outputs, a variable set, or a no-op where the LLM just reasons. This table is the agent."
+**"What is Gorilla Glass?"**
+- Does: No action called. Reason over built-in knowledge.
+- Says: Answers from product knowledge.
+
+**"What's the weather?"**
+- Does: No action called. Classifies as off topic.
+- Says: Politely redirects. Never reveals system config.
+
+**"I need to check on an order"**
+- Does: Collect email first. Set: UserEmail.
+- Says: "To access order details I need to verify your identity. Could you provide your email?"
+
+**User provides their email**
+- Does: Call: OrderDetails_Verify_User. With: UserEmail. Set: isVerified, Verification_Run = true.
+- Says: Verified: "Identity confirmed!" then moves to order lookup. Not verified: "I wasn't able to verify you. Try again or raise a case?"
+
+**"I can't be verified — create a case"**
+- Does: Call: CreateVerificationCase. With: UserEmail. Set: Case creation status and ID.
+- Says: "Your case has been created. Case number [X]. Our support team will reach out shortly."
+
+**User provides an order number**
+- Does: Call: GetExactOrderNumber, then GetOrderDetails.
+- Says: Displays full order details: status, line items, shipping, billing.
+
+**"What's the delivery date?"**
+- Does: No action called. Read from: OrderDetails variable. No re-fetch.
+- Says: Answers directly from stored order data.
+
+**"I need to expedite this"**
+- Does: Call: CreateExpediteCase. With: ExactOrderNumber, UserEmail, Reason. Set: Case ID.
+- Says: "Your request has been submitted. Case [X]. Our team will follow up shortly."
+
+**"Can you look up another order?"**
+- Does: Reset: InputOrderNumber, ExactOrderNumber, OrderDetails.
+- Says: "Sure — please provide the next order number."
+
+**"That's all I need, thanks"**
+- Does: Reset all variables.
+- Says: "Let me know if there's anything else I can help with."
+
+---
+
+Sarah sat back. "See the pattern? Every row in the 'Does' column becomes either an action with explicit inputs and outputs, a variable set, or a no-op where the LLM just reasons. This table is the agent."
 
 She then drew the key insight framework:
 
-- **If 'Agent does' has an action name**, that becomes an Agent action with explicit inputs and outputs.
-- **If it says 'Set'**, that becomes a setVariables utility action — something the agent needs to remember.
-- **If it says 'No action called'**, the LLM reasons over stored variables or built-in knowledge.
-- **If it says 'Reset variables'**, that's cleanup — preventing data from bleeding between turns.
+- **If 'Does' has an action name** — that becomes an Agent action with explicit inputs and outputs.
+- **If it says 'Set'** — that becomes a setVariables utility action, something the agent needs to remember.
+- **If it says 'No action called'** — the LLM reasons over stored variables or built-in knowledge.
+- **If it says 'Reset variables'** — that's cleanup, preventing data from bleeding between turns.
 
 Marcus stared at the table. "So the variables section writes itself from this."
 
@@ -253,9 +284,9 @@ start_agent agent_router:
         model: "model://sfdc_ai__DefaultGPT41"
 ```
 
-"GPT 4.1 is well-tested with agents and supports the full feature set we need," she said. "The router's before_reasoning block stays. Our session resumption pattern stays. We just trade some routing speed for workflow continuity."
+"The good news," Sarah added, "is that switching from EinsteinHyperClassifier to a general LLM is painless at any point — it's a one-line model config change. The painful direction is the reverse. If you build a router on a general LLM and load it up with before_reasoning blocks, deterministic transitions, and variable logic, then later decide you want the speed of EinsteinHyperClassifier, you have to strip all of that out first. The constraint is on the HyperClassifier side, not the swap itself. So make the decision now, before you write the router script, and you won't have to undo anything."
 
-Marcus nodded and made the note. It was the kind of architectural decision that looked obvious in hindsight but could silently break an entire workflow if made without understanding the constraints. He was glad they had caught it before writing a single line of the router script.
+Marcus nodded and made the note.
 
 ---
 
@@ -274,23 +305,23 @@ She picked up the user_verification sub-agent and wrote it out in the order a pe
 
 Then they drew the boundary.
 
-**Step 1:** Checking if UserEmail is empty and isVerified is false — *deterministic*. This is a pure variable check: `UserEmail == "" and isVerified == False`. There's no ambiguity. It's either empty or it isn't.
+**Step 1: Checking if UserEmail is empty and isVerified is false** — *deterministic*. This is a pure variable check: `UserEmail == "" and isVerified == False`. There's no ambiguity. It's either empty or it isn't.
 
-**Asking for the email:** *LLM*. The agent needs to phrase the request naturally, acknowledge the user's prior message, adapt to tone. The LLM handles this beautifully.
+**Asking for the email** — *LLM*. The agent needs to phrase the request naturally, acknowledge the user's prior message, adapt to tone. The LLM handles this beautifully.
 
-**Capturing what the user says and storing it in UserEmail:** *LLM-driven via utility action*. The LLM extracts the email from the user's message. It's trained on enough data to recognize that "my email is sarah@corning.com" contains an email address and to extract it cleanly, without any regex or parsing code on the developer's part. But critically, it cannot update the variable unless a `setVariables` utility action is defined. Without that utility action, the email simply vanishes after the reasoning loop. The documentation flags this explicitly as one of the most common early mistakes.
+**Capturing and storing the email** — *LLM-driven via utility action*. The LLM extracts the email from the user's message. It's trained on enough data to recognize that "my email is sarah@corning.com" contains an email address and to extract it cleanly, without any regex or parsing code on the developer's part. But critically, it cannot update the variable unless a `setVariables` utility action is defined. Without that utility action, the email simply vanishes after the reasoning loop. The documentation flags this explicitly as one of the most common early mistakes.
 
-**Step 2: Running the verification check:** *deterministic*. This must fire exactly once, exactly when UserEmail is populated and Verification_Run is false. The LLM is not consulted. An `if` condition triggers `OrderDetails_Verify_User` with UserEmail as input, and sets isVerified and Verification_Run = true as outputs.
+**Step 2: Running the verification check** — *deterministic*. This must fire exactly once, exactly when UserEmail is populated and Verification_Run is false. The LLM is not consulted. An `if` condition triggers `OrderDetails_Verify_User` with UserEmail as input, and sets isVerified and Verification_Run = true as outputs.
 
 "And this," Sarah said, "is why we do not put `OrderDetails_Verify_User` in the reasoning actions. If it's in the reasoning actions, the LLM can call it. It might call it twice. It might call it before the email is collected. By keeping it exclusively in the deterministic section, we guarantee the call happens exactly once, with a valid email, at exactly the right moment."
 
-**Step 3: The success message:** *LLM*. The agent is wording a result, not executing logic.
+**Step 3: The success message** — *LLM*. The agent is wording a result, not executing logic.
 
-**Step 3: Transitioning to Order_Status:** *deterministic*. This is never an LLM choice. A `transition to` fires automatically the moment isVerified is true.
+**Step 3: Transitioning to Order_Status** — *deterministic*. This is never an LLM choice. A `transition to` fires automatically the moment isVerified is true.
 
-**Step 4: The failed verification conversation:** *LLM*. The user's response to "would you like to try again?" is completely open-ended. They might say "yes," "let me try a different email," "try again please," or "sure." You cannot write a deterministic rule that catches every phrasing. This is exactly what the LLM is built for — interpreting conversational intent.
+**Step 4: The failed verification conversation** — *LLM*. The user's response to "would you like to try again?" is completely open-ended. They might say "yes," "let me try a different email," "try again please," or "sure." You cannot write a deterministic rule that catches every phrasing. This is exactly what the LLM is built for — interpreting conversational intent.
 
-**Steps 5 and 6: Acting on their choice:** *LLM-driven via utility actions*. The LLM interprets the intent. But the actual variable resets and transitions are executed by pre-defined utility actions that the LLM calls. The LLM decides which utility action to call; the system executes it deterministically.
+**Steps 5 and 6: Acting on their choice** — *LLM-driven via utility actions*. The LLM interprets the intent. But the actual variable resets and transitions are executed by pre-defined utility actions that the LLM calls. The LLM decides which utility action to call; the system executes it deterministically.
 
 Marcus stared at the whiteboard. "So it's not really deterministic versus LLM. It's: does this decision depend on a variable value, or does it depend on a human's words?"
 
@@ -477,7 +508,7 @@ reasoning:
 
 "And that last block," Sarah added, pointing at the `OrderDetails != ""` condition, "is where the LLM lives for the rest of the order conversation. Every follow-up question, every 'what's the delivery date,' every 'how many units were ordered' — the LLM reads from the stored variable. No action. No API call. No latency. No cost."
 
-She tapped the screen. "If `OrderDetails` is already populated and the user asks a follow-up, the first four conditions produce different results. Only the last block evaluates to true. The LLM reads and responds. This is how you avoid redundant API calls."
+She tapped the screen. "If `OrderDetails` is already populated and the user asks a follow-up, only the last block evaluates to true. The LLM reads and responds. This is how you avoid redundant API calls."
 
 ---
 
@@ -616,7 +647,7 @@ Same rule as variables. If the LLM does not have a transition utility action for
 If you forget to set workflow_step at the entry of a sub-agent, session resumption breaks. The topic selector's before_reasoning checks workflow_step to know where to send a returning user. If workflow_step is empty or stale, the user gets re-routed by the LLM instead of resumed to their exact location. Always set workflow_step in the before_reasoning block of every sub-agent that is part of a multi-turn workflow.
 
 **Gotcha #5: The Invisible Blocks**
-Before_reasoning and after_reasoning do not appear in Canvas view. You will not see them. You will not be prompted for them. To add them, flip to Script view and write the keyword at the correct indentation level alongside `reasoning:`. This confused every developer on the team at least once.
+Before_reasoning and after_reasoning blocks are created in Script view by writing the keyword at the correct indentation level alongside `reasoning:`. Once created there, they do appear in Canvas view as well. But if you are working purely in Canvas and haven't yet created these blocks in Script view, you won't see them or be prompted to add them. If you expect to see them in Canvas and they aren't there, the answer is to flip to Script view and create them first.
 
 **Gotcha #6: The Contradicting Instructions**
 Global system instructions apply across all sub-agents. Sub-agent instructions apply within that sub-agent. If they contradict each other, the LLM gets confused and produces unpredictable behavior. Review global instructions whenever you add a sub-agent whose instructions might conflict with them.
@@ -631,7 +662,7 @@ When you run an action deterministically, the reasoning engine does not automati
 If the topic selector's before_reasoning always matches a workflow_step even after the workflow is complete, the user will be stuck in a permanent redirect loop. Clear workflow_step (set it to `""`) when a workflow completes cleanly so that the next fresh turn starts with LLM routing instead of deterministic resume. The documentation flags this explicitly: avoid logic that causes a transition from sub-agent A to sub-agent B and then back to A, repeating indefinitely.
 
 **Gotcha #10: The EinsteinHyperClassifier Swap**
-Some teams start from the Agentforce Service Agent template, which uses EinsteinHyperClassifier in the router by default. It is faster and more accurate for pure intent classification. But it cannot use `before_reasoning` or `after_reasoning`, and it can only call `@utils.transition` — no other tools. If your router design depends on before_reasoning for session resumption or variable initialization, you must switch to a general LLM model in the router. Understand the trade-off before you start. Swapping it out after the router is fully built is a painful afternoon.
+Some teams start from the Agentforce Service Agent template, which uses EinsteinHyperClassifier in the router by default. It is faster and more accurate for pure intent classification. But it cannot use `before_reasoning` or `after_reasoning`, and it can only call `@utils.transition` — no other tools. Switching from EinsteinHyperClassifier to a general LLM is a simple model config change and can be done at any point. The painful direction is the reverse: if you have built a router on a general LLM and loaded it with before_reasoning logic, deterministic transitions, and variable handling, then later want to switch to EinsteinHyperClassifier, you have to remove all of that first. The constraint lives on the HyperClassifier side. Make the decision before you build the router, not after.
 
 **Gotcha #11: Build One From Scratch First**
 This was the one Marcus had tried to skip and had regretted most. Before you use Claude Code, Claude, or any AI coding assistant to help you generate Agent Script, you need to have written at least one complete agent by hand. Not because the tools are bad. The tools are very good. But if the generated code produces unexpected behavior, you need to be able to read it, diagnose it, and fix it. If you haven't internalized how the reasoning loop thinks, how before and after reasoning interact with the main loop, and where the LLM boundary lives, debugging generated code will be impossible. Build one simple agent yourself first. It can be completely hypothetical. Then use the tools.
@@ -648,8 +679,7 @@ One turn can involve multiple reasoning loops and multiple sub-agent traversals 
 **2. The agent router runs on every single turn, not just the first one.**
 Design your router to check session state before doing anything else. Resume logic is the highest priority.
 
-**3. workflow_step is the breadcrumb that lets the agent pick up exactly where it left off.**
-Without it, an interrupted session starts over. With it, the session resumes as if nothing happened.
+**3. workflow_step is the breadcrumb that lets the agent pick up exactly where it it, an interrupted session starts over. With it, the session resumes as if nothing happened.
 
 **4. Deterministic versus LLM is not a preference. It is a decision framework.**
 Check a variable value? Deterministic. Interpret what a person means? LLM.
@@ -664,7 +694,7 @@ You cannot instruct the LLM in natural language to "remember the email." Without
 Same rule. "Go to Case_Management" in a natural language prompt does nothing without a defined utility action. And every transition is one-way — control does not return to the calling sub-agent.
 
 **8. Your router model choice is an architecture decision, not a preference.**
-EinsteinHyperClassifier is faster and more accurate for classification, but it cannot use before_reasoning, after_reasoning, or any tool except @utils.transition. If your router needs any of those, use a general LLM.
+EinsteinHyperClassifier is faster and more accurate for classification, but it cannot use before_reasoning, after_reasoning, or any tool except @utils.transition. If your router needs any of those, use a general LLM. Switching from HyperClassifier to a general LLM is easy. The reverse is not.
 
 **9. The pipe `|` means LLM. The arrow `->` means code. The whitespace matters.**
 Agent Script is whitespace-sensitive. Indentation is not style. It is syntax. Shorter instructions produce more accurate results — keep reasoning blocks focused.
@@ -687,7 +717,7 @@ A Returns Agent. A Loyalty Program Agent. A Supply Chain Visibility Agent.
 
 The Superagent pattern was the next frontier. Instead of one agent handling everything, you could have multiple specialized agents, each with their own sub-agents and workflows, and a top-level orchestrator that delegated to them based on intent. The orchestrator wouldn't need to know how any individual agent worked. It would read each agent's name and description, just as the topic selector read sub-agent names and descriptions, and route accordingly.
 
-The agent-level name and that she had filled in almost as an afterthought at the beginning of this project were, it turned out, the API contract for that future orchestration layer. Good descriptions now meant easy orchestration later. She made a note to go back and polish them.
+The agent-level name and description fields that she had filled in almost as an afterthought at the beginning of this project were, it turned out, the API contract for that future orchestration layer. Good descriptions now meant easy orchestration later. She made a note to go back and polish them.
 
 She thought about a principle she had taken from the Salesforce documentation early on and returned to again and again: plan before you build, map the jobs before the sub-agents, draw the flow before the script. The technical implementation had turned out to be the easy part, once the thinking was done. The hard work had been the spec table, the boundary analysis, the variable category diagram, and the honest accounting of which decisions belonged to code and which belonged to the model.
 
@@ -724,7 +754,6 @@ They were just getting started.
 ## Appendix A: Key Concepts Reference
 
 ### The Sub-Agent Anatomy
-Every sub-agent in Agentforce follows a consistent structure:
 
 ```
 subagent: SubAgentName
@@ -733,105 +762,134 @@ subagent: SubAgentName
      Good descriptions also matter for future multi-agent orchestration.]
   actions:
     [Sub-agent level actions: Flows, Apex, Prompt Templates]
-  before_reasoning:        <- Optional. Runs deterministically on entry.
-    [Variable stamps, resume transitions, pre-flight logic]
+  before_reasoning:
+    [Optional. Runs deterministically on entry, before the LLM.
+     Created in Script view; visible in Canvas view once created.]
   reasoning:
     actions:
       [Reasoning actions: utility actions the LLM can choose to call.
        Verify that deterministically-called actions are not also listed here.]
     instructions:
-      [Deterministic if/else blocks using -> and LLM prompts using | live here]
-  after_reasoning:         <- Optional. Runs deterministically on exit.
-    [Safety-net transitions, cleanup logic]
+      [-> deterministic blocks and | LLM prompts live here together]
+  after_reasoning:
+    [Optional. Runs deterministically after the LLM finishes.
+     Created in Script view; visible in Canvas view once created.]
 ```
 
 ### The Two Syntaxes
+
 ```
-->  deterministic execution: runs exactly as written, every time
+->  deterministic: runs exactly as written, every time
 |   LLM prompt: passed to the reasoning engine as natural language
 ```
 
-Both can appear in the same reasoning block. The whitespace indentation determines which block each line belongs to.
+Both can appear in the same reasoning block. Whitespace indentation determines which block each line belongs to.
 
 ### The Decision Framework
 
-| Question | Answer | Goes where |
-|---|---|---|
-| Am I checking a variable value? | Yes | Deterministic `if` condition |
-| Am I interpreting user intent? | Yes | LLM instruction with `|` |
-| Must this action fire every time condition X is met? | Yes | Deterministic `->` block |
-| Should the LLM pick *when* to call this action? | Yes | Reasoning actions |
-| Am I storing a value the LLM captures? | Yes | `setVariables` utility action |
-| Am I moving to another sub-agent? | Yes | `transition to` utility action |
-| Do I need the output of a deterministic action in an LLM prompt? | Yes | Store it in a variable first |
+**Am I checking a variable value?**
+Use a deterministic `if` condition.
 
-### The Variable Categories
+**Am I interpreting user intent?**
+Use an LLM instruction with `|`.
 
-| Category | Variables | Cleared when |
-|---|---|---|
-| Identity | UserEmail, isVerified, Verification_Run | On retry, or after case created |
-| Order | InputOrderNumber, ExactOrderNumber, OrderDetails | Between lookups |
-| Case | CaseType, CaseNumber, CaseCreationStatus | After confirmation |
-| Session | workflow_step | On clean close |
+**Must this action fire every time condition X is met?**
+Use a deterministic `->` block. Remove it from reasoning actions.
+
+**Should the LLM pick when to call this action?**
+Put it in reasoning actions.
+
+**Am I storing a value the LLM captures?**
+Define a `setVariables` utility action.
+
+**Am I moving to another sub-agent?**
+Define a `transition to` utility action.
+
+**Do I need the output of a deterministic action in a later LLM prompt?**
+Store it in a variable first, then reference the variable.
+
+### Variable Categories
+
+**Identity**
+- UserEmail, isVerified, Verification_Run
+- Cleared on retry or after case created
+
+**Order**
+- InputOrderNumber, ExactOrderNumber, OrderDetails
+- Cleared between lookups
+
+**Case**
+- CaseType, CaseNumber, CaseCreationStatus
+- Cleared after confirmation
+
+**Session**
+- workflow_step
+- Cleared on clean close
 
 ### Transition Behavior
-Transitions using `@utils.transition to` are strictly one-way. When a transition fires, Agentforce discards the current sub-agent's prompt and processes the destination sub-agent from top to bottom. Control does not return to the calling sub-agent. After the destination sub-agent completes, control returns to `start_agent` on the next turn. If you need the user to return to a prior sub-agent, you must define an explicit transition back in the destination sub-agent. When returning, the sub-agent starts from the beginning, not from where it previously left off.
+
+`@utils.transition to` is strictly one-way. When a transition fires, Agentforce discards the current sub-agent's prompt and processes the destination sub-agent from top to bottom. Control does not return to the calling sub-agent. After the destination sub-agent completes, control returns to `start_agent` on the next turn.
+
+If you need the user to return to a prior sub-agent, define an explicit transition back in the destination sub-agent. When it fires, that sub-agent restarts from the beginning, not from where it previously left off.
 
 ### The Router Model Trade-Off
 
-| Model | Speed | Accuracy | before_reasoning | after_reasoning | Tools available |
-|---|---|---|---|---|---|
-| EinsteinHyperClassifier | Faster | Higher for classification | Not supported | Not supported | `@utils.transition` only |
-| General LLM (e.g. GPT 4.1) | Standard | Good | Supported | Supported | Full tool set |
+**EinsteinHyperClassifier**
+- Faster, higher accuracy for classification
+- Cannot use before_reasoning or after_reasoning
+- Only tool available: `@utils.transition`
+- Best for: purely intent-based routing with no session state logic
 
-Use EinsteinHyperClassifier when routing is purely intent-based and you need maximum speed and classification accuracy. Use a general LLM when your router needs before_reasoning or after_reasoning for session state management, variable initialization, or any tool beyond `@utils.transition`.
+**General LLM (e.g. GPT 4.1)**
+- Standard speed, good routing accuracy
+- Supports before_reasoning, after_reasoning, and all tools
+- Best for: routers that need session resumption, variable logic, or any tool beyond transition
+
+Switching from EinsteinHyperClassifier to a general LLM is a simple model config change. The reverse requires removing any before_reasoning, after_reasoning, and non-transition tools first.
 
 ### The Agent Router Pattern
 
 ```
 start_agent agent_router:
     model_config:
-        model: "model://sfdc_ai__DefaultGPT41"  <- Use general LLM if before_reasoning needed
-    before_reasoning:          <- Resume interrupted sessions (deterministic, bypasses LLM entirely)
+        model: "model://sfdc_ai__DefaultGPT41"
+    before_reasoning:
         if workflow_step == "X":
             -> transition to subagent X
         if workflow_step == "Y":
             -> transition to subagent Y
     reasoning:
         actions:
-            [Only include sub-agents the LLM is allowed to route to.
-             Never include sub-agents that must be reached deterministically.
-             Keep this list focused — the official guidance is to limit and filter
-             subagents available to the LLM so it can route effectively.]
+            [Only sub-agents the LLM should route to.
+             Never include sub-agents reached deterministically.
+             Limit this list — fewer choices means more reliable routing.]
         instructions:
             | Clear routing instructions for fresh sessions.
-              Describe each routable sub-agent's domain without ambiguity.
               Shorter instructions produce more accurate results.
 ```
 
 ### Before and After Reasoning
 
-- Neither block is required. Add them only when your use case warrants it.
-- Both blocks are invisible in Canvas view. Flip to Script view to see and edit them.
-- Both blocks use the same `->` syntax as deterministic instructions in the reasoning block.
-- Indentation must align with `reasoning:` at the same level.
-- Before reasoning fires once, immediately on sub-agent entry, before any LLM processing.
-- After reasoning fires once, after the LLM completes its loop, before the agent responds.
-- Neither block is available when using EinsteinHyperClassifier as the sub-agent model.
+- Neither block is required — add them only when your use case warrants it.
+- Both are created in Script view by writing the keyword at the same indentation level as `reasoning:`.
+- Once created in Script view, they are visible and editable in Canvas view as well.
+- Before reasoning fires once on sub-agent entry, before any LLM processing.
+- After reasoning fires once after the LLM loop completes, before the response is sent.
+- Neither block is supported when using EinsteinHyperClassifier as the sub-agent model.
 
-### The Gotcha Checklist (Before You Declare It Done)
+### The Gotcha Checklist
 
-- [ ] Every action I call deterministically is not also listed in reasoning actions.
-- [ ] Every variable I want the LLM to update has a matching setVariables utility action.
-- [ ] Every sub-agent I want the LLM to transition to has a matching transition utility action.
-- [ ] Every sub-agent in a multi-turn workflow stamps workflow_step in before_reasoning.
-- [ ] workflow_step is cleared when a workflow completes cleanly.
-- [ ] Global instructions and sub-agent instructions do not contradict each other.
-- [ ] No sub-agent has so many if conditions and instructions that it becomes hard to read.
-- [ ] Outputs of deterministic actions that are needed later are stored in variables.
-- [ ] String variables are initialized to `""` not null so equality checks work correctly.
-- [ ] My router model choice (general LLM vs. EinsteinHyperClassifier) is deliberate and matches my router's feature requirements.
-- [ ] I have run at least one full end-to-end conversation in the tracer and checked the variable state panel at each step.
+- [ ] Every deterministically-called action is removed from reasoning actions
+- [ ] Every variable the LLM updates has a matching setVariables utility action
+- [ ] Every sub-agent the LLM transitions to has a matching transition utility action
+- [ ] Every sub-agent in a multi-turn workflow stamps workflow_step in before_reasoning
+- [ ] workflow_step is cleared when a workflow completes cleanly
+- [ ] Global and sub-agent instructions do not contradict each other
+- [ ] No sub-agent has grown so long it is hard to read
+- [ ] Outputs of deterministic actions needed later are stored in variables
+- [ ] String variables are initialized to `""` not null
+- [ ] Router model choice matches the router's actual feature requirements
+- [ ] At least one full end-to-end conversation has been traced with the variable panel open
 
 ---
 
@@ -840,51 +898,71 @@ start_agent agent_router:
 Before writing any Agent Script, complete this document. The script is a translation of this document, not the other way around.
 
 **Agent Name:**
-**Agent Description** *(will be used for orchestration — be specific):*
+**Agent Description** *(used for orchestration — be specific):*
 **Scope** *(where does this agent's responsibility start and stop):*
+
+---
 
 ### User Intent Table
 
-| User intent | Agent does | Actions called | Variables set | Agent responds |
-|---|---|---|---|---|
-| | | | | |
+For each user intent, answer:
+
+**Intent:**
+- Agent does:
+- Actions called:
+- Variables set:
+- Agent responds:
+
+---
 
 ### Variable Registry
 
-| Variable name | Type | Default | Set by | Cleared when |
-|---|---|---|---|---|
-| | | | | |
+For each variable:
+
+**Name:**
+- Type:
+- Default:
+- Set by:
+- Cleared when:
+
+---
 
 ### Sub-Agent Map
 
 For each sub-agent:
-- **Name** *(clear, descriptive — the LLM reads this):*
-- **Description** *(one sentence, unambiguous):*
-- **Entry condition** *(how does the agent arrive here):*
-- **Before reasoning** *(what must happen deterministically on entry):*
-- **Deterministic instructions** *(if-then-else blocks):*
-- **LLM instructions** *(natural language prompts — keep them short):*
-- **After reasoning** *(what must happen deterministically on exit):*
-- **Exit conditions** *(how does the agent leave this sub-agent):*
+
+**Name** *(clear, descriptive — the LLM reads this):*
+**Description** *(one sentence, unambiguous):*
+**Entry condition:**
+**Before reasoning** *(deterministic on entry):*
+**Deterministic instructions** *(if-then-else blocks):*
+**LLM instructions** *(natural language prompts — keep them short):*
+**After reasoning** *(deterministic on exit):*
+**Exit conditions:**
+
+---
 
 ### Routing Plan
 
-| Trigger | Routing method | Destination |
-|---|---|---|
-| workflow_step = "X" | Deterministic (before_reasoning) | Sub-agent X |
-| New order intent | LLM tool call | user_verification |
-| General question | LLM tool call | General Questions |
-| Off-topic | LLM tool call | Off Topic |
+For each trigger:
+
+**Trigger:**
+- Routing method: deterministic / LLM tool call
+- Destination:
+
+---
 
 ### Router Model Decision
 
-Answer these questions before choosing:
 - Does my router need `before_reasoning` or `after_reasoning`? If yes: use a general LLM.
 - Does my router need any tool other than `@utils.transition`? If yes: use a general LLM.
 - Is my routing purely intent-based with no session state logic? If yes: EinsteinHyperClassifier is a strong option.
 
+---
+
 ### Boundary Analysis
 
-For each action in the system, answer: Must this fire with 100% certainty when condition X is met?
-- Yes: deterministic, verify it is not also in reasoning actions.
-- No: reasoning action, LLM decides when to call.
+For each action, answer: must this fire with 100% certainty when condition X is met?
+
+- **Yes:** call it deterministically, verify it is not also in reasoning actions.
+- **No:** put it in reasoning actions, let the LLM decide when to call it.
