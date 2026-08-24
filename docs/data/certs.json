@@ -40,6 +40,26 @@
     "quizLengths": []
   },
   {
+    "id": "agentforcehelpagent",
+    "name": "Agentforce Help Agent: Outcome-Based Pricing",
+    "shortName": "Help Agent",
+    "icon": "\u2753",
+    "primaryColor": "#339966",
+    "secondaryColor": "#4DC78C",
+    "headerGradient": [
+      "#1A5C3D",
+      "#24704D",
+      "#339966"
+    ],
+    "passingScore": 70,
+    "questionBank": "agentforcehelpagent",
+    "storageKeyPrefix": "agentforcehelpagent",
+    "isBonusTopic": true,
+    "subtitle": null,
+    "guideFile": "agentforcehelpagent",
+    "quizLengths": []
+  },
+  {
     "id": "tracinganalytics",
     "name": "Agentforce Tracing and Analytics",
     "shortName": "Tracing & Analytics",
@@ -217,6 +237,26 @@
     "isBonusTopic": true,
     "subtitle": null,
     "guideFile": "rag",
+    "quizLengths": []
+  },
+  {
+    "id": "salesforceknowledge",
+    "name": "Salesforce Knowledge: The Architect's Guide to Knowledge-Grounded Agents",
+    "shortName": "SF Knowledge",
+    "icon": "\ud83d\udcda",
+    "primaryColor": "#995926",
+    "secondaryColor": "#C78040",
+    "headerGradient": [
+      "#5C3314",
+      "#70401A",
+      "#995926"
+    ],
+    "passingScore": 70,
+    "questionBank": "salesforceknowledge",
+    "storageKeyPrefix": "salesforceknowledge",
+    "isBonusTopic": true,
+    "subtitle": null,
+    "guideFile": "salesforceknowledge",
     "quizLengths": []
   },
   {

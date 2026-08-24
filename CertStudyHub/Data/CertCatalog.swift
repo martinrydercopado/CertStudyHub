@@ -5,6 +5,7 @@ enum CertCatalog {
     static let deepDives: [CertConfig] = [
         agentSurfaces,
         agentforceCoworker,
+        agentforceHelpAgent,
         tracinganalytics,
         agentOps,
         customLWC,
@@ -14,6 +15,7 @@ enum CertCatalog {
         reasoningEngine,
         multiagent,
         rag,
+        salesforceKnowledge,
         agentforceArchitect,
         hybridReasoning
     ]
@@ -58,6 +60,27 @@ enum CertCatalog {
         storageKeyPrefix: "agentsurfaces",
         isBonusTopic: true,
         guideFile: "agentsurfaces"
+    )
+
+    static let agentforceHelpAgent = CertConfig(
+        id: "agentforcehelpagent",
+        name: "Agentforce Help Agent: Outcome-Based Pricing",
+        shortName: "Help Agent",
+        icon: "questionmark.circle.fill",
+        primaryColor: Color(red: 0.20, green: 0.60, blue: 0.40),
+        secondaryColor: Color(red: 0.30, green: 0.78, blue: 0.55),
+        headerGradient: [
+            Color(red: 0.10, green: 0.36, blue: 0.24),
+            Color(red: 0.14, green: 0.44, blue: 0.30),
+            Color(red: 0.20, green: 0.60, blue: 0.40)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "agentforcehelpagent",
+        isBonusTopic: true,
+        guideFile: "agentforcehelpagent"
     )
 
     static let dc360GroundUp = CertConfig(
@@ -184,6 +207,27 @@ enum CertCatalog {
         storageKeyPrefix: "dc360devops",
         isBonusTopic: true,
         guideFile: "dc360devops"
+    )
+
+    static let salesforceKnowledge = CertConfig(
+        id: "salesforceknowledge",
+        name: "Salesforce Knowledge: The Architect's Guide to Knowledge-Grounded Agents",
+        shortName: "SF Knowledge",
+        icon: "books.vertical.fill",
+        primaryColor: Color(red: 0.60, green: 0.35, blue: 0.15),
+        secondaryColor: Color(red: 0.78, green: 0.50, blue: 0.25),
+        headerGradient: [
+            Color(red: 0.36, green: 0.20, blue: 0.08),
+            Color(red: 0.44, green: 0.25, blue: 0.10),
+            Color(red: 0.60, green: 0.35, blue: 0.15)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "salesforceknowledge",
+        isBonusTopic: true,
+        guideFile: "salesforceknowledge"
     )
 
     static let humanInTheLoop = CertConfig(
