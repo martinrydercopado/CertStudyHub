@@ -40,6 +40,22 @@
     "quizLengths": []
   },
   {
+    "id": "agentforcediscovery",
+    "name": "Agentforce Discovery & Requirements Gathering Guide",
+    "shortName": "Discovery & Reqs",
+    "icon": "🔍",
+    "primaryColor": "#CC731A",
+    "secondaryColor": "#F29940",
+    "headerGradient": ["#7A450F", "#945414", "#CC731A"],
+    "passingScore": 70,
+    "questionBank": "agentforcediscovery",
+    "storageKeyPrefix": "agentforcediscovery",
+    "isBonusTopic": true,
+    "subtitle": null,
+    "guideFile": "agentforcediscovery",
+    "quizLengths": []
+  },
+  {
     "id": "agentforcehelpagent",
     "name": "Agentforce Help Agent: Outcome-Based Pricing",
     "shortName": "Help Agent",

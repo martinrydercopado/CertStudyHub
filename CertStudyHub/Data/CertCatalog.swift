@@ -5,6 +5,7 @@ enum CertCatalog {
     static let deepDives: [CertConfig] = [
         agentSurfaces,
         agentforceCoworker,
+        agentforceDiscovery,
         agentforceHelpAgent,
         tracinganalytics,
         agentOps,
@@ -208,6 +209,27 @@ enum CertCatalog {
         storageKeyPrefix: "agentforcecoworker",
         isBonusTopic: true,
         guideFile: "agentforcecoworker"
+    )
+
+    static let agentforceDiscovery = CertConfig(
+        id: "agentforcediscovery",
+        name: "Agentforce Discovery & Requirements Gathering Guide",
+        shortName: "Discovery & Reqs",
+        icon: "magnifyingglass.circle.fill",
+        primaryColor: Color(red: 0.80, green: 0.45, blue: 0.10),
+        secondaryColor: Color(red: 0.95, green: 0.60, blue: 0.25),
+        headerGradient: [
+            Color(red: 0.48, green: 0.27, blue: 0.06),
+            Color(red: 0.58, green: 0.33, blue: 0.08),
+            Color(red: 0.80, green: 0.45, blue: 0.10)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "agentforcediscovery",
+        isBonusTopic: true,
+        guideFile: "agentforcediscovery"
     )
 
     static let dc360DevOps = CertConfig(

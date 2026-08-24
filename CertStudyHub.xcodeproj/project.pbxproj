@@ -169,6 +169,8 @@
 		C100000000000000000000AF /* salesforceknowledge.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F00000000000000000005F /* salesforceknowledge.md */; };
 		C100000000000000000000B0 /* determinism.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000060 /* determinism.md */; };
 		C100000000000000000000B1 /* determinism.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000060 /* determinism.md */; };
+		C100000000000000000000B2 /* agentforcediscovery.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000061 /* agentforcediscovery.md */; };
+		C100000000000000000000B3 /* agentforcediscovery.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000061 /* agentforcediscovery.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -253,6 +255,7 @@
 		C1F00000000000000000005E /* agentforcehelpagent.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = agentforcehelpagent.md; sourceTree = "<group>"; };
 		C1F00000000000000000005F /* salesforceknowledge.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = salesforceknowledge.md; sourceTree = "<group>"; };
 		C1F000000000000000000060 /* determinism.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = determinism.md; sourceTree = "<group>"; };
+		C1F000000000000000000061 /* agentforcediscovery.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = agentforcediscovery.md; sourceTree = "<group>"; };
 		C1P000000000000000000001 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1P000000000000000000002 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -440,6 +443,7 @@
 				C1F00000000000000000005A /* hybridreasoning.md */,
 				C1F000000000000000000050 /* agentforcearchitect.md */,
 				C1F000000000000000000051 /* agentforcecoworker.md */,
+				C1F000000000000000000061 /* agentforcediscovery.md */,
 				C1F000000000000000000052 /* agentops.md */,
 				C1F000000000000000000053 /* customlwc.md */,
 				C1F000000000000000000054 /* dc360devops.md */,
@@ -549,6 +553,7 @@
 				C100000000000000000000AC /* agentforcehelpagent.md in Resources */,
 				C100000000000000000000AE /* salesforceknowledge.md in Resources */,
 				C100000000000000000000B0 /* determinism.md in Resources */,
+				C100000000000000000000B2 /* agentforcediscovery.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -574,6 +579,7 @@
 				C100000000000000000000AD /* agentforcehelpagent.md in Resources */,
 				C100000000000000000000AF /* salesforceknowledge.md in Resources */,
 				C100000000000000000000B1 /* determinism.md in Resources */,
+				C100000000000000000000B3 /* agentforcediscovery.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
