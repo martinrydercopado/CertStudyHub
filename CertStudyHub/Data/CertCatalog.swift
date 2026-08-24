@@ -9,6 +9,7 @@ enum CertCatalog {
         tracinganalytics,
         agentOps,
         customLWC,
+        determinism,
         dc360DevOps,
         dc360GroundUp,
         humanInTheLoop,
@@ -81,6 +82,27 @@ enum CertCatalog {
         storageKeyPrefix: "agentforcehelpagent",
         isBonusTopic: true,
         guideFile: "agentforcehelpagent"
+    )
+
+    static let determinism = CertConfig(
+        id: "determinism",
+        name: "Determining the Right Level of Determinism for Agentforce",
+        shortName: "Determinism",
+        icon: "slider.horizontal.3",
+        primaryColor: Color(red: 0.55, green: 0.25, blue: 0.60),
+        secondaryColor: Color(red: 0.72, green: 0.40, blue: 0.78),
+        headerGradient: [
+            Color(red: 0.33, green: 0.13, blue: 0.36),
+            Color(red: 0.40, green: 0.17, blue: 0.44),
+            Color(red: 0.55, green: 0.25, blue: 0.60)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "determinism",
+        isBonusTopic: true,
+        guideFile: "determinism"
     )
 
     static let dc360GroundUp = CertConfig(

@@ -120,6 +120,26 @@
     "quizLengths": []
   },
   {
+    "id": "determinism",
+    "name": "Determining the Right Level of Determinism for Agentforce",
+    "shortName": "Determinism",
+    "icon": "\u2696\ufe0f",
+    "primaryColor": "#8C4099",
+    "secondaryColor": "#B866C7",
+    "headerGradient": [
+      "#54215C",
+      "#662B70",
+      "#8C4099"
+    ],
+    "passingScore": 70,
+    "questionBank": "determinism",
+    "storageKeyPrefix": "determinism",
+    "isBonusTopic": true,
+    "subtitle": null,
+    "guideFile": "determinism",
+    "quizLengths": []
+  },
+  {
     "id": "dc360devops",
     "name": "Data 360 DevOps",
     "shortName": "Data 360 DevOps",
