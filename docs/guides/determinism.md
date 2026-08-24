@@ -1,4 +1,4 @@
-#Determining the Right Level of Determinism for Agentforce
+# Determining the Right Level of Determinism for Agentforce
 
 *Updated August 24, 2026*
 *This guide was generated using AI with grounding in official Salesforce documentation. Review for accuracy before using.*
