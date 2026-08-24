@@ -39,6 +39,8 @@ None of these pillars is optional. A technically brilliant SA who dominates the 
 Technical mastery without trust gets you nowhere. The Trust Equation provides the operating framework:
 
 > **Trust = (Credibility + Reliability + Intimacy) / Self-Orientation**
+>
+> *— Maister, Green & Galford, The Trusted Advisor*
 
 Every component matters, but the denominator is the one that can silently destroy everything else. High self-orientation — rushing to solutions, dominating the conversation, finishing a stakeholder's sentence — collapses trust regardless of how technically correct you are.
 
@@ -185,6 +187,8 @@ The kickoff is not a discovery session. It is an alignment session. Do not try t
 ## Part 3 — Pre-Game: Structured Preparation Before the Session
 
 > "Preparation time is where you should prepare the information you have available to you in a structured format to ensure you make the best of the discovery session."
+>
+> *— The Salesforce Business Analysis Playbook, Munagavalasa*
 
 Discovery time is expensive. Every minute spent restating what is already known is a minute not spent uncovering the unknowns that determine success or failure. Come prepared.
 
@@ -218,6 +222,8 @@ This "known/unknown" map is the foundation of your session agenda. You are not r
 ## Part 4 — Game Day: Structuring the Discovery Sessions
 
 > "You are the Salesforce specialist. You should lead the conversation — but let the client do 80% of the talking."
+>
+> *— The Salesforce Business Analysis Playbook, Munagavalasa*
 
 ### Session structure and sequencing
 
@@ -376,7 +382,7 @@ Red flags are not anti-patterns to avoid in design — they are signals to recog
 **Why it matters:** When technology is the primary focus rather than business outcome, the VFD framework collapses to Feasible only. You end up building a proof of technology that nobody uses (desirability gap) and that cannot demonstrate business ROI (viability gap). Competitive anxiety also pulls discovery conversations off-topic and into territory that is rarely productive.
 
 **How to respond:**
-- Lean on the Competitive Analysis resources available internally (e.g., internal competitive intelligence channels).
+- Lean on the Competitive Analysis resources available internally.
 - Redirect to business outcomes: *"Regardless of what platform is selected, what does a successful outcome look like for your team? What does it look like for your customers?"*
 - Use personas and relatable education to help stakeholders understand what agent decision-making actually involves, and why platform-native integration matters for trust and governance.
 
@@ -513,6 +519,10 @@ Use the relative prioritization matrix to plot all VFD-qualified use cases. The 
 
 ### SMART success metrics
 
+> "Without the proper metrics and key performance indicators (KPIs), you cannot gauge the success of your project."
+>
+> *— The Salesforce Business Analysis Playbook, Munagavalasa*
+
 Work with the business owner to define metrics using the SMART framework — Specific, Measurable, Achievable, Relevant, Time-bound:
 
 | Business Goal | Candidate KPI | Measurement Method | Baseline Needed? |
@@ -568,9 +578,7 @@ When discovery closes, the build team should be able to start without a single f
 - [ ] VFD assessment documented for each candidate use case
 - [ ] Phase 1 use cases confirmed as Ideal PoC quadrant (high value, low complexity)
 - [ ] Items explicitly de-scoped for Phase 2+ documented with named conditions for progression
-- [ ] Phase 1 Review scheduled with executive sponsor for scope and project plan finalization
-
----
+- [ ] Phase 1 Review scheduled with executive sponsor for scope and project plan fin
 
 ## Part 10 — Common Anti-Patterns
 
@@ -586,7 +594,7 @@ Red flags (Part 5) are signals you read in the room and address in real time. An
 
 ### Anti-Pattern 2: Skipping the guardrail conversation
 
-**What it looks like:** The session covers what the agent will do in great detail. The question of what the agent does when go wrong gets deferred: "We'll figure that out in UAT."
+**What it looks like:** The session covers what the agent will do in great detail. The question of what the agent does when things go wrong gets deferred: "We'll figure that out in UAT."
 
 **Why it fails:** Guardrails are design decisions, not testing afterthoughts. Undefined escalation paths lead to build-team assumptions. Late-stage legal flags cost weeks. Unspecified data access controls produce agents that surface data they should never see.
 
