@@ -510,6 +510,8 @@
     var gradient = 'linear-gradient(135deg, ' + gradColors.join(', ') + ')';
 
     var hasQuiz = cert.quizLengths && cert.quizLengths.length > 0;
+    var isGuideOnly = !hasQuiz && !hasSections && cert.guideFile;
+
     var tabs = '';
     if (hasSections && hasQuiz) {
       tabs =
@@ -520,7 +522,9 @@
     }
 
     var content = '';
-    if ((state.activeTab === 'quiz' && hasQuiz) || !hasSections) {
+    if (isGuideOnly) {
+      content = renderGuideOnly();
+    } else if ((state.activeTab === 'quiz' && hasQuiz) || !hasSections) {
       if (state.quiz.screen === 'start') {
         content = renderQuizStart();
       } else if (state.quiz.screen === 'active') {
@@ -543,7 +547,7 @@
     }
 
     var guideLink = '';
-    if (cert.guideFile) {
+    if (cert.guideFile && !isGuideOnly) {
       guideLink =
         '<div class="guide-link-bar">' +
           '<a class="guide-link-btn" href="guides/viewer.html?guide=' + encodeURIComponent(cert.guideFile) + '" target="_blank" rel="noopener">' +
@@ -568,6 +572,27 @@
         guideLink +
         tabs +
         '<div class="tab-content">' + content + '</div>' +
+      '</div>'
+    );
+  }
+
+  // ── Guide-Only Landing (Deep Dives) ──────────────────────
+
+  function renderGuideOnly() {
+    var cert = state.currentCert;
+    var subtitleHtml = cert.subtitle
+      ? '<p class="guide-only-subtitle">' + escapeHtml(cert.subtitle) + '</p>'
+      : '';
+
+    return (
+      '<div class="guide-only-landing">' +
+        '<div class="guide-only-icon">📖</div>' +
+        '<h3 class="guide-only-title">Reference Guide</h3>' +
+        subtitleHtml +
+        '<a class="guide-only-btn" href="guides/viewer.html?guide=' + encodeURIComponent(cert.guideFile) + '" target="_blank" rel="noopener" style="background: ' + cert.primaryColor + '">' +
+          'Open Reference Guide' +
+        '</a>' +
+        '<p class="guide-only-hint">Opens in a new tab</p>' +
       '</div>'
     );
   }
@@ -1724,6 +1749,15 @@
       '.guide-link-icon { font-size: 20px; }' +
       '.guide-link-text { flex: 1; }' +
       '.guide-link-chevron { color: var(--secondary-text); font-size: 18px; font-weight: 300; }' +
+
+      /* Guide-only landing */
+      '.guide-only-landing { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 24px; text-align: center; min-height: 300px; }' +
+      '.guide-only-icon { font-size: 56px; margin-bottom: 16px; }' +
+      '.guide-only-title { font-size: 22px; font-weight: 700; color: var(--text); margin: 0 0 8px; }' +
+      '.guide-only-subtitle { font-size: 14px; color: var(--secondary-text); margin: 0 0 24px; max-width: 400px; line-height: 1.5; }' +
+      '.guide-only-btn { display: inline-block; padding: 14px 32px; color: #fff; font-size: 16px; font-weight: 600; border-radius: 12px; text-decoration: none; transition: opacity 0.15s; }' +
+      '.guide-only-btn:hover { opacity: 0.85; }' +
+      '.guide-only-hint { font-size: 12px; color: var(--secondary-text); margin-top: 12px; }' +
 
       '';
     document.head.appendChild(style);
