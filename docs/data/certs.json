@@ -15,7 +15,7 @@
     "questionBank": "agentsurfaces",
     "storageKeyPrefix": "agentsurfaces",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "A complete guide to every deployment channel where Agentforce agents can live. Covers web, mobile, Slack, APIs, and portal surfaces with setup details and trade-offs.",
     "guideFile": "agentsurfaces",
     "quizLengths": []
   },
@@ -35,7 +35,7 @@
     "questionBank": "agentforcecoworker",
     "storageKeyPrefix": "agentforcecoworker",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "Understand Agentforce Coworker's three usage modes, multi-surface reach, and how it differs from bespoke custom agents. Covers eligibility, governance, and real-world scenarios.",
     "guideFile": "agentforcecoworker",
     "quizLengths": []
   },
@@ -51,7 +51,7 @@
     "questionBank": "agentforcediscovery",
     "storageKeyPrefix": "agentforcediscovery",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "A field guide for running structured discovery workshops with Agentforce customers. Covers the consultative mindset shift, question frameworks, and translating business pain into buildable agent specs.",
     "guideFile": "agentforcediscovery",
     "quizLengths": []
   },
@@ -71,7 +71,7 @@
     "questionBank": "agentforcehelpagent",
     "storageKeyPrefix": "agentforcehelpagent",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "Covers the prepackaged Help Agent's fast setup, outcome-based pricing model, and reimagined Customer Service Portal. Honest assessment of where it delivers and where current limitations apply.",
     "guideFile": "agentforcehelpagent",
     "quizLengths": []
   },
@@ -91,7 +91,7 @@
     "questionBank": "tracinganalytics",
     "storageKeyPrefix": "tracinganalytics",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "Master Agentforce observability — session tracing, agent platform tracing, and dashboards. Covers common diagnostic patterns and the triage-before-you-trace methodology.",
     "guideFile": "tracinganalytics",
     "quizLengths": []
   },
@@ -111,7 +111,7 @@
     "questionBank": "agentops",
     "storageKeyPrefix": "agentops",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "The complete Agentforce lifecycle for consultants — from Agent Script and execution phases to multi-agent orchestration, security, and the Einstein Trust Layer.",
     "guideFile": "agentops",
     "quizLengths": []
   },
@@ -131,7 +131,7 @@
     "questionBank": "customlwc",
     "storageKeyPrefix": "customlwc",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "Build rich, branded agent experiences with Custom Lightning Types. Covers the three-layer architecture, LWC component design, and wiring custom UI into Agent Script actions.",
     "guideFile": "customlwc",
     "quizLengths": []
   },
@@ -151,7 +151,7 @@
     "questionBank": "determinism",
     "storageKeyPrefix": "determinism",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "Navigate the spectrum from fully autonomous to fully deterministic agents. Covers the six official determinism levels, Agent Script controls, and diagnosing unreliable behavior.",
     "guideFile": "determinism",
     "quizLengths": []
   },
@@ -171,7 +171,7 @@
     "questionBank": "dc360devops",
     "storageKeyPrefix": "dc360devops",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "Where traditional Salesforce DevOps breaks down for Data 360. Covers change management challenges, platform-managed components, and a practical ALM strategy for data cloud projects.",
     "guideFile": "dc360devops",
     "quizLengths": []
   },
@@ -191,7 +191,7 @@
     "questionBank": "dc360groundup",
     "storageKeyPrefix": "dc360groundup",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "Follow NTO's enterprise architect through a complete Data 360 implementation — from data profiling and harmonization through identity resolution, segmentation, and activation.",
     "guideFile": "dc360groundup",
     "quizLengths": []
   },
@@ -211,7 +211,7 @@
     "questionBank": "humanintheloop",
     "storageKeyPrefix": "humanintheloop",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "Design trustworthy agent autonomy with deliberate human checkpoints. Covers approval, input, and escalation patterns with implementation guidance for each Agentforce building block.",
     "guideFile": "humanintheloop",
     "quizLengths": []
   },
@@ -231,7 +231,7 @@
     "questionBank": "reasoningengine",
     "storageKeyPrefix": "reasoningengine",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "Deep dive into how Atlas works — the two-phase execution engine, deterministic resolution vs. LLM reasoning, and the Agent Graph. Covers Agentforce Builder authoring and runtime configuration.",
     "guideFile": "reasoningengine",
     "quizLengths": []
   },
@@ -251,7 +251,7 @@
     "questionBank": "multiagent",
     "storageKeyPrefix": "multiagent",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "Architect multi-agent systems across SOMA, MOMA, and third-party streams. Covers the Supervisor pattern, deterministic routing with Agent Script, and building superagent networks.",
     "guideFile": "multiagent",
     "quizLengths": []
   },
@@ -271,7 +271,7 @@
     "questionBank": "rag",
     "storageKeyPrefix": "rag",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "How Agentforce thinks, retrieves, and grounds answers using RAG and Data 360. Covers the Atlas hybrid engine, data libraries, retrieval tuning, and governing grounded agents in production.",
     "guideFile": "rag",
     "quizLengths": []
   },
@@ -291,7 +291,7 @@
     "questionBank": "salesforceknowledge",
     "storageKeyPrefix": "salesforceknowledge",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "Set up Lightning Knowledge as the default grounding source for Agentforce agents. Covers data categories, data libraries, citations, multimodal grounding, and governance for vector stores.",
     "guideFile": "salesforceknowledge",
     "quizLengths": []
   },
@@ -311,7 +311,7 @@
     "questionBank": "agentforcearchitect",
     "storageKeyPrefix": "agentforcearchitect",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "The complete agent development lifecycle — from ideation and design through deployment, monitoring, and tuning. Covers the architect's role, hybrid reasoning boundaries, and human-in-the-loop design.",
     "guideFile": "agentforcearchitect",
     "quizLengths": []
   },
@@ -331,7 +331,7 @@
     "questionBank": "hybridreasoning",
     "storageKeyPrefix": "hybridreasoning",
     "isBonusTopic": true,
-    "subtitle": null,
+    "subtitle": "A Phoenix Project-style story about building Agentforce agents with Agent Script. Follow an architect team as they decompose a failing monolithic agent into a reliable multi-agent system.",
     "guideFile": "hybridreasoning",
     "quizLengths": []
   },

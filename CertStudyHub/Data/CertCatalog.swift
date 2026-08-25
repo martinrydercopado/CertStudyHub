@@ -61,6 +61,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "agentsurfaces",
         isBonusTopic: true,
+        subtitle: "A complete guide to every deployment channel where Agentforce agents can live. Covers web, mobile, Slack, APIs, and portal surfaces with setup details and trade-offs.",
         guideFile: "agentsurfaces"
     )
 
@@ -82,6 +83,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "agentforcehelpagent",
         isBonusTopic: true,
+        subtitle: "Covers the prepackaged Help Agent's fast setup, outcome-based pricing model, and reimagined Customer Service Portal. Honest assessment of where it delivers and where current limitations apply.",
         guideFile: "agentforcehelpagent"
     )
 
@@ -103,6 +105,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "determinism",
         isBonusTopic: true,
+        subtitle: "Navigate the spectrum from fully autonomous to fully deterministic agents. Covers the six official determinism levels, Agent Script controls, and diagnosing unreliable behavior.",
         guideFile: "determinism"
     )
 
@@ -124,6 +127,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "dc360groundup",
         isBonusTopic: true,
+        subtitle: "Follow NTO's enterprise architect through a complete Data 360 implementation — from data profiling and harmonization through identity resolution, segmentation, and activation.",
         guideFile: "dc360groundup"
     )
 
@@ -145,6 +149,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "hybridreasoning",
         isBonusTopic: true,
+        subtitle: "A Phoenix Project-style story about building Agentforce agents with Agent Script. Follow an architect team as they decompose a failing monolithic agent into a reliable multi-agent system.",
         guideFile: "hybridreasoning"
     )
 
@@ -166,6 +171,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "agentforcearchitect",
         isBonusTopic: true,
+        subtitle: "The complete agent development lifecycle — from ideation and design through deployment, monitoring, and tuning. Covers the architect's role, hybrid reasoning boundaries, and human-in-the-loop design.",
         guideFile: "agentforcearchitect"
     )
 
@@ -187,6 +193,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "customlwc",
         isBonusTopic: true,
+        subtitle: "Build rich, branded agent experiences with Custom Lightning Types. Covers the three-layer architecture, LWC component design, and wiring custom UI into Agent Script actions.",
         guideFile: "customlwc"
     )
 
@@ -208,6 +215,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "agentforcecoworker",
         isBonusTopic: true,
+        subtitle: "Understand Agentforce Coworker's three usage modes, multi-surface reach, and how it differs from bespoke custom agents. Covers eligibility, governance, and real-world scenarios.",
         guideFile: "agentforcecoworker"
     )
 
@@ -229,6 +237,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "agentforcediscovery",
         isBonusTopic: true,
+        subtitle: "A field guide for running structured discovery workshops with Agentforce customers. Covers the consultative mindset shift, question frameworks, and translating business pain into buildable agent specs.",
         guideFile: "agentforcediscovery"
     )
 
@@ -250,6 +259,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "dc360devops",
         isBonusTopic: true,
+        subtitle: "Where traditional Salesforce DevOps breaks down for Data 360. Covers change management challenges, platform-managed components, and a practical ALM strategy for data cloud projects.",
         guideFile: "dc360devops"
     )
 
@@ -271,6 +281,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "salesforceknowledge",
         isBonusTopic: true,
+        subtitle: "Set up Lightning Knowledge as the default grounding source for Agentforce agents. Covers data categories, data libraries, citations, multimodal grounding, and governance for vector stores.",
         guideFile: "salesforceknowledge"
     )
 
@@ -292,6 +303,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "humanintheloop",
         isBonusTopic: true,
+        subtitle: "Design trustworthy agent autonomy with deliberate human checkpoints. Covers approval, input, and escalation patterns with implementation guidance for each Agentforce building block.",
         guideFile: "humanintheloop"
     )
 
@@ -339,6 +351,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "agentops",
         isBonusTopic: true,
+        subtitle: "The complete Agentforce lifecycle for consultants — from Agent Script and execution phases to multi-agent orchestration, security, and the Einstein Trust Layer.",
         guideFile: "agentops"
     )
 
@@ -384,6 +397,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "reasoningengine",
         isBonusTopic: true,
+        subtitle: "Deep dive into how Atlas works — the two-phase execution engine, deterministic resolution vs. LLM reasoning, and the Agent Graph. Covers Agentforce Builder authoring and runtime configuration.",
         guideFile: "reasoningengine"
     )
 
@@ -405,6 +419,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "rag",
         isBonusTopic: true,
+        subtitle: "How Agentforce thinks, retrieves, and grounds answers using RAG and Data 360. Covers the Atlas hybrid engine, data libraries, retrieval tuning, and governing grounded agents in production.",
         guideFile: "rag"
     )
 
@@ -666,6 +681,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "multiagent",
         isBonusTopic: true,
+        subtitle: "Architect multi-agent systems across SOMA, MOMA, and third-party streams. Covers the Supervisor pattern, deterministic routing with Agent Script, and building superagent networks.",
         guideFile: "multiagent"
     )
 
@@ -687,6 +703,7 @@ enum CertCatalog {
         studySections: [],
         storageKeyPrefix: "tracinganalytics",
         isBonusTopic: true,
+        subtitle: "Master Agentforce observability — session tracing, agent platform tracing, and dashboards. Covers common diagnostic patterns and the triage-before-you-trace methodology.",
         guideFile: "tracinganalytics"
     )
 

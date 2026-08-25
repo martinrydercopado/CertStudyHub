@@ -187,32 +187,61 @@ struct CertCard: View {
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.primary)
 
-            // Stats
-            HStack(spacing: 16) {
-                if cert.questionCount > 0 {
-                    HStack(spacing: 4) {
-                        Image(systemName: "questionmark.circle.fill")
-                            .font(.caption)
-                            .foregroundStyle(cert.primaryColor)
-                        Text("\(cert.questionCount) questions")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+            // Subtitle blurb (deep dives)
+            if let subtitle = cert.subtitle {
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(4)
+            }
 
-                if cert.topicCount > 0 {
-                    HStack(spacing: 4) {
-                        Image(systemName: "book.fill")
-                            .font(.caption)
-                            .foregroundStyle(cert.primaryColor)
-                        Text("\(cert.topicCount) topics")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+            // Stats (certifications only)
+            if !cert.isBonusTopic {
+                HStack(spacing: 16) {
+                    if cert.questionCount > 0 {
+                        HStack(spacing: 4) {
+                            Image(systemName: "questionmark.circle.fill")
+                                .font(.caption)
+                                .foregroundStyle(cert.primaryColor)
+                            Text("\(cert.questionCount) questions")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+
+                    if cert.topicCount > 0 {
+                        HStack(spacing: 4) {
+                            Image(systemName: "book.fill")
+                                .font(.caption)
+                                .foregroundStyle(cert.primaryColor)
+                            Text("\(cert.topicCount) topics")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
             }
 
-            // Passing score badge
+            // Deep dive: Reference Guide badge
+            if cert.isBonusTopic {
+                HStack(spacing: 4) {
+                    Image(systemName: "doc.text.fill")
+                        .font(.caption2)
+                    Text("Reference Guide")
+                        .font(.caption2)
+                        .fontWeight(.semibold)
+                }
+                .foregroundStyle(cert.primaryColor)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 4)
+                .background(
+                    Capsule()
+                        .fill(cert.primaryColor.opacity(0.1))
+                )
+            }
+
+            // Passing score badge (certifications only)
             if !cert.isBonusTopic {
                 Text("Passing: \(cert.passingScore)%")
                     .font(.caption2)
