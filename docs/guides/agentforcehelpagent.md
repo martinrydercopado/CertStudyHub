@@ -1,6 +1,6 @@
 # Agentforce Help Agent: Outcome-Based Pricing
 
-> **Scope:** This guide covers the Agentforce Help Agent as generally available in July 2026. It is intended to help a Success Architect make an honest, grounded recommendation — knowing both where this product genuinely delivers and where current limitations will affect a client's expectations.
+> **Scope:** This guide covers the Agentforce Help Agent ("Casey") as generally available in July 2026. It is intended to help a Success Architect make an honest, grounded recommendation — knowing both where this product genuinely delivers and where current limitations will affect a client's expectations.
 >
 > **Pricing Note:** Salesforce pricing guidance should always be confirmed with the account executive and the current Sales Guide before a client conversation.
 
@@ -8,7 +8,7 @@
 
 ## 1. What It Is (and What It Isn't)
 
-Agentforce Help Agent is a **prepackaged, autonomous service agent** built on top of the full Agentforce 360 Platform. It is not a new platform or a separate product. As Kishan Chetan (EVP and GM of Agentforce Service) has stated directly: *"This isn't new technology. It has everything from Agentforce — the ability to define your topics, to use Agent Script, our more deterministic approach. We just did three things on top of it."*
+Agentforce Help Agent — officially named **Casey** — is a **prepackaged, autonomous service agent** built on top of the full Agentforce 360 Platform. It is not a new platform or a separate product. As Kishan Chetan (EVP and GM of Agentforce Service) has stated directly: *"This isn't new technology. It has everything from Agentforce — the ability to define your topics, to use Agent Script, our more deterministic approach. We just did three things on top of it."*
 
 Those three things are:
 
@@ -34,6 +34,8 @@ The headline claim is deployment in minutes, not weeks. The setup flow provision
 
 In a live demo, Prasad Raje (SVP of Product) provisioned a **working voice agent — including acquiring a phone number in-flow** — across three screens. Standing up a help line through a third-party telephony vendor is typically a multi-week project. That comparison is a genuine, credible differentiator for clients evaluating time-to-value.
 
+> **GA dates to know:** Help Agent Quick Setup is **GA July 2026**. The Agentforce Service Portal (Concierge), which provides the new conversational portal surface described in Section 3.5, reached **GA separately in June 2026**. These are two distinct products with different timelines, even though they are frequently demoed together.
+
 ### 2.2 Real-World Proof of Concept
 
 Salesforce has run this agent on help.salesforce.com itself. The result: **4.3 million inquiries handled, 70% resolved autonomously**. That real-world learning is embedded in the product. This is a strong rebuttal to clients who worry they are early adopters of unproven technology.
@@ -46,7 +48,7 @@ The pricing model finally matches the way buyers think about value. Clients pay 
 
 ### 2.4 Customer Experience Upgrade
 
-The Agentforce Customer Service Portal is reimagined around a **single conversation bar**. As customers describe what they need, the experience adapts in real time, surfacing personalized responses and dynamic cards that let them complete tasks inside the conversation flow. Because the experience uses real-time data, it can also **trigger workflows proactively** — engaging the customer before an issue arises, not just reacting to one.
+The Agentforce Service Portal (Concierge) is reimagined around a **single conversation bar**. As customers describe what they need, the experience adapts in real time, surfacing personalized responses and dynamic cards that let them complete tasks inside the conversation flow. Because the experience uses real-time data, it can also **trigger workflows proactively** — engaging the customer before an issue arises, not just reacting to one.
 
 ---
 
@@ -117,6 +119,68 @@ The auto-created agent user means the Help Agent **automatically respects the or
 
 ---
 
+### 3.5 Agentforce Service Portal (Concierge): Architecture and Setup
+
+The Agentforce Service Portal — internally called **Concierge** — is the new conversational portal surface that sits on top of Help Agent. It reached GA in June 2026 (separate from the Help Agent Quick Setup GA in July 2026). Understanding the mental model before diving into implementation steps will save significant configuration time.
+
+#### Three-Layer Mental Model
+
+| Layer | What It Is | Role |
+|---|---|---|
+| **The Intelligence** | Casey / Help Agent (created via Salesforce Go) | Backend reasoning, knowledge retrieval, and action execution |
+| **The Surface** | Experience Cloud Site | The host interface; the canvas where conversational modules are visually presented |
+| **The Orchestration** | Agentforce components (Orchestrator, Prompt Bar, Chat UI, Suggestion Themes, Sidebar, Persona Greeting) | Unites the Agent and the Surface into the "Concierge" experience |
+
+#### Four-Step Implementation Process
+
+**Step 1: Pre-requisites (Foundation)**
+Confirm these before touching any configuration:
+- Help Agent (Casey) has been created via Salesforce Go
+- An Experience Cloud site is active
+- The AI Experiences workspace exists in the org
+
+**Step 2: Critical Config — AI Experiences Wiring**
+Navigate to Workspaces > AI Experiences and configure:
+- Default AI Agent linked to Casey
+- Agentforce Orchestrator connected
+- Embedded Service Deployment for Guest users
+
+> **Hard constraint:** Only **1 Orchestrator** and **1 Embedded Service Deployment** are permitted per Experience Cloud network. Attempting to add more than one of either will result in an error. Plan your deployment strategy accordingly before beginning config.
+
+**Step 3: User Interface — Pages and Components**
+
+Core canvas layout to build out:
+
+| Page / Component | Path / Notes |
+|---|---|
+| **Agentic Home** | URL path `/concierge`; add the **Concierge Prompt Bar** component |
+| **Conversation Page** | Add the **Concierge Chat** component |
+| **Sidebar / Footer** | Optional but high-value on the Home or Conversation page |
+| **Suggestion Themes** | Configure under AI Experiences; see pitfalls in Section 3.6 |
+
+**Step 4: Premium / Authenticated Path**
+For authenticated (logged-in) customer experiences:
+- Create a **separate Embedded Service Deployment** specifically for authenticated users
+- Enable **User Verification** in Messaging Settings
+- Configure Concierge Greeting, a Data Graph, and a Personalized Greeting prompt template
+- **Testing rule:** Always test as a named persona (e.g., "Lauren Bailey") — never as SysAdmin. Admin users lack an Individual profile, so personalization will not render correctly and you will not see what customers see
+
+---
+
+### 3.6 Agentforce Service Portal: Common Pitfalls and Solutions
+
+These are the five most frequently encountered implementation failures when setting up Concierge. Review them before starting any client implementation.
+
+| Pitfall | Root Cause | Resolution |
+|---|---|---|
+| **Blank Chat Page** | Testing while logged in as Admin. There is typically no active Service Deployment for the authenticated Admin user context. | Use an incognito window or test as a named persona (e.g., Lauren Bailey), not as SysAdmin. |
+| **Duplication Error ("Cannot use same Deployment")** | Attempting to reuse the same Embedded Service Deployment across Guest and Authenticated paths, or across multiple sites. The hard limit is exactly 1 Orchestrator and 1 Deployment per network. | Create separate, distinct Embedded Service Deployments for Guest and Authenticated paths. Never share deployments across networks. |
+| **Suggestion Themes Not Visible** | Theme has not been activated, is not assigned to the correct user profiles, or the component has not been added to the page canvas. | Verify the Theme is activated, check profile assignments, and explicitly drag the Suggestion Themes component onto the page canvas in Experience Builder. |
+| **Personalized Greeting Missing** | Data Graph has zero records, or the test is being run as Admin (who lacks an Individual profile). | Ensure the Data Graph has at least one record. Always test as a named persona, not as SysAdmin. Also verify Orchestrator settings. |
+| **Guest Cannot Open Knowledge Articles** | The Guest User profile is missing the required Read permission on the `Knowledge_kav` object. | Update the Guest User profile to grant Read access to `Knowledge_kav`. |
+
+---
+
 ## 4. What the Help Agent Can and Cannot Do
 
 ### 4.1 Out of the Box (Day One, No Additional Config)
@@ -137,7 +201,7 @@ The auto-created agent user means the Help Agent **automatically respects the or
 - WhatsApp and additional messaging channels
 - Custom actions built with Flows, Apex, or a coding agent (e.g., Claude Code)
 - Multi-agent orchestration with other Agentforce agents
-- Branded, multi-page portal experience (via Experience Builder)
+- Branded, multi-page portal experience via Experience Builder, including the **Agentforce Service Portal (Concierge)** conversational surface
 - Additional grounding sources beyond the initial single source (via Data 360)
 
 ### 4.3 Current Limitations (Know These Before Recommending)
@@ -149,12 +213,13 @@ This is the section that matters most for an honest client conversation.
 | **Single grounding source per agent** | Each agent draws from exactly one source at setup time. Multi-source grounding requires post-setup Data 360 configuration. |
 | **File upload capacity** | Maximum approximately 300 pages of PDF/DOCX/HTML. Not suitable for organizations with large knowledge repositories that have not migrated to Salesforce Knowledge. |
 | **Website Sync depth** | Indexes one page at a time; no deep crawl or full-site sync. A client with a large support wiki should use Salesforce Knowledge or uploaded files. |
-| **Help Portal is guest-user only** | The out-of-the-box portal does not support authenticated (logged-in) customer experiences. An authenticated portal requires additional Experience Builder configuration. |
+| **Help Portal is guest-user only (out of the box)** | The out-of-the-box portal does not support authenticated (logged-in) customer experiences. An authenticated portal requires the additional Concierge setup described in Section 3.5. |
 | **Portal is a starter template** | The guided-setup portal is not a production-ready branded experience. It is a foundation that requires Experience Builder for full customization. |
 | **Voice requires Agentforce Contact Center or a Salesforce telephony partner** | Clients on third-party contact center platforms (Genesys, Avaya, Cisco, etc.) need to evaluate the telephony integration path before voice is a Day One option. |
 | **Additional channels require manual setup** | WhatsApp, SMS, and other messaging channels are not available in the guided setup flow. |
 | **Not available in Trailhead Playground** | Dev and test environments must be Enterprise or Unlimited Edition orgs with Agentforce enabled. |
 | **Resolution definition must be contractually specified** | Pricing is tied to an autonomous resolution, but the exact definition and who adjudicates it must be established in writing before signing. See Section 5. |
+| **1 Orchestrator and 1 Deployment per Experience Cloud network** | A hard platform constraint for Concierge. Multi-site or mixed Guest/Authenticated setups require careful upfront planning. See Section 3.5. |
 
 ---
 
@@ -167,19 +232,45 @@ The Salesforce press release is explicit on these points:
 - Organizations **only pay when the Help Agent autonomously resolves an issue from start to finish**
 - **No charge** if the customer gives negative feedback or asks for human escalation
 - **Both Data 360 and Agentforce are unmetered during the agent interaction** — no forecasting of consumption or overages required
+- The $2/resolution price is equivalent to **400 Flex Credits per resolution** for customers who prefer the Flex Credits purchase path
+- **Carrier transport for messaging apps (WhatsApp, SMS, etc.) is an additional cost** and is not included in the resolution price. Voice transport, by contrast, is included via a $0 Resolutions Transport SKU
 
 > **Important caveat on unmetering (from internal Sales Guide):** Data 360 and Agentforce unmetering during interactions applies to customers on **Flex Credits**. Customers on older, non-Flex-Credit Agentforce SKUs are not covered by this unmetering. Confirm the client's current Agentforce SKU before representing this benefit.
 
-### 5.2 Portal License Upgrade Paths (from Internal Sales Guidance)
+### 5.2 Resolution Counting: When Is a $2 Charge Applied?
 
-The approved Salesforce press release describes the outcome-based pricing model but does not enumerate pricing variants. Per internal sales guidance (Kayla Ferrin / #pnw-tech-cmrcl-core-sales; Rachael Balsillie Sales Guide canvas), there are **existing portal-license upgrade paths** available to customers based on their current portal license type:
+Not every session results in a $2 charge. The resolution decision follows an explicit decision tree:
 
-- **Customer Community Login** customers can upgrade to **Agentforce Portal Login** ($4/login, unmetered resolutions)
-- **Customer Community+ Member** customers can upgrade to **Agentforce Portal Member** ($10/member/month, unmetered resolutions)
+1. **Did the session have at least two conversation turns?**
+   - No: the session is **$0** (unresolved). Single-turn sessions are never billed.
+   - Yes: proceed to step 2.
+2. **Did the customer escalate to a human agent?**
+   - Yes: the session is **$0** (no charge for escalations).
+   - No: proceed to step 3.
+3. **Was there explicit customer feedback?**
+   - **Thumbs up:** 1 resolution = **$2** (or 400 Flex Credits).
+   - **Thumbs down:** the session is **$0** (unresolved).
+   - **No explicit feedback:** the session is **$0** (unresolved).
 
-These are upgrade paths tied to portal license type, not vertical-specific carve-outs. Any customer on those portal license types may have access to the corresponding model. **Confirm with the AE and current Sales Guide before quoting.**
+> **Session duration caps:** Messaging sessions cap at **2 hours**; Voice sessions cap at **10 minutes**. Sessions that exceed the cap count as either $0 or as multiple $2 resolutions, depending on duration. Explicit thumbs up / thumbs down feedback is available for web chat and portals. A feedback action can be configured for use across all other channels.
 
-### 5.3 Contract Questions Every Success Architect Should Insist On
+### 5.3 Portal License Upgrade Paths and Flex Credit Consumption
+
+The approved Salesforce press release describes the outcome-based pricing model but does not enumerate pricing variants. Per internal sales guidance (Kayla Ferrin / #pnw-tech-cmrcl-core-sales; Rachael Balsillie Sales Guide canvas), there are **existing portal-license upgrade paths** available based on the client's current portal license type. A critical distinction for financial modeling is which SKUs consume Flex Credits.
+
+| SKU | Price | Flex Credits Consumed? | Use Case |
+|---|---|---|---|
+| **Help Agent Resolutions** | $2/resolution ($2,000 per 1K) | Yes — 400 Flex Credits per resolution | Pay only for successful outcomes; Guest and authenticated |
+| **Agentic Portal Login** | $4/login | No | Authenticated, infrequent users; unmetered Agentforce and Data 360 during 24-hour login session |
+| **Agentic Portal Member** | $10/member/month | No | Authenticated, frequent users; unmetered Agentforce and Data 360 with unlimited sessions per month |
+
+Upgrade path eligibility:
+- **Customer Community Login** customers can upgrade to **Agentforce Portal Login**
+- **Customer Community+ Member** customers can upgrade to **Agentforce Portal Member**
+
+These are upgrade paths tied to portal license type, not vertical-specific carve-outs. **Confirm with the AE and current Sales Guide before quoting.**
+
+### 5.4 Contract Questions Every Success Architect Should Insist On
 
 Two questions must be answered in writing before a client signs:
 
@@ -187,7 +278,7 @@ Two questions must be answered in writing before a client signs:
 
 2. **Which pricing model applies to this client — pay-per-resolution, portal login, or portal member?** The answer depends on the client's current portal license type. The financial model differs significantly for high-volume portal deployments.
 
-### 5.4 The Fin Acquisition: What Is Known
+### 5.5 The Fin Acquisition: What Is Known
 
 Salesforce has signed a definitive agreement to acquire Fin, described by Salesforce as *"a customer agent platform purpose-built for small- and medium-sized businesses (SMBs) that provides autonomous, end-to-end AI service agents trusted by more than 30,000 companies globally."* The transaction is expected to close in Q4 of Salesforce's fiscal year 2027, subject to regulatory clearances. The two companies operate independently until then.
 
@@ -217,6 +308,7 @@ Use these questions to determine fit — and to set honest expectations.
 - [ ] Client is in a **regulated industry** with strict PII or data-residency requirements — validate that grounding source content meets compliance standards before upload
 - [ ] Client expects **multi-source grounding** at launch without Data 360 configuration
 - [ ] Client is currently on a **non-Flex-Credit Agentforce SKU** — the unmetering benefit may not apply
+- [ ] Client needs multiple Agentforce Service Portal (Concierge) deployments on a single Experience Cloud network — the 1 Orchestrator / 1 Deployment per network limit applies
 
 ### Blockers (Resolve Before Recommending)
 
@@ -242,23 +334,48 @@ For a Success Architect, Help Agent is best positioned as **Phase 1 of a broader
 
 ---
 
-## 8. Quick Reference Summary
+## 8. Near-Term Roadmap: Dreamforce Highlights
+
+The following innovations were announced at Dreamforce and represent the product direction to share with forward-looking clients. Use these to frame the long-term value of adopting Help Agent now as the foundation.
+
+| Innovation | GA Date | Description |
+|---|---|---|
+| **Help Agent Optimizer** | GA Nov 2026 | Auto-generates production-ready AI agents from real conversations, continuously expanding covered use cases without manual authoring |
+| **Agentforce Service Headless** | GA Nov 2026 | Set up, deploy, and extend Help Agent using coding agents — no UI required; designed for developer-first workflows |
+| **AFCC Global** | GA Nov 2026 | Agentforce Contact Center (AFCC) available globally, expanding the voice channel footprint |
+| **Hybrid WEM** | GA Nov 2026 | Tools that allow supervisors to manage human agents and AI agents together from a single unified view |
+| **Frontline Workforce Management** | GA Oct 2026 | AI-native shift scheduling for field workers with demand forecasting and agentic shift management |
+| **Smart Console** | GA FY27 | Unified interface where service leaders orchestrate an entire fleet of autonomous agents |
+| **SRA with C360 and Skills** | GA FY27 | Real-time customer health signals with embedded playbooks to drive proactive success |
+| **Guided Experience** | GA FY27 | Process-driven mobile experience that guides field technicians step-by-step |
+
+> **Note:** All dates are based on Salesforce's Dreamforce announcements. Confirm current status with the account team before including roadmap items in client proposals.
+
+---
+
+## 9. Quick Reference Summary
 
 | Dimension | What's True Today |
 |---|---|
-| **GA Date** | July 2026 |
+| **Product Name** | Casey (Agentforce Help Agent) |
+| **Help Agent Quick Setup GA** | July 2026 |
+| **Agentforce Service Portal (Concierge) GA** | June 2026 |
 | **Setup time** | Minutes (fewer than 10 steps) |
 | **Editions required** | Enterprise or Unlimited with Agentforce |
-| **Grounding sources** | 1 per agent (Knowledge, files ~300pp, or 1 URL) |
+| **Grounding sources** | 1 per agent (Knowledge, files approx. 300pp, or 1 URL) |
 | **Channels in guided setup** | Web chat, Help Portal, Voice |
-| **Channels requiring manual setup** | WhatsApp, other messaging |
-| **Out-of-box actions** | Answer questions, manage cases |
+| **Channels requiring manual setup** | WhatsApp, SMS, other messaging |
+| **Out-of-box actions** | Answer questions, manage cases, escalate to human |
 | **Extensible actions** | Order mgmt, appointments, account mgmt, custom (Flows/Apex) |
-| **Portal auth** | Guest users only out of the box |
-| **Pricing model** | Pay-per-resolution (portal license upgrades available; confirm with AE) |
+| **Portal auth (out of the box)** | Guest users only |
+| **Authenticated portal** | Requires Concierge setup (Section 3.5); separate Embedded Service Deployment required |
+| **Concierge hard limit** | 1 Orchestrator + 1 Deployment per Experience Cloud network |
+| **Pricing model** | $2/resolution or 400 Flex Credits/resolution; portal license upgrades available (confirm with AE) |
+| **Flex Credits consumed** | Help Agent Resolutions: Yes (400/resolution). Agentic Portal Login and Member: No |
+| **Carrier transport** | Messaging apps (WhatsApp, SMS): extra cost. Voice: included via $0 Resolutions Transport SKU |
+| **Session caps** | Messaging: 2 hours. Voice: 10 minutes. Exceeded caps count as $0 or multiple $2 resolutions |
 | **Unmetering applies** | Flex Credits customers only (confirm SKU) |
 | **Security** | Dedicated auto-created agent user; respects org sharing model |
 | **Underlying retrieval** | LLM-preprocessed via Agent Data Library; not plain vector RAG |
 | **Proof of scale** | 4.3M inquiries on help.salesforce.com; 70% autonomous resolution rate |
-
----
+| **Key upcoming innovation** | Help Agent Optimizer (GA Nov 2026), Agentforce Service Headless (GA Nov 2026), Smart Console (GA FY27) |
