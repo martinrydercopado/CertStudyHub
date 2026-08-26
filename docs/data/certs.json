@@ -336,6 +336,26 @@
     "quizLengths": []
   },
   {
+    "id": "adlcide",
+    "name": "The ADLC in an IDE: An Educational CLI Guide",
+    "shortName": "ADLC in an IDE",
+    "icon": "\ud83d\udda5\ufe0f",
+    "primaryColor": "#3B82F6",
+    "secondaryColor": "#60A5FA",
+    "headerGradient": [
+      "#1E3A5F",
+      "#1E4976",
+      "#1E588D"
+    ],
+    "passingScore": 70,
+    "questionBank": "adlcide",
+    "storageKeyPrefix": "adlcide",
+    "isBonusTopic": true,
+    "subtitle": "A guided walkthrough of the entire Agent Development Lifecycle using only the CLI. Covers every ADLC phase from agent spec generation through deployment, activation, and production monitoring.",
+    "guideFile": "adlcide",
+    "quizLengths": []
+  },
+  {
     "id": "agentforce",
     "name": "Agentforce Specialist",
     "shortName": "Agentforce",

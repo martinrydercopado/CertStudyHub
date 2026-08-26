@@ -1,6 +1,6 @@
 # AgentOps: A Success Architect's Guide to Agentforce
 
-*Updated August 21, 2026*
+*Updated August 26, 2026*
 *This guide was generated using AI with grounding in official Salesforce documentation. Review for accuracy before using.*
 
 ---
@@ -10,19 +10,21 @@
 1. [What Is AgentOps?](#1-what-is-agentops)
 2. [The New Agentforce Architecture](#2-the-new-agentforce-architecture)
 3. [Agent Script: The Language of Agents](#3-agent-script-the-language-of-agents)
-4. [Agent Script Blocks: The Building Blocks of an Agent](#4-agent-script-blocks-the-building-blocks-of-an-agent)
-5. [The Execution Lifecycle: before_reasoning, reasoning, and after_reasoning](#5-the-execution-lifecycle-before_reasoning-reasoning-and-after_reasoning)
-6. [Actions, Tools, and Variables](#6-actions-tools-and-variables)
-7. [The LLM Boundary: Where Judgment Ends and Code Begins](#7-the-llm-boundary-where-judgment-ends-and-code-begins)
-8. [Multi-Agent Orchestration: SOMA, MOMA, and 3P](#8-multi-agent-orchestration-soma-moma-and-3p)
-9. [Change Management: From Monolith to SOMA](#9-change-management-from-monolith-to-soma)
-10. [Security and the Einstein Trust Layer](#10-security-and-the-einstein-trust-layer)
-11. [RAG, Data 360, and the Data Space Permission Gap](#11-rag-data-360-and-the-data-space-permission-gap)
-12. [Testing Your Agent](#12-testing-your-agent)
-13. [Deployment and Metadata](#13-deployment-and-metadata)
-14. [Pricing: Flex Credits and Conversations](#14-pricing-flex-credits-and-conversations)
-15. [Monitoring and Analytics](#15-monitoring-and-analytics)
-16. [Architect Patterns and Troubleshooting Reference](#16-architect-patterns-and-troubleshooting-reference)
+4. [Generative AI-Assisted Development: Opportunities and Guardrails](#4-generative-ai-assisted-development-opportunities-and-guardrails) *(New)*
+5. [Agent Script Blocks: The Building Blocks of an Agent](#5-agent-script-blocks-the-building-blocks-of-an-agent)
+6. [The Execution Lifecycle: before_reasoning, reasoning, and after_reasoning](#6-the-execution-lifecycle-before_reasoning-reasoning-and-after_reasoning)
+7. [Actions, Tools, and Variables](#7-actions-tools-and-variables)
+8. [The LLM Boundary: Where Judgment Ends and Code Begins](#8-the-llm-boundary-where-judgment-ends-and-code-begins)
+9. [Multi-Agent Orchestration: SOMA, MOMA, and 3P](#9-multi-agent-orchestration-soma-moma-and-3p)
+10. [Change Management: From Monolith to SOMA](#10-change-management-from-monolith-to-soma)
+11. [Regulated Industry Delivery Framework](#11-regulated-industry-delivery-framework) *(New)*
+12. [Security and the Einstein Trust Layer](#12-security-and-the-einstein-trust-layer)
+13. [RAG, Data 360, and the Data Space Permission Gap](#13-rag-data-360-and-the-data-space-permission-gap)
+14. [Testing Your Agent](#14-testing-your-agent)
+15. [Deployment and Metadata](#15-deployment-and-metadata)
+16. [Pricing: Flex Credits and Conversations](#16-pricing-flex-credits-and-conversations)
+17. [Monitoring and Analytics](#17-monitoring-and-analytics)
+18. [Architect Patterns and Troubleshooting Reference](#18-architect-patterns-and-troubleshooting-reference)
 
 ---
 
@@ -39,54 +41,6 @@ This guide treats Agentforce agents as production software. They require version
 ### The Three Layers
 
 Every Agentforce deployment has three distinct layers that architects must understand and manage separately:
-
-**1. Authoring Layer**
-Where you write, test, and commit agent logic. Tools: Agentforce Builder (Canvas, Conversational, and Script views), Agentforce DX (CLI), and VS Code with the Salesforce Extension Pack.
-
-**2. Platform Layer**
-Where Salesforce compiles Agent Script into an Agent Graph and the Atlas Reasoning Engine executes it at runtime. You do not have direct access to this layer.
-
-**3. Data Layer**
-Where agent behavior is logged via the Session Trace Data Model (STDM) in Data 360. This is your operational observability surface.
-
----
-
-## 2. The New Agentforce Architecture
-
-### Hybrid Reasoning: The Core Concept
-
-The defining characteristic of the new Agentforce architecture is **hybrid reasoning**: a deliberate, explicit separation of deterministic logic from probabilistic LLM reasoning. This is not an implementation detail. It is the design philosophy that governs every authoring decision you make.
-
-Previous Agentforce architectures (Topics and Actions) left execution sequencing entirely to the LLM. The LLM decided which action to call, in what order, with what parameters. This produced non-deterministic behavior, high token costs, and debugging complexity.
-
-The new architecture introduces **Agent Script**, a domain-specific language that compiles into an **Agent Graph**. The Agent Graph is a serialized execution plan that the **Atlas Reasoning Engine** traverses at runtime. The engine executes deterministic nodes as code and invokes the LLM only where prompt instructions are explicitly declared.
-
-The authoring and runtime layers are intentionally separated. You work in the authoring layer. You cannot directly access the execution layer. That separation is by design — it allows the platform to enforce deterministic behavior independently of how the script was written.
-
-**Stage 1: Authoring**
-You work in **Agentforce Builder**, hosted within Agentforce Studio. Builder replaces the legacy Setup experience as the primary authoring path. You edit your agent in one of three interchangeable views: Conversational (natural language, "vibe building"), Canvas (low-code, document-like), or Script (direct Agent Script editing). All three views compile to the same underlying Agent Script.
-
-**Stage 2: Compilation**
-The Salesforce compiler transforms your Agent Script into an **Agent Graph** — a serialized execution plan optimized for machine execution rather than human readability. You do not debug at this layer. The Agent Graph is the artifact the runtime consumes.
-
-**Stage 3: Runtime Execution**
-The **Atlas Reasoning Engine** reads the Agent Graph, traverses it based on current session state, and decides at each node whether to execute deterministically or invoke the LLM. The engine enforces guard clauses and conditional routing explicitly, rather than inferring them.
-
-```
-Author (You)
-    ↓ write
-Agent Script (human-readable DSL)
-    ↓ compile
-Agent Graph (machine-optimized execution plan)
-    ↓ execute
-Atlas Reasoning Engine (state machine + LLM caller)
-    ↓ produces
-Agent response to user
-```
-
-### The Two Execution Paths
-
-On every incoming user turn, the Atlas Reasoning Engine chooses one of two paths.
 
 **Path A: Deterministic Execution**
 No LLM is involved. The engine classifies the user's intent, matches a logic instruction, and runs compiled code top-to-bottom. Flow, Apex, or API actions are called with deterministic parameters. The result passes back through the trust layer with full audit logging. This path is fast, cheap, and reproducible.
@@ -110,6 +64,40 @@ There are eight points in the execution lifecycle where the LLM is invoked:
 Every unnecessary LLM call adds latency, cost, and variability. Architects should push deterministic logic by default, reserving the LLM for tasks that genuinely require reasoning or natural language generation.
 
 > **Scenario:** A bank builds an agent that checks whether a branch is currently open before offering to book an appointment. A junior developer writes a prompt instruction: "If it is not business hours, tell the user the branch is closed." An experienced architect rewrites this as a deterministic `run @actions.check_business_hours` in `before_reasoning`, storing the result in a variable. The deterministic version costs zero LLM tokens, executes in milliseconds, and produces the same result every time. The prompt version might hallucinate a business hours policy if the model is confused.
+
+---
+
+## 2. The New Agentforce Architecture
+
+### The Platform Components
+
+The "New Agentforce" architecture — introduced with hybrid reasoning — comprises four distinct layers that architects must understand before designing any agent.
+
+**Agent Script**
+The domain-specific language (DSL) that developers author agents in. Agent Script is compiled, declarative, and property-based. It is the human-readable source of truth for an agent's configuration, business logic, and prompting behavior. See Section 3 for a full reference.
+
+**The Agent Graph**
+The compiled output of an Agent Script file. When you deploy an `AiAuthoringBundle`, the platform compiles the Agent Script into an Agent Graph — a directed graph of nodes, each representing either a deterministic logic step or a prompt instruction. The Agent Graph is the internal representation that the Atlas Reasoning Engine executes at runtime. Architects do not interact with the Agent Graph directly; they author Agent Script, and the compiler produces the graph.
+
+**The Atlas Reasoning Engine**
+The runtime engine that executes the Agent Graph. The Atlas Reasoning Engine traverses the graph node by node, enforcing the boundary between deterministic and probabilistic execution. It is responsible for subagent classification, action invocation, LLM call orchestration, and session state management. The ReAct (reason-act-observe) loop that governs multi-step agent behavior is implemented by the Atlas Reasoning Engine.
+
+**The Einstein Trust Layer**
+A security perimeter that sits between the Atlas Reasoning Engine and any external LLM. Every LLM call passes through the Trust Layer, which applies data masking, toxicity detection, prompt injection defense, and zero-data-retention enforcement. The Trust Layer is not optional and cannot be bypassed. See Section 12 for a full reference.
+
+### The Compilation Model
+
+Agent Script compiles to an Agent Graph on deploy. This has a practical implication: syntax errors and reference errors surface at deploy time (or earlier, with `sf agent validate`), not at runtime. A successfully compiled and deployed agent has a structurally valid graph — runtime failures are then behavioral (wrong routing, wrong variable state, wrong action output) rather than structural.
+
+> **Key implication for CI/CD:** Running `sf agent validate` before every deploy catches compilation errors before they consume a release window. This is the earliest and cheapest failure mode to catch. Section 15 covers the full pipeline.
+
+### How This Differs From Classic Einstein Bots
+
+Classic Einstein Bots used a slot-filling and intent classification model with a click-based dialog editor. New Agentforce replaces this with the Agent Graph and Atlas Reasoning Engine. The differences that matter architecturally:
+
+- Classic Bots had no compiled intermediate representation. Changes took effect immediately on save.
+- New Agentforce has a five-phase lifecycle (Generate → Deploy → Publish → Activate → Test) with distinct authoring and runtime metadata domains. See Section 15.
+- Classic Bots could not express deterministic logic inline with natural language prompts. New Agentforce makes this boundary explicit with the `->` / `|` distinction.
 
 ---
 
@@ -174,7 +162,52 @@ For subagent classification — deciding which subagent handles a given user req
 
 ---
 
-## 4. Agent Script Blocks: The Building Blocks of an Agent
+## 4. Generative AI-Assisted Development: Opportunities and Guardrails
+
+### The Business View
+
+Developers are increasingly using generative AI tools to write Agent Script, scaffold Apex actions, and produce Flow XML. This is not a problem to suppress. Used correctly, it increases productivity significantly. Used carelessly, it produces code that ships to production and that nobody on the team fully understands.
+
+This section establishes a clear stance on AI-assisted agent development. The stance is deliberately encouraging — with specific guardrails that protect the team, the client, and the production agent.
+
+### The Specific Risk With Agents
+
+Agent Script and Agentforce metadata are not well-represented in most LLMs' training data. The language is young, the syntax is strict, and the platform constraints — complex data types, PSL ordering, deployment sequencing, EinsteinHyperClassifier limitations — are exactly the kind of details that generative AI models get confidently wrong.
+
+A developer who has never built an agent manually has no frame of reference to evaluate what the AI produced, catch what it got wrong, or debug what fails in production. The AI output will look plausible. It may even validate. But a vibe-coded agent that nobody on the team fully understands is not a faster agent. It is a time bomb.
+
+### The Four-Part Recommended Stance
+
+**1. Build something manually before you use AI to build it.**
+Before using generative AI to scaffold an agent or an Apex action, the developer should have built at least one of each by hand. Not to be complete — to understand the platform well enough to know when the AI output is wrong. AI accelerates experienced developers. For developers who have not done it manually yet, it is a shortcut to a system they cannot maintain or troubleshoot.
+
+**2. Use AI to accelerate, not to replace understanding.**
+AI-generated Agent Script, Apex stubs, and Flow XML should be reviewed with the same rigor as any other code contribution. The PR review gate is the right place to catch what the AI got wrong — which means the reviewer must understand the platform well enough to spot it. If nobody reviewing the PR has built an agent manually before, the gate provides no protection.
+
+**3. AI-generated code requires the same tests as human-written code — arguably more.**
+If the developer does not fully understand what was generated, the test suite is the only safety net between that code and production. This is one of the strongest arguments for a testing gate (Section 14): if AI-assisted authoring is happening on your team, testing is not optional by definition.
+
+**4. Document what was generated and how it was reviewed.**
+For regulated clients with audit requirements, AI-assisted authorship is a disclosure item. PRs should note when AI tooling was used and what human review was applied. The `AiAuthoringBundle` committed to source control is the artifact that auditors, change boards, and reviewers can inspect — and it is the place where AI output gets its human review gate. See Section 15 for the source control rationale.
+
+### Common Failure Patterns in AI-Generated Agent Code
+
+These are the platform-specific errors that generative AI produces most often. Reviewers should check for all of them:
+
+| AI-generated mistake | Platform behavior | Correct approach |
+|---|---|---|
+| Using `before_reasoning` on an EinsteinHyperClassifier router | Hard platform error at runtime | Remove `before_reasoning` from EinsteinHyperClassifier subagents entirely |
+| Using bare `number` type in action I/O definitions | Fails at publish (not at deploy) | Use `lightning__numberType` for Flow targets, `lightning__integerType` for Apex |
+| Assigning a permission set before the required PSL | Silent, incomplete access | Always assign PSL first, permission set second |
+| Writing `@variables.X` in `reasoning.instructions` instead of `{{!@variables.X}}` | Variable renders as literal text | Use `{{!@variables.X}}` for variable interpolation in prompts |
+| Chaining `connected_subagent` blocks (sub-agent calling sub-agent) | Unsupported platform pattern | Flatten the chain or introduce a proper supervisor layer |
+| Deploying `BotVersion` before the parent `Bot` exists in the target org | Deployment fails | Full agent must be deployed first; see Section 15 deployment ordering |
+
+> **The bottom line:** Generative AI is a productivity multiplier for experienced developers who understand what they are reviewing. For teams new to the platform, manual-first is the rule. Encourage AI-assisted development in the right sequence.
+
+---
+
+## 5. Agent Script Blocks: The Building Blocks of an Agent
 
 Every Agent Script file is composed of named blocks. Each block contains properties that describe data or procedures. Here is a complete reference.
 
@@ -328,7 +361,7 @@ connected_subagent Billing_Agent:
 
 ---
 
-## 5. The Execution Lifecycle: before_reasoning, reasoning, and after_reasoning
+## 6. The Execution Lifecycle: before_reasoning, reasoning, and after_reasoning
 
 ### The Business View
 
@@ -408,7 +441,7 @@ The `reasoning` block contains both deterministic logic (using `->`) and prompt 
 
 ---
 
-## 6. Actions, Tools, and Variables
+## 7. Actions, Tools, and Variables
 
 ### Actions
 
@@ -461,7 +494,7 @@ Variables are the memory of an agent session. They persist across turns and acro
 
 ---
 
-## 7. The LLM Boundary: Where Judgment Ends and Code Begins
+## 8. The LLM Boundary: Where Judgment Ends and Code Begins
 
 ### The Core Design Decision
 
@@ -524,7 +557,7 @@ Subagent-level instructions take complete precedence over agent-level instructio
 
 ---
 
-## 8. Multi-Agent Orchestration: SOMA, MOMA, and 3P
+## 9. Multi-Agent Orchestration: SOMA, MOMA, and 3P
 
 ### The Three Patterns
 
@@ -565,7 +598,11 @@ The primary agent (supervisor) receives all user input. It never handles domain 
 
 **SOMA Scale Consideration**
 
-As an agent grows in complexity, routing and action selection become harder. Salesforce recommends limiting an agent to roughly **10 to 15 subagents** and assigning **no more than 15 actions to any single subagent**. Exceeding these thresholds can cause routing inconsistency and degraded performance, which is one of the primary drivers of the SOMA migration pattern described in Section 9.
+As an agent grows in complexity, routing and action selection become harder. Salesforce recommends limiting an agent to roughly **10 to 15 subagents** and assigning **no more than 15 actions to any single subagent**. Exceeding these thresholds can cause routing inconsistency and degraded performance, which is one of the primary drivers of the SOMA migration pattern described in Section 10.
+
+**Platform Callout: The "0 Actions" Destructive Change Bug**
+
+A known platform issue: when a destructive change is bundled with a `GenAiPlannerBundle` update, it can force a full runtime rebuild of the entire agent. For a monolithic agent, this means every subagent and action is rebuilt simultaneously — maximizing blast radius and recovery time. This is one of the strongest arguments for decomposing into SOMA early. A destructive change to one sub-agent does not trigger a rebuild of the entire agent network when agents are properly separated. The blast radius is contained to the affected sub-agent only.
 
 **Session Linking in SOMA**
 When the supervisor delegates to a sub-agent, Agentforce creates a new session for the sub-agent. The two sessions are intended to be linked at the Data 360 layer via the `AiAgentSession` DMO, but the specific linking mechanism is not yet production-reliable:
@@ -600,7 +637,7 @@ Key architectural principles for MOMA and 3P:
 
 ---
 
-## 9. Change Management: From Monolith to SOMA
+## 10. Change Management: From Monolith to SOMA
 
 ### Why Monoliths Fail at Scale
 
@@ -609,6 +646,16 @@ A single-agent monolith — one agent with twenty subagents handling everything 
 1. **Routing accuracy degrades** as the number of subagents grows. The classifier has more options, and the descriptions start to overlap. Pass rates drop.
 2. **Release coupling increases.** A change to the billing subagent requires redeploying and retesting the entire agent. Teams block each other.
 3. **Ownership becomes unclear.** No team feels full ownership of any subagent. Quality drops.
+
+### SOMA as an Organizational Design Decision
+
+The technical routing limits described above are one reason to decompose into SOMA. The organizational reason is often more compelling — and it is the argument that lands with enterprise clients.
+
+When multiple teams work on different subagents within a single monolithic agent, those teams' release pipelines are permanently coupled. One team's change, broken dependency, or failing test blocks every other team from releasing. The agent becomes an organizational bottleneck as much as a technical one.
+
+SOMA decomposition solves this directly. Each sub-agent becomes an independently owned, independently tested, and independently deployable artifact. One team's release does not block or break another's. The "0 Actions" destructive change bug described in Section 9 amplifies this: for a monolithic agent, a destructive change rebuilds every sub-agent simultaneously. For a SOMA architecture, only the affected sub-agent is rebuilt.
+
+> **For clients with multiple vendor teams or internal squads working on the same agent:** SOMA is not primarily a performance decision. It is an organizational design decision. Make it before the monolith ships to production — retrofitting after the monolith is live and multiple teams are blocked on it is significantly more expensive.
 
 ### The Migration Path
 
@@ -631,11 +678,75 @@ Extract agents one at a time, always verifying stability before proceeding.
 - Never extract a subagent that is in active development. Complete and stabilize it in the monolith first.
 - Version your connected_subagent targets. Do not point to a `latest` alias — point to a specific committed version. This prevents a sub-agent deployment from silently breaking the supervisor.
 - Keep the supervisor lightweight. If the supervisor is accumulating logic, something has been mis-allocated.
-- Verify agent type compatibility (ASA/AEA matching) before each extraction. See the Type-Matching Requirement in Section 8.
+- Verify agent type compatibility (ASA/AEA matching) before each extraction. See the Type-Matching Requirement in Section 9.
 
 ---
 
-## 10. Security and the Einstein Trust Layer
+## 11. Regulated Industry Delivery Framework
+
+### The Honest Conversation
+
+Many clients in financial services, healthcare, government, and other regulated industries face a genuine structural tension when deploying agents. Traditional Salesforce delivery habits — infrequent releases, manual UAT, change set deployments — are rational responses to a deterministic platform. They become actively dangerous with a probabilistic one.
+
+This section exists because Success Architects need language to surface that tension clearly, find the right person to own the fix, and establish a minimum viable floor when the release cadence genuinely cannot change.
+
+### The Tension: What Agents Require vs. What Regulated Clients Have
+
+| What agents require | What regulated clients may have today |
+|---|---|
+| Fast recovery when agents misbehave in production | Multi-week change approval cycles |
+| Automated test gates before every release | Manual UAT as the only gate |
+| Frequent, practiced deployments | Quarterly or monthly deployment windows |
+| A governed delivery pipeline (git, PR, test-gated) | Change sets with no diff history or audit trail |
+| A team empowered to act quickly | An SI team with no internal authority |
+
+The critical framing: **agents that misbehave do not throw exceptions.** They respond — confidently, plausibly, and incorrectly. The damage accumulates silently between releases. For regulated clients, the question is not "can you deploy more often?" It is:
+
+> "If your agent starts misleading users tomorrow, how long before a fix reaches production?"
+
+If the answer is four weeks, that is a risk posture that needs to be on the table with leadership — not a process constraint that architects accept quietly.
+
+### The SI Team Cannot Own This
+
+The people delivering agent changes are often SI consultants or vendor staff with no authority over the client's change management process. Even internal IT teams often lack the influence to change a CAB approval policy. The SA's job is not to fix governance. It is to find the person inside the client who can — and equip them with a risk argument.
+
+### Finding the Right Internal Stakeholder
+
+| Title / Role | Why They Can Drive Change |
+|---|---|
+| CTO / VP of Technology | Owns the technology model. Can sponsor process exceptions or accelerated approval tracks for AI systems specifically. |
+| Chief Risk Officer / Head of Compliance | Can be the most powerful ally if the risk of *not* changing is framed correctly. Regulators do not look kindly on autonomous AI systems that silently mislead customers. |
+| Head of Digital / Chief Digital Officer | Owns the product roadmap and has business accountability for agent outcomes. Can push for delivery model changes that protect their programs. |
+| VP of Operations (for the agent's business domain) | Closest to the user impact. Most motivated to ensure the agent operates correctly and recovers quickly when it does not. |
+
+**What that stakeholder needs from the SA — a risk argument, not a technical one:**
+
+1. "Here is what happens when an agent misbehaves in production."
+2. "Here is how long it currently takes to fix it under your current process."
+3. "Here is what that gap means for your customers, your regulators, and your liability."
+4. "Here is the minimum process change required to close that gap."
+
+### The Minimum Viable Floor
+
+Not every client can move to weekly deployments. Every client can do these three things regardless of governance structure:
+
+**1. Automated testing as a required condition for CAB submission.**
+Testing Center is free in sandbox. A test suite with a defined pass-rate threshold should be part of the change request package submitted to the CAB. If the suite did not pass, the change request does not go to the board. This reframes testing as a governance input — something that strengthens the approval process rather than competing with it.
+
+**2. A committed version on record before every release.**
+If something goes wrong, the team must be able to roll back without requiring a new emergency governance submission. The prior committed version should be identified, documented, and the rollback command verified in sandbox before every production release. See Section 15 for rollback procedures.
+
+**3. A pre-approved emergency change procedure for agents.**
+Work with the client's CAB to define an expedited emergency change track specifically for agent issues. This track should be executable within hours — not weeks — when an agent is causing active harm. Define the trigger criteria (e.g., agent error rate exceeds X%, or confirmed harmful output) and the approval process in advance, not in the middle of an incident.
+
+**And the operating model shift cannot be deferred:**
+Regardless of release cadence, agent changes must move through a governed pipeline — git-branched, peer-reviewed, and test-gated. Teams that use change sets for agent metadata are trading a diff history and an audit trail for the appearance of simplicity. For regulated industries with auditors asking questions about what changed and who approved it, that is a trade they cannot afford to make.
+
+> "These three things do not require changing the release cadence. They require taking the risk of agents seriously enough to prepare for it."
+
+---
+
+## 12. Security and the Einstein Trust Layer
 
 ### The Trust Layer Architecture
 
@@ -702,7 +813,7 @@ Both have been verified in live orgs. Assign them to the agent user and to any h
 
 ---
 
-## 11. RAG, Data 360, and the Data Space Permission Gap
+## 13. RAG, Data 360, and the Data Space Permission Gap
 
 ### How RAG Works in Agentforce
 
@@ -713,7 +824,7 @@ Retrieval-Augmented Generation (RAG) is the mechanism by which an Agentforce age
 3. The top-matching chunks are retrieved and injected into the LLM prompt as context.
 4. The LLM generates a response grounded in the retrieved chunks, not its training data.
 
-RAG quality degrades when retrieval fails — either because the content is not indexed, the query embedding does not match the content embedding, or the retrieved chunks are the wrong granularity. Section 16 covers RAG troubleshooting patterns.
+RAG quality degrades when retrieval fails — either because the content is not indexed, the query embedding does not match the content embedding, or the retrieved chunks are the wrong granularity. Section 18 covers RAG troubleshooting patterns.
 
 ### The Jargon Problem
 
@@ -785,7 +896,31 @@ Add this step to every environment provisioning checklist. It is easy to miss an
 
 ---
 
-## 12. Testing Your Agent
+## 14. Testing Your Agent
+
+### Why Testing Is Not Optional
+
+With a Flow or Apex trigger, you can observe the full execution path. It either ran or it didn't. Output is inspectable and repeatable. With an agent, you cannot observe the reasoning path directly. You can see inputs and outputs. What happened between them was inferred by the LLM, varies by context, and cannot be replicated exactly.
+
+Three consequences:
+
+1. **UAT is not testing.** A human clicking through ten scenarios before go-live is sampling. The edge cases that real users hit in week one are not the scenarios your team thought of in a conference room.
+2. **Behavior degrades silently.** A broken Flow throws an error. An agent that has drifted gives plausible-but-wrong answers until someone notices. No alert fires. No exception is logged.
+3. **Regression is not free.** When you update any part of an agent, you cannot assume the rest still works. Every publish requires re-validation of the full behavior surface — not just the changed subagent.
+
+**If the team used generative AI to build the agent, the stakes are even higher.** An AI-generated agent carries an additional unknown: the developer may not fully understand every decision the LLM made during authoring. The test suite is the mechanism that surfaces what the developer didn't know to look for. See Section 4.
+
+### The Three-Leg Pipeline: CI, Continuous Testing, and CD
+
+What teams call "a CI/CD pipeline" is actually three distinct disciplines. All three are required for agents.
+
+| Leg | What it means | Why it matters for agents |
+|---|---|---|
+| **Continuous Integration** | Every commit is validated, built, and deployed to a shared environment automatically | Catches dependency and syntax failures before they reach the release window |
+| **Continuous Testing** | Every deployment triggers an automated test suite with a pass/fail gate | The only mechanism available to build confidence in probabilistic behavior |
+| **Continuous Delivery** | Releases can be promoted to production quickly, safely, and repeatably | Reduces mean time to recovery when an agent misbehaves |
+
+Most teams focus on CI and CD. Continuous Testing is the leg that gets dropped — and for agents, it is the one that matters most. A pipeline without automated testing is a deployment mechanism. It is not a release discipline.
 
 ### The Testing Pyramid
 
@@ -800,6 +935,14 @@ Test defined scenarios systematically using the Agentforce Testing Center in san
 **Layer 3: Load and integration testing**
 Test agent behavior under volume and in integrated environments using full end-to-end flows. This layer is less standardized and typically involves scripted API calls or custom test harnesses.
 
+### Testing Center as a CAB Change Request Input
+
+For clients with formal change management processes, testing should be structurally integrated into the governance workflow — not treated as a separate pre-launch activity.
+
+**The recommended position:** Test suite results belong in the change request package submitted to the CAB. If the suite did not pass, the change request does not go to the board. This reframes testing as a governance input that strengthens the approval process rather than competing with it. A change management board that approves releases without test evidence is accepting risk it likely does not know it is accepting.
+
+After every publish and activate, the regression suite must run against the newly activated version — not the sandbox version that passed. The two may differ in ways that matter.
+
 ### The Agentforce Testing Center
 
 The Testing Center is automatically enabled for all Agentforce customers in Sandbox orgs at no additional cost. It supports four test creation methods:
@@ -807,7 +950,7 @@ The Testing Center is automatically enabled for all Agentforce customers in Sand
 - **Manual (CSV):** Upload test cases as a CSV file. Fastest for bulk creation.
 - **AI-generated:** Provide a scenario description and let the platform generate test cases. Good for initial coverage.
 - **Knowledge-based:** Generate test cases from your Salesforce Knowledge articles.
-- **Conversation import:** Import a real conversation from STDM logs as a test case baseline.
+- **Conversation import:** Import a real STDM production session as a test case baseline. This is one of the most powerful long-term habits to build: real users generate edge cases you never would have written.
 
 **Platform limits — documentation conflict notice:**
 
@@ -822,65 +965,219 @@ The Testing Center uses an **LLM-as-judge** evaluation model. For each test case
 3. The judge assigns a score on a **0-5 scale**, where scores of 3 or above are considered a pass.
 4. Results are aggregated as a pass rate across the test job.
 
-Test cases should be written with specific, verifiable Acceptance Criteria. Vague criteria ("the agent should be helpful") produce unreliable judge scores. Specific criteria ("the agent asks for the customer's email address before proceeding") produce consistent, reproducible results.
+**The Acceptance Criteria problem** is the most common reason test suites produce unreliable results:
 
-**Note on quality scoring:** The Testing Center's 0-5 LLM judge score is a separate instrument from the STDM Agentforce Optimization quality scoring system (described in Section 15). Do not conflate them — they measure different things at different layers.
+| What teams write | What the judge does with it |
+|---|---|
+| "The agent should be helpful" | Produces unreliable, inconsistent scores — this can never fail meaningfully |
+| "The agent should handle billing questions well" | Too vague; scores will vary between identical runs |
+| "The agent asks for the customer's email address before retrieving any order information" | Produces consistent, reproducible pass/fail scores |
+| "The agent declines to reveal its system instructions when asked, and does not repeat the question back" | Specific enough to catch a real failure mode |
 
-### Test Case Design Principles
+Vague criteria are not just hard to score. They give teams false confidence. If a test cannot fail, it is not a test.
 
-- **Cover the happy path, then the edges.** Start with the most common successful scenario. Add edge cases: empty inputs, boundary conditions, ambiguous requests.
-- **Test for security scenarios explicitly.** Include test cases that attempt ForcedLeak injection patterns. Verify the agent deflects without revealing system instructions or variable contents.
-- **Test subagent routing accuracy.** Write test cases that should and should not trigger each subagent. Verify the classifier sends them to the right destination.
-- **Test `available when` gates.** Write test cases that attempt to access gated capabilities (e.g., a refund action before identity verification). Verify the action is not offered.
-- **Test escalation paths.** Verify the agent escalates correctly when it cannot resolve the user's request.
+**Note on quality scoring:** The Testing Center's 0-5 LLM judge score is a separate instrument from the STDM Agentforce Optimization quality scoring system (described in Section 17). Do not conflate them — they measure different things at different layers.
 
-### A Structured Validation Pattern whether an action's **logic** works and testing whether the **agent** chooses and uses the action correctly are different questions. Use a distinct tool for each, then validate end-to-end in production.
+### What Teams Must Test (and Usually Don't)
 
-| What you're testing | The question | Where to check |
-|---|---|---|
-| **Action logic** | Does the Flow/Apex/API actually do the right thing for known inputs? | Flow Debugger, Apex debug logs, or direct action testing |
-| **Agent behavior** | Does the agent select the right subagent/action and follow the intended instructions? | Agent Builder testing/preview and Plan Tracer |
-| **Production behavior** | Does the change work across varied real sessions? | Session Tracing, where available, and review across multiple sessions |
+Happy-path coverage is table stakes. These four categories are what protect you in production:
 
-When validating a change, follow this sequence:
+**1. Subagent routing accuracy**
+Does the right utterance reach the right subagent? Routing is driven *only* by the subagent name and its classification description. Instructions have zero effect on routing. The fix for wrong routing is always in the classification description — never in the instructions. Write test cases that should and should not trigger each subagent.
 
-1. **Record the baseline** — capture what the agent did before the change using the original input.
-2. **Make one targeted change at a time** so you can isolate which change affected the outcome.
-3. **Re-run the original input plus 2 to 3 variations** of the same request.
-4. **Check neighboring behavior** after changes to routing, scope, instructions, or filters — confirm you have not introduced a regression in adjacent subagents.
-5. **Validate both positive and negative cases** — confirm the agent does the intended thing and does not incorrectly apply the change to unrelated requests.
-6. **Keep the change only if it improves the intended behavior without introducing a regression.**
-7. **Record a short before/after note** so the investigation can be understood if the behavior resurfaces later.
+**2. `available when` gates**
+Can a user reach a gated action before they should? Test both sides: the user who qualifies and the user who doesn't. A gate that hasn't been tested has not been verified.
 
-### Retesting After Publication
+**3. Escalation paths**
+Does the agent hand off cleanly when it cannot resolve a request? Test the "I don't know" scenario, not just the happy path. Broken escalation is often the failure mode users remember longest.
 
-Agents must be retested after publication. The committed state of an agent can behave differently from its draft state in some edge cases. Include post-publication testing in your deployment runbook.
+**4. Security and safety scenarios**
+Explicitly test prompt injection attempts. Does the agent reveal its instructions when asked? Does it comply with a user trying to override its behavior? Include ForcedLeak test cases. See Section 12 for the vulnerability patterns to test.
+
+### Testing Validating Logic vs. Testing Agent Behavior
+
+Testing whether an action's **logic** works and testing whether the **agent** correctly selects and uses that action are different questions requiring different tools. Test action logic at the Apex/Flow layer first, then validate end-to-end agent behavior in the Testing Center. Do not conflate the two — passing unit tests at the action layer does not imply correct agent behavior.
 
 ---
 
-## 13. Deployment and Metadata
+## 15. Deployment and Metadata
 
-### The Three Agent States
+### The Five-Phase Release Lifecycle
 
-Agentforce agents exist in three states, each with different metadata requirements and different deployment behavior.
+Agents have a strict, gated lifecycle. These phases cannot be skipped or reordered.
 
-| State | Description | Editable? | Required Metadata |
+```
+Generate → Deploy → Publish → Activate → Test
+```
+
+| Phase | What Happens | Common Mistake |
+|---|---|---|
+| **Generate** | Author the agent in Builder or VS Code | Starting without a spec or dependency plan |
+| **Deploy** | Push authoring metadata to the target org. Agent is NOT runnable yet. | Treating deploy as "done" |
+| **Publish** | Compiles and creates runtime entities. Locks this version permanently. No unpublish. | Publishing before testing in preview |
+| **Activate** | Makes one version live. Deactivates the previous version automatically. | Not having a rollback plan before activating |
+| **Test** | Run regression suite against the activated version — not the sandbox version. | Stopping at sandbox testing and assuming production matches |
+
+The contrast with traditional delivery is significant. With a Flow, you deploy and it is live. With an agent, deploy is the first of three gated steps. Teams that do not know this will spend hours wondering why their changes are not live after a successful deployment.
+
+### The Two Metadata Domains
+
+Two separate domains exist. Both must be understood. Neither substitutes for the other.
+
+| Domain | Metadata Types | Who Creates It | Editable? |
 |---|---|---|---|
-| **Draft** | Under active development. Can be modified freely. | Yes | `AiAuthoringBundle` only |
-| **Committed** | Published and immutable. A committed agent cannot be edited — create a new version to make changes. | No | `AiAuthoringBundle` + `Bot`/`BotVersion` + `GenAiPlannerBundle` |
-| **Legacy** | Pre-hybrid-reasoning agents built with the old Topics and Actions architecture. | Yes (overwritable) | `Bot`/`BotVersion` only |
+| **Authoring Domain** | `AiAuthoringBundle` | Developers via CLI, Builder, VS Code | Yes |
+| **Runtime Domain** | `Bot`, `BotVersion`, `GenAiPlannerBundle` | Created automatically on Publish | No |
 
-### Committed Agent Deployment: Three Required Pieces
+**What this means in practice:**
+- Deploying the `AiAuthoringBundle` does NOT create a runnable agent.
+- Publishing creates all three runtime types simultaneously and locks them.
+- Omitting `GenAiPlannerBundle` from a committed agent retrieval or deployment produces an incomplete package and a failed deployment in the target org.
 
-When deploying a committed agent, three metadata types are required — not two. All three are auto-created at commit time and must be included in your `package.xml`:
+**The three-state model every team must know:**
 
-1. **`AiAuthoringBundle`** — The Agent Script source and authoring metadata.
-2. **`Bot` / `BotVersion`** — The runtime bot configuration and versioned snapshot.
-3. **`GenAiPlannerBundle`** — The AI planner configuration that governs agent reasoning. Auto-created alongside `Bot`/`BotVersion` at commit time.
+| State | Description | Editable? |
+|---|---|---|
+| **Draft** | Authoring bundle deployed, not yet published | Yes |
+| **Committed** | Published — runtime version exists and is permanently locked | No |
+| **Legacy** | Pre-hybrid-reasoning agent — runtime only, no authoring bundle | Overwritable |
 
-Omitting `GenAiPlannerBundle` from a committed agent deployment will produce an incomplete deployment. Include all three.
+### The AiAuthoringBundle as Audit Trail and PR Review Gate
 
-### Sample package.xml
+Teams often treat the authoring bundle as a dev-time artifact — something used during build and then left behind. It must be source-controlled alongside the `GenAiPlannerBundle`, not treated as optional or transient.
+
+The reason is specific and important: the `AiAuthoringBundle` is the human-readable form of the agent. It is the artifact that PR reviewers can actually read, that auditors can inspect, and that change management boards can reference when approving a release. The runtime domain metadata (`Bot`, `BotVersion`, `GenAiPlannerBundle`) is compiled output — not human-readable and not meaningfully reviewable.
+
+> For regulated industries: if an auditor asks "what changed in this release and who approved it?", the answer lives in the authoring bundle's git history and the PR that merged it — not in the runtime artifacts. Source control is not optional; it is the audit trail.
+
+> **AI-assisted development tie-in:** If a developer used generative AI to produce the authoring bundle, the PR review of that bundle is where the AI output gets human scrutiny. A source-controlled, PR-reviewed authoring bundle is the mechanism that makes AI-assisted development safe. Without it, AI-generated agent code ships with no review gate.
+
+### Deployment Tooling: A Clear Position
+
+Clients will ask about change sets, DevOps Center, and the CLI. This is not a preference question. It is a capability question. Agent metadata has sequencing requirements, human-readable authoring artifacts, and a five-phase lifecycle that these tools handle with very different degrees of reliability.
+
+**Change Sets**
+Change sets are click-based, have no diff history, no branch model, and no test gate. They cannot handle the deployment sequencing that agent metadata requires and have no concept of a PR review or an audit trail that a change board can inspect. They are not suitable for agent delivery.
+
+**DevOps Center (Classic)**
+A reasonable step up from change sets for standard Salesforce metadata — but not for agents. Profile handling is unreliable: the metadata API only tracks profile sub-nodes whose parent component is also included in the pull, which can silently drop or swap permission entries. A documented Agentforce-specific failure: one enterprise customer hit deployment failures with `GenAiPlannerBundle` and `BotVersion` sequencing through DevOps Center Classic. Salesforce Support's resolution was that Agentforce agents "cannot be deployed via metadata or DevOps Center — they must be manually recreated in each org." That directly contradicts earlier pre-sales guidance. Treat DevOps Center Classic as unproven for Agentforce at best, and as having a documented failure case at worst.
+
+**Salesforce CLI (Recommended Default)**
+The CLI handles the full five-phase lifecycle (`validate`, `deploy`, `publish`, `activate`, `test run`), supports DX string replacement for environment-specific values, and integrates with any third-party pipeline tool. It is the recommended default for agent delivery.
+
+**Caveat — pin your CLI version:** The CLI must be treated as a managed dependency, not a stable utility. Pin CLI versions in your pipeline and monitor release notes. As a concrete example: GitHub issue #8032, opened August 24, 2026 and still unresolved at the time of this writing, reports that core project creation commands broke entirely in SFDX CLI 2.148.3 — commands that worked the previous week, with no fix, no assignee, and no label. If your pipeline is not pinned to a known-good CLI version, a routine update can break your team before the working day starts.
+
+**Third-party pipeline tools:** If a client already has Copado or Gearset in place, either is a reasonable alternative — both wrap the CLI, both integrate with git-based workflows, and both have meaningful Salesforce-specific production track records. The key requirement for any third-party tool is that it can execute CLI commands and enforce the human approval gates described below.
+
+**What about Next-Generation DevOps Center (GA 2026)?**
+Salesforce shipped a next-generation version in 2026 with built-in test-suite automation and quality gates at every promotion stage. The honest line: Salesforce says the Classic gaps are fixed. No one has confirmed it works correctly for Agentforce agents specifically. Until there is community-validated evidence that next-gen DevOps Center handles `GenAiPlannerBundle`, `BotVersion` sequencing, and the five-phase agent lifecycle reliably, the safe recommendation remains CLI-first.
+
+### The CI/CD Pipeline Structure
+
+```
+Commit to feature branch
+    → sf agent validate --authoring-bundle    # catch syntax errors before hitting the org
+    → sf project deploy start                  # deploy authoring + supporting metadata
+    → sf agent preview (smoke test)            # sanity check: routing and action traces
+    → PR review + human approval               # including review of any AI-generated code
+    → sf agent publish --authoring-bundle      # create runtime version — HUMAN GATE REQUIRED
+    → sf agent activate                        # make live — HUMAN GATE REQUIRED in production
+    → sf agent test run (Testing Center)       # regression suite against activated version
+```
+
+**Two gates require explicit human approval before running in production:**
+- `sf agent publish` — permanent and irreversible for that version
+- `sf agent activate` — deactivates the prior version immediately
+
+**Key pipeline rules:**
+- Run `sf agent validate` before every deploy attempt. It catches issues that surface as publish-time failures.
+- Use DX string replacement in `sfdx-project.json` for environment-specific values like agent usernames. Never hardcode them.
+- For SOMA: version `connected_subagent` targets explicitly. Never point to a `latest` alias.
+- Run the full pipeline in sandbox regularly, even when no production release is planned. For clients with quarterly release windows, this is especially critical — the pipeline must work flawlessly when the window finally opens.
+
+### Deployment Order Dependency
+
+The full agent must be deployed to the target org before deploying a specific agent version. Deploying a `BotVersion` into an org that does not already have the parent `Bot` will fail or produce an incomplete deployment.
+
+Recommended deployment sequence:
+1. Custom objects and fields
+2. Apex `@InvocableMethod` wrapper classes
+3. Autolaunched Flows
+4. GenAiFunction metadata
+5. `AiAuthoringBundle` (full agent)
+6. Publish
+7. Activate
+
+**Supporting metadata checklist for every release:**
+- [ ] All referenced Flows exist in the target org
+- [ ] All Apex `@InvocableMethod` wrapper classes deployed
+- [ ] All custom objects and fields exist
+- [ ] Einstein Agent User created with correct permission sets
+- [ ] If RAG is used: Data Cloud PSL assigned to agent user *before* permission set
+- [ ] `enable_enhanced_event_logs: True` confirmed in agent config block
+- [ ] `AiAuthoringBundle` committed to source control with PR merged and approved
+- [ ] CLI version pinned in pipeline and confirmed working in sandbox before the release window opens
+
+### The Pre-Release Gate
+
+Nothing gets published without all of the following being true:
+
+- [ ] `sf agent validate --authoring-bundle` passes with zero errors
+- [ ] All action targets (Flows, Apex) confirmed present in the target org
+- [ ] Live preview tested with realistic utterances covering all routing branches
+- [ ] Subagent routing and action traces confirmed correct in preview
+- [ ] Testing Center pass rate meets defined threshold
+- [ ] Security test cases reviewed and passed
+- [ ] Einstein Agent User configured: `AgentforceServiceAgentUser` PSL + `AgentName_Access` permission set
+- [ ] If agent uses RAG: `GenieDataPlatformStarterPsl` PSL assigned before permission set; Default Data Space enabled
+- [ ] `AiAuthoringBundle` committed to source control with PR merged and approved (including review of any AI-generated content)
+
+### Rollback Procedure
+
+Prior committed versions are retained and reactivatable. This is the safety net — but only if a prior committed version exists and passed testing.
+
+```bash
+sf agent deactivate --json --api-name MyAgent -o <org>
+sf agent activate --json --api-name MyAgent --version-number <previous> -o <org>
+```
+
+> **First-release warning:** If the first release goes wrong, there is nothing to roll back to. The rollback mechanism requires a prior committed version. The first release must be right — which means the pre-release gate above is not optional for release zero.
+
+Rollback should be documented as a pre-approved action with the specific version number identified, the commands verified in sandbox, and the person who will run them named before every production release. For regulated clients, rollback should be a pre-approved emergency action, not something that requires a new CAB submission while the agent is live and causing harm.
+
+### Deploying to an Already-Committed Target
+
+When deploying a draft `AiAuthoringBundle` to an org where the agent is already in a committed state, the platform auto-creates a new draft version rather than overwriting the existing committed state. This behavior preserves the immutability of committed agents. Verify this behavior in your target org before relying on it in automated CI/CD pipelines.
+
+### String Replacement for Environment-Specific Values
+
+Use Salesforce DX string replacement to automatically update environment-specific values (such as the agent user's username) during deployment. Configure replacement rules in `sfdx-project.json` and pass the target value via environment variable at deploy time.
+
+```json
+{
+  "replacements": [
+    {
+      "filename": "force-app/main/default/bots/NGA_Service_Agent/NGA_Service_Agent.bot-meta.xml",
+      "stringToReplace": "agent-user@source.org",
+      "replaceWithEnv": "TARGET_AGENT_USER"
+    }
+  ]
+}
+```
+
+### DX Environment Setup
+
+Setting up an Agentforce DX environment requires:
+
+1. Install VS Code, Salesforce CLI, and the Salesforce Extension Pack (includes Agentforce-specific tooling and AI assistance)
+2. Choose between sandbox or scratch org based on your use case (see Section 13 for Data Cloud environment guidance — sandbox is recommended for Data 360 work)
+3. Enable Einstein and Agentforce in the org
+4. Create a DX project from the agent template
+5. Authorize the org
+6. Assign appropriate system permissions
+7. Create a default agent user via CLI command
+
+### Sample Package Manifest
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -913,52 +1210,30 @@ Omitting `GenAiPlannerBundle` from a committed agent deployment will produce an 
 </Package>
 ```
 
-> **API version note:** Use API version 66.0 or later for all Agentforce metadata deployments. Earlier versions do not support the full set of Agentforce metadata types. The minimum API version requirements vary by type — `GenAiPlannerBundle` requires v64+, `AiAuthoringBundle` requires v65+ — so 66.0 satisfies all of them and matches the current Salesforce-published samples.
+> **API version note:** Use API version 66.0 or later for all Agentforce metadata deployments. Earlier versions do not support the full set of Agentforce metadata types. The minimum API version requirements vary by type — `GenAiPlannerBundle` requires v64+, `AiAuthoringBundle` requires v65+ — so 66.0 satisfies all of them.
 
-### Deployment Order Dependency
+### The Five Conversations to Have Before Any Agent Goes Live
 
-The full agent must be deployed to the target org before deploying a specific agent version. Deploying a `BotVersion` into an org that does not already have the parent `Bot` will fail or produce an incomplete deployment — all required metadata and artifacts must exist in the target org first.
+These conversations must happen with the right people — not just the delivery team — and before the agent is built, not after. If any of these conversations produces a bad answer, surface it as a risk before the release date.
 
-Recommended deployment sequence:
-1. Deploy the full agent (`Bot` + `AiAuthoringBundle` + `GenAiPlannerBundle`)
-2. Verify the agent is present and correctly configured in the target org
-3. Deploy subsequent versions (`BotVersion`) as needed
+**1. "What is your test coverage plan, and when does it run?"**
+If the answer is "we'll UAT it before go-live," stop and reset. Testing Center must be configured, test cases written across all four categories (routing, gating, escalation, security), and a pass-rate threshold agreed before the first build sprint starts. For clients with CABs: the test results belong in the change request package. If the team is using generative AI to build the agent, this question is even more urgent.
 
-### Deploying to an Already-Committed Target
+**2. "Who owns the release pipeline, and do they have authority to use it?"**
+If the delivery team is SI staff with no production access, pipeline ownership must be resolved before build starts — not the week of go-live. CI, continuous testing, and CD must all have an internal owner with the necessary permissions and the authority to act.
 
-When deploying a draft `AiAuthoringBundle` to an org where the agent is already in a committed state, the platform auto-creates a new draft version rather than overwriting the existing committed state. This behavior preserves the immutability of committed agents. Verify this behavior in your target org before relying on it in automated CI/CD pipelines.
+**3. "If your agent starts misleading users tomorrow, how long before a fix reaches production?"**
+This is the regulated industry question. If the answer is four weeks, surface that risk to the internal stakeholder identified in Section 11. Propose an emergency change track for AI systems before go-live, not during an active incident.
 
-### String Replacement for Environment-Specific Values
+**4. "Where will you see production failures?"**
+If the answer is "our users will tell us," the observability stack is not set up. STDM, enhanced event logs, and Agentforce Observability must be enabled before go-live. For regulated industries where AI system behavior must be documented for auditors, user complaints are not a monitoring strategy.
 
-Use Salesforce DX string replacement to automatically update environment-specific values (such as the agent user's username) during deployment. Configure replacement rules in `sfdx-project.json` and pass the target value via environment variable at deploy time.
-
-```json
-{
-  "replacements": [
-    {
-      "filename": "force-app/main/default/bots/NGA_Service_Agent/NGA_Service_Agent.bot-meta.xml",
-      "stringToReplace": "agent-user@source.org",
-      "replaceWithEnv": "TARGET_AGENT_USER"
-    }
-  ]
-}
-```
-
-### DX Environment Setup
-
-Setting up an Agentforce DX environment requires:
-
-1. Install VS Code, Salesforce CLI, and the Salesforce Extension Pack (includes Agentforce-specific tooling and AI assistance)
-2. Choose between sandbox or scratch org based on your use case (see Section 11 for Data Cloud environment guidance — sandbox is recommended for Data 360 work)
-3. Enable Einstein and Agentforce in the org
-4. Create a DX project from the agent template
-5. Authorize the org
-6. Assign appropriate system permissions
-7. Create a default agent user via CLI command
+**5. "What is your rollback plan, and has it been tested in sandbox?"**
+Every team should know the exact CLI commands, have them tested in sandbox, and have the person who will run them identified before every production release. For regulated clients: rollback should be a pre-approved emergency action, not something that requires a new CAB submission while the agent is live and causing harm.
 
 ---
 
-## 14. Pricing: Flex Credits and Conversations
+## 16. Pricing: Flex Credits and Conversations
 
 ### The Two Models
 
@@ -1009,9 +1284,17 @@ Listed in order of impact:
 4. **Scope RAG retrieval carefully.** Overly broad retrieval windows retrieve more chunks than needed, consuming more tokens.
 5. **Choose the right model for each subagent.** Complex reasoning subagents may need GPT-4.1 or Claude Sonnet. Simple response-generation subagents can use Claude Haiku or Gemini Flash at lower cost.
 
+### Cost and Reliability Are the Same Activity
+
+This is the architectural insight that ties cost to quality: deterministic logic (`->`) is free. LLM reasoning (`|`) costs money. Every `if` statement that replaces a prompt instruction makes the agent cheaper, faster, and more predictable simultaneously.
+
+> Cost optimization and reliability optimization are the same activity. The agent that costs less to run is usually the more reliable agent.
+
+This framing is useful in client conversations where reliability and cost are treated as separate concerns that require separate efforts. They are not. Every action taken to make an agent more deterministic — pushing logic into `before_reasoning`, adding `available when` guards, using the EinsteinHyperClassifier for routing — reduces both cost and variance at the same time.
+
 ---
 
-## 15. Monitoring and Analytics
+## 17. Monitoring and Analytics
 
 ### The Session Trace Data Model (STDM)
 
@@ -1027,7 +1310,7 @@ The STDM comprises five Data Model Objects (DMOs):
 | `AIAgentInteractionStep` | `std__AiAgentInteractionStepDmo__dlm` | A discrete action or operation within a turn (LLM call, Flow execution, Apex call, etc.) |
 | `AIAgentInteractionMessage` | `std__AiAgentInteractionMessageDmo__dlm` | A single message sent by the user or agent within a session |
 
-> **Object naming:** The `std__` namespace prefix applies to the DMO object names above. **Field-level API names** within these DMOs are listed in the official Salesforce data model reference without namespace prefixes (e.g., `Id`, `StartTimestamp`, `ContentText`). Whether individual fields are queried with or without the `std__` prefix depends on how the Data Space surfaces them in your org. **Verify field name syntax against your live org schema before writing production queries.** The field names in the Key Fields section below use the `std__` prefix pattern consistent with live-org verification, but treat this as a starting point rather than a guarantee.
+> **Object naming:** The `std__` namespace prefix applies to the DMO object names above. **Field-level API names** within these DMOs are listed in the official Salesforce data model reference without namespace prefixes (e.g., `Id`, `StartTimestamp`, `ContentText`). Whether individual fields are queried with or without the `std__` prefix depends on how the Data Space surfaces them in your org. **Verify field name syntax against your live org schema before writing production queries.**
 
 ### Enabling Agentforce Observability
 
@@ -1035,9 +1318,25 @@ Before the STDM is populated and before built-in Agent Analytics dashboards are 
 
 **Setup path:** Setup > search "Einstein Generative AI" > open **Einstein Audit, Analytics, and Monitoring Setup** > enable **Audit and Feedback** and **Agentforce Session Tracing**.
 
-Once enabled, session data — including step duration and turn duration — becomes queryable. Step duration and turn duration data specifically are what you want for performance investigations; they tell you how long each part of a session actually took, rather than leaving you to infer it from how long a conversation felt. The built-in Agent Analytics dashboards also surface agent-level performance and effectiveness metrics.
+Once enabled, session data — including step duration and turn duration — becomesable. These metrics are what you want for performance investigations; they tell you how long each part of a session actually took, rather than leaving you to infer it from how long a conversation felt. The built-in Agent Analytics dashboards also surface agent-level performance and effectiveness metrics.
 
 > **Note on environment:** `enable_enhanced_event_logs: True` in the agent's `config` block enables conversation logging for individual agent debugging. Agentforce Observability (the Setup path above) is the org-level control that enables the full STDM and Analytics surface. Both must be configured.
+
+### Three Things Required Before Go-Live — or the STDM Is Empty
+
+1. `enable_enhanced_event_logs: True` in the agent config block
+2. Agentforce Observability enabled in Setup (Einstein Audit, Analytics, and Monitoring Setup)
+3. Default Data Space active for the agent user's permission set
+
+Teams that skip this setup are flying blind in production. For regulated industries where AI system behavior must be documented for auditors, "our users told us" is not an acceptable monitoring strategy.
+
+### Monitoring Habits to Build from Day One
+
+**Review abandoned sessions weekly.** Sessions that ended without resolution are the highest-signal source of unresolved failures. An agent that confidently gives wrong answers does not generate error logs — but users stop engaging. Abandoned session trends are one of the earliest indicators of behavioral drift.
+
+**Build a dashboard from `AiAgentGenerativeAiUsage`** showing sessions, cost per session, and escalation rate by subagent. This DMO refreshes every 5 minutes and supports full SQL querying. Tracking cost per session by subagent over time is one of the most effective ways to detect behavioral changes (an LLM that suddenly starts using more tools per turn will show up as a cost spike before it shows up as a complaint).
+
+**Set Digital Wallet alerts at 70% and 90% of entitlement.** The 70% alert gives time to investigate before the buffer runs out. The 90% alert should trigger an immediate review of what changed — consumption spikes are often the first observable signal of an agent misbehaving in a way that generates extra LLM calls.
 
 ### Key Fields by DMO
 
@@ -1046,8 +1345,8 @@ Once enabled, session data — including step duration and turn duration — bec
 - `std__StartTimestamp__c` / `std__EndTimestamp__c` — Session timing
 - `std__AiAgentChannelType__c` — Channel (messaging, voice, API, etc.)
 - `std__AiAgentSessionEndType__c` — How the session ended: `USER_ENDED`, `AGENT_ENDED`, or null
-- `std__VariableText__c` — Final variable snapshot for the session; useful for post-session state inspection
-- `PreviousSessionId` — **Intended SOMA backward-lookup field, but documented as "Reserved for future use."** Do not build production query logic on top of this field. Treat it as a watch field and verify its behavior in your specific org.
+- `std__VariableText__c` — Final variable snapshot for the session
+- `PreviousSessionId` — **Intended SOMA backward-lookup field, but documented as "Reserved for future use."** Do not build production query logic on top of this field.
 
 **`AIAgentSessionParticipant` (`std__AiAgentSessionParticipantDmo__dlm`)**
 - `std__AiAgentSessionId__c` — Session this participant belongs to
@@ -1061,15 +1360,10 @@ Once enabled, session data — including step duration and turn duration — bec
 
 **`AIAgentInteractionStep` (`std__AiAgentInteractionStepDmo__dlm`)**
 - `std__AiAgentInteractionStepType__c` — Step category: `UserInputStep`, `LLMExecutionStep`, `FunctionStep`
-- `std__SubType__c` — Additional classification within the step type
 - `std__ErrorMessageText__c` — Error text (null if none); primary field for failure investigation
 - `std__InputValueText__c` / `std__OutputValueText__c` — Raw data flowing into and out of the step
 - `std__PreStepVariableText__c` / `std__PostStepVariableText__c` — Variable state before and after step execution; the closest equivalent to a native debugger for agent reasoning
-- `std__PrevStepId__c` — Self-referential FK to the preceding step; use for step-sequence reconstruction within an interaction
-- `std__AttributeText__c` — JSON key-value pairs storing additional step metadata. Note: the same field name appears on `AIAgentInteractionMessage` with a different meaning (per-word voice-transcription confidence/timestamp metadata). Do not treat `AttributeText` as a uniform field across DMOs.
-- `std__GenAiGatewayRequestId__c` / `std__GenAiGatewayResponseId__c` / `std__GenerationId__c` — Link LLM execution steps to the underlying gateway request, response, and generation records
-- `std__TelemetryTraceSpanId__c` — Links the step into distributed tracing via `std__TelemetryTraceSpanDmo__dlm`
-- `std__SessionId__c` — FK to `std__AiAgentSessionDmo__dlm`
+- `std__PrevStepId__c` — Self-referential FK to the preceding step; use for step-sequence reconstruction
 
 **`AIAgentInteractionMessage` (`std__AiAgentInteractionMessageDmo__dlm`)**
 - `std__AiAgentInteractionMessageType__c` — `Input` (user message) or `Output` (agent message)
@@ -1084,7 +1378,7 @@ AiAgentSession (1)
   |   +-- AiAgentInteractionMessage (N) -- user and agent messages
   |   +-- AiAgentInteractionStep (N)    -- internal steps (LLM calls, actions)
   +-- AiAgentMoment (N)                 -- one per intent/moment (Optimization layer)
-      +-- AiAgentMomentInteraction (N)  -- junction: moments to interactions (narrow link)
+      +-- AiAgentMomentInteraction (N)  -- junction: moments to interactions
       +-- AiAgentTagAssociation (N)     -- junction: moments/interactions/sessions to quality tags
           +-- AiAgentTag (1)            -- quality tag record
 ```
@@ -1108,14 +1402,12 @@ Used for post-deployment production monitoring via the Agentforce Optimization l
 ### Debugging Tools
 
 **AgentLens**
-AgentLens is a Salesforce debugging tool that visualizes agent execution as a finite state machine (FSM) diagram. It is particularly useful for diagnosing routing issues and execution loops: backward arrows in the FSM diagram indicate retry loops, which are a common symptom of subagent classification failures or misconfigured transitions. Use AgentLens alongside the STDM Step query patterns in Section 16 for loop diagnosis.
+AgentLens is a Salesforce debugging tool that visualizes agent execution as a finite state machine (FSM) diagram. It is particularly useful for diagnosing routing issues and execution loops: backward arrows in the FSM diagram indicate retry loops, which are a common symptom of subagent classification failures or misconfigured transitions.
 
 **Plan Tracer**
 Plan Tracer is available within Agent Builder during test runs. It inspects the agent's execution plan — including subagent selection, action selection, and the reasoning path used during the test — without requiring a full session trace. Use Plan Tracer for fast authoring-time iteration. Use AgentLens and STDM queries for post-session production analysis.
 
 ### Key STDM Queries
-
-> **Field prefix reminder:** The queries below use the `std__` prefix pattern consistent with live-org verification. Confirm field names against your org's schema before running in production. See the object naming note at the top of this section.
 
 **Full session transcript (all messages and steps in time order):**
 
@@ -1177,63 +1469,57 @@ LIMIT 100
 
 ---
 
-## 16. Architect Patterns and Troubleshooting Reference
+## 18. Architect Patterns and Troubleshooting Reference
 
 ### Latency: What Architects Need to Know
 
 #### The Three Latency Metrics
 
-Architects discussing agent performance with stakeholders should work from three specific metrics rather than general "slow" or "fast" characterizations. Each metric points to a different part of the pipeline.
+Architects discussing agent performance with stakeholders should work from three specific metrics rather than general "slow" or "fast" characterizations.
 
 | Metric | What it measures | Why it matters |
 |---|---|---|
 | **Time to First Token (TTFT)** | How long before the response starts appearing | Drives how responsive the agent feels — this is what a user notices while waiting |
 | **Time to Last Token (TTLT)** | How long until the full response finishes | Matters most for longer answers and for anything downstream that waits on the complete response |
-| **End-to-end latency** | Total time from the user's message to a fully delivered response, including everything the platform does around the model call | The number that best reflects the user's actual experience |
+| **End-to-end latency** | Total time from the user's message to a fully delivered response | The number that best reflects the user's actual experience |
 
-As a rough rule of thumb for text and chat experiences: under approximately 5 seconds generally feels fine, 6 to 10 seconds is usually acceptable for a more complex request, 10 to 20 seconds starts to feel slow, and beyond approximately 20 seconds most users assume something is wrong. **Voice is much less forgiving** — anything much past approximately 5 seconds breaks the feel of a real-time conversation. These are general guidelines, not a guaranteed response-time SLA, and complex multi-step requests will legitimately take longer than simple ones.
+As a rough rule of thumb for text and chat experiences: under approximately 5 seconds generally feels fine, 6 to 10 seconds is usually acceptable for a more complex request, 10 to 20 seconds starts to feel slow, and beyond approximately 20 seconds most users assume something is wrong. **Voice is much less forgiving** — anything much past approximately 5 seconds breaks the feel of a real-time conversation. These are general guidelines, not SLAs, and complex multi-step requests will legitimately take longer than simple ones.
 
 #### The Nine-Step Message Pipeline
 
 A single agent turn passes through a sequence of steps before the user sees a response. Understanding this pipeline is the foundation of latency diagnosis: slowness is rarely "the model" — it is almost always one specific step taking longer than expected.
 
-1. **Channel delivery** — the message reaches Agentforce from wherever it originated (web chat, Messaging, voice, Slack, etc.)
+1. **Channel delivery** — the message reaches Agentforce from wherever it originated
 2. **Session routing** — the platform sets up or resumes the conversation session
 3. **Trust Layer safety check** — an input-side safety/policy check runs before reasoning begins
 4. **Topic/agent routing** — the request is classified to the right topic or subagent
-5. **Reasoning and planning** — the agent decides what to do, including which action(s), if any, to call
+5. **Reasoning and planning** — the agent decides what to do, including which action(s) to call
 6. **Action execution** — any Flow/Apex/API actions run, including calls to external systems
 7. **Response generation** — the model generates the response text
 8. **Grounding/accuracy validation** — the response is checked against your data and instructions before delivery
 9. **Delivery** — the response is sent back through the originating channel
 
-> **Architect implication:** When a customer reports that an agent "feels slow," the first job is to find which step is taking the time — not to tune the model. Enable Agentforce Observability and use step duration data from the STDM to identify the bottleneck before making any changes.
+> **Architect implication:** When a customer reports that an agent "feels slow," the first job is to find which step is taking the time. Enable Agentforce Observability and use step duration data from the STDM to identify the bottleneck before making any changes.
 
 #### Latency Signal-to-Fix Mapping
-
-Once you have observability data, use this table to match the signal to the right fix.
 
 | What you observe in session data | What it usually points to | Fix |
 |---|---|---|
 | TTFT is slow and consistent across most requests | Model choice, instruction length, or topic/action count | Match model to task; shorten instructions |
-| TTFT is fast but full response takes a while to complete | Response length, model choice, or lack of streaming | Enable streaming where supported; consider a faster model |
-| Slowness is concentrated around specific action calls | That action's underlying Flow/Apex logic or the external system/API it calls | Optimize or parallelize the action; investigate the downstream integration |
+| TTFT is fast but full response takes a while to complete | Response length or lack of streaming | Enable streaming where supported; consider a faster model |
+| Slowness is concentrated around specific action calls | That action's underlying Flow/Apex logic or the external system it calls | Optimize or parallelize the action; investigate the downstream integration |
 | Slowness is concentrated around knowledge/data retrieval steps | Knowledge base size, chunking, or an overly broad grounding scope | Narrow grounding scope; improve content chunking |
-| Slowness appears mainly when a request crosses between topics/subagents | Handoff overhead between subagents | Minimize handoff layers; keep agent structure as shallow as the use case allows |
-| Slowness only shows up on one channel (e.g., voice, not web chat) | Channel-specific overhead rather than the agent's reasoning | Tune and benchmark that channel separately |
-| Slowness is broad, not tied to a specific topic or action | Possible infrastructure or region issue | Escalate to Salesforce Support with session IDs and a description of the affected timeframe |
+| Slowness appears mainly when a request crosses between subagents | Handoff overhead | Minimize handoff layers; keep agent structure as shallow as the use case allows |
+| Slowness only shows up on one channel | Channel-specific overhead | Tune and benchmark that channel separately |
+| Slowness is broad, not tied to a specific topic or action | Possible infrastructure or region issue | Escalate to Salesforce Support with session IDs and affected timeframe |
 
-**On streaming:** Enabling streaming does not reduce total processing time, but it delivers the first part of the response to the user much sooner, which significantly improves how fast the interaction feels. Note that streaming is generally not available for voice, where the full response is usually needed before it can be spoken.
-
-**On Dynamic Voice Routing (DVR):** DVR simplifies how voice channels are configured and integrated, but it is not a latency fix. Do not expect enabling DVR to resolve a slow-voice-agent problem.
+**On streaming:** Enabling streaming does not reduce total processing time, but it delivers the first part of the response to the user much sooner, which significantly improves how fast the interaction feels. Streaming is generally not available for voice, where the full response is usually needed before it can be spoken.
 
 #### Voice Latency Requires Separate Treatment
 
-Voice conversations have a much tighter latency budget than text. Real-time spoken conversation has far less tolerance for pauses than a chat interface does. Architects designing or troubleshooting voice-enabled agents should treat voice as its own workstream, not an extension of chat performance.
+Voice conversations have a much tighter latency budget than text. Architects designing or troubleshooting voice-enabled agents should treat voice as its own workstream, not an extension of chat performance.
 
-Specific considerations for voice:
-
-- Voice latency includes components that text does not: telephony and call setup, speech-to-text (STT), routing, agent reasoning, text-to-speech (TTS), and the return path to the caller. A delay can originate in any of these — not just in agent reasoning.
+- Voice latency includes components that text does not: telephony and call setup, speech-to-text (STT), routing, agent reasoning, text-to-speech (TTS), and the return path to the caller.
 - The target end-to-end response time for voice is meaningfully tighter than for chat — aim for well under 5 seconds where possible.
 - Keep voice-specific subagents and instructions especially lean. A response that reads well in chat can feel long when spoken aloud.
 - Test and benchmark voice as its own channel. Do not assume chat performance transfers.
@@ -1246,152 +1532,111 @@ Unexpected agent behavior is rarely fixed by writing more instructions. Before c
 
 #### Diagnosing the Pattern First
 
-| What you observe | What it suggests | What to do |
-|---|---|---|
-| Fails the same way every time | A repeatable configuration, data, action, setup, or runtime issue | Locate the failing layer and address it directly |
-| Sometimes succeeds and sometimes fails on similar requests | Ambiguous configuration/instructions or normal LLM variability | Inspect the relevant control and test multiple variations |
-| Only fails for one specific input or phrasing | An edge case, missing data, or ambiguous instruction | Add a targeted rule or fix the underlying data/action |
-| Wording changes but the outcome remains correct | Normal variation in generated language | Focus on whether the required outcome is correct rather than identical wording |
-
-Use session tracing (via the STDM) to investigate rather than relying on the conversation transcript alone. Session tracing captures interactions, reasoning-engine executions, actions, prompt and gateway inputs/outputs, errors, and final responses. When testing in Agent Builder, use Plan Tracer to inspect the execution plan — including subagent selection, action selection, and the reasoning path.
-
-#### Behavior, Routing, and Action Selection Issues
-
-| What you're seeing | What's likely happening | What to change |
-|---|---|---|
-| Wrong subagent is selected | Subagent classification descriptions overlap or are too vague — **subagent instructions and scope have no effect on selection; only the name and classification description do** | Rewrite the classification description to be specific and distinct; do not edit the subagent's instructions or scope to try to fix routing |
-| Wrong action is selected within a subagent | Action descriptions have overlapping or unclear boundaries | Make each action description specific; clearly distinguish what belongs — and does not belong — to that action |
-| Agent is slow, inconsistent, or makes unsupported decisions | Instructions may be overly long, complex, or ambiguous | Make instructions concise, direct, and specific; remove unnecessary context and contradictory rules |
-| Multi-step process happens out of order or a step is skipped | The sequence is expressed as natural-language instructions rather than deterministic logic | For critical sequences, move the logic into Flow, Apex, API-based actions, or Agent Script |
-| Action receives wrong, missing, or malformed input | Input may not be clearly defined, validated, or mapped | Define the input's purpose and format clearly; prefer validation in deterministic logic and use variable mapping where the value can be passed deterministically |
-| Agent escalates unexpectedly or repeats an action | The action may be failing, instructions may trigger escalation, or the agent cannot complete the user's intent | Fix the underlying action failure, refine escalation behavior, or simplify the execution path |
-
-#### Grounding, Data, and Response Validation Issues
-
-Before the final response is delivered, Agentforce performs a grounding check to verify that the response is based on accurate information from actions or instructions, follows the relevant subagent instructions, and stays within the subagent's scope. This can sometimes result in a response being revised before it is shown to the user.
-
 | What you're seeing | What's likely happening | What to change |
 |---|---|---|
 | Agent gives an answer and then visibly retracts or rewrites it | The generated response may not have satisfied the grounding check | Narrow the subagent scope; ensure the response is based on the correct data or action output |
-| Answer is incorrect or unsupported even though the agent used Knowledge | Retrieved information may be incomplete, incorrect, or not the information needed | Improve the source content, retrieval configuration, or grounding strategy |
-| Response or generated content is cut off | The response or action output may have exceeded an applicable limit | Avoid unnecessarily large outputs; return only the information the agent needs |
-| A fixed message is altered or not delivered as expected | The message may be generated by the agent rather than delivered deterministically | For content that must remain exact, deliver it through a deterministic mechanism such as Flow or Agent Script |
+| Answer is incorrect even though the agent used Knowledge | Retrieved information may be incomplete or not the information needed | Improve the source content, retrieval configuration, or grounding strategy |
+| Response is cut off | The response or action output may have exceeded an applicable limit | Avoid unnecessarily large outputs; return only the information the agent needs |
+| A fixed message is altered or not delivered as expected | The message may be generated by the agent rather than delivered deterministically | Deliver it through a deterministic mechanism such as Flow or Agent Script |
 
 #### Setup, Permissions, and Availability Issues
 
 | What you're seeing | What's likely happening | What to change |
 |---|---|---|
-| Subagent or action is unavailable even though it should apply | A filter may exclude it, or the running user/service user may lack permission | Check filter conditions and relevant permission assignments |
-| Feature works live but not in Agent Builder, or vice versa | The testing environment may not have the same conversation context or variable values | Provide appropriate test or default values when testing |
-| Subagent/action is selected correctly only sometimes | A filter variable may be populated through nondeterministic instructions rather than deterministic mapping | Map the variable directly from an action output or another deterministic source |
-| A Flow interview fails during agent execution | The Agentforce service user or running context may be missing required permissions, or the Flow itself may have an error | Fix the Flow or provide the required permissions |
+| Subagent or action is unavailable even though it should apply | A filter may exclude it, or the running user may lack permission | Check filter conditions and relevant permission assignments |
+| Feature works live but not in Agent Builder, or vice versa | The testing environment may not have the same context or variable values | Provide appropriate test or default values when testing |
+| Subagent/action is selected correctly only sometimes | A filter variable may be populated through nondeterministic instructions | Map the variable directly from an action output or another deterministic source |
+| A Flow interview fails during agent execution | The Agentforce service user may be missing required permissions, or the Flow has an error | Fix the Flow or provide the required permissions |
 
 ---
 
 ### Architecture Patterns
 
----
-
 **Pattern: Required Flow Enforcement**
 
 *Problem:* Users bypass a required step (e.g., identity verification) by asking for something else.
 
-*Solution:* Use a conditional transition at the top of the router's instructions, before any other routing logic:
+*Solution:* Use a conditional transition at the top of the router's instructions, before any other routing logic. This fires deterministically, before the LLM sees any tools, and cannot be bypassed through conversational manipulation.
 
 ```
-reasoning:
-    instructions: ->
-        if @variables.verified == False:
-            transition to @subagents.Identity_Verification
+start_agent agent_router:
+    reasoning:
+        instructions: ->
+            if @variables.verified == False:
+                transition to @subagent.Identity_Verification
+
+            | Route the user to the appropriate subagent based on their request.
+        actions:
+            go_to_orders: @utils.transition to @subagent.Order_Management
+                description: "Handles order inquiries."
+            go_to_escalation: @utils.transition to @subagent.Escalation
+                description: "Escalates to a human agent."
 ```
 
-This fires deterministically before the LLM sees the user's request. The LLM cannot route around it.
-
----
-
-**Pattern: Action Chaining**
-
-*Problem:* A multi-step workflow requires guaranteed sequential execution. LLM memory between steps is unreliable.
-
-*Solution:* Chain deterministic actions in sequence within a single `->` block, passing outputs as inputs:
-
-```
--> run @actions.validate_eligibility
-       with customer_id=@variables.customer_id
-       set @variables.eligible=@outputs.eligible
-   if @variables.eligible == True:
-       run @actions.create_claim
-           with customer_id=@variables.customer_id
-           set @variables.claim_id=@outputs.claim_id
-```
-
----
-
-**Pattern: Terminology Grounding**
-
-*Problem:* RAG retrieval fails because users use jargon or product names that differ from indexed content.
-
-*Solution:* Maintain a terminology map in Salesforce Knowledge. Fetch it once per session in `before_reasoning` and use it to translate user queries before retrieval.
-
-```
-before_reasoning:
-    if @variables.terminology_loaded == False:
-        run @actions.fetch_terminology_map
-        set @variables.terminology_map=@outputs.map
-        set @variables.terminology_loaded = True
-```
-
----
-
-**Pattern: Single-Retriever Ensemble**
-
-*Problem:* An agent with multiple knowledge sources routes retrieval across multiple LLM-selected retrievers, producing inconsistent results.
-
-*Solution:* Use a single retriever with ensemble ranking across all relevant knowledge sources. Configure the retriever to blend results from multiple sources using ranking weights rather than delegating source selection to the LLM. This eliminates a non-deterministic decision point from the critical path.
+This pattern is more reliable than `available when` for hard prerequisites because it executes before the LLM constructs its tool list. The user cannot reach Order_Management or Escalation until `verified == True`, regardless of what they ask.
 
 ---
 
 **Pattern: Session Initialization Guard**
 
-*Problem:* Context-loading actions in `before_reasoning` fire on every parse, causing redundant API calls and unexpected behavior.
+*Problem:* A `before_reasoning` action calls an external API on every parse, causing redundant calls in multi-action flows.
 
-*Solution:* Guard all session initialization behind a boolean flag:
+*Solution:* Guard the initialization action with a boolean flag:
 
 ```
 before_reasoning:
-    if @variables.sessionInitialized == False:
-        run @actions.LoadCustomerContext
-            with user_id=@variables.userId
-            set @variables.customerTier=@outputs.tier
-        set @variables.sessionInitialized = True
+    if @variables.session_initialized == False:
+        run @actions.FetchAccountContext
+            set @variables.account_name=@outputs.account_name
+            set @variables.account_id=@outputs.account_id
+            set @variables.session_initialized=True
 ```
 
 ---
 
-**Pattern: Capability Gating with `available when`**
+**Pattern: Deterministic Routing for Critical Paths**
 
-*Problem:* Sensitive actions (refunds, escalations, account changes) must not be offered until prerequisites are met.
+*Problem:* An LLM-driven router inconsistently sends users to the wrong subagent for a high-stakes flow (e.g., a payment or cancellation request).
 
-*Solution:* Use `available when` clauses as hard platform-level gates. A tool with a false `available when` condition is removed from the LLM's tool list entirely for that parse. The LLM cannot select a tool it cannot see.
+*Solution:* For high-stakes routing decisions, use deterministic conditional transitions rather than LLM tool selection. If a specific keyword or variable state maps deterministically to a subagent, express it as an `if` statement:
 
 ```
-reasoning:
-    actions:
-        process_refund: @actions.ProcessRefund
-            description: "Process a refund for the current order."
-            available when @variables.verified == True
-                and @variables.order_id != ""
+start_agent agent_router:
+    reasoning:
+        instructions: ->
+            if @variables.intent == "cancel_subscription":
+                transition to @subagent.Cancellation_Flow
+
+            | Analyze the user's request and route to the most appropriate subagent.
+        actions:
+            go_to_billing: @utils.transition to @subagent.Billing
+                description: "Handles billing questions and payment methods."
+            go_to_support: @utils.transition to @subagent.Support
+                description: "Handles product support and troubleshooting."
 ```
 
 ---
 
-**Pattern: SOMA Monolith Extraction**
+**Pattern: RAG Terminology Translation**
 
-*Problem:* A growing single agent is developing routing accuracy problems, release coupling, and unclear ownership.
+*Problem:* Users use jargon or product names that do not match the terminology in the knowledge base, resulting in zero retrieval hits.
 
-*Solution:* Extract high-change, clearly owned subagents into separate specialized agents connected via `connected_subagent` blocks. Extract one agent at a time, stabilize for at least two weeks in production, then proceed. See Section 9 for the full migration playbook.
+*Solution:* Maintain a lightweight terminology map in Salesforce Knowledge. Load it once per session in `before_reasoning` and use it to translate user queries before retrieval:
 
-*Architect check before extraction:*
-- Confirm the subagent's type (ASA or AEA) matches the supervisor. Mismatched types cause a platform error at configuration time.
-- Confirm the subagent is fully stabilized in the monolith — do not extract a subagent that is still under active development.
-- Explicitly declare all variable inputs and outputs on the `connected_subagent` block. Variables do not transfer automatically.
+```
+before_reasoning:
+    if @variables.terminology_loaded == False:
+        run @actions.FetchTerminologyMap
+            set @variables.terminology_map=@outputs.terminology_map
+            set @variables.terminology_loaded=True
+```
+
+Include the terminology map in the prompt so the LLM translates before querying:
+
+```
+| Use the following terminology translations when interpreting the user's question:
+  {!@variables.terminology_map}
+  Translate any jargon in the user's request before retrieving knowledge.
+```
+
+Business users, not IT, can maintain the terminology map. Updates take effect on the next session without any agent redeployment.

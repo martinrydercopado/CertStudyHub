@@ -19,7 +19,8 @@ enum CertCatalog {
         rag,
         salesforceKnowledge,
         agentforceArchitect,
-        hybridReasoning
+        hybridReasoning,
+        adlcIDE
     ]
 
     // ── Certifications ──
@@ -151,6 +152,28 @@ enum CertCatalog {
         isBonusTopic: true,
         subtitle: "A Phoenix Project-style story about building Agentforce agents with Agent Script. Follow an architect team as they decompose a failing monolithic agent into a reliable multi-agent system.",
         guideFile: "hybridreasoning"
+    )
+
+    static let adlcIDE = CertConfig(
+        id: "adlcide",
+        name: "The ADLC in an IDE: An Educational CLI Guide",
+        shortName: "ADLC in an IDE",
+        icon: "desktopcomputer",
+        primaryColor: Color(red: 0.23, green: 0.51, blue: 0.96),
+        secondaryColor: Color(red: 0.38, green: 0.65, blue: 0.98),
+        headerGradient: [
+            Color(red: 0.12, green: 0.23, blue: 0.37),
+            Color(red: 0.12, green: 0.29, blue: 0.46),
+            Color(red: 0.12, green: 0.35, blue: 0.55)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "adlcide",
+        isBonusTopic: true,
+        subtitle: "A guided walkthrough of the entire Agent Development Lifecycle using only the CLI. Covers every ADLC phase from agent spec generation through deployment, activation, and production monitoring.",
+        guideFile: "adlcide"
     )
 
     static let agentforceArchitect = CertConfig(

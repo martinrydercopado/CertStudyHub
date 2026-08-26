@@ -1,6 +1,6 @@
 # Tracing and Analytics in Agentforce
 
-*Updated August 21, 2026*
+*Updated August 26, 2026*
 *This guide was generated using AI with grounding in official Salesforce documentation. Review for accuracy before using.*
 
 ---
@@ -51,11 +51,12 @@ For a Success Architect, observability is also a trust-building tool. Customers 
 Agentforce observability depends on a stack of capabilities that must be explicitly enabled. None of them are on by default. Before advising a customer on tracing or analytics, confirm this infrastructure is in place.
 
 ### Required Foundation
+
 - [ ] Data Cloud provisioned and CRM Connector active
-- [ ] `CopilotSalesforceAdmin` assigned to admin users
-- [ ] `GenieAdmin` assigned to admin users needing Data Cloud access
-- [ ] `AgentforceServiceAgentBuilder` assigned to service agent admins
-- [ ] `AgentforceDeveloperAndAdminTools` assigned to developers (verify purpose per org)
+- [ ] **Agentforce Default Admin** (`CopilotSalesforceAdmin`) assigned to admin users
+- [ ] **Data Cloud Architect** (`GenieAdmin`) assigned to admin users needing Data Cloud access
+- [ ] **Agentforce Service Agent Configuration** (`AgentforceServiceAgentBuilder`) assigned to service agent admins
+- [ ] **Agentforce Developer and Admin Tools** (`AgentforceDeveloperAndAdminTools`) assigned to developers
 - [ ] Session Tracing enabled (Einstein Audit, Analytics, and Monitoring Setup)
 - [ ] Agentforce Optimization enabled (same setup page)
 - [ ] Audit and Feedback enabled with target data space selected (same setup page)
@@ -64,6 +65,21 @@ Agentforce observability depends on a stack of capabilities that must be explici
 - [ ] `config.runtime` block reviewed: if no runtime behavior needs overriding, omit the block entirely. `runtime` is a sub-block of `config` with five optional boolean parameters (`streaming`, `thought_chunks`, `citation`, `groundedness`, `reset_to_initial_node`). Agent Script's compiler expects at least one property after a block header; an empty `runtime:` declaration produces a compilation error at deployment time, not a silent runtime failure. Confirm the `groundedness` flag state if `ReasoningStep` entries are absent from traces.
 - [ ] Consumption Tagging app installed (if Consumption Analytics Dashboard required)
 - [ ] Alert thresholds configured relative to expected session volume before go-live
+
+### Permission Set Quick Reference
+
+| Label | API Name | Assign To |
+|---|---|---|
+| Agentforce Default Admin | `CopilotSalesforceAdmin` | Admin users |
+| Data Cloud Architect | `GenieAdmin` | Admin users needing Data Cloud access |
+| Agentforce Service Agent Configuration | `AgentforceServiceAgentBuilder` | Service agent admins |
+| Agentforce Developer and Admin Tools | `AgentforceDeveloperAndAdminTools` | Developers |
+
+### Sandbox vs. Production Note
+
+Both tracing toggles (Session Tracing and Agent Platform Tracing) must be explicitly enabled in production — they do not carry over from sandbox. After go-live, confirm admin users have **Data Cloud Architect** (`GenieAdmin`) and **Agentforce Default Admin** (`CopilotSalesforceAdmin`) assigned before running any SOQL against Data Cloud DMOs.
+
+---
 
 ### Audit and Feedback: Additional Prerequisites
 
@@ -1118,7 +1134,7 @@ Contact Salesforce Support when:
 When a customer promotes an agent from sandbox to production:
 
 1. **Enable both tracing toggles in production separately.** Session Tracing and Agent Platform Tracing must be explicitly enabled. They do not transfer from sandbox.
-2. **Confirm Data Cloud DMOs are accessible.** Run a test query against `std__AiAgentSessionDmo__dlm` and verify that admin users have `GenieAdmin` and `CopilotSalesforceAdmin` assigned.
+2. **Confirm Data Cloud DMOs are accessible.** Run a test query against `std__AiAgentSessionDmo__dlm` and verify that admin users have **Data Cloud Architect** (`GenieAdmin`) and **Agentforce Default Admin** (`CopilotSalesforceAdmin`) assigned.
 3. **Verify the deployment included all three metadata pieces.** Committed-agent deployment requires `AiAuthoringBundle` + `Bot`/`BotVersion` + `GenAiPlannerBundle`. Omitting `GenAiPlannerBundle` produces an incomplete deployment that can look like a tracing or data problem rather than a deployment problem. Missing data in the STDM is the symptom.
 4. **Seed baseline metrics in the first 48 hours.** Dashboards need live traffic to establish a baseline before alert thresholds can be calibrated accurately.
 5. **Configure alert thresholds before launch.** Set thresholds relative to expected session volume, not arbitrary defaults.

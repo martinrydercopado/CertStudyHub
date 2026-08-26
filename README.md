@@ -26,33 +26,34 @@ A native SwiftUI app (iPhone + Mac) and a companion web app for studying Salesfo
 
 Reference-guide-only tracks — no quizzes, no study topics. Each links to a full markdown study guide rendered in-app and on the web.
 
-| Deep Dive | Quiz | Guide |
-|---|:---:|:---:|
-| Agentforce Agent Surfaces | — | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentsurfaces) |
-| Agentforce Coworker | — | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcecoworker) |
-| Agentforce Discovery & Requirements Gathering | — | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcediscovery) |
-| Agentforce Help Agent: Outcome-Based Pricing | — | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcehelpagent) |
-| AgentOps: Agentforce Lifecycle | 50 | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentops) |
-| Custom Lightning Components in Agentforce | — | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=customlwc) |
-| Data 360 DevOps | — | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=dc360devops) |
-| Data 360 from the Ground Up: The NTO Story | — | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=dc360groundup) |
-| Determining the Right Level of Determinism | — | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=determinism) |
-| Human-in-the-Loop Patterns | — | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=humanintheloop) |
-| Inside the Atlas Reasoning Engine | 44 | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=reasoningengine) |
-| Multi-Agent Architecture in Agentforce | 70 | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=multiagent) |
-| RAG, Agentforce & Data 360 | 77 | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=rag) |
-| Salesforce Knowledge: Knowledge-Grounded Agents | — | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=salesforceknowledge) |
-| The Agentforce Architect | — | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcearchitect) |
-| The Hybrid Reasoning Chronicles | — | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=hybridreasoning) |
-| Tracing and Analytics in Agentforce | 77 | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=tracinganalytics) |
+| Deep Dive | Guide |
+|---|:---:|
+| Agentforce Agent Surfaces | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentsurfaces) |
+| Agentforce Coworker | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcecoworker) |
+| Agentforce Discovery & Requirements Gathering | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcediscovery) |
+| Agentforce Help Agent: Outcome-Based Pricing | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcehelpagent) |
+| AgentOps: Agentforce Lifecycle | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentops) |
+| Custom Lightning Components in Agentforce | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=customlwc) |
+| Data 360 DevOps | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=dc360devops) |
+| Data 360 from the Ground Up: The NTO Story | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=dc360groundup) |
+| Determining the Right Level of Determinism | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=determinism) |
+| Human-in-the-Loop Patterns | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=humanintheloop) |
+| Inside the Atlas Reasoning Engine | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=reasoningengine) |
+| Multi-Agent Architecture in Agentforce | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=multiagent) |
+| RAG, Agentforce & Data 360 | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=rag) |
+| Salesforce Knowledge: Knowledge-Grounded Agents | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=salesforceknowledge) |
+| The ADLC in an IDE | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=adlcide) |
+| The Agentforce Architect | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcearchitect) |
+| The Hybrid Reasoning Chronicles | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=hybridreasoning) |
+| Tracing and Analytics in Agentforce | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=tracinganalytics) |
 
-**Totals:** 2,206 questions and 2,511 study topics across 30 tracks (13 certifications + 17 deep dives).
+**Totals:** 2,206 questions and 2,511 study topics across 31 tracks (13 certifications + 18 deep dives).
 
 ## Features
 
 - **Quiz Mode** — Configurable quiz lengths (10, 15, 25, 30, 50, 60, or full bank), instant feedback with explanations, score tracking, and a "For Review" list of flagged questions
 - **Study Guide** — Browse topics grouped by exam section and objective, track which you've studied, and filter to "Needs Review" items
-- **Reference Guides** — In-depth markdown study guides for all 17 deep dive topics, rendered client-side with a persistent sidebar TOC on desktop and bundled offline in the native app
+- **Reference Guides** — In-depth markdown study guides for all 18 deep dive topics, rendered client-side with a persistent sidebar TOC on desktop and bundled offline in the native app
 - **Progress Tracking** — Per-certification progress saved locally (UserDefaults on native, localStorage on web)
 - **Cross-Platform** — One SwiftUI codebase targets both iPhone and Mac; the web app works in any browser
 
@@ -64,7 +65,7 @@ CertStudyHub/              SwiftUI app source
   Models/                  Question, StudySection, StudyTopic, CertConfig
   ViewModels/              QuizViewModel, StudyViewModel
   Views/                   Quiz views, Study views, ReferenceGuideView
-  Guides/                  17 bundled .md reference guides + marked.min.js
+  Guides/                  18 bundled .md reference guides + marked.min.js
   CertStudyHubApp.swift    App entry point
 
 CertStudyHub.xcodeproj/    Xcode project (iOS + macOS targets)
@@ -78,7 +79,7 @@ docs/                      GitHub Pages web app
     study.json             All study topic banks
   guides/
     viewer.html            Markdown guide viewer (marked.js)
-    *.md                   17 reference guide markdown files
+    *.md                   18 reference guide markdown files
     marked.min.js          Vendored marked.js v15.0.4
 ```
 
