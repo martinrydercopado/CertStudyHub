@@ -5,10 +5,12 @@ enum CertCatalog {
     static let deepDives: [CertConfig] = [
         agentSurfaces,
         agentforceCoworker,
+        consultBestPractices,
         agentforceDiscovery,
         agentforceHelpAgent,
         tracinganalytics,
         agentOps,
+        agentOpsCopado,
         customLWC,
         determinism,
         dc360DevOps,
@@ -174,6 +176,50 @@ enum CertCatalog {
         isBonusTopic: true,
         subtitle: "A guided walkthrough of the entire Agent Development Lifecycle using only the CLI. Covers every ADLC phase from agent spec generation through deployment, activation, and production monitoring.",
         guideFile: "adlcide"
+    )
+
+    static let consultBestPractices = CertConfig(
+        id: "consultbestpractices",
+        name: "Consultation Best Practices for the Agentforce Success Architect",
+        shortName: "Consultation Best Practices",
+        icon: "person.2.fill",
+        primaryColor: Color(red: 0.96, green: 0.62, blue: 0.04),
+        secondaryColor: Color(red: 0.98, green: 0.75, blue: 0.14),
+        headerGradient: [
+            Color(red: 0.57, green: 0.25, blue: 0.05),
+            Color(red: 0.63, green: 0.38, blue: 0.03),
+            Color(red: 0.71, green: 0.33, blue: 0.04)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "consultbestpractices",
+        isBonusTopic: true,
+        subtitle: "A field-tested playbook for Success Architects covering the trusted advisor mindset, strategic discovery, stakeholder management, executive communication, and consultative authority in Agentforce engagements.",
+        guideFile: "consultbestpractices"
+    )
+
+    static let agentOpsCopado = CertConfig(
+        id: "agentopscopado",
+        name: "AgentOps with Copado: A Success Architect's Guide",
+        shortName: "AgentOps with Copado",
+        icon: "arrow.triangle.2.circlepath",
+        primaryColor: Color(red: 0.06, green: 0.73, blue: 0.51),
+        secondaryColor: Color(red: 0.20, green: 0.83, blue: 0.60),
+        headerGradient: [
+            Color(red: 0.02, green: 0.31, blue: 0.23),
+            Color(red: 0.02, green: 0.37, blue: 0.27),
+            Color(red: 0.02, green: 0.47, blue: 0.34)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "agentopscopado",
+        isBonusTopic: true,
+        subtitle: "A comprehensive guide to running AgentOps through Copado's Agentia Pro pipeline. Covers metadata tracking, source control, AI-assisted development, Agent Script in the pipeline, and multi-agent orchestration (SOMA).",
+        guideFile: "agentopscopado"
     )
 
     static let agentforceArchitect = CertConfig(

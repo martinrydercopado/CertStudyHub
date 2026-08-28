@@ -33,6 +33,8 @@ Reference-guide-only tracks — no quizzes, no study topics. Each links to a ful
 | Agentforce Discovery & Requirements Gathering | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcediscovery) |
 | Agentforce Help Agent: Outcome-Based Pricing | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentforcehelpagent) |
 | AgentOps: Agentforce Lifecycle | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentops) |
+| AgentOps with Copado | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=agentopscopado) |
+| Consultation Best Practices | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=consultbestpractices) |
 | Custom Lightning Components in Agentforce | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=customlwc) |
 | Data 360 DevOps | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=dc360devops) |
 | Data 360 from the Ground Up: The NTO Story | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=dc360groundup) |
@@ -47,13 +49,13 @@ Reference-guide-only tracks — no quizzes, no study topics. Each links to a ful
 | The Hybrid Reasoning Chronicles | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=hybridreasoning) |
 | Tracing and Analytics in Agentforce | [View](https://martinrydercopado.github.io/CertStudyHub/guides/viewer.html?guide=tracinganalytics) |
 
-**Totals:** 2,206 questions and 2,511 study topics across 31 tracks (13 certifications + 18 deep dives).
+**Totals:** 2,206 questions and 2,511 study topics across 33 tracks (13 certifications + 20 deep dives).
 
 ## Features
 
 - **Quiz Mode** — Configurable quiz lengths (10, 15, 25, 30, 50, 60, or full bank), instant feedback with explanations, score tracking, and a "For Review" list of flagged questions
 - **Study Guide** — Browse topics grouped by exam section and objective, track which you've studied, and filter to "Needs Review" items
-- **Reference Guides** — In-depth markdown study guides for all 18 deep dive topics, rendered client-side with a persistent sidebar TOC on desktop and bundled offline in the native app
+- **Reference Guides** — In-depth markdown study guides for all 20 deep dive topics, rendered client-side with a persistent sidebar TOC on desktop and bundled offline in the native app
 - **Progress Tracking** — Per-certification progress saved locally (UserDefaults on native, localStorage on web)
 - **Cross-Platform** — One SwiftUI codebase targets both iPhone and Mac; the web app works in any browser
 
@@ -65,7 +67,7 @@ CertStudyHub/              SwiftUI app source
   Models/                  Question, StudySection, StudyTopic, CertConfig
   ViewModels/              QuizViewModel, StudyViewModel
   Views/                   Quiz views, Study views, ReferenceGuideView
-  Guides/                  18 bundled .md reference guides + marked.min.js
+  Guides/                  20 bundled .md reference guides + marked.min.js
   CertStudyHubApp.swift    App entry point
 
 CertStudyHub.xcodeproj/    Xcode project (iOS + macOS targets)
@@ -79,7 +81,7 @@ docs/                      GitHub Pages web app
     study.json             All study topic banks
   guides/
     viewer.html            Markdown guide viewer (marked.js)
-    *.md                   18 reference guide markdown files
+    *.md                   20 reference guide markdown files
     marked.min.js          Vendored marked.js v15.0.4
 ```
 

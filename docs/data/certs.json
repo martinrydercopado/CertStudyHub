@@ -3,7 +3,7 @@
     "id": "agentsurfaces",
     "name": "Agentforce Agent Surfaces",
     "shortName": "Agent Surfaces",
-    "icon": "\ud83d\udcf1",
+    "icon": "📱",
     "primaryColor": "#268CD1",
     "secondaryColor": "#40B3F2",
     "headerGradient": [
@@ -23,7 +23,7 @@
     "id": "agentforcecoworker",
     "name": "Agentforce Coworker: A Success Architect's Guide",
     "shortName": "Agentforce Coworker",
-    "icon": "\ud83e\udd1d",
+    "icon": "🤝",
     "primaryColor": "#0891B2",
     "secondaryColor": "#22D3EE",
     "headerGradient": [
@@ -40,13 +40,37 @@
     "quizLengths": []
   },
   {
+    "id": "consultbestpractices",
+    "name": "Consultation Best Practices for the Agentforce Success Architect",
+    "shortName": "Consultation Best Practices",
+    "icon": "🤝",
+    "primaryColor": "#F59E0B",
+    "secondaryColor": "#FBBF24",
+    "headerGradient": [
+      "#92400E",
+      "#A16207",
+      "#B45309"
+    ],
+    "passingScore": 70,
+    "questionBank": "consultbestpractices",
+    "storageKeyPrefix": "consultbestpractices",
+    "isBonusTopic": true,
+    "subtitle": "A field-tested playbook for Success Architects covering the trusted advisor mindset, strategic discovery, stakeholder management, executive communication, and consultative authority in Agentforce engagements.",
+    "guideFile": "consultbestpractices",
+    "quizLengths": []
+  },
+  {
     "id": "agentforcediscovery",
     "name": "Agentforce Discovery & Requirements Gathering Guide",
     "shortName": "Discovery & Reqs",
     "icon": "🔍",
     "primaryColor": "#CC731A",
     "secondaryColor": "#F29940",
-    "headerGradient": ["#7A450F", "#945414", "#CC731A"],
+    "headerGradient": [
+      "#7A450F",
+      "#945414",
+      "#CC731A"
+    ],
     "passingScore": 70,
     "questionBank": "agentforcediscovery",
     "storageKeyPrefix": "agentforcediscovery",
@@ -59,7 +83,7 @@
     "id": "agentforcehelpagent",
     "name": "Agentforce Help Agent: Outcome-Based Pricing",
     "shortName": "Help Agent",
-    "icon": "\u2753",
+    "icon": "❓",
     "primaryColor": "#339966",
     "secondaryColor": "#4DC78C",
     "headerGradient": [
@@ -79,7 +103,7 @@
     "id": "tracinganalytics",
     "name": "Agentforce Tracing and Analytics",
     "shortName": "Tracing & Analytics",
-    "icon": "\ud83d\udcc8",
+    "icon": "📈",
     "primaryColor": "#1A808C",
     "secondaryColor": "#30B0C7",
     "headerGradient": [
@@ -99,7 +123,7 @@
     "id": "agentops",
     "name": "AgentOps: Agentforce Lifecycle",
     "shortName": "AgentOps",
-    "icon": "\u2699\ufe0f",
+    "icon": "⚙️",
     "primaryColor": "#D97333",
     "secondaryColor": "#FF9500",
     "headerGradient": [
@@ -116,10 +140,30 @@
     "quizLengths": []
   },
   {
+    "id": "agentopscopado",
+    "name": "AgentOps with Copado: A Success Architect's Guide",
+    "shortName": "AgentOps with Copado",
+    "icon": "🔄",
+    "primaryColor": "#10B981",
+    "secondaryColor": "#34D399",
+    "headerGradient": [
+      "#064E3B",
+      "#065F46",
+      "#047857"
+    ],
+    "passingScore": 70,
+    "questionBank": "agentopscopado",
+    "storageKeyPrefix": "agentopscopado",
+    "isBonusTopic": true,
+    "subtitle": "A comprehensive guide to running AgentOps through Copado's Agentia Pro pipeline. Covers metadata tracking, source control, AI-assisted development, Agent Script in the pipeline, and multi-agent orchestration (SOMA).",
+    "guideFile": "agentopscopado",
+    "quizLengths": []
+  },
+  {
     "id": "customlwc",
     "name": "Custom Lightning Components in Agentforce Agents",
     "shortName": "Custom LWC",
-    "icon": "\u26a1",
+    "icon": "⚡",
     "primaryColor": "#7C3AED",
     "secondaryColor": "#8B5CF6",
     "headerGradient": [
@@ -139,7 +183,7 @@
     "id": "determinism",
     "name": "Determining the Right Level of Determinism for Agentforce",
     "shortName": "Determinism",
-    "icon": "\u2696\ufe0f",
+    "icon": "⚖️",
     "primaryColor": "#8C4099",
     "secondaryColor": "#B866C7",
     "headerGradient": [
@@ -159,7 +203,7 @@
     "id": "dc360devops",
     "name": "Data 360 DevOps",
     "shortName": "Data 360 DevOps",
-    "icon": "\ud83d\udd27",
+    "icon": "🔧",
     "primaryColor": "#0D9488",
     "secondaryColor": "#2DD4BF",
     "headerGradient": [
@@ -179,7 +223,7 @@
     "id": "dc360groundup",
     "name": "Data 360 from the Ground Up: The NTO Story",
     "shortName": "NTO Story",
-    "icon": "\ud83c\udf0e",
+    "icon": "🌎",
     "primaryColor": "#0D879E",
     "secondaryColor": "#21BAD4",
     "headerGradient": [
@@ -199,7 +243,7 @@
     "id": "humanintheloop",
     "name": "Human-in-the-Loop Patterns for Agentforce Agents",
     "shortName": "Human-in-the-Loop",
-    "icon": "\u2705",
+    "icon": "✅",
     "primaryColor": "#B34D8C",
     "secondaryColor": "#D973B3",
     "headerGradient": [
@@ -219,7 +263,7 @@
     "id": "reasoningengine",
     "name": "Inside the Atlas Reasoning Engine",
     "shortName": "Daisy",
-    "icon": "\ud83e\udde0",
+    "icon": "🧠",
     "primaryColor": "#663399",
     "secondaryColor": "#AF52DE",
     "headerGradient": [
@@ -239,7 +283,7 @@
     "id": "multiagent",
     "name": "Multi-Agent Architecture in Agentforce",
     "shortName": "Multi-Agent",
-    "icon": "\ud83d\udd00",
+    "icon": "🔀",
     "primaryColor": "#3366B3",
     "secondaryColor": "#007AFF",
     "headerGradient": [
@@ -259,7 +303,7 @@
     "id": "rag",
     "name": "RAG, Agentforce & Data 360",
     "shortName": "RAG",
-    "icon": "\ud83d\udd0d",
+    "icon": "🔍",
     "primaryColor": "#3373B3",
     "secondaryColor": "#007AFF",
     "headerGradient": [
@@ -279,7 +323,7 @@
     "id": "salesforceknowledge",
     "name": "Salesforce Knowledge: The Architect's Guide to Knowledge-Grounded Agents",
     "shortName": "SF Knowledge",
-    "icon": "\ud83d\udcda",
+    "icon": "📚",
     "primaryColor": "#995926",
     "secondaryColor": "#C78040",
     "headerGradient": [
@@ -299,7 +343,7 @@
     "id": "agentforcearchitect",
     "name": "The Agentforce Architect: A Design and Planning Guide",
     "shortName": "Agentforce Architect",
-    "icon": "\ud83c\udfd7\ufe0f",
+    "icon": "🏗️",
     "primaryColor": "#2563EB",
     "secondaryColor": "#3B82F6",
     "headerGradient": [
@@ -319,7 +363,7 @@
     "id": "hybridreasoning",
     "name": "The Hybrid Reasoning Chronicles (an Agent Script Story)",
     "shortName": "Hybrid Reasoning",
-    "icon": "\ud83d\udcd6",
+    "icon": "📖",
     "primaryColor": "#7C3AED",
     "secondaryColor": "#8B5CF6",
     "headerGradient": [
@@ -339,7 +383,7 @@
     "id": "adlcide",
     "name": "The ADLC in an IDE: An Educational CLI Guide",
     "shortName": "ADLC in an IDE",
-    "icon": "\ud83d\udda5\ufe0f",
+    "icon": "🖥️",
     "primaryColor": "#3B82F6",
     "secondaryColor": "#60A5FA",
     "headerGradient": [
@@ -359,7 +403,7 @@
     "id": "agentforce",
     "name": "Agentforce Specialist",
     "shortName": "Agentforce",
-    "icon": "\ud83e\udde0",
+    "icon": "🧠",
     "primaryColor": "#5856D6",
     "secondaryColor": "#007AFF",
     "headerGradient": [
@@ -377,7 +421,7 @@
       {
         "id": 15,
         "label": "15 Questions",
-        "icon": "\u26a1",
+        "icon": "⚡",
         "subtitle": "Quick Review",
         "duration": "~8 min",
         "questionIDRange": null
@@ -385,7 +429,7 @@
       {
         "id": 30,
         "label": "30 Questions",
-        "icon": "\ud83d\udd25",
+        "icon": "🔥",
         "subtitle": "Standard Practice",
         "duration": "~15 min",
         "questionIDRange": null
@@ -393,7 +437,7 @@
       {
         "id": 60,
         "label": "60 Questions",
-        "icon": "\ud83c\udfc6",
+        "icon": "🏆",
         "subtitle": "Full Exam Simulation",
         "duration": "~30 min",
         "questionIDRange": null
@@ -401,8 +445,8 @@
       {
         "id": 72,
         "label": "Flashcards",
-        "icon": "\ud83c\udccf",
-        "subtitle": "Exam Prep \u2014 Likely on Exam",
+        "icon": "🃏",
+        "subtitle": "Exam Prep — Likely on Exam",
         "duration": "72 Qs",
         "questionIDRange": [
           1,
@@ -415,7 +459,7 @@
     "id": "dc360",
     "name": "Data 360 Consultant",
     "shortName": "Data 360",
-    "icon": "\u2601\ufe0f",
+    "icon": "☁️",
     "primaryColor": "#30B0C7",
     "secondaryColor": "#32ADE6",
     "headerGradient": [
@@ -433,7 +477,7 @@
       {
         "id": 10,
         "label": "10 Questions",
-        "icon": "\u26a1",
+        "icon": "⚡",
         "subtitle": "Quick Review",
         "duration": "~5 min",
         "questionIDRange": null
@@ -441,7 +485,7 @@
       {
         "id": 30,
         "label": "30 Questions",
-        "icon": "\ud83d\udd25",
+        "icon": "🔥",
         "subtitle": "Standard Practice",
         "duration": "~15 min",
         "questionIDRange": null
@@ -449,7 +493,7 @@
       {
         "id": 60,
         "label": "60 Questions",
-        "icon": "\ud83c\udfc6",
+        "icon": "🏆",
         "subtitle": "Exam Simulation",
         "duration": "~30 min",
         "questionIDRange": null
@@ -457,7 +501,7 @@
       {
         "id": 427,
         "label": "All 427 Questions",
-        "icon": "\u2b50",
+        "icon": "⭐",
         "subtitle": "Full Question Bank",
         "duration": "~214 min",
         "questionIDRange": null
@@ -468,7 +512,7 @@
     "id": "agentforcesales",
     "name": "Agentforce Sales Consultant",
     "shortName": "Sales Consultant",
-    "icon": "\ud83d\udcbc",
+    "icon": "💼",
     "primaryColor": "#2E86AB",
     "secondaryColor": "#32ADE6",
     "headerGradient": [
@@ -486,7 +530,7 @@
       {
         "id": 15,
         "label": "15 Questions",
-        "icon": "\u26a1",
+        "icon": "⚡",
         "subtitle": "Quick Review",
         "duration": "~8 min",
         "questionIDRange": null
@@ -494,7 +538,7 @@
       {
         "id": 30,
         "label": "30 Questions",
-        "icon": "\ud83d\udd25",
+        "icon": "🔥",
         "subtitle": "Standard Practice",
         "duration": "~15 min",
         "questionIDRange": null
@@ -502,7 +546,7 @@
       {
         "id": 60,
         "label": "60 Questions",
-        "icon": "\ud83c\udfc6",
+        "icon": "🏆",
         "subtitle": "Exam Simulation",
         "duration": "~30 min",
         "questionIDRange": null
@@ -510,7 +554,7 @@
       {
         "id": 126,
         "label": "All 126 Questions",
-        "icon": "\u2b50",
+        "icon": "⭐",
         "subtitle": "Full Question Bank",
         "duration": "~63 min",
         "questionIDRange": null
@@ -521,7 +565,7 @@
     "id": "agentforceservice",
     "name": "Agentforce Service Consultant",
     "shortName": "Service Consultant",
-    "icon": "\ud83c\udfa7",
+    "icon": "🎧",
     "primaryColor": "#5A9E6F",
     "secondaryColor": "#34C759",
     "headerGradient": [
@@ -539,28 +583,28 @@
       {
         "id": 15,
         "label": "15 Questions",
-        "icon": "\u26a1",
+        "icon": "⚡",
         "subtitle": "Quick Review",
         "duration": "~8 min"
       },
       {
         "id": 30,
         "label": "30 Questions",
-        "icon": "\ud83d\udd25",
+        "icon": "🔥",
         "subtitle": "Standard Practice",
         "duration": "~15 min"
       },
       {
         "id": 60,
         "label": "60 Questions",
-        "icon": "\ud83c\udfc6",
+        "icon": "🏆",
         "subtitle": "Exam Simulation",
         "duration": "~30 min"
       },
       {
         "id": 125,
         "label": "All 125 Questions",
-        "icon": "\u2b50",
+        "icon": "⭐",
         "subtitle": "Full Question Bank",
         "duration": "~63 min"
       }
@@ -570,7 +614,7 @@
     "id": "ba",
     "name": "Business Analyst",
     "shortName": "BA",
-    "icon": "\ud83d\udcca",
+    "icon": "📊",
     "primaryColor": "#339ADB",
     "secondaryColor": "#32ADE6",
     "headerGradient": [
@@ -588,7 +632,7 @@
       {
         "id": 15,
         "label": "15 Questions",
-        "icon": "\u26a1",
+        "icon": "⚡",
         "subtitle": "Quick Review",
         "duration": "~8 min",
         "questionIDRange": null
@@ -596,7 +640,7 @@
       {
         "id": 30,
         "label": "30 Questions",
-        "icon": "\ud83d\udd25",
+        "icon": "🔥",
         "subtitle": "Standard Practice",
         "duration": "~15 min",
         "questionIDRange": null
@@ -604,7 +648,7 @@
       {
         "id": 60,
         "label": "60 Questions",
-        "icon": "\ud83c\udfc6",
+        "icon": "🏆",
         "subtitle": "Exam Simulation",
         "duration": "~30 min",
         "questionIDRange": null
@@ -612,7 +656,7 @@
       {
         "id": 148,
         "label": "All 148 Questions",
-        "icon": "\u2b50",
+        "icon": "⭐",
         "subtitle": "Full Question Bank",
         "duration": "~74 min",
         "questionIDRange": null
@@ -623,7 +667,7 @@
     "id": "pdlda",
     "name": "Development Lifecycle & Deployment Architect",
     "shortName": "PDLDA",
-    "icon": "\ud83d\udce6",
+    "icon": "📦",
     "primaryColor": "#AF52DE",
     "secondaryColor": "#FF2D55",
     "headerGradient": [
@@ -641,7 +685,7 @@
       {
         "id": 15,
         "label": "15 Questions",
-        "icon": "\u26a1",
+        "icon": "⚡",
         "subtitle": "Quick Review",
         "duration": "~8 min",
         "questionIDRange": null
@@ -649,7 +693,7 @@
       {
         "id": 30,
         "label": "30 Questions",
-        "icon": "\ud83d\udd25",
+        "icon": "🔥",
         "subtitle": "Standard Practice",
         "duration": "~15 min",
         "questionIDRange": null
@@ -657,7 +701,7 @@
       {
         "id": 60,
         "label": "60 Questions",
-        "icon": "\ud83c\udfc6",
+        "icon": "🏆",
         "subtitle": "Exam Simulation",
         "duration": "~30 min",
         "questionIDRange": null
@@ -665,7 +709,7 @@
       {
         "id": 100,
         "label": "All 100 Questions",
-        "icon": "\u2b50",
+        "icon": "⭐",
         "subtitle": "Full Question Bank",
         "duration": "~50 min",
         "questionIDRange": null
@@ -676,7 +720,7 @@
     "id": "admin2",
     "name": "Platform Administrator II",
     "shortName": "Admin II",
-    "icon": "\ud83d\udee0\ufe0f",
+    "icon": "🛠️",
     "primaryColor": "#8B5CF6",
     "secondaryColor": "#A78BFA",
     "headerGradient": [
@@ -694,7 +738,7 @@
       {
         "id": 15,
         "label": "15 Questions",
-        "icon": "\u26a1",
+        "icon": "⚡",
         "subtitle": "Quick Review",
         "duration": "~8 min",
         "questionIDRange": null
@@ -702,7 +746,7 @@
       {
         "id": 30,
         "label": "30 Questions",
-        "icon": "\ud83d\udd25",
+        "icon": "🔥",
         "subtitle": "Standard Practice",
         "duration": "~15 min",
         "questionIDRange": null
@@ -710,7 +754,7 @@
       {
         "id": 60,
         "label": "60 Questions",
-        "icon": "\ud83c\udfc6",
+        "icon": "🏆",
         "subtitle": "Exam Simulation",
         "duration": "~30 min",
         "questionIDRange": null
@@ -718,7 +762,7 @@
       {
         "id": 122,
         "label": "All 122 Questions",
-        "icon": "\u2b50",
+        "icon": "⭐",
         "subtitle": "Full Question Bank",
         "duration": "~61 min",
         "questionIDRange": null
@@ -729,7 +773,7 @@
     "id": "appbuilder",
     "name": "Platform App Builder",
     "shortName": "App Builder",
-    "icon": "\ud83d\udd28",
+    "icon": "🔨",
     "primaryColor": "#34C759",
     "secondaryColor": "#00C7BE",
     "headerGradient": [
@@ -747,7 +791,7 @@
       {
         "id": 15,
         "label": "15 Questions",
-        "icon": "\u26a1",
+        "icon": "⚡",
         "subtitle": "Quick Review",
         "duration": "~8 min",
         "questionIDRange": null
@@ -755,7 +799,7 @@
       {
         "id": 30,
         "label": "30 Questions",
-        "icon": "\ud83d\udd25",
+        "icon": "🔥",
         "subtitle": "Standard Practice",
         "duration": "~15 min",
         "questionIDRange": null
@@ -763,7 +807,7 @@
       {
         "id": 60,
         "label": "60 Questions",
-        "icon": "\ud83c\udfc6",
+        "icon": "🏆",
         "subtitle": "Exam Simulation",
         "duration": "~30 min",
         "questionIDRange": null
@@ -771,7 +815,7 @@
       {
         "id": 100,
         "label": "All 100 Questions",
-        "icon": "\u2b50",
+        "icon": "⭐",
         "subtitle": "Full Question Bank",
         "duration": "~50 min",
         "questionIDRange": null
@@ -782,7 +826,7 @@
     "id": "dataarchitect",
     "name": "Platform Data Architect",
     "shortName": "Data Architect",
-    "icon": "\ud83d\uddc4\ufe0f",
+    "icon": "🗄️",
     "primaryColor": "#0891B2",
     "secondaryColor": "#22D3EE",
     "headerGradient": [
@@ -800,7 +844,7 @@
       {
         "id": 15,
         "label": "15 Questions",
-        "icon": "\u26a1",
+        "icon": "⚡",
         "subtitle": "Quick Review",
         "duration": "~8 min",
         "questionIDRange": null
@@ -808,7 +852,7 @@
       {
         "id": 30,
         "label": "30 Questions",
-        "icon": "\ud83d\udd25",
+        "icon": "🔥",
         "subtitle": "Standard Practice",
         "duration": "~15 min",
         "questionIDRange": null
@@ -816,7 +860,7 @@
       {
         "id": 60,
         "label": "60 Questions",
-        "icon": "\ud83c\udfc6",
+        "icon": "🏆",
         "subtitle": "Exam Simulation",
         "duration": "~30 min",
         "questionIDRange": null
@@ -824,7 +868,7 @@
       {
         "id": 120,
         "label": "All 120 Questions",
-        "icon": "\u2b50",
+        "icon": "⭐",
         "subtitle": "Full Question Bank",
         "duration": "~60 min",
         "questionIDRange": null
@@ -835,7 +879,7 @@
     "id": "pd1",
     "name": "Platform Developer I",
     "shortName": "PD1",
-    "icon": "\ud83d\udcbb",
+    "icon": "💻",
     "primaryColor": "#FF9500",
     "secondaryColor": "#FF3B30",
     "headerGradient": [
@@ -853,7 +897,7 @@
       {
         "id": 15,
         "label": "15 Questions",
-        "icon": "\u26a1",
+        "icon": "⚡",
         "subtitle": "Quick Review",
         "duration": "~8 min",
         "questionIDRange": null
@@ -861,7 +905,7 @@
       {
         "id": 30,
         "label": "30 Questions",
-        "icon": "\ud83d\udd25",
+        "icon": "🔥",
         "subtitle": "Standard Practice",
         "duration": "~15 min",
         "questionIDRange": null
@@ -869,7 +913,7 @@
       {
         "id": 60,
         "label": "60 Questions",
-        "icon": "\ud83c\udfc6",
+        "icon": "🏆",
         "subtitle": "Exam Simulation",
         "duration": "~30 min",
         "questionIDRange": null
@@ -877,7 +921,7 @@
       {
         "id": 100,
         "label": "All 100 Questions",
-        "icon": "\u2b50",
+        "icon": "⭐",
         "subtitle": "Full Question Bank",
         "duration": "~50 min",
         "questionIDRange": null
@@ -888,7 +932,7 @@
     "id": "pia",
     "name": "Platform Integration Architect",
     "shortName": "PIA",
-    "icon": "\ud83d\udd17",
+    "icon": "🔗",
     "primaryColor": "#2BA173",
     "secondaryColor": "#00C7BE",
     "headerGradient": [
@@ -906,7 +950,7 @@
       {
         "id": 15,
         "label": "15 Questions",
-        "icon": "\u26a1",
+        "icon": "⚡",
         "subtitle": "Quick Review",
         "duration": "~8 min",
         "questionIDRange": null
@@ -914,7 +958,7 @@
       {
         "id": 30,
         "label": "30 Questions",
-        "icon": "\ud83d\udd25",
+        "icon": "🔥",
         "subtitle": "Standard Practice",
         "duration": "~15 min",
         "questionIDRange": null
@@ -922,7 +966,7 @@
       {
         "id": 60,
         "label": "60 Questions",
-        "icon": "\ud83c\udfc6",
+        "icon": "🏆",
         "subtitle": "Exam Simulation",
         "duration": "~30 min",
         "questionIDRange": null
@@ -930,7 +974,7 @@
       {
         "id": 154,
         "label": "All 154 Questions",
-        "icon": "\u2b50",
+        "icon": "⭐",
         "subtitle": "Full Question Bank",
         "duration": "~77 min",
         "questionIDRange": null
@@ -941,7 +985,7 @@
     "id": "sharingvisibility",
     "name": "Platform Sharing and Visibility Architect",
     "shortName": "Sharing & Visibility",
-    "icon": "\ud83d\udd10",
+    "icon": "🔐",
     "primaryColor": "#DC2626",
     "secondaryColor": "#F87171",
     "headerGradient": [
@@ -959,7 +1003,7 @@
       {
         "id": 15,
         "label": "15 Questions",
-        "icon": "\u26a1",
+        "icon": "⚡",
         "subtitle": "Quick Review",
         "duration": "~8 min",
         "questionIDRange": null
@@ -967,7 +1011,7 @@
       {
         "id": 30,
         "label": "30 Questions",
-        "icon": "\ud83d\udd25",
+        "icon": "🔥",
         "subtitle": "Standard Practice",
         "duration": "~15 min",
         "questionIDRange": null
@@ -975,7 +1019,7 @@
       {
         "id": 60,
         "label": "60 Questions",
-        "icon": "\ud83c\udfc6",
+        "icon": "🏆",
         "subtitle": "Exam Simulation",
         "duration": "~30 min",
         "questionIDRange": null
@@ -983,7 +1027,7 @@
       {
         "id": 120,
         "label": "All 120 Questions",
-        "icon": "\u2b50",
+        "icon": "⭐",
         "subtitle": "Full Question Bank",
         "duration": "~60 min",
         "questionIDRange": null
@@ -994,7 +1038,7 @@
     "id": "uxdesigner",
     "name": "Platform User Experience Designer",
     "shortName": "UX Designer",
-    "icon": "\ud83c\udfa8",
+    "icon": "🎨",
     "primaryColor": "#D946EF",
     "secondaryColor": "#E879F9",
     "headerGradient": [
@@ -1012,7 +1056,7 @@
       {
         "id": 30,
         "label": "30 Questions",
-        "icon": "\u26a1",
+        "icon": "⚡",
         "subtitle": "Quick Review",
         "duration": "~15 min",
         "questionIDRange": null
@@ -1020,7 +1064,7 @@
       {
         "id": 60,
         "label": "60 Questions",
-        "icon": "\ud83d\udd25",
+        "icon": "🔥",
         "subtitle": "Standard Practice",
         "duration": "~30 min",
         "questionIDRange": null
@@ -1028,7 +1072,7 @@
       {
         "id": 121,
         "label": "All 121 Questions",
-        "icon": "\u2b50",
+        "icon": "⭐",
         "subtitle": "Full Question Bank",
         "duration": "~61 min",
         "questionIDRange": null
