@@ -1,7 +1,7 @@
 # RAG, Agentforce & Data Cloud
-## A Success Architect Guide — Version 3.2
+## A Success Architect Guide — Version 3.3
 
-*Updated August 20, 2026*
+*Updated August 27, 2026*
 *This guide was generated using AI with grounding in official Salesforce documentation. Review for accuracy before using.*
 
 ---
@@ -41,25 +41,24 @@
 - [Chapter 13: The Four-Layer Permission Model](#chapter-13-the-four-layer-permission-model)
 
 **Part 6: Production Operations**
-- [Chapter 14: Observability — Seeing Inside the Agent](#chapter-14-observability)
-- [Chapter 15: When to Involve a Developer — Pro-Code RAG](#chapter-15-pro-code-rag)
+- [Chapter 14: Observability — What to Watch in Production](#chapter-14-observability)
+- [Chapter 14.5: Context Rot — The Long-Conversation Failure Mode](#chapter-145-context-rot)
+- [Chapter 15: Pro-Code RAG Patterns](#chapter-15-pro-code-rag-patterns)
 - [Chapter 16: The Credit Model — What RAG Actually Costs](#chapter-16-the-credit-model)
 
 **Part 7: Troubleshooting and Client Conversations**
 - [Chapter 17: Troubleshooting — The Diagnostic Ladder](#chapter-17-troubleshooting)
 - [Chapter 18: Known Platform Issues](#chapter-18-known-platform-issues)
-- [Chapter 19: Client Conversation Frameworks](#chapter-19-client-conversations)
-
-**Part 8: Architecture Patterns**
-- [Chapter 20: Six Production Architecture Patterns](#chapter-20-architecture-patterns)
+- [Chapter 19: Reference Patterns](#chapter-19-reference-patterns)
 
 **Appendix**
-- [A1: The Four Silent Failure Checklist](#a1-four-silent-failure-checklist)
-- [A2: RAG Anti-Hallucination Guard Template](#a2-anti-hallucination-guard-template)
-- [A3: The Scoping Decision Tree](#a3-scoping-decision-tree)
-- [A4: Content Authoring Best Practices Checklist](#a4-content-authoring-checklist)
+- [A1: The Four Silent Failure Checklist](#a1-the-four-silent-failure-checklist)
+- [A2: RAG Anti-Hallucination Guard Template](#a2-rag-anti-hallucination-guard-template)
+- [A3: The Scoping Decision Tree](#a3-the-scoping-decision-tree)
+- [A4: Content Authoring Best Practices Checklist](#a4-content-authoring-best-practices-checklist)
 - [A5: Multi-Source Architecture Decision Guide](#a5-multi-source-architecture-decision-guide)
 - [A6: Terminology Reference](#a6-terminology-reference)
+- [A7: Context Rot Diagnostic Checklist](#a7-context-rot-diagnostic-checklist)
 
 ---
 
@@ -69,11 +68,7 @@
 
 ### Chapter 1: The Mental Model — Atlas and the Hybrid Engine
 
-#### 1.1 Atlas and the Unified Planner
-
-At runtime, every Agentforce agent is powered by the **Atlas Reasoning Engine**. Atlas is what executes your agent's logic, manages the conversation state, calls actions, and coordinates LLM reasoning. It is the "brain" that clients experience — even if they never hear that name.
-
-Underneath Atlas is the **Unified Planner** — the engineering product that powers it. The Unified Planner was built to unify what were previously two separate execution systems: the Agent Graph engine (optimized for deep reasoning and complex orchestration) and the Voice Planner (optimized for ultra-low latency). Maintaining two parallel systems created duplicate engineering work, inconsistent developer capabilities, and architectural bottlenecks. The Unified Planner solves this by separating platform-managed services (execution infrastructure, prompt injection detection, AI memory) from customer-defined business workflows. Developers build once on a common foundation.
+#### 1.1 The Unified Planner Architecture
 
 **Why this matters for client conversations:** The Unified Planner reduced response latency from approximately 20 seconds to approximately 2.3 seconds. This was achieved through aggressive parallel execution — context gathering, citation generation, grounding validation, and knowledge retrieval, which previously ran sequentially, now run concurrently wherever possible. Multiple API and tool calls within a customer workflow can also execute in parallel. When clients ask about Agentforce performance, this is the architectural reason latency is where it is.
 
@@ -386,45 +381,27 @@ At query time, the user's question is embedded using the same model, and the vec
 - **Static pre-filters:** Set at configuration time. Example: `PublishStatus = 'Online'`
 - **Dynamic pre-filters:** Resolved at runtime from conversation context. The filter condition is specified at design time using a placeholder syntax, and the placeholder is mapped to a runtime value (such as a customer's account or product line) by the prompt template. This means one agent and one corpus can serve multiple user segments, each scoped to only their entitled content.
 
-> **Scenario: The Insurance Agent That Filters by Policy Type**
->
-> An insurance client's agent handles individual policyholders, small business owners, and enterprise accounts — each with access to different policy documents.
->
-> With a static retriever, the team would need separate deployments per segment, or risk surfacing enterprise-tier policy details to individual customers.
->
-> With dynamic pre-filters, the agent captures the customer's segment during identity verification and passes it as a runtime filter. Every retrieval query automatically scopes to only the content that customer is entitled to see. One agent. One corpus. Three perfectly scoped experiences.
-
-**What can go wrong at retrieval:** Low similarity scores due to embedding model mismatch, missing permissions at the data space level, or an anti-hallucination guard that is syntactically incorrect and silently passes empty retrieval results to the LLM.
-
 ---
 
 ### Chapter 5.5: Corpus Design — Content Best Practices
 
-This chapter covers guidance that is often overlooked in implementation conversations. The quality of the retrieval corpus is the single largest determinant of agent answer quality. A well-designed corpus compensates for many retrieval configuration imperfections. A poorly designed corpus cannot be fixed by any amount of retrieval tuning.
+The quality of the corpus is the single largest determinant of retrieval quality. A well-configured ADL with a poorly designed corpus will consistently underperform a less sophisticated setup with well-designed content.
 
-#### 5.5.1 Why Content Quality Is an SA Conversation
+**1. Write thorough articles, not brief ones.**
 
-Many clients assume that once they connect their Knowledge base or upload their document library, the agent will work. The "garbage in, garbage out" principle applies directly to RAG. Corpus curation is a business process conversation, not just a technical one. SAs who understand the content best practices can run that conversation with the customer's Knowledge Manager or Content Team — before implementation begins.
+The retrieval system works by matching chunks against a user's query. A chunk that provides complete, detailed information is more likely to satisfy the query and less likely to leave the LLM without enough context to answer. Brief articles that point users elsewhere — "see Policy XYZ for details" — produce retrieval results that surface a pointer rather than an answer. The LLM cannot follow the pointer.
 
-#### 5.5.2 Seven Content Best Practices
+**2. Write for how users ask questions, not for how the business organizes information.**
 
-These apply whether the corpus is Salesforce Knowledge articles, uploaded files, or custom indexed content.
+Retrieval runs on semantic similarity between the user's query and the chunk content. If an article about refund procedures is titled "Return Merchandise Authorization Process" but users ask "how do I get a refund," semantic similarity will be low. Include the words users actually use in the article text. When indexing Salesforce Knowledge articles, the search index is built against a structured DMO. Take advantage of this structure by spreading long-text content across multiple fields — for example: Question, Description, Resolution, and Exceptions. Annotate the article with metadata that can be used for filtering and prepending. This produces richer, better-targeted chunks than packing all content into a single body field.
 
-**1. Favor thoroughness over brevity.**
+**3. Use heading structure (H1-H6) in HTML-formatted articles.**
 
-Generative AI synthesizes best from complete, detailed information. A short article that says "Contact support for help with billing" gives the agent nothing to work with. A thorough article that explains the billing process, common scenarios, and resolution paths gives the agent everything it needs to answer at the right level of detail for any user. In general, err on the side of too much detail rather than too little.
+The chunker uses heading tags as natural split points. Well-structured articles chunk into semantically coherent sections. Unstructured prose chunks at arbitrary token boundaries, often mid-thought.
 
-**2. Include real-world examples in a conversational style.**
+**4. Keep articles focused on a single topic.**
 
-Users ask questions the way they talk, not the way documentation is written. Including examples — "For instance, if a customer ordered on a Friday and wants same-day delivery, the system will automatically route to the next business day..." — dramatically improves retrieval accuracy for conversational queries. The chunk now contains language patterns that match how users phrase their questions.
-
-**3. Structure articles with heading tags.**
-
-For HTML-formatted content (Knowledge articles, uploaded HTML files), use heading tags (H1 through H6) to signal how content is hierarchically related. The chunking process uses heading tags as chunk delimiters. An article with no headings is chunked arbitrarily by token count. An article with well-placed headings is chunked at logical topic boundaries, producing chunks that are semantically coherent units rather than random text fragments.
-
-**4. Spread content across structured fields in Knowledge articles.**
-
-When indexing Salesforce Knowledge articles, the search index is built against a structured DMO. Take advantage of this structure by spreading long-text content across multiple fields — for example: Question, Description, Resolution, and Exceptions. Annotate the article with metadata that can be used for filtering and prepending. This produces richer, better-targeted chunks than packing all content into a single body field.
+> **v3.3 addition:** Multi-topic articles are a direct contributor to context rot in long conversations (see Chapter 14.5). When a retrieval chunk contains content spanning multiple topics, it consumes context budget carrying information irrelevant to the current question. Split long, multi-topic articles into focused, single-topic pieces. This is one of the highest-leverage corpus improvements you can make, and it addresses both retrieval precision and long-conversation reliability at once.
 
 **5. Include common synonyms and abbreviations in article text.**
 
@@ -593,7 +570,7 @@ This distinction is important for clients with large existing document stores. T
 
 #### 8.2 KNOWLEDGE: Knowledge Article Library
 
-The KNOWLEDGE source type indexes directly from published Salesforce Knowledge articles. No file upload required. The CRM Connector reads article content and triggers indexing automatically.
+The KNOWLEDGE source type indexes directly from published Salesforce Knowledge articles. No file upload required. TheRM Connector reads article content and triggers indexing automatically.
 
 **The `primaryIndexField` constraint:** Two primary index fields must be chosen at creation time. They are **immutable after creation** — the platform returns a `PRIMARY_FIELDS_IMMUTABLE` error if you attempt to change them. Common choices: `ArticleNumber` and `Title`. A wrong choice means deleting and recreating the library. Always confirm this choice with the client before creating the library.
 
@@ -875,37 +852,6 @@ Understanding how data is organized in Data 360 is essential when discussing RAG
 
 **Data Lake Objects (DLOs):** The core persistent storage layer. Stores cleaned, transformed data and serves as the long-term repository. DLOs include structured DLOs (traditional tabular data), Unstructured Data Lake Objects (UDLOs — directory tables pointing to unstructured content like files and documents), and External DLOs (federated views of data that stays in external systems).
 
-**Data Model Objects (DMOs):** The harmonized layer. Created by mapping DLO fields to the standard Customer 360 Data Model. DMOs are the single source of truth for customer data — the foundation for profile creation, segmentation, and activation. For Knowledge article RAG, the search index is built against a structured DMO.
-
-**Data Spaces:** The fundamental logical container for organizing all data and metadata. Data spaces enforce isolation at multiple layers: data-level isolation (queries cannot cross data space boundaries without explicit authorization), access control integration (permission sets tied to data spaces), and governance with full audit trails. Data spaces are how multi-tenant and multi-business-unit organizations maintain separation while sharing a single Data 360 instance.
-
-#### 12.3 Data 360 as a Zero-Copy Infrastructure
-
-Data 360's architecture supports zero-copy data access for structured data from external platforms — Snowflake, Databricks, BigQuery, Redshift — through both query-based federation (JDBC pushdown) and file-based federation (Apache Iceberg / Parquet directly from object storage). For RAG specifically, SFDRIVE-based libraries also follow a zero-copy model for external file storage: the physical files never move to Data 360. Only the text extracted from chunking, and the DMO records containing vectors, reside there.
-
-This matters for:
-- **Data residency compliance:** The original file stays in its source location (S3, Azure Blob, etc.)
-- **Storage cost:** Clients are not paying Data 360 storage costs for large binary files
-- **Governance:** Source-side access controls on the file storage remain the authoritative gate
-
-Zero-copy also extends to unstructured data sources — hyperscaler storage (S3, GCS, Azure), Slack, and Google Drive — which Data 360's unstructured processing pipelines can access without physical data movement.
-
-#### 12.4 Data 360 ABAC and RAG Security
-
-Data 360 implements a comprehensive **attribute-based access control (ABAC)** framework using **CEDAR policy language** at the object, field, and row levels. This is architecturally significant for RAG deployments.
-
-The framework operates through three interlocking components:
-
-- **Policy Information Point (PIP):** Automated tagging and classification using LLM and ML to identify sensitive categories (PII.Email, PII.Phone, PII.Name, PHI, FinancialData) in both structured and unstructured data. Tag propagation follows data lineage automatically — from DLO through DMO through derived objects.
-- **Policy Enforcement Point (PEP):** The Authorization Service intercepts all data access requests from consumption layers (queries, GenAI RAG retrievers, CRM enrichment) and consults the Policy Decision Point.
-- **Policy Decision Point (PDP):** Evaluates CEDAR policy definitions against current attributes to make authoritative access decisions.
-
-**CEDAR policy enforcement levels for RAG:**
-- Object Level Security: controlling access to entire DLOs or DMOs
-- Field Level Security: restricting access to specific sensitive fields
-- Row Level Security: filtering data to show only relevant rows based on user attributes
-- Dynamic Data Masking: masking fields in structured data and content in unstructured data at the point of access, without altering underlying data
-
 For RAG specifically, metadata filtering (pre-filters on search indexes) restricts what gets retrieved for a given user or context, enforced at the retrieval layer before any LLM call. Together, these controls mean RAG security can be as granular as the content requires — different users retrieve from different slices of the same corpus.
 
 **To protect against RAG poisoning attacks** — where malicious content is injected into the corpus to manipulate agent responses — apply strict data governance and validation rules through the ABAC framework before data becomes available for vector search.
@@ -943,23 +889,19 @@ The Einstein Agent User must be assigned the correct Data 360 permission set. Wi
 
 #### Layer 2: Data Space Access
 
-The agent user must have access to the specific Data 360 data space that contains the search index. Without it, the retrieval query executes but returns 0 results — same symptom as Layer 1 but different fix. Data spaces enforce isolation at the permission set level.
+The agent user must be granted access to the specific Data Space where the ADL's search index resides. Data Spaces are Data 360's multi-tenancy boundary — access to one Data Space does not imply access to another.
 
-**Diagnostic check:** In Data 360 Setup, verify the agent user's permission set includes access to the relevant data space.
+**Diagnostic check:** Confirm the agent user has been granted access to the correct Data Space in Data 360 setup. This is the layer most commonly missed in enterprise orgs with multiple Data Spaces.
 
 #### Layer 3: Search Index Permissions
 
-The search index itself must be configured to allow access by the agent user. This is a separate configuration from data space access.
+The agent user must have read access to the specific search index the ADL retriever is querying. In orgs with multiple search indexes, this is a per-index permission, not a blanket grant.
 
-**Diagnostic check:** In the ADL or search index configuration, verify that the agent user's permission set is listed in the index access controls.
+#### Layer 4: Knowledge Article Data Categories
 
-#### Layer 4: Knowledge Article Sharing and Publish Status
+For KNOWLEDGE libraries, the retriever filters articles by data category visibility. If the agent user's profile does not have visibility to the data categories assigned to the articles, those articles are excluded from retrieval — silently.
 
-For KNOWLEDGE libraries, article sharing must be configured to allow access by the agent user, and articles must have `PublishStatus = 'Online'`. Articles in Draft or Archived status are not indexed and do not appear in retrieval results.
-
-**Diagnostic check:** SOQL query against `Knowledge__kav` filtered to `PublishStatus = 'Online'` and confirm the expected articles are present. Verify the article's Data Category assignments match the scope configured in the search index.
-
-> **The four-layer permission checklist is pre-launch, not post-failure.** Running through these four checks before go-live takes 15 minutes. Not running them means the go-live scenario described in Chapter 11 is almost guaranteed.
+**Diagnostic check:** Confirm the agent user has data category group visibility configured in Knowledge settings, and that the categories match the articles in scope for the agent's use case.
 
 ---
 
@@ -967,74 +909,169 @@ For KNOWLEDGE libraries, article sharing must be configured to allow access by t
 
 ---
 
-### Chapter 14: Observability — Seeing Inside the Agent
+### Chapter 14: Observability — What to Watch in Production
 
-#### 14.1 The Observability Architecture
+Agentforce exposes production telemetry through the `AiAgentGenerativeAiUsage` DMO and the `AiRetrieverQualityMetric` DMO. The metrics that matter most for a healthy grounded agent in production are:
 
-Agentforce session data is captured in a set of Data Model Objects (DMOs) within Data 360. These DMOs are what power the out-of-the-box dashboards and are also queryable directly for custom reporting.
+- **Resolution rate:** The percentage of sessions that reach a successful resolution without escalation. This is your primary health signal.
+- **Escalation rate:** The percentage of sessions that transfer to a human agent. Elevated escalation rate — especially when users have not explicitly asked to escalate — is an early indicator of agent quality problems.
+- **Turns to resolution:** How many conversation turns the average session requires. Rising turns-to-resolution, without a corresponding change in query complexity, signals that the agent is working harder to stay on track.
+- **Groundedness retry rate:** The rate at which the grounding validation layer rejects an initial LLM response and requests a retry. Spikes here indicate retrieval is returning noisy or multi-topic content.
+- **Token consumption per session:** Tracks context window usage. Sessions consuming consistently high token counts may be approaching context limits and are candidates for context rot investigation (see Chapter 14.5).
 
-#### 14.2 The Session and Interaction DMOs
+> **v3.3 addition:** When resolution rate, escalation rate, or turns-to-resolution degrade specifically in longer sessions — rather than uniformly across all sessions — the root cause is usually context rot rather than a corpus or routing problem. Chapter 14.5 covers this failure mode in detail.
 
-**AiAgentSession:** One record per conversation session. Contains session-level metadata: agent ID, channel, start/end timestamps, and resolution status.
-
-**AiAgentInteraction:** One record per agent turn (parse cycle). Key fields:
-- `TopicApiName` — the subagent that handled this turn (maps to Agent Script subagent API names)
-- `StartTimestamp` / `EndTimestamp` — turn duration
-- `TelemetryTraceId` — distributed tracing ID for correlating with LLM gateway logs
-
-**AiAgentInteractionStep:** One record per step within a turn. Key fields:
-- `StepType` — `LLM_STEP`, `ACTION_STEP`, `TRUST_GUARDRAILS_STEP`
-- `EndTimestamp` — frequently `NOT_SET` for in-progress or interrupted steps
-
-Two important data quality notes: the platform uses `"NOT_SET"` (string) as a sentinel for null values, and the `TRUST_GUARDRAILS_STEP` error field may contain the Python string `"None"` — which is not a real error. Filter accordingly in any custom queries or dashboards.
-
-#### 14.3 RAG Quality Metrics — The AiRetrieverQualityMetric DMO
-
-This DMO provides per-retrieval quality scores for agents using RAG. It is separate from the general quality score chain and is only populated when the agent uses knowledge retrieval actions.
-
-**Key fields:**
-
-| Field | What it measures | What it tells you |
-|---|---|---|
-| `FaithfulnessRelevancyScoreNumber` (0-1) | How grounded is the response in the retrieved context? | Low score: LLM is supplementing from general knowledge despite the guard |
-| `AnswerRelevancyScoreNumber` (0-1) | How relevant is the response to the user's question? | Low score: response is accurate but not helpful — misaligned scope |
-| `ContextPrecisionScoreNumber` (0-1) | How relevant is the retrieved content to the query? | Low score: retrieval is missing; corpus design or enrichment issue |
-
-**Using these three metrics together:**
-
-| Pattern | What it indicates |
-|---|---|
-| Low Context Precision, High Faithfulness | Retrieval is poor but LLM is faithfully using what it got. Fix: corpus or chunking. |
-| High Context Precision, Low Faithfulness | Good retrieval but LLM is ignoring the context. Fix: tighten the anti-hallucination guard. |
-| High Context Precision, High Faithfulness, Low Answer Relevance | Agent is answering a different question than the user asked. Fix: query understanding or topic routing. |
-| All three high | RAG pipeline is working. Focus optimization elsewhere. |
-
-> **Note:** `AiRetrieverQualityMetric` rows only exist for sessions where a retrieval action was called. An agent that is routing to the wrong subagent and never calling `AnswerQuestionsWithKnowledge` will show 0 rows in this DMO — which is itself a diagnostic signal.
-
-#### 14.4 Observability Data Refresh Cadences
-
-Not all observability data appears immediately. These cadences matter for SAs setting client expectations about dashboards and reporting:
-
-- **Session and interaction data:** Near real-time (typically minutes)
-- **RAG quality metrics:** Available within approximately 30 minutes of session completion
-- **Billing and credit consumption data:** 24-hour delay — do not use for same-day operational decisions
-- **Audit trail data:** Near real-time for Trust Layer events; 24-hour delay for aggregated reports
+> **Client conversation tip:** Clients frequently want to know "is the agent working?" in a single number. Frame resolution rate as the headline metric, with escalation rate and turns-to-resolution as the two supporting signals. If all three are healthy, the agent is working. If resolution rate drops while escalation rate rises specifically in multi-turn sessions, bring in the context rot diagnostic from Chapter 14.5.
 
 ---
 
-### Chapter 15: When to Involve a Developer — Pro-Code RAG
+### Chapter 14.5: Context Rot — The Long-Conversation Failure Mode
 
-#### 15.1 The No-Code Boundary
+> **v3.3 addition**
 
-The ADL and Agent Script cover the majority of production RAG use cases. A developer conversation is warranted when the client's requirements exceed what the ADL supports.
+#### 14.5.1 What Context Rot Is
 
-**Escalate to a developer when:**
+Every Agentforce pilot tells the same story. Turn one looks great. The agent retrieves the right knowledge article, answers the question, and the room is impressed. Then you ship to production. By turn seven, the agent has forgotten what the user asked at turn one. It routes to the wrong topic. It escalates when it should not. It answers a question the user stopped asking four turns ago.
 
-- The knowledge source is not Knowledge articles or files (e.g., long-text fields on Case, Order, or custom objects)
-- The client needs to retrieve from an external system with its own API (e.g., a document management system, Confluence, SharePoint with custom auth)
-- Retrieval requires custom business logic before returning results (e.g., filtering based on a complex entitlement calculation)
-- The client needs to combine multiple heterogeneous sources in a single retrieval call
-- Data residency requirements mandate that content never enters Salesforce storage, even temporarily
+This is not a model problem. It is a design problem with a name: **context rot**.
+
+Each turn, Agentforce passes the conversation history to the LLM alongside retrieved knowledge chunks and tool outputs. That combined payload has a finite token budget. As the conversation grows, retrieved content and tool responses crowd out earlier turns. Early turns — the ones that established user intent, captured account context, and set the conversation's direction — are the first to fall out. The LLM is left reasoning over an increasingly stale, incomplete, and sometimes internally contradictory slice of what the user actually said.
+
+Context rot compounds. It does not just mean the agent is missing information. It means the agent is actively reasoning from bad information, and the situation gets worse with every new turn.
+
+**The context conflict variant**
+
+Context rot does not always show up as missing information. Sometimes it appears as contradictory information. Users refine their intent mid-conversation. "I want to cancel" becomes "actually, just pause it" becomes "wait, what are my options?" Each turn adds new intent that may conflict with what the agent already captured.
+
+When the LLM is working from a truncated conversation history that contains both the original intent and the revised intent, it may act on an intent the user has already walked back, or blend two conflicting signals into a response that satisfies neither. The fix is not to retain more history. It is to overwrite stale state rather than accumulate it.
+
+> **Scenario: The Subscription Reversal**
+>
+> A telecommunications client's agent handles account changes. A user opens with "I want to cancel my plan." The agent captures this intent and begins a cancellation flow. Two turns later, the user says "actually, let me hear the retention offer first." Three turns after that: "OK forget the offer, just cancel."
+>
+> By turn seven, earlier conversation turns have been pushed out of the context window by retrieved policy chunks and tool outputs. The LLM is now reasoning from the middle of the conversation, where the retention discussion is still present but the original cancellation intent has been displaced. The agent begins presenting retention options again — re-asking a question the user resolved three turns ago. The user escalates to a human agent in frustration.
+>
+> The fix: a `currentIntent` context variable, overwritten at each intent shift rather than left to accumulate in conversation history. The variable persists regardless of context window pressure. The LLM always reasons from the current state, not the historical state.
+
+#### 14.5.2 How to Detect Context Rot in Production
+
+Context rot is not a platform error — no alert fires, no log entry flags it. It is a behavioral degradation pattern that surfaces in the observability metrics covered in Chapter 14. The five production signals to watch:
+
+| Signal | What to look for | Why it indicates context rot |
+|---|---|---|
+| Resolution rate | Drops specifically in longer conversations (high turn counts), not uniformly | The agent is succeeding in short sessions but degrading as context accumulates |
+| Escalation rate | Higher than expected, especially without user-initiated escalation requests | The agent is losing track of the conversation and routing to humans unnecessarily |
+| Agent re-asks questions | User reports or conversation logs show the agent asking for information already provided | The relevant turn has been displaced from the context window |
+| Groundedness retry rate | Spiking | Retrieval is returning noisy multi-topic content, consuming budget and degrading coherence |
+| Turns to resolution | Rising above pilot benchmarks without a change in query complexity | The agent is working harder to reach the same outcome |
+
+If two or more of these signals appear together — especially when they correlate with session length rather than session volume — context rot is the probable root cause.
+
+**How to segment the data:** Standard dashboards report aggregate resolution rate. To diagnose context rot, segment by conversation length (turn count). A healthy agent holds its resolution rate consistently as turns increase. An agent with context rot shows a clear degradation curve: strong resolution at turns 1-3, declining from turn 5 onward. That shape is the diagnostic signature.
+
+#### 14.5.3 The Five Mitigations
+
+None of these require new platform features. Every lever is available today.
+
+---
+
+**Mitigation 1: Redesign knowledge articles for focus**
+
+*Effort: Quick win*
+
+Long, multi-topic knowledge articles are one of the most common causes of context rot. The retriever pulls chunks based on the TOP\_K setting. When those chunks come from sprawling multi-topic articles, they carry content that mostly does not answer the current question — and that irrelevant content consumes token budget that could carry conversation history instead.
+
+Split long articles into focused, single-topic pieces. Front-load them with the words users actually say ("refund," "dispute," "returned payment") rather than internal taxonomy. This directly addresses both retrieval precision and context rot — one change, two benefits.
+
+Resist the instinct to raise TOP\_K when retrieval quality is poor. More chunks means more content in the window and less room for conversation history. Better articles fix retrieval. TOP\_K is the last lever to adjust, not the first.
+
+This is also the most direct implementation of the corpus design guidance in Chapter 5.5 — multi-topic articles are the single most common corpus design mistake that produces context rot in production.
+
+> **Client conversation tip:** Frame this as an afternoon of work with one of the highest returns on investment in the entire agent design. Clients frequently underestimate how much retrieval design affects long-conversation reliability.
+
+---
+
+**Mitigation 2: Shape tool outputs**
+
+*Effort: Quick win*
+
+Agentforce action outputs can return up to approximately 65,000 characters. Unfiltered responses flood the context window and displace conversation history rapidly.
+
+Wrap every action in a response filter that returns only the fields the agent actually needs for the current task. Dropping average tool output from thousands of characters to a few hundred frees up meaningful context budget per turn. Agentforce's Flow-based action architecture makes this straightforward: add a Transform element or a short Apex validation action to shape the output before it reaches the agent, without changing the underlying API or data source.
+
+Most production agents are carrying far more tool output than they need. This is one of the highest-return changes in the list.
+
+---
+
+**Mitigation 3: Use context variables for durable state**
+
+*Effort: Bigger lift — plan for this at design time*
+
+Conversation history has a finite budget. Context variables do not. Unlike conversation history, context variables persist across the entire session regardless of how long the conversation runs and regardless of what retrieval or tool output is accumulating in the window.
+
+Capture user intent, account ID, case summary, and last-tool-result summary early and store them as context variables. Do not rely on conversation history to carry them. When user intent shifts, overwrite the relevant variable rather than letting the old intent sit alongside the new one in accumulated history. An agent designed to refresh its state is far more resilient than one designed to remember everything.
+
+This is the architectural complement to the `before_reasoning` variable initialization pattern covered in Chapter 2.2. The same guard pattern — checking whether a variable is already set before overwriting it — applies here, with the opposite logic: for intent-shift variables, you *want* to overwrite on every new intent signal.
+
+```
+before_reasoning:
+    if @variables.currentIntent != @system_variables.user_input:
+        set @variables.currentIntent = @system_variables.user_input
+```
+
+This is an architectural decision best made at design time. Retrofitting a live agent with a context variable model is significantly harder than building it in from the start. Include it in every initial design review.
+
+---
+
+**Mitigation 4: Add escalation guardrails**
+
+*Effort: Quick win*
+
+Agentforce can trigger escalation when tool calls fail or return unexpected responses. If action outputs are not validated before the agent processes them, unexpected API responses can push a session into an unintended escalation state — producing an escalation event that registers in observability dashboards but was never requested by the user.
+
+Add tool-output validation to every action. Check that the response includes the expected fields before the agent attempts to use them. A Decision element in Flow or a short Apex validation action catches this before the response reaches the reasoning layer. It is a small addition that accounts for a disproportionate share of unexpected escalations in production.
+
+When diagnosing an elevated escalation rate, check tool-output validation before assuming the root cause is context rot — this is the faster fix when the escalation pattern is not correlated with session length.
+
+---
+
+**Mitigation 5: Use Data Graphs to constrain what reaches the agent**
+
+*Effort: Bigger lift — high payoff for complex data models*
+
+Every enterprise agent operates against a data model that can include accounts, cases, orders, entitlements, products, and more. Without constraints, a tool call can return an entire object graph: every field, every related record, every nested association the API exposes. Most of it has nothing to do with the current conversation turn.
+
+Data Graphs let you define a curated, agent-specific view of your Salesforce data. Instead of retrieving a full Account record with 80 fields and a dozen related lists, you define exactly which fields and relationships the agent can see. Agentforce enforces that scope at the platform level, so each tool retrieval is leaner by default.
+
+This matters most in long conversations where users keep asking new questions across multiple objects. Each tool call adds data, and without curation, the window fills with overlapping and redundant fields from successive retrievals.
+
+Combine Data Graphs with output shaping from Mitigation 2 for maximum context headroom. Data Graphs control what the platform exposes. Output filters control what the agent actually processes from what the platform exposes.
+
+Best configured at the data model design phase, but worth retrofitting for agents that handle multi-object queries across long conversations.
+
+#### 14.5.4 Where to Invest First
+
+| Scenario | Start here |
+|---|---|
+| Short conversations, high query variance | Mitigation 1: article redesign |
+| Long conversations, low query variance | Mitigation 3: context variables |
+| Long conversations, high query variance | Mitigation 1, then Mitigation 3 |
+| Escalation rate high, not correlated with session length | Mitigation 4: escalation guardrails |
+| Groundedness retries spiking | Mitigation 2: shape tool outputs |
+| Multi-object queries, complex data model | Mitigation 5: Data Graphs |
+| Users refining or reversing intent mid-conversation | Mitigation 3: overwrite context variables on intent shift |
+
+#### 14.5.5 How to Know the Mitigations Worked
+
+Measure task resolution rate segmented by conversation length, not just overall averages. A healthy agent holds its resolution rate consistently as turn count increases. If resolution rate drops in longer sessions after applying mitigations, the context management problem is not fully resolved. Continue with the next mitigation in the priority table above.
+
+---
+
+### Chapter 15: Pro-Code RAG Patterns
+
+#### 15.1 Custom Apex Actions for External Retrieval
+
+When the client's knowledge store lives outside Salesforce and cannot be indexed through an ADL, a custom Apex Action serves as the retrieval bridge.
 
 **The pro-code path:** Custom Apex Action that calls an external retrieval API, populates a variable with the result, and passes it to the reasoning instructions. The Agent Script pattern is identical to the ADL pattern — the variable name changes, the retrieval action changes, the guard logic is identical.
 
@@ -1083,6 +1120,8 @@ This is a one-time cost at initial indexing, but it recurs whenever the content 
 
 **The web search fallback cost trap:** As noted in Chapter 9, a high retrieval miss rate combined with a web search fallback doubles the per-session retrieval cost. Improving corpus quality is always more cost-effective than relying on the fallback.
 
+**Context rot and credit consumption:** Context rot carries a credit cost beyond the resolution rate impact. Agents with context rot take more turns to resolve the same task, generating more action calls and more LLM reasoning cycles per session. Fixing context rot improves resolution rate and reduces per-session credit consumption at the same time. When scoping the ROI of the mitigations in Chapter 14.5, include the credit reduction alongside the resolution rate improvement in the business case.
+
 ---
 
 ## Part 7: Troubleshooting and Client Conversations
@@ -1093,9 +1132,9 @@ This is a one-time cost at initial indexing, but it recurs whenever the content 
 
 #### 17.1 The Diagnostic Principle
 
-Agentforce failures have a predictable structure. The deterministic layer runs first. If something is wrong there, the LLM never gets a chance to succeed. Work from the bottom up: permissions, then ADL readiness, then Agent Script logic, then LLM behavior.
+Agentforce failures have a predictable structure. The deterministic layer runs first. If something is wrong there, the LLM never gets a chance to succeed. Work from the bottom up: permissions, then ADL readiness, then Agent Script logic, then LLM behavior. For failures that manifest only in longer conversations, add a fifth rung: context rot.
 
-#### 17.2 The Four-Rung Ladder
+#### 17.2 The Five-Rung Ladder
 
 **Rung 1: Permissions (Chapter 13)**
 
@@ -1112,6 +1151,10 @@ Reconstruct the resolved prompt. What did the LLM actually receive? Is the guard
 **Rung 4: LLM Behavior**
 
 If the resolved prompt is correct and the retrieval result is populated, but the response is still wrong, the issue is in the LLM reasoning instructions. Tighten the anti-hallucination guard, clarify the answer scope, or adjust subagent descriptions to improve routing.
+
+**Rung 5: Context Rot (Chapter 14.5)**
+
+If the agent performs well in short sessions but degrades as conversation length increases — resolution rate drops, escalation rate rises, the agent re-asks questions already answered — the failure mode is context rot rather problem. Rungs 1-4 will not surface anything wrong. Apply the diagnostic in Chapter 14.5 to identify which mitigation addresses the specific pattern. Segment resolution rate by turn count before drawing conclusions: uniform degradation across all session lengths points to Rungs 1-4; degradation that correlates with session length points to Rung 5.
 
 #### 17.3 Testing Center for RAG — Current Limitations
 
@@ -1131,13 +1174,15 @@ The Testing Center does support:
 - Instruction adherence
 - Multi-turn conversation testing via conversation history import
 
+**Testing for context rot:** Testing Center batch runs execute against fixed test cases, which do not naturally replicate multi-turn degradation. To test for context rot, use conversation history import to create test cases that simulate long sessions — 6-10 turns with multiple intent shifts — and measure resolution rate across these longer conversation test cases separately from short single-turn tests.
+
 ---
 
 ### Chapter 18: Known Platform Issues
 
 #### 18.1 The Day 0 Race Condition (KNOWLEDGE Libraries)
 
-Covered in Chapter 8.2. The CRM Connector has approximately a **17-second** visibility delay after library creation before article data is queryable. The Day 0 chunking job fires immediately processes 0 rows, emitting a false READY status. Always verify with a live test query, not just `retrieverId` presence.
+Covered in Chapter 8.2. The CRM Connector has approximately a **17-second** visibility delay after library creation before article data is queryable. The Day 0 chunking job fires immediately, processes 0 rows, and emits a false READY status. Always verify with a live test query, not just `retrieverId` presence.
 
 #### 18.2 Post-Day-0 Incremental Refresh Stall
 
@@ -1157,53 +1202,17 @@ Covered in Chapter 2.2. When `is_displayable: True` is set on an action, `after_
 
 #### 18.4 The Language Alignment Silent Failure
 
-Covered in Chapter 8.2. `en_US` vs. `en_GB` is treated as a mismatch by the retriever. The retriever silently returns 0 results. The fix is confirming the agent user's language/locale matches the indexed articles' language.
-
-#### 18.5 The `ARFPC_` Prefix Omission
-
-Covered in Chapter 8.3. The `rag_feature_config_id` must include the `ARFPC_` prefix. The validation error does not explain the requirement.
-
-#### 18.6 Circuit Breaker Failover
-
-When an LLM provider is unavailable, the Trust Layer activates a circuit breaker that fails over to an alternate provider. The specific thresholds (error rate, latency) that trigger the circuit breaker are not published externally. No new corroboration of specific figures has been found; keep this caveat as-is in client conversations.
+Covered in Chapter 8.2. The retriever silently returns 0 results when the agent user's language setting does not match the indexed article language. Even `en_US` vs. `en_GB` is treated as a mismatch. Verify language alignment before go-live with a SOQL query against `Knowledge__kav`.
 
 ---
 
-### Chapter 19: Client Conversation Frameworks
+### Chapter 19: Reference Patterns
 
-#### 19.1 "Is Our Data Safe?" — The Security Framework
+#### Pattern 1: Knowledge Article Agent
 
-Use the five Trust Layer pillars from Chapter 11. Lead with ZDR (contractual guarantee, no model training). Add encryption (in transit TLS 1.2+, at rest AES-256). Add Prompt Injection Detection and Prompt Defense. Add Toxicity Scoring.
+**When to use:** Client has a Salesforce Knowledge base with published articles. Content is article-based. Corpus is in English only or multilingual.
 
-For agent workflows specifically: be direct that dynamic data masking is currently off for the agent planner path. Lead with ZDR and the other active controls. Do not position masking as an active safeguard for agent prompts.
-
-For regulated industries: lead with the trust boundary distinction (Salesforce trust boundary vs. shared trust boundary), ZDR, and the Data 360 ABAC framework for data-layer security.
-
-#### 19.2 "How Does It Know About Our Products?" — The RAG Framework
-
-Walk through the four stages of grounding maturity (Chapter 4.4). Position where the client currently sits and what Stage 4 requires. Connect corpus design (Chapter 5.5) to the business conversation about content ownership and governance.
-
-#### 19.3 "What Does This Cost?" — The Credit Framework
-
-Start with the action credit ($0.10 per action). Add the corpus processing cost ($0.75/MB basic, $3.00/MB enhanced). Estimate session volume. Build a simple credit model before go-live. Flag the web search fallback cost trap and the action loop billing risk.
-
-#### 19.4 "How Do We Keep It Accurate?" — The Governance Framework
-
-Three levers: corpus governance (quarterly Knowledge audit, clear ownership), retrieval tuning (chunking enrichment, embedding model, pre-filters), and RAG quality monitoring (AiRetrieverQualityMetric DMO). Frame it as an ongoing operational discipline, not a one-time launch activity.
-
----
-
-## Part 8: Architecture Patterns
-
----
-
-### Chapter 20: Six Production Architecture Patterns
-
-#### Pattern 1: Single-Source Knowledge Agent
-
-**When to use:** Client has a well-maintained Salesforce Knowledge base. Single line of business. Single language.
-
-**Architecture:** ADL (KNOWLEDGE) → ensemble retriever (single source) → `AnswerQuestionsWithKnowledge` in `before_reasoning` → anti-hallucination guard → citations enabled.
+**Architecture:** ADL (KNOWLEDGE) → `AnswerQuestionsWithKnowledge` in `before_reasoning` → anti-hallucination guard → citations enabled.
 
 **Risks:** Language alignment. Day 0 race condition. Primary index field selection (immutable). Corpus governance.
 
@@ -1346,6 +1355,7 @@ Before go-live, review the corpus against these criteria:
 - [ ] HTML-formatted articles use heading tags (H1-H6) for logical structure.
 - [ ] Knowledge articles use multiple fields (Question, Description, Resolution, Exceptions) rather than a single body field.
 - [ ] Common synonyms and abbreviations are included in article text.
+- [ ] Articles cover a single focused topic. Multi-topic articles have been split. (See Chapter 14.5 — multi-topic articles are a primary driver of context rot in long conversations.)
 - [ ] The corpus scope matches the agent's topic scope. No tangentially related content.
 - [ ] Content governance owner is identified. Quarterly audit cadence is scheduled.
 - [ ] All articles are published (`PublishStatus = 'Online'`).
@@ -1374,23 +1384,55 @@ Before go-live, review the corpus against these criteria:
 
 | Term | Definition |
 |---|---|
-| Atlas Reasoning Engine | Public-facing name for the Agentforce runtime engine |
-| Unified Planner | Engineering product name for the Atlas runtime; unifies Agent Graph + Voice Planner |
-| ADL | Agentforce Data Library — the no-code RAG provisioning tool |
-| DLO | Data Lake Object — persistent storage layer in Data 360 |
-| UDLO | Unstructured Data Lake Object — directory table for unstructured content |
-| DMO | Data Model Object — harmonized Customer 360 data layer |
-| Data Space | Logical isolation container in Data 360 |
-| SNCE | Storage Native Change Events — reactive change notification from Iceberg tables |
-| CDF | Change Data Feed — incremental change consumption built on SNCE |
-| ABAC | Attribute-Based Access Control — Data 360's governance framework |
-| CEDAR | Policy language used to define ABAC rules in Data 360 |
-| SOMA | Single-Org Multi-Agent — orchestration pattern for multiple agents within one Salesforce org (GA Summer '26) |
-| MOMA | Multi-Org Multi-Agent — orchestration pattern across multiple Salesforce orgs within the same DC1 trust boundary |
-| ZDR | Zero Data Retention — contractual guarantee that LLM providers do not retain prompt data |
-| Salesforce trust boundary | Network path for Claude Haiku 4.5 via AWS Bedrock with Salesforce-managed private connections |
-| Shared trust boundary | Network path for GPT-4.1 via public internet with contractual ZDR protections |
-| ARFPC_ prefix | Required prefix on `rag_feature_config_id` in the Agent Script `knowledge:` block |
-| knowledgeSummary | The string payload returned by `AnswerQuestionsWithKnowledge` containing retrieved chunks |
-| Day 0 race condition | KNOWLEDGE library false READY status caused by ~17-second CRM Connector visibility delay |
-| Parse | The atomic unit of Agentforce execution: one complete cycle through before_reasoning, reasoning, and after_reasoning |
+| **ADL (Agentforce Data Library)** | The no-code/low-code provisioning path for RAG. Creates the full pipeline — Data Stream, DLO, DMO, Search Index, Retriever, Prompt Template, Agent Action — from a single configuration. |
+| **Atlas** | The public-facing name for the Agentforce reasoning engine. Use with clients and in documentation. |
+| **`before_reasoning`** | The first lifecycle block in a subagent parse. Fully deterministic, no LLM involvement. Runs at the start of every parse — not just the first. |
+| **Chunk** | A semantically coherent unit of content produced by splitting a source document during indexing. The atomic unit of RAG retrieval. |
+| **Claude Haiku 4.5** | Anthropic's model running within the Salesforce trust boundary (AWS Bedrock). Stronger data residency assurance. Does not support multimodal features. |
+| **Context rot** | The degradation in LLM reliability as conversation history grows. Caused by retrieved chunks and tool outputs crowding out earlier turns from the finite context window. Manifests as routing errors, re-asked questions, and resolution rate decline in longer sessions. See Chapter 14.5. |
+| **CRM Connector** | The Data 360 component that reads Salesforce Knowledge articles and triggers KNOWLEDGE library indexing. |
+| **Data Graph** | A curated, agent-specific view of Salesforce data that constrains which fields and relationships are exposed to the agent during tool calls. Reduces context window pressure in agents with complex multi-object data models. |
+| **Day 0 race condition** | A documented KNOWLEDGE library behavior where the chunking job fires before the CRM Connector has committed article data, producing a false READY status with 0 indexed chunks. |
+| **DLO (Data Lake Object)** | Data 360's core persistent storage layer. Stores cleaned, transformed data as the long-term repository. |
+| **DMO (Data Model Object)** | A semantic layer on top of DLOs that represents business concepts (Customer, Account, Interaction) in a unified schema. The RAG search index is built against DMO fields. |
+| **Ensemble Retriever** | A retriever that combines results from multiple source-specific retrievers through a cross-encoder reranker, producing unified results across heterogeneous content sources. |
+| **GPT-4.1** | OpenAI's model running over the shared trust boundary. Supports multimodal features. Salesforce's recommended default for most agent configurations. |
+| **Hybrid search** | A search strategy that runs vector and keyword search simultaneously and reranks the combined results. Recommended default for most production RAG deployments. |
+| **`knowledgeSummary`** | The payload returned by `AnswerQuestionsWithKnowledge` — the top-ranked retrieved chunks assembled into a single string for injection into the LLM prompt. |
+| **Parse** | The atomic unit of Agentforce execution. One complete cycle through `before_reasoning`, `reasoning`, and `after_reasoning`. Atlas initiates a new parse on subagent entry, after every tool call, and on every new user turn. |
+| **Pre-filter** | A deterministic filter applied before vector similarity search runs. Eliminates ineligible content from the candidate pool entirely, before any semantic comparison. |
+| **RAG (Retrieval-Augmented Generation)** | The pattern of retrieving relevant content from a managed corpus and injecting it into the LLM prompt as grounding context, enabling the agent to answer questions about client-specific knowledge accurately. |
+| **SNCE (Storage Native Change Events)** | Data 360's event mechanism that triggers downstream pipeline processing on every Iceberg table write, enabling near-real-time incremental indexing. |
+| **TOP\_K** | The retriever configuration setting that controls how many chunks are returned per query. Higher values return more context but consume more token budget and can contribute to context rot. |
+| **Unified Planner** | The engineering product name for the Atlas reasoning engine, used in Salesforce Engineering blog and internal architecture discussions. |
+| **ZDR (Zero Data Retention)** | Contractual agreements with LLM providers prohibiting them from retaining prompt data or using it for model training. |
+
+---
+
+### A7: Context Rot Diagnostic Checklist
+
+Use this checklist when a production agent shows signs of quality degradation in longer conversations. Work through the detection questions first to confirm context rot is the root cause, then apply mitigations in priority order.
+
+#### Detection: Confirm the Pattern
+
+- [ ] **Segment resolution rate by turn count.** Does resolution rate drop specifically in sessions with 5+ turns, while short sessions perform well? (This is the diagnostic signature of context rot. Uniform degradation across all session lengths points elsewhere.)
+- [ ] **Check escalation rate against session length.** Is escalation rate elevated in longer sessions, with escalations not triggered by explicit user requests?
+- [ ] **Review conversation logs for re-asked questions.** Is the agent asking for information the user already provided in an earlier turn?
+- [ ] **Check groundedness retry rate.** Is it spiking? This indicates retrieval is returning noisy multi-topic content consuming disproportionate context budget.
+- [ ] **Review turns to resolution.** Is it rising above pilot benchmarks without a change in query complexity or scope?
+
+If two or more of the above are true and correlated with session length, proceed to mitigations.
+
+#### Mitigation Priority
+
+- [ ] **Mitigation 1 — Article redesign (Quick win):** Are any knowledge articles covering multiple topics in a single article? Split them into focused, single-topic pieces. Front-load with user-facing vocabulary. Do not raise TOP\_K until articles are redesigned.
+- [ ] **Mitigation 2 — Shape tool outputs (Quick win):** Are action outputs filtered to return only the fields the agent needs? Add a Transform element or Apex validation action to each tool to restrict output to relevant fields only.
+- [ ] **Mitigation 4 — Escalation guardrails (Quick win):** Are tool outputs validated before the agent processes them? Add output field validation to every action. Check for unexpected escalation caused by malformed API responses before attributing escalation to context rot.
+- [ ] **Mitigation 3 — Context variables (Bigger lift):** Are user intent, account context, and key session state stored as context variables rather than left in conversation history? Is user intent overwritten on each intent shift rather than accumulated alongside previous intents?
+- [ ] **Mitigation 5 — Data Graphs (Bigger lift):** For agents handling multi-object queries, are Data Graphs configured to restrict which fields and relationships are exposed per tool call? Is output shaping from Mitigation 2 applied in combination?
+
+#### Post-Mitigation Verification
+
+- [ ] Re-segment resolution rate by turn count after applying mitigations. A healthy agent holds resolution rate consistently across all turn counts.
+- [ ] Confirm that per-session credit consumption has decreased alongside resolution rate improvement. Context rot fixes reduce both failure rate and cost simultaneously.
+- [ ] For ongoing monitoring, set an alert on the resolution-rate-by-turn-count segmentation so that context rot degradation surfaces early rather than accumulating unnoticed in production.

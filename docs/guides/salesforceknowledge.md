@@ -1,6 +1,6 @@
 # Salesforce Knowledge: The Architect's Guide to Knowledge-Grounded Agents
 
-*Updated August 24, 2026*
+*Updated August 27, 2026*
 *This guide was generated using AI with grounding in official Salesforce documentation. Review for accuracy before using.*
 
 ---
@@ -16,9 +16,11 @@
 7. [Multimodal Grounding: Beyond Article Text](#7-multimodal-grounding-beyond-article-text)
 8. [Common Pitfall: The Default Retriever Casts a Wide Net](#8-common-pitfall-the-default-retriever-casts-a-wide-net)
 9. [Governance: Keeping Unvalidated Content Out of the Vector Store](#9-governance-keeping-unvalidated-content-out-of-the-vector-store)
-10. [Testing: Retrieval Before Agent](#10-testing-retrieval-before-agent)
-11. [Migrating from Classic Knowledge to Lightning Knowledge](#11-migrating-from-classic-knowledge-to-lightning-knowledge)
-12. [Architect's Quick-Reference Checklist](#12-architects-quick-reference-checklist)
+10. [Knowledge Base Content Quality: The Four Pathologies](#10-knowledge-base-content-quality-the-four-pathologies)
+11. [Testing: Retrieval Before Agent](#11-testing-retrieval-before-agent)
+12. [Migrating from Classic Knowledge to Lightning Knowledge](#12-migrating-from-classic-knowledge-to-lightning-knowledge)
+13. [Architect's Quick-Reference Checklist](#13-architects-quick-reference-checklist)
+14. [Additional Resources](#14-additional-resources)
 
 ---
 
@@ -31,7 +33,6 @@ Salesforce Knowledge is a centralized repository for structured articles. Think 
 ### Why This Matters for the Business
 
 LLMs are trained on public internet data. They have no knowledge of your client's products, policies, contracts, case history, or internal procedures unless that information is explicitly supplied at reasoning time. Without grounding, an agent asked about a specific warranty term, a regional compliance rule, or a proprietary product specification will either refuse to answer or hallucinate a plausible-sounding but incorrect response.
-
 That failure is not just a technical problem. It is a trust problem. Customers who receive incorrect information from an AI agent are less likely to trust the agent, less likely to self-serve, and more likely to escalate to a human. The business case for grounding is simple: grounded agents give accurate, citable answers. Ungrounded agents give confident-sounding guesses.
 
 Knowledge is the highest-quality, lowest-risk starting point for grounding Agentforce agents in proprietary enterprise content.
@@ -179,7 +180,9 @@ Data categories do three things for grounding:
 
 ### Practical Guidance for Architects
 
-- **Keep the taxonomy shallow.** Complex hierarchies lead to miscategorization and retrieval noise. Authors need to be able to classify reliably without a cheat sheet.
+- **Keep the taxonomy shallow.** Complex hierarchies lead to miscategorization and retrieval noise. Authors need to be able to classify reliably without a cheat sheet. Limit category trees to 3-5 levels deep.
+- **Align the category tree with user intent and business taxonomy, not org hierarchy.** Use topic names like "Returns Policy" or "Billing Issues" rather than internal department names.
+- **Tag each article with the most specific applicable categories** while avoiding excessive overlap.
 - **Classify before indexing.** Articles added without category assignments cannot be filtered by category at retrieval time.
 - **Review category visibility settings** in both Default Data Category Visibility and the Knowledge Manager permission set. Both must be configured for the correct scope.
 - **Treat categories as metadata, not indexable text.** Do not add category fields as index fields in the search index. Single-word category values produce micro-chunks that degrade semantic search quality. Use them as prepend fields or filter fields instead.
@@ -238,14 +241,50 @@ Use manual configuration when you need:
 
 How articles are written has a direct impact on retrieval accuracy and generation quality. These practices matter because the chunking pipeline works on raw text, and the quality of that text determines the quality of the vectors.
 
-1. **Be thorough.** Generative AI synthesizes information. Favor detail over brevity in article bodies. An agent can always condense a detailed answer; it cannot invent detail that is missing.
-2. **Include real-world examples.** Conversational, scenario-based phrasing in articles improves semantic match against user queries.
-3. **Use structural HTML headings (H1-H6).** The chunking process uses heading tags as chunk delimiters, keeping related content together in the same chunk.
-4. **Spread content across fields.** For Knowledge articles indexed as a DMO, use multiple fields (Question, Description, Resolution, Exceptions) rather than one mega-body field. This gives the search index more targeted vectors and enables field-level filtering.
-5. **Explain synonyms and abbreviations.** Including common alternate phrasings for key terms helps the LLM understand how concepts relate, improving retrieval recall.
-6. **Annotate media.** Charts and diagrams embedded in articles should have descriptive alt-text or caption annotations, both for accessibility and because text is what gets chunked and vectorized.
+#### Knowledge Base Self-Assessment
 
-> **Scenario.** A client's knowledge base has 2,000 published articles but agent responses are consistently vague. Investigation reveals that most articles follow a style guide that prioritizes brevity: each article is three to five sentences long. The chunking process creates vectors from these micro-articles, but there is simply not enough semantic content for the retriever to produce high-confidence matches. Recommendation: revise the style guide to require a minimum article depth (for example, at least one scenario, one step-by-step section, and a "When This Does Not Apply" field) before articles are approved for publication.
+Before configuring any retriever or tuning any search index, assess the quality of the content corpus itself. The following eight-dimension maturity scale is the right diagnostic to run at the start of every engagement. Low scores are predictive of specific retrieval failure modes. Any dimension scoring 1 or 2 should be treated as a pre-deployment blocker or a tracked risk item, not a post-go-live improvement.
+
+| Dimension | Low Score (1) | High Score (5) | RAG Risk If Score Is Low |
+|---|---|---|---|
+| **FAQ Coverage** | Covers none of the most frequently asked questions | Covers 60-80% or more of common customer questions | Retriever finds nothing; agent defaults to "I don't know" |
+| **Content Freshness** | Most content is years old, rarely reviewed | Most content recently reviewed and up-to-date | Stale vectors ground the agent in outdated or incorrect facts |
+| **Structure and Style** | No predefined structure; every article looks different | Detailed style guide with guidelines for structure, tone, and use of examples | Inconsistent chunking; unpredictable retrieval quality |
+| **Use of Examples** | No real-world examples of when the issue might occur | Rich with detailed, scenario-based examples | Low semantic match against conversational user queries |
+| **Content Depth** | Articles are very sparse and lack details | Articles are thorough and detailed | Insufficient semantic content for high-confidence retrieval |
+| **Media Annotation** | Content is mostly text, or media lacks annotations | Lots of images and video with alt-text and captions | Visual content is invisible to the RAG pipeline |
+| **Article Scope** | Large monolithic articles covering many different issues | Short, focused articles covering one specific issue | Irrelevant chunks retrieved alongside relevant ones; reduced Context Precision |
+| **Knowledge Management** | No knowledge management processes defined | KCS principles followed; regular audits conducted | Content quality degrades over time without detection |
+
+Rate the maturity of the client's knowledge base across all eight dimensions before beginning any retrieval configuration work. The results tell you where to invest time before the first agent query is ever run.
+
+#### Authoring Guidelines
+
+1. **Be thorough.** Generative AI synthesizes information. Favor detail over brevity in article bodies. An agent can always condense a detailed answer; it cannot invent detail that is missing. Let the LLM do the work of summarizing; the article's job is to supply complete, accurate source material.
+
+2. **Include real-world examples.** Conversational, scenario-based phrasing in articles improves semantic match against natural-language user queries. Write from the perspective of a typical user facing the issue. This puts you in your customer's shoes and gives the AI the contextual signal it needs to retrieve the article for the right queries.
+
+3. **Use structural HTML headings (H1-H6).** The chunking process uses heading tags as chunk delimiters, keeping related content together in the same chunk. Like humans, AI prefers structured content. Sentences should be logically related; break up content into paragraphs, lists, and headed sections.
+
+4. **Spread content across fields.** For Knowledge articles indexed as a DMO, use multiple fields (Question, Description, Resolution, Exceptions) rather than one mega-body field. This gives the search index more targeted vectors and enables field-level filtering. Separate internal and customer-facing information into different fields, and configure Einstein for appropriate grounding and access so the right information reaches the right audience.
+
+5. **Explain synonyms and abbreviations.** Including common alternate phrasings for key terms helps the LLM understand how concepts relate, improving retrieval recall. Avoid jargon where possible; when jargon is unavoidable, define it in the article body.
+
+6. **Annotate media.** Charts and diagrams embedded in articles should have descriptive alt-text or caption annotations, both for accessibility and because text is what gets chunked and vectorized. Short, simple videos and screenshots are great for humans, but AI requires annotation to understand and synthesize them. Annotated multimedia benefits both AI processing and screen-reader accessibility.
+
+7. **Single-topic focus.** Each article should cover exactly one issue. Multi-topic or FAQ-bundle articles (for example, "Product X FAQs") produce chunks that contain irrelevant content alongside relevant content, reducing Context Precision scores. Architects should flag monolithic articles during the pre-deployment content audit and recommend splitting them into focused, individually published articles. Users who click through on AI citations also prefer concise, focused articles over long documents, so single-topic focus serves both the RAG pipeline and the human reading experience.
+
+8. **Article title and summary discipline.** The title should clearly and specifically describe the article's single topic. The Summary field should be a concise answer to the article's core question. Do not use Summary as a keyword-stuffing field. Keyword-stuffed summaries inflate search rankings for irrelevant queries and constitute the Poisoning pathology described in Section 10.
+
+9. **Content ordering matters.** Testing confirms that placing the most important hyperlinks and figures at the beginning of an article affects search results. Architects should include this in the style guide template and explain it to content teams as a retrieval signal, not just an editorial preference.
+
+10. **Use tables for structured data.** For facts like interest rates, fee schedules, or policy limits, use HTML tables rather than prose descriptions. Tables give the search index clean, structured values and reduce the risk of the LLM misreading a numerical relationship.
+
+11. **Follow KCS principles.** KCS (Knowledge-Centered Service) is the industry-standard framework for sustainable knowledge management. Adopting KCS produces a knowledge base that is consistent, accurate, and represents the collective wisdom of the team, all of which directly improve grounding quality. Start the knowledge base small, focusing on the most frequently asked customer questions. Assemble a small group of top service agents to identify and answer the top 10 customer questions first. Then expand over time using KCS principles and Einstein Knowledge Creation. See Section 14 for links to the KCS v6 Practices Guide and the Salesforce Knowledge User Group on Trailblazer Community.
+
+12. **Search before creating.** Before creating any new article, authors should search the existing knowledge base for related content. If an article on a related topic already exists, update or consolidate it rather than create a new article. This single rule prevents Content Duplication (the Confusion pathology) at the source.
+
+> **Scenario.** A client's knowledge base has 2,000 published articles but agent responses are consistently vague. Investigation reveals that most articles follow a style guide that prioritizes brevity: each article is three to five sentences long. The chunking process creates vectors from these micro-articles, but there is simply not enough semantic content for the retriever to produce high-confidence matches. Separately, 30% of the published articles are topic bundles covering three to five issues each, producing chunks that mix relevant and irrelevant content. The self-assessment score for Content Depth is 2; Article Scope is also 2. Recommendation: revise the style guide to require a minimum article depth (at least one scenario, one step-by-step section, and a "When This Does Not Apply" field) before articles are approved for publication, and prioritize splitting the multi-topic bundles into focused, individual articles. Post-remediation, both dimensions rise to 4, correlated with a measurable improvement in Context Precision scores.
 
 ---
 
@@ -428,6 +467,8 @@ The RAG pipeline is only as trustworthy as the content that enters it. An agent 
 
 Governance of the knowledge base is not a content management concern. It is a quality and compliance engineering concern.
 
+For content that has passed publication governance but still exhibits structural quality issues such as duplication, topic drift, metadata misdirection, or factual contradiction, see Section 10: Knowledge Base Content Quality: The Four Pathologies. Governance controls what enters the vector store. Content quality controls what the vector store actually contains.
+
 ### The Article Publication Lifecycle Is the Control Point
 
 Architects should verify that the following are in place before any Agentforce deployment goes live:
@@ -442,7 +483,7 @@ Architects should verify that the following are in place before any Agentforce d
 
 **5. Version control is meaningful.** Knowledge tracks article versions. When a version is updated and republished, the old version should not persist in the vector store. Confirm the data stream ingests `KnowledgeArticleVersion` correctly and that superseded versions are excluded.
 
-### RAG Security at the Retrieval Layer
+### RAG Security the Retrieval Layer
 
 Data 360 supports attribute-based access control (ABAC) at the object, field, and row levels via Data Governance Policy settings. This is the primary mechanism for controlling what data is visible to whom, including within RAG search indexes. For unstructured data, metadata filtering (prefilters on search indexes) can restrict what gets retrieved.
 
@@ -464,11 +505,96 @@ Retrieved content is injected into the LLM context window and may influence or a
 
 ---
 
-## 10. Testing: Retrieval Before Agent
+## 10. Knowledge Base Content Quality: The Four Pathologies
+
+### Why This Matters
+
+Section 9 covers governance: the controls that keep unvalidated content out of the vector store. This section addresses a different problem. Content can pass every governance gate, carry the "Validated" status, and still degrade agent responses because of structural quality issues baked into the articles themselves. These are not governance failures. They are authoring failures, and they require a different remediation approach.
+
+Detailed testing confirms that the quality and structure of knowledge articles affect agent performance even after all technical configuration changes have been made. Architects who understand the four pathologies can diagnose retrieval problems that do not appear in index population queries, permission audits, or retriever configuration reviews. The symptoms look like hallucination or poor retrieval. The root cause is content.
+
+### The Four Pathologies Defined
+
+| Pathology | Technical Name | Definition | RAG Impact |
+|---|---|---|---|
+| **Confusion** | Content Duplication | Two or more distinct articles cover the same topic, creating significant content overlap and preventing the AI from identifying a single source of authority. | The retriever splits confidence between articles. Neither reaches the top of the ranked list. The agent produces a hedged or incomplete response, or retrieves the wrong version. |
+| **Distraction** | Topic Drift | An article dedicated to one subject contains a detailed mention of an unrelated subject, causing the AI to retrieve the article for queries about the secondary subject. | Context Precision drops. The agent is grounded in an article that is largely irrelevant to the query, diluting response quality. |
+| **Poisoning** | Metadata Misdirection | An article's Summary or body uses keywords central to a completely different topic, artificially inflating its search ranking for irrelevant queries. | A well-written article on Topic B gets outranked by a poorly summarized article on Topic A because Topic B's keywords appear in Topic A's Summary. |
+| **Clash** | Factual Contradiction | Two or more published articles provide conflicting, contradictory, or divergent factual information (different deadlines, amounts, or processes) for the same policy or topic. | The agent may retrieve both articles simultaneously and synthesize a blended response that mixes contradictory information. This is the most severe pathology: the agent sounds confident while being wrong. |
+
+### Detecting Pathologies in Practice
+
+The Data Cloud Query Editor is the primary diagnostic tool for all four pathologies. Use it to run semantic similarity queries against the search index. The returned chunk reveals exactly why the retriever ranked a given article for a given query.
+
+- **For Confusion:** Query the same topic in multiple phrasings. If two or more different articles consistently surface for the same query, Confusion is likely.
+- **For Distraction:** Run queries about Topic B and inspect whether an article primarily about Topic A is being returned. If it is, check the article body for a paragraph or sentence mentioning Topic B.
+- **For Poisoning:** Run queries about Topic B and inspect the Summary field of any unexpected top results. If the Summary contains Topic B keywords but the article is about Topic A, the Summary is driving the misdirection.
+- **For Clash:** Search for the same policy term across multiple queries. Surface and compare the top two results side-by-side. Look for numerical or procedural contradictions.
+
+### The Five-Step Remediation Plan
+
+The following order of operations is a non-technical, business-driven process for making articles clean, focused, and optimized for the AI agent. Follow the steps in sequence: resolving Clashes first prevents new contradictions from being introduced during consolidation in Step 2.
+
+#### Step 1: Resolve Clashes Immediately (Top Priority)
+
+**Goal:** One source of truth for every fact or policy. No exceptions.
+
+| Action | Verification |
+|---|---|
+| Compare clashing articles side-by-side. Identify all points of contradiction. | Before the fix: two articles suggest different steps or figures. |
+| Designate the single most accurate article as the authoritative version. Integrate all unique, correct details from the other article into the authoritative one. Archive or delete the duplicate. | After the fix: a single, clear article exists. Re-run the Query Editor query and confirm only the authoritative article surfaces for that topic. |
+
+#### Step 2: Consolidate Confusing Articles
+
+**Goal:** Eliminate content redundancy. One definitive article per core topic.
+
+| Action | Verification |
+|---|---|
+| Identify articles that cover the same topic with different framing or structure. Select one as the Single Source of Truth (SSOT). | Before the fix: multiple articles use identical or near-identical language on the same topic, causing the retriever to hesitate. |
+| Copy all unique, valuable content from the duplicates into the SSOT. Archive or redirect duplicates. Do not simply delete duplicates that have inbound links; use the archive or redirect path to preserve link integrity. | After the fix: the retriever returns one comprehensive article with a single, confident response. Re-run the query to confirm. |
+
+#### Step 3: Prune Distracting and Poisoning Content
+
+**Goal:** Every article covers exactly one topic. Every Summary answers exactly one question.
+
+| Action | Verification |
+|---|---|
+| For Distraction: identify sentences or paragraphs in an article that describe a different topic. Remove them. Replace with a direct hyperlink to the authoritative article on that topic. | Run the previously distracting query in the Query Editor. If the old article is still returned, more distracting content remains in the body or Summary. Continue pruning. |
+| For Poisoning: audit the Summary field of every article flagged as returning for irrelevant queries. Rewrite Summaries to be concise answers to the article's primary question only. Do not list every keyword contained in the article. | Re-run the query that was triggering the misdirected article. Confirm the poisoned article no longer surfaces. |
+
+#### Step 4: Implement an Ongoing Review and Maintenance Process
+
+**Goal:** Prevent content quality issues from recurring and ensure future articles are AI-ready.
+
+| Practice | Standard |
+|---|---|
+| **New article creation (mandatory):** Before creating any new article, search the existing knowledge base for related content. If a related article exists, update or consolidate. Only create a new article if the topic is truly unique and complex enough to warrant its own page. | Avoid content duplication at all costs. |
+| **Article structure:** Use HTML headings (H1, H2) to structure content logically. Use tables for data like interest rates, fee schedules, or policy limits. Place the most important hyperlinks and figures at the beginning of the article. | Order matters. Testing confirms placement affects search results. |
+| **Quarterly knowledge audit:** Review the top 20 most-used articles for all four pathologies. | Add this to the governance calendar alongside the monthly article rating review. |
+| **Summary discipline:** The Article Summary field must be a concise answer to the article's core question. Keyword stuffing in Summaries directly causes the Poisoning pathology. | Enforce via style guide. Validate during the quarterly audit. |
+
+#### Step 5: Propagate Changes to the Agent
+
+**Goal:** Ensure the agent has access to updated articles so it provides accurate, current information to users.
+
+After updating or creating articles, the changes must travel through the full data pipeline before the agent can retrieve them. Both steps below happen automatically on schedule, but manual execution eliminates propagation lag after significant content remediation work.
+
+| Action | Notes |
+|---|---|
+| **Refresh the Data Stream:** Manually trigger the data stream refresh to bring updated articles from Salesforce into Data Cloud. | Accessing Data Cloud features requires appropriate permissions. Coordinate with the technical support team if content authors do not have access. |
+| **Rebuild the Search Index:** After refreshing the data stream, manually rebuild the relevant search index. This is the step that makes updated content actually retrievable by the agent. | Cross-reference Section 9 for the governance note on index refresh cadence. The same lag applies here: content remediation is not live until the index rebuild completes. |
+
+> **Scenario.** An agent for a financial services client consistently returns partially correct answers to questions about early withdrawal penalties. The architect queries the search index in the Query Editor and finds two articles being retrieved: one from the "Savings Accounts" category and one from the "Retirement Accounts" category. Both mention early withdrawal penalties, but with different figures. The agent faithfully synthesizes both into a blended response that is partially wrong. This is a Clash pathology. Resolution: designate one article as the single source of truth, merge the correct details from the other into it, archive the duplicate, manually refresh the data stream, and rebuild the search index. Re-test in the Query Editor to confirm only one article surfaces for that query. The agent's responses are accurate on the next run.
+
+---
+
+## 11. Testing: Retrieval Before Agent
 
 ### Why This Matters
 
 Most architects test a grounded agent by talking to it. That is the least efficient way to debug a RAG problem. When an agent gives an unsatisfactory response, the failure could be in the agent's topic classification, the action selection, the retriever routing, the search index population, or the LLM's use of retrieved content. Jumping straight to agent-level testing means investigating all five layers at once. Testing retrieval in isolation first eliminates four of them.
+
+A well-designed testing protocol is only as effective as the quality of the content being tested. If the knowledge base has not been assessed using the eight-dimension maturity scale (Section 4) and audited for the four content pathologies (Section 10), testing will surface symptoms such as low Context Precision and low Faithfulness scores without revealing root causes. Complete the content quality audit and run any necessary remediation before investing heavily in retrieval tuning.
 
 The Agentforce Testing Center also eliminates the risk of deploying an agent that hallucinates, gives inconsistent responses, or fails on edge-case queries. Without pre-deployment testing, those failures happen in production, in front of customers.
 
@@ -484,7 +610,7 @@ When a RAG-powered agent gives an unsatisfactory response, investigate these lay
 
 **Layer 2: ADL Retriever Routing.** Is the right retriever being passed to the action? When using ADL and the standard action, Agent Builder shows the reasoning engine's intermediate results. Confirm the correct grounding source and retriever are being passed into the prompt template.
 
-**Layer 3: Search Index.** Does the index contain vectors? Run a query in the Data Cloud Query Editor against the index DMO. Compare the article count in the index DMO against the count in `KnowledgeArticleVersion__dlm` to detect a partial or failed index refresh. Also use Data Explorer to confirm records exist.
+**Layer 3: Search Index.** Does the index contain vectors? Run a query in the Data Cloud Query Editor against the index DMO. Compare the article count in the index DMO against the count in `KnowledgeArticleVersion__dlm` to detect a partial or failed index refresh. Also use Data Explorer to confirm records exist. The Query Editor also serves as the primary diagnostic tool for the four content pathologies described in Section 10: use it to run semantic similarity queries and inspect which articles are being retrieved and why.
 
 **Layer 4: Prompt Template.** Is the prompt being augmented with retrieved content? Use **Prompt Builder** to preview the resolved prompt with representative inputs. Prompt Builder renders the grounded prompt, including retrieved chunks, so you can inspect what the LLM is actually receiving without triggering a full agent run. For prompt templates that invoke Flows as data providers, use **Flow Builder's debugger** to trace flow execution and confirm the correct records are being fetched. Standard **system debug logs** can also be enabled for Apex-backed data providers to verify retrieval logic is executing as expected.
 
@@ -492,7 +618,7 @@ When a RAG-powered agent gives an unsatisfactory response, investigate these lay
 
 Once the pipeline is confirmed to be connected, evaluate qualitative performance using three RAG evaluation metrics. These metrics are recorded in the `AiRetrieverQualityMetricDmo__dlm` DMO in Data Cloud. The DMO's field prefix is **`std__`** in most orgs (for example, `std__AnswerRelevancyScoreNumber__c`), though some older or differently-provisioned orgs may surface it under the **`ssot__`** prefix. Always verify the actual prefix in the target org's Data Cloud schema before writing queries.
 
-**Context Precision** (`std__ContextPrecisionScoreNumber__c`): What proportion of the retrieved chunks were actually relevant to the query? Low scores indicate a retrieval scoping problem. The retriever is surfacing articles from the wrong domain, category, or topic. Fix the retriever prefilters or tighten the search index scope.
+**Context Precision** (`std__ContextPrecisionScoreNumber__c`): What proportion of the retrieved chunks were actually relevant to the query? Low scores indicate a retrieval scoping problem. The retriever is surfacing articles from the wrong domain, category, or topic. Fix the retriever prefilters or tighten the search index scope. Persistently low Context Precision despite correct retriever configuration is a strong indicator of one of the four content pathologies, particularly Confusion or Distraction.
 
 **Faithfulness** (`std__FaithfulnessRelevancyScoreNumber__c`): Is the response grounded in the retrieved content, or is the LLM generating beyond it? Low scores indicate hallucination. The retrieved context is being ignored or supplemented by the model. Improve prompt template instructions, reduce the temperature setting, or consider a stronger model.
 
@@ -500,9 +626,10 @@ Once the pipeline is confirmed to be connected, evaluate qualitative performance
 
 **Common diagnostic patterns:**
 
-- High Faithfulness + Low Context Precision: The agent is faithfully citing the wrong articles. Fix the retriever scope, search string, or content categorization.
+- High Faithfulness + Low Context Precision: The agent is faithfully citing the wrong articles. Fix the retriever scope, search string, or content categorization. If the retriever scope is already correct, audit for Distraction or Poisoning pathologies.
 - Low Faithfulness + High Context Precision: The right articles are surfaced but the LLM is not using them. Improve prompt template instructions or consider a stronger model.
 - High Faithfulness + High Context Precision + Low Answer Relevancy: Not enough context is being retrieved to fully answer the query. Increase the number of retrieved results or broaden the search index.
+- Persistent low Context Precision across multiple retriever tuning attempts: Stop tuning the retriever. The problem is in the content. Run the Query Editor diagnostic for Confusion, Distraction, and Poisoning pathologies before making further retriever changes.
 
 ### Using the Agentforce Testing Center
 
@@ -526,7 +653,7 @@ Always build test cases that cover:
 
 ---
 
-## 11. Migrating from Classic Knowledge to Lightning Knowledge
+## 12. Migrating from Classic Knowledge to Lightning Knowledge
 
 ### Why This Matters
 
@@ -548,77 +675,89 @@ Salesforce provides the **Knowledge Migration Tool** (Setup > Knowledge > Knowle
 
 **4. Custom fields migrate with the article type.** Custom fields from Classic article types are preserved but may need re-evaluation, particularly long-text fields that will be targeted as index fields in the RAG pipeline.
 
-**5. Lightning Knowledge cannot be disabled after enablement.** Enable it in a sandbox first, run the migration, validate article content and category assignments, then proceed to production.
+**5. Treat migration as a content quality opportunity.** Before migrating, run the eight-dimension self-assessment (Section 4) and the four-pathology audit (Section 10) on the Classic content. Migrating a knowledge base that scores 1-2 on FAQ Coverage, Content Depth, or Article Scope simply moves the content quality problem from Classic into Lightning. Remediate before migrating, not after.
 
-**6. Versioning behavior differs.** Classic Knowledge has its own version model. Review article history carefully after migration to confirm versioning integrity before configuring the data stream.
+### Post-Migration Checklist
 
-### Post-Migration RAG Readiness Audit
-
-After migrating to Lightning Knowledge, before configuring ADL:
-
-- [ ] Confirm all migrated articles have accurate Publication Status (Published, Draft, or Archived)
-- [ ] Confirm all migrated articles have category assignments
-- [ ] Review article body field content for quality (see Section 4 authoring best practices)
-- [ ] Rebuild page layouts with appropriate fields for the RAG field mapping strategy
-- [ ] Enable Validation Status and assign statuses to migrated articles
-- [ ] Set up approval processes on record types before enabling article creation by authors
-
-### External Content Integration
-
-For customers with knowledge content in external systems such as SharePoint, Google Drive, Confluence, or ServiceNow, note that the Knowledge Migration Tool is specifically for Classic-to-Lightning migration. External content is a separate ingestion path via Data Cloud connectors or manual file upload into ADL. Architects should determine early whether external content warrants a separate search index and retriever or whether it should be consolidated into Knowledge articles before ADL configuration.
-
-> **Scenario.** A client migrates 8,000 Classic Knowledge articles to Lightning Knowledge. Post-migration, the architect discovers that approximately 1,200 articles had their Publication Status reset to "Draft" during migration due to a validation rule conflict on the new page layout. The agent's index contains only the 6,800 articles that migrated cleanly as Published. The architect identifies the gap by comparing the index DMO count to the full `Knowledge__kav` count in the Query Editor, as described in Section 5.
+- [ ] All Classic article types mapped to Lightning record types
+- [ ] Category assignments verified post-migration
+- [ ] Page layouts rebuilt in Lightning with RAG-relevant fields exposed
+- [ ] Long-text fields reviewed for chunking suitability
+- [ ] Content quality assessment completed on migrated corpus before ADL configuration
+- [ ] ADL configured and index population verified using the Query Editor approach in Section 5
 
 ---
 
-## 12. Architect's Quick-Reference Checklist
+## 13. Architect's Quick-Reference Checklist
 
-Use this checklist when scoping or auditing a Knowledge-grounded Agentforce deployment.
+### Pre-Configuration Content Audit
 
-### Pre-Configuration Audit
+- [ ] Knowledge base self-assessment completed across all eight dimensions; any dimension scoring 1-2 flagged as a pre-deployment blocker
+- [ ] FAQ coverage assessed: minimum 60-80% of the most common customer questions have a published article before agent go-live
+- [ ] Knowledge base audited for all four content pathologies: Confusion, Distraction, Poisoning, Clash
+- [ ] Five-step remediation plan executed for any identified pathologies before ADL configuration begins
+- [ ] Single-topic article standard defined in the style guide and enforced via authoring guidelines
+- [ ] Article Summary field standards defined: concise answer to the primary question only; no keyword stuffing
+- [ ] Content ordering reviewed: most important hyperlinks and figures placed at or near the top of each article
+- [ ] HTML heading structure enforced (H1-H6) for all article body content
+- [ ] Tables used for structured data (rates, limits, fees) rather than prose descriptions
+- [ ] KCS principles adopted as the knowledge management methodology
+- [ ] "Search before creating" rule distributed to all authors and enforced as a mandatory pre-authoring step
 
-- [ ] Lightning Knowledge enabled (or migration path from Classic planned)
-- [ ] Knowledge User licenses assigned to all article authors and admins
-- [ ] Permission set(s) defined for Knowledge managers, contributors, and readers
-- [ ] Record types defined for each article category (FAQ, How To, etc.)
-- [ ] Page layouts configured with appropriate fields for authoring and RAG targeting
-- [ ] Data category groups and categories defined, activated, and communicated to authors
-- [ ] Approval workflows attached to sensitive record types
-- [ ] Validation Status field enabled and defaults set
+### Setup and Configuration
 
-### RAG Pipeline Design Decisions
+- [ ] Lightning Knowledge enabled in a sandbox before production
+- [ ] Knowledge User licenses assigned to all article authors and managers
+- [ ] Knowledge Manager permission set created with correct Object, App, and System permissions
+- [ ] Record types created for each distinct article presentation format (FAQ, How To, etc.)
+- [ ] Page layouts configured with Summary, Validation Status, and structured body fields exposed
+- [ ] Data category taxonomy designed aligned to user intent and business topics, not org hierarchy
+- [ ] Category tree limited to 3-5 levels deep
+- [ ] Validation Status field enabled and defaulted to "Work In Progress" for new articles
+- [ ] Approval processes attached to all sensitive record types
 
-- [ ] ADL path vs. manual Data Cloud pipeline selected (rationale documented)
-- [ ] Source scope defined: Knowledge articles only, files only, or both
-- [ ] If Knowledge plus other sources: separate search indexes planned for each source type
-- [ ] Field selection strategy documented (which fields to index, prepend, filter, and return)
-- [ ] Chunking strategy chosen (max 512 tokens; smaller for dense technical content)
-- [ ] Embedding model selected (E5-Large V2 for English; Multilingual E5-Large for non-English)
-- [ ] Hybrid search vs. vector-only decision made and cost/latency implications accepted
-- [ ] Retriever scope evaluated: default dynamic retriever vs. custom scoped retriever
-- [ ] Citation model decided: standard action (inline) vs. custom action (sources list)
+### RAG Pipeline Configuration
+
+- [ ] ADL created and Knowledge articles confirmed as the content source
+- [ ] Index population verified using the Data Cloud Query Editor (DMO count matches index count)
+- [ ] Custom retriever evaluated if agent is scoped to a specific product line, region, or domain
+- [ ] Retriever prefilters configured and tested if using category-based scoping
+- [ ] Citation model decision documented: standard action (inline) vs. custom prompt template (sources list)
+- [ ] All media-heavy articles audited for descriptive alt-text and caption annotations
+- [ ] Hybrid vs. vector-only search decision made and documented with cost/latency rationale
 
 ### Governance and Ongoing Operations
 
-- [ ] Article publication tied to index refresh schedule; lag communicated to content teams
-- [ ] Archival process confirmed to remove articles from vector store on next refresh
-- [ ] Knowledge audit schedule established (monthly or quarterly)
-- [ ] Article feedback mechanism (ratings) enabled and reporting configured
-- [ ] Multimodal content (charts, diagrams) audited for adequate text annotation
-- [ ] Retrieval access permissions reviewed (ABAC, permission sets on agent user, `AllowViewKnowledge`)
-- [ ] Language alignment confirmed: agent user locale matches article language field values
+- [ ] Index refresh schedule documented and communicated to content teams
+- [ ] Archived articles confirmed to be excluded from the vector store on refresh
+- [ ] Article feedback mechanism (thumbs up/down) enabled and reviewed periodically
+- [ ] Quarterly knowledge audit scheduled: top 20 articles reviewed for all four pathologies
+- [ ] "Search before creating" rule enforced as a mandatory step before any new article is published
+- [ ] Manual data stream refresh and search index rebuild processes documented and accessible to content team leads (not just Data Cloud admins)
+- [ ] Data Cloud Query Editor used post-remediation to verify pathological articles are no longer returned for previously misdirected queries
+- [ ] Post-remediation data stream refresh and search index rebuild completed before re-testing the agent
 
-### Testing and Validation
+### Testing
 
-- [ ] Prompt Builder used to preview resolved prompt in isolation (Layer 4) before agent testing
-- [ ] Flow Builder debugger and system debug logs used for data provider tracing where applicable
-- [ ] Index population verified via Data Cloud Query Editor (Layer 3)
-- [ ] Agent topic and action routing verified via Agent Builder (Layers 1 and 2)
-- [ ] Agentforce Testing Center scenarios built for in-scope, edge-scope, and out-of-scope queries
-- [ ] Testing Center limits confirmed against current org configuration before planning test runs (published limits have a known discrepancy between sources)
-- [ ] RAG quality metrics (Context Precision, Faithfulness, Answer Relevancy) baselined in `AiRetrieverQualityMetricDmo__dlm`
-- [ ] Prefix verified in target org schema (`std__` vs. `ssot__`) before writing quality metric queries
-- [ ] Multilingual retrieval tested if Multilingual E5-Large model is in use
-- [ ] Citation rendering verified in the target channel (web, mobile, voice)
+- [ ] Eight-dimension self-assessment and pathology audit completed before testing begins
+- [ ] Retrieval tested at the prompt-template level in Prompt Builder before agent-level testing
+- [ ] Index population confirmed via Data Cloud Query Editor (Layer 3) before running agent tests
+- [ ] Test cases built for queries within scope, at the edge of scope, and in additional languages if using Multilingual E5-Large
+- [ ] Context Precision, Faithfulness, and Answer Relevancy metrics queried from `AiRetrieverQualityMetricDmo__dlm` post-go-live
+- [ ] DMO field prefix (`std__` vs. `ssot__`) verified in the target org before writing metric queries
+- [ ] Testing Center limits verified against the org's current configuration before quoting them to a customer
 
 ---
+
+## 14. Additional Resources
+
+- **10 Ways to Prep Your Knowledge Base for AI Grounding** - Salesforce Blog
+- **How You Can Write a Good Knowledge Base Article** - Salesforce Blog (September 2025)
+- **Knowledge Grounding Improvement Guide** - Salesforce Best Practices Deck
+- **Knowledge Grounding for AI: Quick Look** - Trailhead Badge
+- **How to Plan Salesforce Knowledge** - Expert Coaching Session
+- **Transition to Lightning Knowledge** (Classic Knowledge customers) - Expert Coaching Session
+- **Knowledge Planning Guide** - Best practices deck for a successful Knowledge rollout
+- **Planning Guide for Agentforce Grounding** - Security and governance considerations for AI agents
+- **KCS v6 Practices Guide** - knowledgedge-centered service methodology (serviceinnovation.org)
+- **Knowledge User Group on Trailblazer Community** - Share ideas, tips, and resources with other Knowledge admins
