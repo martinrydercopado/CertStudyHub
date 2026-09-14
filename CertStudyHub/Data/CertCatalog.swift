@@ -8,6 +8,7 @@ enum CertCatalog {
         consultBestPractices,
         agentforceDiscovery,
         agentforceHelpAgent,
+        agentforceVoice,
         tracinganalytics,
         agentOps,
         agentOpsCopado,
@@ -176,6 +177,28 @@ enum CertCatalog {
         isBonusTopic: true,
         subtitle: "A guided walkthrough of the entire Agent Development Lifecycle using only the CLI. Covers every ADLC phase from agent spec generation through deployment, activation, and production monitoring.",
         guideFile: "adlcide"
+    )
+
+    static let agentforceVoice = CertConfig(
+        id: "agentforcevoice",
+        name: "Agentforce Voice: Success Architect Reference Guide",
+        shortName: "Agentforce Voice",
+        icon: "phone.fill",
+        primaryColor: Color(red: 0.55, green: 0.36, blue: 0.96),
+        secondaryColor: Color(red: 0.65, green: 0.55, blue: 0.98),
+        headerGradient: [
+            Color(red: 0.30, green: 0.11, blue: 0.58),
+            Color(red: 0.36, green: 0.13, blue: 0.71),
+            Color(red: 0.43, green: 0.16, blue: 0.85)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "agentforcevoice",
+        isBonusTopic: true,
+        subtitle: "A comprehensive reference covering Agentforce Voice architecture, telephony integration patterns (Amazon Connect, Five9, Genesys), IVR design, voice-to-text pipelines, escalation flows, and production monitoring for voice-enabled AI agents.",
+        guideFile: "agentforcevoice"
     )
 
     static let consultBestPractices = CertConfig(

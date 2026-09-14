@@ -100,6 +100,26 @@
     "quizLengths": []
   },
   {
+    "id": "agentforcevoice",
+    "name": "Agentforce Voice: Success Architect Reference Guide",
+    "shortName": "Agentforce Voice",
+    "icon": "📞",
+    "primaryColor": "#8B5CF6",
+    "secondaryColor": "#A78BFA",
+    "headerGradient": [
+      "#4C1D95",
+      "#5B21B6",
+      "#6D28D9"
+    ],
+    "passingScore": 70,
+    "questionBank": "agentforcevoice",
+    "storageKeyPrefix": "agentforcevoice",
+    "isBonusTopic": true,
+    "subtitle": "A comprehensive reference covering Agentforce Voice architecture, telephony integration patterns (Amazon Connect, Five9, Genesys), IVR design, voice-to-text pipelines, escalation flows, and production monitoring for voice-enabled AI agents.",
+    "guideFile": "agentforcevoice",
+    "quizLengths": []
+  },
+  {
     "id": "tracinganalytics",
     "name": "Agentforce Tracing and Analytics",
     "shortName": "Tracing & Analytics",

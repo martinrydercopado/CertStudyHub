@@ -177,6 +177,8 @@
 		C100000000000000000000B7 /* agentopscopado.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000063 /* agentopscopado.md */; };
 		C100000000000000000000B8 /* consultbestpractices.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000064 /* consultbestpractices.md */; };
 		C100000000000000000000B9 /* consultbestpractices.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000064 /* consultbestpractices.md */; };
+		C100000000000000000000BA /* agentforcevoice.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000065 /* agentforcevoice.md */; };
+		C100000000000000000000BB /* agentforcevoice.md in Resources */ = {isa = PBXBuildFile; fileRef = C1F000000000000000000065 /* agentforcevoice.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -265,6 +267,7 @@
 		C1F000000000000000000062 /* adlcide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = adlcide.md; sourceTree = "<group>"; };
 		C1F000000000000000000063 /* agentopscopado.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = agentopscopado.md; sourceTree = "<group>"; };
 		C1F000000000000000000064 /* consultbestpractices.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = consultbestpractices.md; sourceTree = "<group>"; };
+		C1F000000000000000000065 /* agentforcevoice.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = agentforcevoice.md; sourceTree = "<group>"; };
 		C1P000000000000000000001 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1P000000000000000000002 /* CertStudyHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CertStudyHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -463,6 +466,7 @@
 				C1F000000000000000000062 /* adlcide.md */,
 				C1F000000000000000000063 /* agentopscopado.md */,
 				C1F000000000000000000064 /* consultbestpractices.md */,
+				C1F000000000000000000065 /* agentforcevoice.md */,
 				C1F000000000000000000059 /* marked.min.js */,
 			);
 			path = Guides;
@@ -569,6 +573,7 @@
 				C100000000000000000000B4 /* adlcide.md in Resources */,
 				C100000000000000000000B6 /* agentopscopado.md in Resources */,
 				C100000000000000000000B8 /* consultbestpractices.md in Resources */,
+				C100000000000000000000BA /* agentforcevoice.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -598,6 +603,7 @@
 				C100000000000000000000B5 /* adlcide.md in Resources */,
 				C100000000000000000000B7 /* agentopscopado.md in Resources */,
 				C100000000000000000000B9 /* consultbestpractices.md in Resources */,
+				C100000000000000000000BB /* agentforcevoice.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
