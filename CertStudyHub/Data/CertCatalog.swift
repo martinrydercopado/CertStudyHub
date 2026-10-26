@@ -7,6 +7,7 @@ enum CertCatalog {
         agentforceCoworker,
         consultBestPractices,
         agentforceDiscovery,
+        agentOpsDiscovery,
         agentforceHelpAgent,
         agentforceVoice,
         tracinganalytics,
@@ -331,6 +332,28 @@ enum CertCatalog {
         isBonusTopic: true,
         subtitle: "A field guide for running structured discovery workshops with Agentforce customers. Covers the consultative mindset shift, question frameworks, and translating business pain into buildable agent specs.",
         guideFile: "agentforcediscovery"
+    )
+
+    static let agentOpsDiscovery = CertConfig(
+        id: "agentopsdiscovery",
+        name: "AgentOps Discovery Guide for Success Architects",
+        shortName: "AgentOps Discovery",
+        icon: "safari.fill",
+        primaryColor: Color(red: 0.72, green: 0.38, blue: 0.11),
+        secondaryColor: Color(red: 0.88, green: 0.54, blue: 0.24),
+        headerGradient: [
+            Color(red: 0.42, green: 0.23, blue: 0.06),
+            Color(red: 0.54, green: 0.29, blue: 0.08),
+            Color(red: 0.72, green: 0.38, blue: 0.11)
+        ],
+        passingScore: 70,
+        quizLengths: [],
+        questions: [],
+        studySections: [],
+        storageKeyPrefix: "agentopsdiscovery",
+        isBonusTopic: true,
+        subtitle: "A comprehensive discovery playbook for Success Architects running AgentOps engagements. Covers structured discovery workshops, stakeholder mapping, use case prioritization, and translating business outcomes into actionable agent roadmaps.",
+        guideFile: "agentopsdiscovery"
     )
 
     static let dc360DevOps = CertConfig(

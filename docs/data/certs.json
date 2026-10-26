@@ -80,6 +80,26 @@
     "quizLengths": []
   },
   {
+    "id": "agentopsdiscovery",
+    "name": "AgentOps Discovery Guide for Success Architects",
+    "shortName": "AgentOps Discovery",
+    "icon": "🧭",
+    "primaryColor": "#B8621B",
+    "secondaryColor": "#E08A3E",
+    "headerGradient": [
+      "#6B3A10",
+      "#8A4A15",
+      "#B8621B"
+    ],
+    "passingScore": 70,
+    "questionBank": "agentopsdiscovery",
+    "storageKeyPrefix": "agentopsdiscovery",
+    "isBonusTopic": true,
+    "subtitle": "A comprehensive discovery playbook for Success Architects running AgentOps engagements. Covers structured discovery workshops, stakeholder mapping, use case prioritization, and translating business outcomes into actionable agent roadmaps.",
+    "guideFile": "agentopsdiscovery",
+    "quizLengths": []
+  },
+  {
     "id": "agentforcehelpagent",
     "name": "Agentforce Help Agent: Outcome-Based Pricing",
     "shortName": "Help Agent",
